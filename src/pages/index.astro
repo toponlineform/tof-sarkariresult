@@ -2,9 +2,10 @@
 import Layout from '../layouts/Layout.astro';
 
 // ---------------------------------------------------------
-// DATA SECTION
+// DATA SECTION (Yahan apne naye links dalein)
 // ---------------------------------------------------------
 
+// Row 1 Data
 const jobs = [
   { title: "UP Police Constable Recruitment 2025", url: "/job/up-police-constable-2025" },
   { title: "SSC GD Constable Online Form 2025", url: "/job/ssc-gd-constable-2025" },
@@ -22,6 +23,25 @@ const result = [
   { title: "Bihar Board 12th Result 2025", url: "#" },
   { title: "SSC CGL Tier 1 Result Declared", url: "#" },
   { title: "UGC NET December 2024 Result", url: "#" }
+];
+
+// Row 2 Data (New Sections)
+const answerKey = [
+  { title: "SSC GD 2025 Answer Key", url: "#" },
+  { title: "CTET Jan 2025 Answer Key", url: "#" },
+  { title: "UP Police Answer Key PDF", url: "#" }
+];
+
+const admission = [
+  { title: "NTA NEET UG 2025 Online Form", url: "#" },
+  { title: "UP B.Ed Admission 2025", url: "#" },
+  { title: "BHU UET / PET Admission Form", url: "#" }
+];
+
+const syllabus = [
+  { title: "UP Police Constable Syllabus 2025", url: "#" },
+  { title: "SSC GD Exam Pattern & Syllabus", url: "#" },
+  { title: "UPSC IAS Syllabus PDF Hindi", url: "#" }
 ];
 ---
 
@@ -48,9 +68,7 @@ const result = [
                         {item.title}
                     </a>
                 ))}
-                <div class="text-right mt-2">
-                    <a href="#" class="text-xs font-bold text-gray-500 hover:text-black">View More »</a>
-                </div>
+                <div class="text-right mt-2"><a href="#" class="text-xs font-bold text-gray-500 hover:text-black">View More »</a></div>
             </div>
         </div>
 
@@ -64,9 +82,7 @@ const result = [
                         {item.title}
                     </a>
                 ))}
-                <div class="text-right mt-2">
-                    <a href="#" class="text-xs font-bold text-gray-500 hover:text-black">View More »</a>
-                </div>
+                <div class="text-right mt-2"><a href="#" class="text-xs font-bold text-gray-500 hover:text-black">View More »</a></div>
             </div>
         </div>
 
@@ -80,9 +96,49 @@ const result = [
                         {item.title}
                     </a>
                 ))}
-                <div class="text-right mt-2">
-                    <a href="#" class="text-xs font-bold text-gray-500 hover:text-black">View More »</a>
-                </div>
+                <div class="text-right mt-2"><a href="#" class="text-xs font-bold text-gray-500 hover:text-black">View More »</a></div>
+            </div>
+        </div>
+
+        <div id="answer-key" class="bg-white border-2 border-gray-700 rounded-lg shadow-sm">
+            <div class="bg-gray-700 text-white font-bold p-2 text-center text-lg uppercase tracking-wide">
+                Answer Key
+            </div>
+            <div class="p-3 flex flex-col gap-2">
+                {answerKey.map(item => (
+                    <a href={item.url} class="text-blue-700 font-semibold hover:underline hover:text-gray-600 text-sm md:text-base border-b border-gray-100 pb-2 block">
+                        {item.title}
+                    </a>
+                ))}
+                <div class="text-right mt-2"><a href="#" class="text-xs font-bold text-gray-500 hover:text-black">View More »</a></div>
+            </div>
+        </div>
+
+        <div id="admission" class="bg-white border-2 border-orange-600 rounded-lg shadow-sm">
+            <div class="bg-orange-600 text-white font-bold p-2 text-center text-lg uppercase tracking-wide">
+                Admission
+            </div>
+            <div class="p-3 flex flex-col gap-2">
+                {admission.map(item => (
+                    <a href={item.url} class="text-blue-700 font-semibold hover:underline hover:text-orange-600 text-sm md:text-base border-b border-gray-100 pb-2 block">
+                        {item.title}
+                    </a>
+                ))}
+                <div class="text-right mt-2"><a href="#" class="text-xs font-bold text-gray-500 hover:text-black">View More »</a></div>
+            </div>
+        </div>
+
+        <div id="syllabus" class="bg-white border-2 border-purple-600 rounded-lg shadow-sm">
+            <div class="bg-purple-600 text-white font-bold p-2 text-center text-lg uppercase tracking-wide">
+                Syllabus
+            </div>
+            <div class="p-3 flex flex-col gap-2">
+                {syllabus.map(item => (
+                    <a href={item.url} class="text-blue-700 font-semibold hover:underline hover:text-purple-600 text-sm md:text-base border-b border-gray-100 pb-2 block">
+                        {item.title}
+                    </a>
+                ))}
+                <div class="text-right mt-2"><a href="#" class="text-xs font-bold text-gray-500 hover:text-black">View More »</a></div>
             </div>
         </div>
 
