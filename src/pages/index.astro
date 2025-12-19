@@ -2,18 +2,17 @@
 import Layout from '../layouts/Layout.astro';
 
 // ---------------------------------------------------------
-// DATA SECTION (Manual Tags Kaise Lagayein)
+// DATA SECTION (Manual Tags + Data)
 // ---------------------------------------------------------
 
-// Options for 'tagColor': 'red' (Urgent), 'green' (New), 'blue' (Info), 'purple' (Extended)
-
+// Row 1 Data
 const jobs = [
   { 
     title: "UP Police Constable Recruitment 2025", 
     url: "/job/up-police-constable-2025",
-    tag: "Last Date Today", // Text jo dikhana hai
-    tagColor: "red",        // Color (red = blinking)
-    emoji: "🔥"             // Title ke aage emoji (Optional)
+    tag: "Last Date Today", 
+    tagColor: "red",        
+    emoji: "🔥"             
   },
   { 
     title: "SSC GD Constable Online Form 2025", 
@@ -30,11 +29,9 @@ const jobs = [
   { 
     title: "Indian Army Agniveer Rally", 
     url: "#" 
-    // Jisme tag nahi lagana, wahan bas title aur url rakhein
   }
 ];
 
-// Baaki sections mein bhi same logic use kar sakte hain
 const admit = [
   { title: "UPSC Prelims Admit Card 2025", url: "#", tag: "Released", tagColor: "green" },
   { title: "CTET Jan 2025 Hall Ticket", url: "#" },
@@ -47,10 +44,35 @@ const result = [
   { title: "UGC NET December 2024 Result", url: "#" }
 ];
 
-// ... (Baaki data same rakhein ya add karein) ...
-const answerKey = [{ title: "SSC GD Answer Key", url: "#" }];
-const admission = [{ title: "NEET UG 2025 Form", url: "#" }];
-const syllabus = [{ title: "UP Police Syllabus", url: "#" }];
+// Row 2 Data
+const answerKey = [
+  { title: "SSC GD Answer Key 2025", url: "#", tag: "Available", tagColor: "blue" },
+  { title: "UP Police Answer Key PDF", url: "#" }
+];
+
+const admission = [
+  { title: "NTA NEET UG 2025 Online Form", url: "#", tag: "Apply Now", tagColor: "green" },
+  { title: "UP B.Ed Admission 2025", url: "#" }
+];
+
+const syllabus = [
+  { title: "UP Police Constable Syllabus", url: "#", tag: "PDF", tagColor: "red" },
+  { title: "SSC GD Exam Pattern", url: "#" }
+];
+
+// ---------------------------------------------------------
+// SECTION CONFIGURATION (Smart Loop Logic)
+// ---------------------------------------------------------
+const sections = [
+  // Row 1
+  { id: "latest-jobs", title: "Latest Jobs", color: "red", data: jobs },
+  { id: "admit-card", title: "Admit Card", color: "blue", data: admit },
+  { id: "results", title: "Results", color: "green", data: result },
+  // Row 2
+  { id: "answer-key", title: "Answer Key", color: "gray", data: answerKey }, // Gray look professional for keys
+  { id: "admission", title: "Admission", color: "orange", data: admission },
+  { id: "syllabus", title: "Syllabus", color: "purple", data: syllabus },
+];
 ---
 
 <Layout title="Home - Top Online Form | Latest Govt Jobs & Sarkari Results">
@@ -66,15 +88,13 @@ const syllabus = [{ title: "UP Police Syllabus", url: "#" }];
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         
-        { [
-            { id: "latest-jobs", title: "Latest Jobs", color: "red", data: jobs },
-            { id: "admit-card", title: "Admit Card", color: "blue", data: admit },
-            { id: "results", title: "Results", color: "green", data: result }
-          ].map(section => (
+        {sections.map(section => (
             <div id={section.id} class={`bg-white border-2 border-${section.color}-600 rounded-lg shadow-sm`}>
+                
                 <div class={`bg-${section.color}-600 text-white font-bold p-2 text-center text-lg uppercase tracking-wide`}>
                     {section.title}
                 </div>
+
                 <div class="p-3 flex flex-col gap-2">
                     {section.data.map(item => (
                         <a href={item.url} class={`text-blue-700 font-semibold hover:underline hover:text-${section.color}-600 text-sm md:text-base border-b border-gray-100 pb-2 block`}>
@@ -85,10 +105,10 @@ const syllabus = [{ title: "UP Police Syllabus", url: "#" }];
                             {/* 2. Job Title */}
                             {item.title}
 
-                            {/* 3. TAG SYSTEM (Smart Logic) */}
+                            {/* 3. UPDATED COMPACT TAGS (Chota aur Clean) */}
                             {item.tag && (
                                 <span class={`
-                                    ml-2 text-[10px] uppercase font-bold px-1.5 py-0.5 rounded text-white inline-block align-middle
+                                    ml-2 text-[9px] uppercase font-bold px-1.5 py-[1px] rounded-sm text-white inline-block align-middle tracking-wide leading-none
                                     ${item.tagColor === 'red' ? 'bg-red-600 animate-pulse' : ''}
                                     ${item.tagColor === 'green' ? 'bg-green-600' : ''}
                                     ${item.tagColor === 'blue' ? 'bg-blue-600' : ''}
@@ -100,19 +120,18 @@ const syllabus = [{ title: "UP Police Syllabus", url: "#" }];
 
                         </a>
                     ))}
-                    <div class="text-right mt-2"><a href="#" class="text-xs font-bold text-gray-500 hover:text-black">View More »</a></div>
+                    <div class="text-right mt-2">
+                        <a href="#" class="text-xs font-bold text-gray-500 hover:text-black">View More »</a>
+                    </div>
                 </div>
             </div>
         ))}
-
-        {/* ... Aapke purane Answer Key, Admission, Syllabus boxes yahan niche aayenge ... */}
-        {/* Agar wo manually likhe hain toh wahan bhi ye <span> wala logic copy kar sakte hain */}
 
     </div>
 
     <article class="mt-10 prose max-w-none text-gray-700 bg-white p-6 rounded shadow border-t-2 border-gray-200">
         <h3 class="text-xl font-bold text-gray-800">Why Choose TopOnlineForm.com?</h3>
-        <p>TopOnlineForm is India's fastest-growing education portal.</p>
+        <p>TopOnlineForm is India's fastest-growing education portal. We provide instant updates on Sarkari Results, Rojgar Result, and all government job notifications directly to your mobile.</p>
     </article>
 
 </Layout>
