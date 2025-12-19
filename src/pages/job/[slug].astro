@@ -19,6 +19,37 @@ export async function getStaticPaths() {
       eligibility: '10+2 (Intermediate) Exam Passed from any recognized Board in India.',
       applyLink: 'https://uppbpb.gov.in',
       notificationLink: '#'
+      <div class="mt-8 bg-gray-50 p-4 rounded border border-gray-200">
+    <h3 class="text-xl font-bold mb-4">Frequently Asked Questions</h3>
+    <details class="mb-2 bg-white p-2 rounded shadow-sm">
+        <summary class="font-semibold cursor-pointer">What is the last date to apply?</summary>
+        <p class="mt-2 text-sm text-gray-600">The last date to apply is {job.lastDate}.</p>
+    </details>
+    <details class="mb-2 bg-white p-2 rounded shadow-sm">
+        <summary class="font-semibold cursor-pointer">What is the age limit?</summary>
+        <p class="mt-2 text-sm text-gray-600">The age limit is {job.ageLimit}.</p>
+    </details>
+</div>
+
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": `What is the last date for ${job.title}?`,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": `The last date to apply online is ${job.lastDate}.`
+    }
+  }, {
+    "@type": "Question",
+    "name": "What is the official website?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "The official website link is provided in the Important Links section above."
+    }
+  }]
+})} />
     },
     {
       slug: 'ssc-gd-constable-2025',
