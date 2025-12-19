@@ -1,0 +1,68 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+// Ye function batata hai ki kaun-kaun se job pages banane hain (SSG Logic)
+export async function getStaticPaths() {
+  const jobs = [
+    { 
+      slug: 'up-police-constable-2025', 
+      title: 'UP Police Constable Recruitment 2025',
+      date: '20 Dec 2025',
+      fees: 'General/OBC: ₹400, SC/ST: ₹400',
+      age: '18-25 Years',
+      link: 'https://uppbpb.gov.in'
+    },
+    // Aap yahan naye jobs add karte jayenge, pages apne aap bante jayenge
+  ];
+
+  return jobs.map((job) => ({
+    params: { slug: job.slug },
+    props: { job },
+  }));
+}
+
+const { job } = Astro.props;
+---
+
+<Layout title={job.title} description={`Apply online for ${job.title}. Check age limit, fees, and qualification.`}>
+  <div class="bg-white p-4 md:p-8 rounded shadow-lg border-t-4 border-red-600">
+    <h1 class="text-2xl md:text-3xl font-bold text-blue-800 text-center mb-6">{job.title}</h1>
+    
+    <div class="overflow-x-auto">
+      <table class="w-full border-collapse border border-gray-300 text-sm md:text-base">
+        <tr class="bg-gray-100">
+          <th class="border border-gray-300 p-2 text-left text-red-600">Post Date</th>
+          <td class="border border-gray-300 p-2">{job.date}</td>
+        </tr>
+        <tr>
+          <th class="border border-gray-300 p-2 text-left text-red-600">Application Fee</th>
+          <td class="border border-gray-300 p-2">{job.fees}</td>
+        </tr>
+        <tr class="bg-gray-100">
+          <th class="border border-gray-300 p-2 text-left text-red-600">Age Limit</th>
+          <td class="border border-gray-300 p-2">{job.age}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="mt-8 flex flex-col items-center space-y-4">
+      <a href={job.link} target="_blank" class="bg-green-600 text-white px-8 py-3 rounded-full font-bold text-lg hover:bg-green-700 w-full md:w-auto text-center">
+        Apply Online Now
+      </a>
+      <a href="/" class="text-blue-600 underline">Back to Home</a>
+    </div>
+  </div>
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org/",
+    "@type": "JobPosting",
+    "title": job.title,
+    "description": job.title,
+    "datePosted": "2025-12-20",
+    "hiringOrganization": {
+      "@type": "Organization",
+      "name": "Top Online Form",
+      "sameAs": "https://toponlineform.com"
+    }
+  })} />
+</Layout>
