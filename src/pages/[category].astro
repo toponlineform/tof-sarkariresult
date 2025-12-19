@@ -1,0 +1,89 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { allPosts } from '../data/index.js';
+
+export async function getStaticPaths() {
+  // 1. Yahan hum URL Slug aur Data Category ko Match kar rahe hain
+  const categories = [
+    { slug: 'latest-jobs', name: 'Latest Jobs' },
+    { slug: 'admit-card', name: 'Admit Card' },
+    { slug: 'results', name: 'Results' },
+    { slug: 'answer-key', name: 'Answer Key' },
+    { slug: 'admission', name: 'Admission' },
+    { slug: 'syllabus', name: 'Syllabus' }
+  ];
+
+  return categories.map((cat) => {
+    // 2. Data Filter Logic: Sirf wahi posts lo jo is category ki hain
+    const filteredPosts = allPosts.filter(post => post.category === cat.name);
+    
+    // Sort by Date (Latest First) - Agar date format DD/MM/YYYY hai
+    filteredPosts.sort((a, b) => {
+        const dateA = new Date(a.postDate.split('/').reverse().join('-'));
+        const dateB = new Date(b.postDate.split('/').reverse().join('-'));
+        return dateB - dateA;
+    });
+
+    return {
+      params: { category: cat.slug },
+      props: { categoryName: cat.name, posts: filteredPosts },
+    };
+  });
+}
+
+const { categoryName, posts } = Astro.props;
+---
+
+<Layout title={`${categoryName} - Top Online Form`} description={`Check all latest ${categoryName} updates here.`}>
+  
+  <div class="bg-white p-4 md:p-8 rounded-lg shadow-sm border border-gray-200 min-h-screen">
+    
+    {/* Page Header */}
+    <div class="border-b-4 border-red-600 pb-4 mb-6">
+      <h1 class="text-3xl font-extrabold text-gray-800 uppercase tracking-tight">
+        {categoryName} <span class="text-red-600">Archives</span>
+      </h1>
+      <p class="text-gray-500 text-sm mt-1">Total Updates: {posts.length}</p>
+    </div>
+
+    {/* Post List */}
+    {posts.length > 0 ? (
+      <div class="grid gap-4">
+        {posts.map((post) => (
+          <a href={`/job/${post.slug}`} class="block group">
+            <div class="flex flex-col md:flex-row md:items-center justify-between bg-gray-50 hover:bg-yellow-50 border border-gray-200 p-4 rounded-lg transition shadow-sm hover:shadow-md">
+              
+              {/* Left Side: Title */}
+              <div class="flex-1">
+                <h2 class="text-lg md:text-xl font-bold text-blue-800 group-hover:text-red-700 transition leading-tight">
+                  {/* ✅ User Demand: Show Short Title if available */}
+                  {post.shortTitle || post.title}
+                </h2>
+                {post.lastDate && (
+                    <p class="text-xs text-gray-500 mt-2 font-medium">
+                        Last Date: <span class="text-red-600">{post.lastDate}</span>
+                    </p>
+                )}
+              </div>
+
+              {/* Right Side: Button & Date */}
+              <div class="mt-3 md:mt-0 md:ml-4 flex items-center justify-between md:flex-col md:items-end gap-2 min-w-[120px]">
+                <span class="text-xs text-gray-400 font-mono">{post.postDate}</span>
+                <span class="bg-green-600 text-white text-xs font-bold px-3 py-1 rounded shadow group-hover:bg-green-700 transition">
+                  View Details
+                </span>
+              </div>
+
+            </div>
+          </a>
+        ))}
+      </div>
+    ) : (
+      <div class="text-center py-20 bg-gray-50 rounded border border-dashed border-gray-300">
+        <p class="text-gray-500 text-lg">No updates found in {categoryName} yet.</p>
+        <a href="/" class="text-blue-600 font-bold hover:underline mt-2 block">Go to Home</a>
+      </div>
+    )}
+
+  </div>
+</Layout>
