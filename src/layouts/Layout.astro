@@ -21,15 +21,21 @@ const siteUrl = "https://toponlineform.com";
 
     <header class="bg-red-700 text-white shadow-lg sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center">
-            <a href="/" class="text-2xl md:text-3xl font-extrabold uppercase tracking-tighter hover:text-gray-200 transition">
+            
+            <a href="/" class="text-2xl md:text-3xl font-extrabold uppercase tracking-tighter hover:text-gray-200 transition mb-2 md:mb-0">
                 TOP ONLINE FORM
             </a>
-            <nav class="flex space-x-4 mt-2 md:mt-0 font-semibold text-sm md:text-base">
-                <a href="/" class="hover:underline">Home</a>
-                <a href="#latest-jobs" class="hover:underline">Latest Jobs</a>
-                <a href="#results" class="hover:underline">Results</a>
-                <a href="#admit-card" class="hover:underline">Admit Card</a>
+            
+            <nav class="flex flex-wrap justify-center gap-3 md:gap-6 font-semibold text-xs md:text-sm uppercase tracking-wide">
+                <a href="/" class="hover:text-yellow-300 transition">Home</a>
+                <a href="#latest-jobs" class="hover:text-yellow-300 transition">Jobs</a>
+                <a href="#admit-card" class="hover:text-yellow-300 transition">Admit Card</a>
+                <a href="#results" class="hover:text-yellow-300 transition">Results</a>
+                <a href="#answer-key" class="hover:text-yellow-300 transition">Answer Key</a>
+                <a href="#admission" class="hover:text-yellow-300 transition">Admission</a>
+                <a href="#syllabus" class="hover:text-yellow-300 transition">Syllabus</a>
             </nav>
+
         </div>
     </header>
 
@@ -41,7 +47,15 @@ const siteUrl = "https://toponlineform.com";
         <div class="max-w-7xl mx-auto px-4 text-center">
             <h2 class="text-xl font-bold mb-2">TopOnlineForm.com</h2>
             <p class="text-gray-400 text-sm mb-4">India's Most Trusted Portal for Government Job Updates.</p>
-            <p class="mt-4 text-xs text-gray-600">Copyright © 2025 TopOnlineForm. All Rights Reserved.</p>
+            
+            <div class="flex justify-center flex-wrap gap-4 text-xs text-gray-500 mb-4">
+                <a href="/about" class="hover:text-white">About Us</a>
+                <a href="/contact" class="hover:text-white">Contact Us</a>
+                <a href="/disclaimer" class="hover:text-white">Disclaimer</a>
+                <a href="/privacy-policy" class="hover:text-white">Privacy Policy</a>
+            </div>
+            
+            <p class="text-xs text-gray-600">Copyright © 2025 TopOnlineForm. All Rights Reserved.</p>
         </div>
     </footer>
 
