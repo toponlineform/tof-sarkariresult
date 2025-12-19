@@ -1,18 +1,40 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 
-// Ye function batata hai ki kaun-kaun se job pages banane hain (SSG Logic)
+// --------------------------------------------------------
+// 1. DATA CENTER: Yahan aap apni Jobs ki list daalenge
+// --------------------------------------------------------
 export async function getStaticPaths() {
   const jobs = [
-    { 
-      slug: 'up-police-constable-2025', 
+    {
+      slug: 'up-police-constable-2025', // URL yaisa dikhega: /job/up-police-constable-2025
       title: 'UP Police Constable Recruitment 2025',
-      date: '20 Dec 2025',
-      fees: 'General/OBC: ₹400, SC/ST: ₹400',
-      age: '18-25 Years',
-      link: 'https://uppbpb.gov.in'
+      postName: 'Constable (Civil Police)',
+      totalPost: '60,244 Posts',
+      salary: '₹21,700 - ₹69,100 Level-3',
+      startDate: '15/01/2025',
+      lastDate: '15/02/2025',
+      fees: 'Gen/OBC: ₹400 | SC/ST: ₹400',
+      ageLimit: '18-25 Years (Relaxation Extra)',
+      eligibility: '10+2 (Intermediate) Exam Passed from any recognized Board in India.',
+      applyLink: 'https://uppbpb.gov.in',
+      notificationLink: '#'
     },
-    // Aap yahan naye jobs add karte jayenge, pages apne aap bante jayenge
+    {
+      slug: 'ssc-gd-constable-2025',
+      title: 'SSC GD Constable Online Form 2025',
+      postName: 'GD Constable (BSF, CISF, CRPF)',
+      totalPost: '26,146 Posts',
+      salary: '₹21,700 - ₹69,100',
+      startDate: '24/11/2024',
+      lastDate: '31/12/2024',
+      fees: 'Gen/OBC: ₹100 | SC/ST: ₹0',
+      ageLimit: '18-23 Years',
+      eligibility: 'Class 10th (Matric) Exam Passed.',
+      applyLink: 'https://ssc.nic.in',
+      notificationLink: '#'
+    }
+    // Nayi job add karne ke liye bas upar wala {...} copy karke comma (,) lagakar paste karein
   ];
 
   return jobs.map((job) => ({
@@ -24,45 +46,91 @@ export async function getStaticPaths() {
 const { job } = Astro.props;
 ---
 
-<Layout title={job.title} description={`Apply online for ${job.title}. Check age limit, fees, and qualification.`}>
-  <div class="bg-white p-4 md:p-8 rounded shadow-lg border-t-4 border-red-600">
-    <h1 class="text-2xl md:text-3xl font-bold text-blue-800 text-center mb-6">{job.title}</h1>
+<Layout title={job.title} description={`Apply Online for ${job.title}. Check Age Limit, Fees, Eligibility and Exam Date.`}>
+  
+  <article class="bg-white p-4 md:p-6 rounded-lg shadow-md border border-gray-200">
     
-    <div class="overflow-x-auto">
+    <h1 class="text-2xl md:text-3xl font-extrabold text-red-700 text-center mb-2">{job.title}</h1>
+    <p class="text-center text-gray-500 text-sm mb-6">Last Updated: {new Date().toLocaleDateString()}</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div class="border border-red-200 rounded p-3 bg-red-50">
+        <h3 class="text-red-700 font-bold text-lg mb-2">Important Dates</h3>
+        <ul class="text-sm space-y-1">
+          <li>Start Date: <b>{job.startDate}</b></li>
+          <li>Last Date: <b>{job.lastDate}</b></li>
+          <li>Exam Date: <b>Notify Soon</b></li>
+        </ul>
+      </div>
+      <div class="border border-blue-200 rounded p-3 bg-blue-50">
+        <h3 class="text-blue-700 font-bold text-lg mb-2">Application Fee</h3>
+        <p class="text-sm font-medium">{job.fees}</p>
+        <p class="text-xs text-gray-500 mt-1">Pay via Debit Card / Net Banking</p>
+      </div>
+    </div>
+
+    <h2 class="bg-gray-800 text-white p-2 font-bold text-center rounded-t">Vacancy Details</h2>
+    <div class="overflow-x-auto mb-6">
       <table class="w-full border-collapse border border-gray-300 text-sm md:text-base">
-        <tr class="bg-gray-100">
-          <th class="border border-gray-300 p-2 text-left text-red-600">Post Date</th>
-          <td class="border border-gray-300 p-2">{job.date}</td>
-        </tr>
-        <tr>
-          <th class="border border-gray-300 p-2 text-left text-red-600">Application Fee</th>
-          <td class="border border-gray-300 p-2">{job.fees}</td>
-        </tr>
-        <tr class="bg-gray-100">
-          <th class="border border-gray-300 p-2 text-left text-red-600">Age Limit</th>
-          <td class="border border-gray-300 p-2">{job.age}</td>
-        </tr>
+        <tbody>
+          <tr class="bg-gray-100">
+            <th class="border p-2 w-1/3 text-left">Post Name</th>
+            <td class="border p-2">{job.postName}</td>
+          </tr>
+          <tr>
+            <th class="border p-2 text-left">Total Post</th>
+            <td class="border p-2 font-bold text-green-700">{job.totalPost}</td>
+          </tr>
+          <tr class="bg-gray-100">
+            <th class="border p-2 text-left">Eligibility</th>
+            <td class="border p-2">{job.eligibility}</td>
+          </tr>
+          <tr>
+            <th class="border p-2 text-left">Age Limit</th>
+            <td class="border p-2">{job.ageLimit}</td>
+          </tr>
+          <tr class="bg-gray-100">
+            <th class="border p-2 text-left">Salary</th>
+            <td class="border p-2">{job.salary}</td>
+          </tr>
+        </tbody>
       </table>
     </div>
 
-    <div class="mt-8 flex flex-col items-center space-y-4">
-      <a href={job.link} target="_blank" class="bg-green-600 text-white px-8 py-3 rounded-full font-bold text-lg hover:bg-green-700 w-full md:w-auto text-center">
-        Apply Online Now
+    <h2 class="text-xl font-bold text-red-700 mb-4 border-b-2 border-red-200 inline-block">Important Links</h2>
+    <div class="flex flex-col md:flex-row gap-3">
+      <a href={job.applyLink} target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded text-center flex-1 shadow">
+        Apply Online
       </a>
-      <a href="/" class="text-blue-600 underline">Back to Home</a>
+      <a href={job.notificationLink} class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded text-center flex-1 shadow">
+        Download Notification
+      </a>
     </div>
-  </div>
+
+  </article>
 
   <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org/",
     "@type": "JobPosting",
     "title": job.title,
-    "description": job.title,
-    "datePosted": "2025-12-20",
+    "description": `Job Vacancy for ${job.postName}. Eligibility: ${job.eligibility}`,
+    "datePosted": new Date().toISOString().split('T')[0],
+    "validThrough": job.lastDate.split('/').reverse().join('-'), // Converts 15/02/2025 to 2025-02-15
+    "employmentType": "FULL_TIME",
     "hiringOrganization": {
       "@type": "Organization",
       "name": "Top Online Form",
       "sameAs": "https://toponlineform.com"
+    },
+    "baseSalary": {
+      "@type": "MonetaryAmount",
+      "currency": "INR",
+      "value": {
+        "@type": "QuantitativeValue",
+        "value": job.salary,
+        "unitText": "MONTH"
+      }
     }
   })} />
+
 </Layout>
