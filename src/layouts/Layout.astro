@@ -15,7 +15,7 @@ const siteUrl = "https://toponlineform.com";
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script is:inline src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 flex flex-col min-h-screen font-sans">
 
@@ -24,7 +24,6 @@ const siteUrl = "https://toponlineform.com";
             <a href="/" class="text-2xl md:text-3xl font-extrabold uppercase tracking-tighter hover:text-gray-200 transition">
                 TOP ONLINE FORM
             </a>
-            
             <nav class="flex space-x-4 mt-2 md:mt-0 font-semibold text-sm md:text-base">
                 <a href="/" class="hover:underline">Home</a>
                 <a href="#latest-jobs" class="hover:underline">Latest Jobs</a>
@@ -42,12 +41,6 @@ const siteUrl = "https://toponlineform.com";
         <div class="max-w-7xl mx-auto px-4 text-center">
             <h2 class="text-xl font-bold mb-2">TopOnlineForm.com</h2>
             <p class="text-gray-400 text-sm mb-4">India's Most Trusted Portal for Government Job Updates.</p>
-            <div class="text-xs text-gray-500 space-x-4">
-                <a href="/about" class="hover:text-white">About Us</a>
-                <a href="/contact" class="hover:text-white">Contact</a>
-                <a href="/disclaimer" class="hover:text-white">Disclaimer</a>
-                <a href="/privacy-policy" class="hover:text-white">Privacy Policy</a>
-            </div>
             <p class="mt-4 text-xs text-gray-600">Copyright © 2025 TopOnlineForm. All Rights Reserved.</p>
         </div>
     </footer>
