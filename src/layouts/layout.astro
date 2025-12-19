@@ -1,35 +1,54 @@
 ---
-const { title, description } = Astro.props;
+const { title, description = "Latest Government Jobs, Admit Cards, and Results at TopOnlineForm.com" } = Astro.props;
+const siteUrl = "https://toponlineform.com";
 ---
+
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title} | Sarkari Result 2025</title>
+    <title>{title} | Top Online Form</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={new URL(Astro.url.pathname, siteUrl)} />
     <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://yourdomain.com" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
 </head>
-<body class="bg-gray-200 font-sans">
-    <nav class="bg-red-700 text-white p-4 shadow-md sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center">
-            <h1 class="text-2xl font-black uppercase tracking-tighter">SARKARI RESULT</h1>
-            <div class="space-x-4 mt-2 md:mt-0 font-bold">
-                <a href="/" class="hover:bg-red-800 px-2 py-1 rounded">HOME</a>
-                <a href="#" class="hover:bg-red-800 px-2 py-1 rounded">LATEST JOBS</a>
-                <a href="#" class="hover:bg-red-800 px-2 py-1 rounded">ADMIT CARD</a>
-            </div>
-        </div>
-    </nav>
+<body class="bg-gray-100 flex flex-col min-h-screen font-sans">
 
-    <main class="max-w-6xl mx-auto p-4 min-h-screen">
+    <header class="bg-red-700 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center">
+            <a href="/" class="text-2xl md:text-3xl font-extrabold uppercase tracking-tighter hover:text-gray-200 transition">
+                TOP ONLINE FORM
+            </a>
+            
+            <nav class="flex space-x-4 mt-2 md:mt-0 font-semibold text-sm md:text-base">
+                <a href="/" class="hover:underline">Home</a>
+                <a href="#latest-jobs" class="hover:underline">Latest Jobs</a>
+                <a href="#results" class="hover:underline">Results</a>
+                <a href="#admit-card" class="hover:underline">Admit Card</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow w-full max-w-7xl mx-auto p-3 md:p-6">
         <slot />
     </main>
 
-    <footer class="bg-black text-white p-6 mt-10 text-center">
-        <p>© 2025 TopOnlineForm.com - All Rights Reserved</p>
-        <p class="text-xs text-gray-400 mt-2">Sabhi Latest Govt Jobs ki jankari sabse pehle yahan milti hai.</p>
+    <footer class="bg-gray-900 text-white py-8 mt-auto border-t-4 border-red-700">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h2 class="text-xl font-bold mb-2">TopOnlineForm.com</h2>
+            <p class="text-gray-400 text-sm mb-4">India's Most Trusted Portal for Government Job Updates.</p>
+            <div class="text-xs text-gray-500 space-x-4">
+                <a href="/about" class="hover:text-white">About Us</a>
+                <a href="/contact" class="hover:text-white">Contact</a>
+                <a href="/disclaimer" class="hover:text-white">Disclaimer</a>
+                <a href="/privacy-policy" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="mt-4 text-xs text-gray-600">Copyright © 2026 TopOnlineForm. All Rights Reserved.</p>
+        </div>
     </footer>
+
 </body>
 </html>
