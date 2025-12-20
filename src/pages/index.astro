@@ -1,81 +1,10 @@
 ---
 import Layout from '../layouts/Layout.astro';
-
-// ---------------------------------------------------------
-// DATA SECTION (Manual Tags + Data)
-// ---------------------------------------------------------
-
-// Row 1 Data
-const jobs = [
-  { 
-    title: "UP Police Constable Recruitment 2025", 
-    url: "/job/up-police-constable-2025",
-    tag: "Last Date Today", 
-    tagColor: "red",        
-    emoji: "🔥"             
-  },
-  { 
-    title: "SSC GD Constable Online Form 2025", 
-    url: "/job/ssc-gd-constable-2025",
-    tag: "New",
-    tagColor: "green"
-  },
-  { 
-    title: "RRB NTPC Online Form 2025", 
-    url: "#",
-    tag: "Date Extended",
-    tagColor: "purple"
-  }, 
-  { 
-    title: "Indian Army Agniveer Rally", 
-    url: "#" 
-  }
-];
-
-const admit = [
-  { title: "UPSC Prelims Admit Card 2025", url: "#", tag: "Released", tagColor: "green" },
-  { title: "CTET Jan 2025 Hall Ticket", url: "#" },
-  { title: "IBPS PO Mains Admit Card", url: "#" }
-];
-
-const result = [
-  { title: "Bihar Board 12th Result 2025", url: "#", tag: "Declared", tagColor: "red" },
-  { title: "SSC CGL Tier 1 Result", url: "#" },
-  { title: "UGC NET December 2024 Result", url: "#" }
-];
-
-// Row 2 Data
-const answerKey = [
-  { title: "SSC GD Answer Key 2025", url: "#", tag: "Available", tagColor: "blue" },
-  { title: "UP Police Answer Key PDF", url: "#" }
-];
-
-const admission = [
-  { title: "NTA NEET UG 2025 Online Form", url: "#", tag: "Apply Now", tagColor: "green" },
-  { title: "UP B.Ed Admission 2025", url: "#" }
-];
-
-const syllabus = [
-  { title: "UP Police Constable Syllabus", url: "#", tag: "PDF", tagColor: "red" },
-  { title: "SSC GD Exam Pattern", url: "#" }
-];
-
-// ---------------------------------------------------------
-// SECTION CONFIGURATION (Smart Loop Logic)
-// ---------------------------------------------------------
-const sections = [
-  // Row 1
-  { id: "latest-jobs", title: "Latest Jobs", color: "red", data: jobs },
-  { id: "admit-card", title: "Admit Card", color: "blue", data: admit },
-  { id: "results", title: "Results", color: "green", data: result },
-  // Row 2
-  { id: "answer-key", title: "Answer Key", color: "gray", data: answerKey }, // Gray look professional for keys
-  { id: "admission", title: "Admission", color: "orange", data: admission },
-  { id: "syllabus", title: "Syllabus", color: "purple", data: syllabus },
-];
+// ✅ Humne 'home' folder ke index se import kiya
+import { homeBoxes } from '../data/home/index.js';
 ---
 
-<Layout title="Home - Top Online Form | Latest Govt Jobs & Sarkari Results">
+<Layout title="Home - Top Online Form">
     
     <section class="text-center mb-8 bg-white p-6 rounded-lg shadow-sm border-b-4 border-red-600">
         <h1 class="text-2xl md:text-4xl font-extrabold text-gray-800 uppercase tracking-tight">
@@ -88,42 +17,40 @@ const sections = [
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         
-        {sections.map(section => (
-            <div id={section.id} class={`bg-white border-2 border-${section.color}-600 rounded-lg shadow-sm`}>
+        {homeBoxes.map(box => (
+            <div id={box.id} class={`bg-white border-2 border-${box.color}-600 rounded-lg shadow-sm h-full flex flex-col`}>
                 
-                <div class={`bg-${section.color}-600 text-white font-bold p-2 text-center text-lg uppercase tracking-wide`}>
-                    {section.title}
+                {/* Header */}
+                <div class={`bg-${box.color}-600 text-white font-bold p-2 text-center text-lg uppercase tracking-wide`}>
+                    {box.title}
                 </div>
 
-                <div class="p-3 flex flex-col gap-2">
-                    {section.data.map(item => (
-                        <a href={item.url} class={`text-blue-700 font-semibold hover:underline hover:text-${section.color}-600 text-sm md:text-base border-b border-gray-100 pb-2 block`}>
-                            
-                            {/* 1. Emoji Support */}
-                            {item.emoji && <span class="mr-1">{item.emoji}</span>}
-                            
-                            {/* 2. Job Title */}
-                            {item.title}
-
-                            {/* 3. UPDATED COMPACT TAGS (Chota aur Clean) */}
-                            {item.tag && (
+                {/* Content */}
+                <div class="p-3 flex flex-col gap-2 flex-grow">
+                    {box.links.map(link => (
+                        <a href={link.url} class={`text-blue-700 font-semibold hover:underline hover:text-${box.color}-600 text-sm md:text-base border-b border-gray-100 pb-2 block`}>
+                            {link.emoji && <span class="mr-1">{link.emoji}</span>}
+                            {link.title}
+                            {link.tag && (
                                 <span class={`
                                     ml-2 text-[9px] uppercase font-bold px-1.5 py-[1px] rounded-sm text-white inline-block align-middle tracking-wide leading-none
-                                    ${item.tagColor === 'red' ? 'bg-red-600 animate-pulse' : ''}
-                                    ${item.tagColor === 'green' ? 'bg-green-600' : ''}
-                                    ${item.tagColor === 'blue' ? 'bg-blue-600' : ''}
-                                    ${item.tagColor === 'purple' ? 'bg-purple-600' : ''}
-                                `}>
-                                    {item.tag}
-                                </span>
+                                    ${link.tagColor === 'red' ? 'bg-red-600 animate-pulse' : ''}
+                                    ${link.tagColor === 'green' ? 'bg-green-600' : ''}
+                                    ${link.tagColor === 'blue' ? 'bg-blue-600' : ''}
+                                    ${link.tagColor === 'purple' ? 'bg-purple-600' : ''}
+                                `}>{link.tag}</span>
                             )}
-
                         </a>
                     ))}
-                    <div class="text-right mt-2">
-                        <a href="#" class="text-xs font-bold text-gray-500 hover:text-black">View More »</a>
-                    </div>
                 </div>
+
+                {/* View More */}
+                <div class="p-2 text-right border-t border-gray-100 bg-gray-50 rounded-b-lg">
+                    <a href={box.viewMoreLink} class="text-xs font-bold text-gray-500 hover:text-black uppercase tracking-wider">
+                        View More »
+                    </a>
+                </div>
+
             </div>
         ))}
 
@@ -131,7 +58,7 @@ const sections = [
 
     <article class="mt-10 prose max-w-none text-gray-700 bg-white p-6 rounded shadow border-t-2 border-gray-200">
         <h3 class="text-xl font-bold text-gray-800">Why Choose TopOnlineForm.com?</h3>
-        <p>TopOnlineForm is India's fastest-growing education portal. We provide instant updates on Sarkari Results, Rojgar Result, and all government job notifications directly to your mobile.</p>
+        <p>TopOnlineForm is India's fastest-growing education portal.</p>
     </article>
 
 </Layout>
