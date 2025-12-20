@@ -373,12 +373,12 @@ const shareMsg = `Check this Govt Job: ${post.shortTitle || post.title}`;
       </div>
     )}
 
-    {/* 10. DISCLAIMER & SOCIAL */}
+    {/* 10. DISCLAIMER & SOCIAL SHARE (Fixed) */}
     <div class="mb-8 p-4 bg-gray-100 text-gray-500 text-xs text-center rounded border border-gray-200 italic">
         <strong>Disclaimer:</strong> Verify details from official websites before applying.
     </div>
 
-    {/* 11. 📲 SOCIAL SHARE (Pure Sharing Logic) */}
+    {/* ✅ UPDATED SOCIAL SHARE (Share Only, No Join) */}
     <div class="mb-10 bg-white p-6 rounded-xl border border-gray-200 shadow-sm text-center">
         <h3 class="text-gray-800 font-bold mb-4 text-sm md:text-base uppercase tracking-wide flex items-center justify-center gap-2">
             <span class="text-green-500">📢</span> Share this Update with Friends
@@ -392,7 +392,7 @@ const shareMsg = `Check this Govt Job: ${post.shortTitle || post.title}`;
             </a>
 
             {/* Telegram Share */}
-            <a href={`https://t.me/share/url?url=${currentUrl}&text=${encodeURIComponent(shareMsg)}`} target="_blank" class="bg-[#229ED9] hover:bg-[#1f8ubc] text-white font-bold py-3 px-6 rounded-full shadow-lg flex items-center gap-2 transition transform hover:-translate-y-1">
+            <a href={`https://t.me/share/url?url=${shareUrl}&text=${encodeURIComponent(shareMsg)}`} target="_blank" class="bg-[#229ED9] hover:bg-[#1f8ubc] text-white font-bold py-3 px-6 rounded-full shadow-lg flex items-center gap-2 transition transform hover:-translate-y-1">
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.694 0Zm5.216 8.784-1.76 8.297c-.13.587-.48.73-.974.454l-2.696-1.986-1.3 1.253c-.144.144-.265.265-.54.265l.192-2.738 4.985-4.506c.217-.193-.047-.3-.337-.107l-6.16 3.878-2.656-.83c-.577-.18-.588-.577.12-.852l10.378-4.004c.48-.173.9.117.748.876Z"/></svg>
               Share on Telegram
             </a>
