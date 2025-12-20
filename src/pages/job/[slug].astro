@@ -60,15 +60,15 @@ const getDaysLeft = (dates) => {
 
 const daysLeft = getDaysLeft(post.importantDates);
 
-// ✅ NEW SHARING LOGIC (Bold Title + Emoji + Link Below)
-const shareTitle = post.shortTitle || post.title;
+// ✅ NEW SHARING LOGIC (Full Title + Checkmark)
+const shareTitle = post.title; // Ab Full Title lega
 const shareUrl = `https://toponlineform.com/job/${post.slug}`;
 
-// WhatsApp Format: *Title* 👇 (New Line) Link
-const waLink = `https://api.whatsapp.com/send?text=*${encodeURIComponent(shareTitle)}* 👇%0A%0A${encodeURIComponent(shareUrl)}`;
+// WhatsApp Format: ✅ *Full Title* 👇 (New Line) Link
+const waLink = `https://api.whatsapp.com/send?text=✅ *${encodeURIComponent(shareTitle)}* 👇%0A%0A${encodeURIComponent(shareUrl)}`;
 
-// Telegram Format: Text = *Title* 👇 & Url = Link
-const tgLink = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=*${encodeURIComponent(shareTitle)}* 👇`;
+// Telegram Format: ✅ *Full Title* 👇 & Url = Link
+const tgLink = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=✅ *${encodeURIComponent(shareTitle)}* 👇`;
 
 ---
 
@@ -386,7 +386,7 @@ const tgLink = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=
         <strong>Disclaimer:</strong> Verify details from official websites before applying.
     </div>
 
-    {/* ✅ SOCIAL SHARE BUTTONS (Bold Title + Link Style) */}
+    {/* ✅ SOCIAL SHARE BUTTONS (Format: Checkmark + Bold Title + Link) */}
     <div class="mb-10 bg-white p-6 rounded-xl border border-gray-200 shadow-sm text-center">
         <h3 class="text-gray-800 font-bold mb-4 text-sm md:text-base uppercase tracking-wide flex items-center justify-center gap-2">
             <span class="text-green-500">📢</span> Share this Update with Friends
