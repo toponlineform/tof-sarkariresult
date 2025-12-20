@@ -2,7 +2,7 @@ export const syllabusBox = {
   id: "syllabus",
   title: "Syllabus",
   color: "pink",
-  viewMoreLink: "/results",
+  viewMoreLink: "/syllabus",
 
     // ✅ BAS YE 2 LINE ADD KARNI HAIN AUTOMATIC KE LIYE:
   auto: true,               // Switch ON and Use false for OFF Automation
