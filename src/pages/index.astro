@@ -50,7 +50,7 @@ const getBoxLinks = (box) => {
   // 5. Return Processed Data
   return filtered.slice(0, limit).map(post => ({
     title: post.shortTitle || post.title, 
-    url: `/job/${post.slug}`,
+    url: `/${post.slug}`, // 🚨 FIXED: Removed /job/ prefix
     tag: post.tag, 
     tagColor: post.tagColor || "green", // Default color Green
     emoji: post.emoji || null
@@ -73,7 +73,7 @@ const getBoxLinks = (box) => {
     </section>
 
     {/* ================================================================== */}
-    {/* 🚀 2. SOCIAL JOIN BUTTONS (WhatsApp, Telegram, X) - ADDED HERE */}
+    {/* 🚀 2. SOCIAL JOIN BUTTONS (WhatsApp, Telegram, X) */}
     {/* ================================================================== */}
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         
