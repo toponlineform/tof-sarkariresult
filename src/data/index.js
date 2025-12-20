@@ -4,6 +4,8 @@ import { admitCard } from './admitCard';
 import { results } from './results';
 import { admission } from './admission';
 import { answerKey } from './answerKey';
+import { syllabus } from './syllabus';
+
 
 // 2. Master List (Abhi isme sirf jobs hain)
 export const allPosts = [
@@ -11,7 +13,8 @@ export const allPosts = [
   ...admitCard,
   ...results,
   ...admission,
-  ...answerKey
+  ...answerKey,
+  ...syllabus
 ];
 
 // 3. Export for Home Page
@@ -20,4 +23,5 @@ export { admitCard };
 export { results };
 export { admission };
 export { answerKey };
+export { syllabus };
 
