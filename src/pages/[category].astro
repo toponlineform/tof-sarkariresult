@@ -66,7 +66,7 @@ const { categoryName, posts } = Astro.props;
     {posts.length > 0 ? (
       <div class="grid gap-4">
         {posts.map((post) => (
-          <a href={`/job/${post.slug}`} class="block group">
+          <a href={`/${post.slug}`} class="block group">
             <div class="flex flex-col md:flex-row md:items-center justify-between bg-gray-50 hover:bg-yellow-50 border border-gray-200 p-4 rounded-lg transition shadow-sm hover:shadow-md">
               
               {/* Left Side: Title */}
