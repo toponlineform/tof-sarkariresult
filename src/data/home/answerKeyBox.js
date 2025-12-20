@@ -1,7 +1,7 @@
 export const answerKeyBox = {
   id: "answer-key",
   title: "Answer Key",
-  color: "purple",
+  color: "orange",
   viewMoreLink: "/answer-key",
 
     // ✅ BAS YE 2 LINE ADD KARNI HAIN AUTOMATIC KE LIYE:
