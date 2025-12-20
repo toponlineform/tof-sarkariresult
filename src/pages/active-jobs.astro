@@ -107,7 +107,8 @@ const activePosts = getActiveJobs();
 
                 {/* Title Column (Fixed: No Total Posts, No Green Button) */}
                 <div class="p-3 pl-4 flex items-center">
-                  <a href={`/job/${post.slug}`} class="text-[#1a56db] font-bold text-xs md:text-sm hover:underline leading-tight block">
+                  {/* 🚨 FIXED: Removed /job/ from URL */}
+                  <a href={`/${post.slug}`} class="text-[#1a56db] font-bold text-xs md:text-sm hover:underline leading-tight block">
                     {post.shortTitle || post.title}
                     
                     {/* ✅ Admission Tag logic */}
