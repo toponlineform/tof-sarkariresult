@@ -1,0 +1,113 @@
+---
+import Layout from '../layouts/Layout.astro';
+// ✅ Master Data Import kiya
+import { allPosts } from '../data/index.js';
+
+// 1. URL se Query ('q') nikalo (Server Side)
+const query = Astro.url.searchParams.get('q')?.toLowerCase() || '';
+
+// 2. Filter Logic (Super Smart)
+// Ye Title, Tags, State, aur Eligibility sab check karega
+const searchResults = query 
+  ? allPosts.filter(post => {
+      const searchString = `
+        ${post.title} 
+        ${post.shortTitle || ''} 
+        ${post.state || ''} 
+        ${post.tags || ''} 
+        ${post.category || ''}
+        ${post.vacancyDetails?.map(v => v.eligibility).join(' ') || ''} 
+      `.toLowerCase();
+      
+      return searchString.includes(query);
+    })
+  : []; // Agar query nahi hai toh blank
+
+// Sort results by Date (Latest First)
+searchResults.sort((a, b) => {
+    const dateA = new Date(a.postDate.split('/').reverse().join('-'));
+    const dateB = new Date(b.postDate.split('/').reverse().join('-'));
+    return dateB - dateA;
+});
+---
+
+<Layout title={`Search Results for "${query}" - Top Online Form`} noIndex={true}>
+  
+  <div class="bg-gray-50 min-h-screen p-4 md:p-8">
+    
+    <div class="max-w-5xl mx-auto">
+        
+        {/* Header */}
+        <div class="mb-8 bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-800">
+                {query ? (
+                    <>Search Results for: <span class="text-red-600">"{query.toUpperCase()}"</span></>
+                ) : (
+                    "Search Jobs"
+                )}
+            </h1>
+            <p class="text-gray-500 mt-2">Found {searchResults.length} matching updates.</p>
+            
+            {/* Search Box (User manually bhi type kar sake) */}
+            <form action="/search" method="get" class="mt-4 flex gap-2">
+                <input 
+                    type="text" 
+                    name="q" 
+                    placeholder="Type '10th', 'UP', 'Police'..." 
+                    defaultValue={query}
+                    class="flex-1 p-3 border border-gray-300 rounded focus:border-blue-500 outline-none"
+                />
+                <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded font-bold hover:bg-blue-700">
+                    Search
+                </button>
+            </form>
+        </div>
+
+        {/* Results Grid */}
+        {searchResults.length > 0 ? (
+            <div class="grid gap-4">
+                {searchResults.map((post) => (
+                    <a href={`/job/${post.slug}`} class="block group">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between bg-white border border-gray-200 p-4 rounded-lg shadow-sm hover:shadow-md hover:border-blue-300 transition">
+                            
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="text-xs font-bold text-white bg-blue-600 px-2 py-0.5 rounded">
+                                        {post.category}
+                                    </span>
+                                    {post.state && (
+                                        <span class="text-xs font-bold text-gray-600 bg-gray-200 px-2 py-0.5 rounded">
+                                            {post.state}
+                                        </span>
+                                    )}
+                                </div>
+                                <h2 class="text-lg font-bold text-gray-800 group-hover:text-blue-700">
+                                    {post.shortTitle || post.title}
+                                </h2>
+                                <p class="text-sm text-gray-500 mt-1 line-clamp-1">
+                                    {post.shortInfo}
+                                </p>
+                            </div>
+
+                            <div class="mt-3 md:mt-0 md:ml-4 text-right">
+                                <span class="text-xs text-gray-400 block mb-1">Posted: {post.postDate}</span>
+                                <span class="text-red-600 font-bold text-sm">View Details »</span>
+                            </div>
+
+                        </div>
+                    </a>
+                ))}
+            </div>
+        ) : (
+            /* Empty State */
+            <div class="text-center py-20 bg-white rounded border border-dashed border-gray-300">
+                <p class="text-gray-500 text-lg mb-4">No jobs found for your search.</p>
+                <p class="text-sm text-gray-400">Try searching for 'SSC', 'Bank', '12th', or 'Bihar'.</p>
+                <a href="/" class="text-blue-600 font-bold hover:underline mt-4 block">Go Back Home</a>
+            </div>
+        )}
+
+    </div>
+  </div>
+
+</Layout>
