@@ -6,38 +6,39 @@ import { allPosts } from '../data/index.js';
 
 const getActiveJobs = () => {
   const today = new Date();
-  today.setHours(0, 0, 0, 0); // Reset time to midnight for accurate comparison
+  today.setHours(0, 0, 0, 0); // Midnight set karo taaki comparison sahi ho
 
   // 1. Filter Logic
   const active = allPosts.filter(post => {
-    // Find the "Last Date" field in importantDates
+    // Last Date dhoondo
     const lastDateObj = post.importantDates?.find(d => 
       d.label.toLowerCase().includes('last date') || 
       d.label.toLowerCase().includes('closing date')
     );
 
-    // If no Last Date is mentioned, we assume it's Active (Safety Fallback)
+    // Agar date nahi likhi, toh maan lo Active hai (Safety)
     if (!lastDateObj) return true;
 
-    // Parse Date (DD/MM/YYYY)
-    const dateStr = lastDateObj.value.replace(/ \(.*\)/, '').trim(); // Remove (5:00 PM) etc
-    const parts = dateStr.split(/[/-]/); // Handle / or -
+    // Date Parse (DD/MM/YYYY handle karega)
+    const dateStr = lastDateObj.value.replace(/ \(.*\)/, '').trim(); 
+    const parts = dateStr.split(/[/-]/); // slash ya dash handle karega
     
-    if (parts.length !== 3) return true; // If format is weird, keep it active
+    if (parts.length !== 3) return true; 
 
-    // Create Date Object (YYYY, MM-1, DD)
+    // Date Object banao (YYYY, MM-1, DD)
     const jobDate = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
     
-    // Check if Job Date is in the future or today
+    // Check karo future date hai ya aaj ki
     return jobDate >= today;
   });
 
-  // 2. Sort Logic (Closing Soonest First is best for Active Jobs tracker)
+  // 2. Sort Logic (Jo jaldi khatam ho raha hai wo upar)
   active.sort((a, b) => {
     const getDate = (p) => {
        const dObj = p.importantDates?.find(d => d.label.toLowerCase().includes('last date'));
-       if(!dObj) return 9999999999999; // Far future
+       if(!dObj) return 9999999999999;
        const pts = dObj.value.replace(/ \(.*\)/, '').trim().split(/[/-]/);
+       if (pts.length !== 3) return 9999999999999;
        return new Date(`${pts[2]}-${pts[1]}-${pts[0]}`).getTime();
     };
     return getDate(a) - getDate(b);
@@ -82,38 +83,39 @@ const activePosts = getActiveJobs();
       </div>
 
       {/* 3. TABLE HEADERS */}
-      <div class="grid grid-cols-[90px_1fr] md:grid-cols-[120px_1fr] bg-[#f1f1f1] border-b border-gray-300 text-xs md:text-sm font-bold text-gray-700 uppercase">
+      <div class="grid grid-cols-[100px_1fr] bg-[#f1f1f1] border-b border-gray-300 text-xs md:text-sm font-bold text-gray-700 uppercase">
         <div class="p-3 border-r border-gray-300 text-center flex items-center justify-center">Last Date</div>
-        <div class="p-3">Post Name / Details</div>
+        <div class="p-3 pl-4">Post Name / Details</div>
       </div>
 
       {/* 4. JOB LIST (Dynamic Rows) */}
       <div id="jobListContainer">
         {activePosts.length > 0 ? (
           activePosts.map((post) => {
-            // Extract Last Date for Display
-            const lastDateVal = post.importantDates?.find(d => d.label.toLowerCase().includes('last date'))?.value || "Check Notification";
-            
+            // Last Date Clean Format mein nikalo
+            let lastDateVal = post.importantDates?.find(d => d.label.toLowerCase().includes('last date'))?.value || "Check Notice";
+            // Extra text (jaise 5:00 PM) hata do
+            lastDateVal = lastDateVal.replace(/ \(.*\)/, '').trim();
+
             return (
-              <div class="job-row grid grid-cols-[90px_1fr] md:grid-cols-[120px_1fr] border-b border-gray-200 hover:bg-yellow-50 transition group">
+              <div class="job-row grid grid-cols-[100px_1fr] border-b border-gray-200 hover:bg-yellow-50 transition group">
                 
-                {/* Date Column */}
-                <div class="p-3 border-r border-gray-200 text-center flex flex-col justify-center text-[10px] md:text-xs font-bold text-red-600 bg-gray-50 group-hover:bg-yellow-50">
-                  <span>{lastDateVal.split(' ')[0]}</span> {/* Show only date part */}
+                {/* Date Column (Fixed: Ab poori date dikhegi) */}
+                <div class="p-3 border-r border-gray-200 text-center flex flex-col justify-center text-[11px] md:text-xs font-bold text-red-600 bg-gray-50 group-hover:bg-yellow-50">
+                  <span>{lastDateVal}</span>
                 </div>
 
-                {/* Title Column */}
-                <div class="p-3 flex items-center justify-between">
-                  <div>
-                    <a href={`/job/${post.slug}`} class="text-[#1a56db] font-bold text-xs md:text-sm hover:underline leading-tight block">
-                      {post.shortTitle || post.title}
-                    </a>
-                    {post.totalPost && <span class="text-[10px] text-gray-500 font-medium">Total Posts: {post.totalPost}</span>}
-                  </div>
-                  
-                  {/* Mobile Arrow / Desktop Button */}
-                  <a href={`/job/${post.slug}`} class="hidden md:inline-block ml-2 text-[10px] font-bold text-white bg-green-600 px-2 py-1 rounded hover:bg-green-700">
-                    Apply
+                {/* Title Column (Fixed: No Total Posts, No Green Button) */}
+                <div class="p-3 pl-4 flex items-center">
+                  <a href={`/job/${post.slug}`} class="text-[#1a56db] font-bold text-xs md:text-sm hover:underline leading-tight block">
+                    {post.shortTitle || post.title}
+                    
+                    {/* ✅ Admission Tag logic */}
+                    {post.category === 'Admission' && (
+                        <span class="ml-2 text-[10px] font-bold uppercase bg-orange-100 text-orange-700 px-2 py-0.5 rounded border border-orange-200 inline-block align-middle">
+                            Admission
+                        </span>
+                    )}
                   </a>
                 </div>
 
@@ -165,14 +167,13 @@ const activePosts = getActiveJobs();
         jobRows.forEach(row => {
           const text = row.innerText.toLowerCase();
           if (text.includes(query)) {
-            row.style.display = 'grid'; // Grid layout wapas lao
+            row.style.display = 'grid'; 
             hasVisible = true;
           } else {
             row.style.display = 'none';
           }
         });
 
-        // Show/Hide "No Results" message
         if (hasVisible) {
           noResultsMsg.classList.add('hidden');
         } else {
