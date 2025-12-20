@@ -5,7 +5,7 @@ export const admitCardBox = {
   viewMoreLink: "/admit-card",
     // ✅ BAS YE 2 LINE ADD KARNI HAIN AUTOMATIC KE LIYE:
   auto: true,               // Switch ON and Use false for OFF Automation
-  categoryName: "Latest Jobs",   // Master Data wali Category ka naam match hona chahiye
+  categoryName: "Admit Card",   // Master Data wali Category ka naam match hona chahiye
   
   links: [
     { title: "UPSC Prelims Admit Card", url: "#", tag: "Released", tagColor: "green" },
