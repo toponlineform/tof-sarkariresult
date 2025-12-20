@@ -1,29 +1,39 @@
 ---
 import Layout from '../layouts/Layout.astro';
-// ✅ Master Data Import kiya
 import { allPosts } from '../data/index.js';
 
-// 1. URL se Query ('q') nikalo (Server Side)
-const query = Astro.url.searchParams.get('q')?.toLowerCase() || '';
+// 1. Query nikalo
+const query = Astro.url.searchParams.get('q')?.toLowerCase().trim() || '';
 
-// 2. Filter Logic (Super Smart)
-// Ye Title, Tags, State, aur Eligibility sab check karega
+// 2. QUALIFICATION KEYWORDS (Ye wo shabd hain jinke liye hum strict checking karenge)
+const qualKeywords = ['10th', '12th', 'iti', 'diploma', 'graduate', 'b.tech', 'pg', 'mphw', 'b.ed'];
+
+// 3. Filter Logic (Super Pro)
 const searchResults = query 
   ? allPosts.filter(post => {
+      
+      // A. Agar Query koi Qualification hai (e.g., '10th', '12th')
+      // Toh sirf 'post.qualification' array check karo. Description mat dekho.
+      if (qualKeywords.some(k => query.includes(k))) {
+          // Safety check: Agar qualification field nahi hai toh false
+          return post.qualification?.some(q => q.toLowerCase().includes(query));
+      }
+
+      // B. Agar Query normal hai (e.g., 'Police', 'Bihar', 'SSC')
+      // Toh sab kuch check karo (Title, State, Tags etc.)
       const searchString = `
         ${post.title} 
         ${post.shortTitle || ''} 
         ${post.state || ''} 
         ${post.tags || ''} 
         ${post.category || ''}
-        ${post.vacancyDetails?.map(v => v.eligibility).join(' ') || ''} 
       `.toLowerCase();
       
       return searchString.includes(query);
     })
-  : []; // Agar query nahi hai toh blank
+  : [];
 
-// Sort results by Date (Latest First)
+// Sort: Latest Date First
 searchResults.sort((a, b) => {
     const dateA = new Date(a.postDate.split('/').reverse().join('-'));
     const dateB = new Date(b.postDate.split('/').reverse().join('-'));
@@ -34,7 +44,6 @@ searchResults.sort((a, b) => {
 <Layout title={`Search Results for "${query}" - Top Online Form`} noIndex={true}>
   
   <div class="bg-gray-50 min-h-screen p-4 md:p-8">
-    
     <div class="max-w-5xl mx-auto">
         
         {/* Header */}
@@ -48,12 +57,12 @@ searchResults.sort((a, b) => {
             </h1>
             <p class="text-gray-500 mt-2">Found {searchResults.length} matching updates.</p>
             
-            {/* Search Box (User manually bhi type kar sake) */}
+            {/* Search Box */}
             <form action="/search" method="get" class="mt-4 flex gap-2">
                 <input 
                     type="text" 
                     name="q" 
-                    placeholder="Type '10th', 'UP', 'Police'..." 
+                    placeholder="Try '10th', 'SSC', 'UP Police'..." 
                     defaultValue={query}
                     class="flex-1 p-3 border border-gray-300 rounded focus:border-blue-500 outline-none"
                 />
@@ -75,9 +84,10 @@ searchResults.sort((a, b) => {
                                     <span class="text-xs font-bold text-white bg-blue-600 px-2 py-0.5 rounded">
                                         {post.category}
                                     </span>
-                                    {post.state && (
-                                        <span class="text-xs font-bold text-gray-600 bg-gray-200 px-2 py-0.5 rounded">
-                                            {post.state}
+                                    {/* Qualification Badge Show Karo (Agar hai) */}
+                                    {post.qualification && (
+                                        <span class="text-xs font-bold text-gray-700 bg-yellow-100 px-2 py-0.5 rounded border border-yellow-200">
+                                            🎓 {post.qualification[0].toUpperCase()}
                                         </span>
                                     )}
                                 </div>
@@ -99,10 +109,11 @@ searchResults.sort((a, b) => {
                 ))}
             </div>
         ) : (
-            /* Empty State */
             <div class="text-center py-20 bg-white rounded border border-dashed border-gray-300">
                 <p class="text-gray-500 text-lg mb-4">No jobs found for your search.</p>
-                <p class="text-sm text-gray-400">Try searching for 'SSC', 'Bank', '12th', or 'Bihar'.</p>
+                <p class="text-sm text-gray-400">
+                    If you are searching for a qualification (e.g., 10th), make sure the data is updated.
+                </p>
                 <a href="/" class="text-blue-600 font-bold hover:underline mt-4 block">Go Back Home</a>
             </div>
         )}
