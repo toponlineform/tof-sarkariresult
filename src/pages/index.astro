@@ -5,9 +5,9 @@ import { homeBoxes } from '../data/home/index.js';
 // ✅ 2. Master Data (Automatic ke liye zaroori hai)
 import { allPosts } from '../data/index.js';
 
-// --- 🧠 HYBRID LOGIC ENGINE (Auto + Manual + Limit Control) ---
+// --- 🧠 HYBRID LOGIC ENGINE (Fixed Sorting) ---
 const getBoxLinks = (box) => {
-  // Agar Box MANUAL mode me hai (auto: false ya undefined)
+  // Agar Box MANUAL mode me hai (auto: false)
   if (!box.auto) {
     return box.links;
   }
@@ -17,32 +17,43 @@ const getBoxLinks = (box) => {
   // 1. Data Filter karo (Category match karke)
   const filtered = allPosts.filter(post => post.category === box.categoryName);
   
-  // 2. Sort karo (Newest First)
+  // 2. Sort karo (Newest First - FIXED)
   filtered.sort((a, b) => {
+      // Date Parse Function (DD/MM/YYYY handle karega)
       const parseDate = (dateStr) => {
           if (!dateStr) return 0;
-          const parts = dateStr.split('/');
+          const cleanDate = dateStr.trim(); // Extra space hatayein
+          const parts = cleanDate.split('/'); // 26/11/2025 -> [26, 11, 2025]
+          
+          if (parts.length !== 3) return 0; // Agar format galat hai
+
+          // Format: YYYY-MM-DDT00:00:00 (ISO safe format)
           return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`).getTime();
       };
+
       const timeA = parseDate(a.postDate);
       const timeB = parseDate(b.postDate);
       
-      if (timeB !== timeA) return timeB - timeA; // Date Priority
-      return (b.id || 0) - (a.id || 0); // ID Priority (Backup)
+      // ✅ LOGIC: Bada Time (New) pehle aana chahiye
+      if (timeB !== timeA) {
+          return timeB - timeA; 
+      }
+      
+      // ✅ BACKUP: Agar Date same hai, to Bada ID pehle (New Entry)
+      return (b.id || 0) - (a.id || 0); 
   });
 
-  // 3. LIMIT LOGIC (Aapki Demand: Top row = 30, Bottom row = 10)
-  // Top Row IDs: latest-jobs, admit-card, results
+  // 3. LIMIT LOGIC (Top Row = 30, Others = 10)
   const topRowIds = ['latest-jobs', 'admit-card', 'results'];
   const limit = topRowIds.includes(box.id) ? 30 : 10;
 
-  // 4. Data Return karo (Format karke)
+  // 4. Return Data
   return filtered.slice(0, limit).map(post => ({
     title: post.shortTitle || post.title, 
     url: `/job/${post.slug}`,
-    tag: post.tag, // Master Data se tag uthayega
+    tag: post.tag, 
     tagColor: post.tagColor || "green",
-    emoji: post.emoji || null // Agar emoji hai to wo bhi
+    emoji: post.emoji || null
   }));
 };
 ---
