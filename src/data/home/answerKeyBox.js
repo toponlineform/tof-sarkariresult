@@ -6,7 +6,7 @@ export const answerKeyBox = {
 
     // ✅ BAS YE 2 LINE ADD KARNI HAIN AUTOMATIC KE LIYE:
   auto: true,               // Switch ON and Use false for OFF Automation
-  categoryName: "Latest Jobs",   // Master Data wali Category ka naam match hona chahiye
+  categoryName: "Answer Key",   // Master Data wali Category ka naam match hona chahiye
   
   links: [
     { title: "Bihar Board 12th Result", url: "#", tag: "Declared", tagColor: "red" },
