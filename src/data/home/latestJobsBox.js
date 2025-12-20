@@ -3,6 +3,9 @@ export const latestJobsBox = {
   title: "Latest Jobs",
   color: "red",
   viewMoreLink: "/latest-jobs",
+  // ✅ BAS YE 2 LINE ADD KARNI HAIN AUTOMATIC KE LIYE:
+  auto: false,               // Switch OFF
+  categoryName: "Latest Jobs",   // Master Data wali Category ka naam match hona chahiye
   links: [
     { 
       title: "UP Police Constable Recruitment 2025", 
