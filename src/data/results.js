@@ -10,7 +10,7 @@ export const results = [
     title: "PSSSB Senior Assistant cum Inspector Typing Test Result 2025 OUT (Direct PDF) - Download Merit List @sssb.punjab.gov.in",
     shortInfo: "Punjab Subordinate Service Selection Board (PSSSB) has officially released the Typing Test Result for the post of Senior Assistant cum Inspector (Group B) under Advt No. 06/2023. Candidates who appeared for the Typing Skill Test held from 30th November to 2nd December 2025 can now check their qualifying status and download the Merit List PDF directly from the link below.",
     postDate: "08/12/2025",
-    category: "Result",
+    category: "Results",
 
     importantDates: [
       { label: "Typing Test Date", value: "30 Nov to 02 Dec 2025" },
