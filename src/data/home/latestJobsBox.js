@@ -4,7 +4,7 @@ export const latestJobsBox = {
   color: "red",
   viewMoreLink: "/latest-jobs",
   // ✅ BAS YE 2 LINE ADD KARNI HAIN AUTOMATIC KE LIYE:
-  auto: false,               // Switch OFF
+  auto: true,               // Switch ON
   categoryName: "Latest Jobs",   // Master Data wali Category ka naam match hona chahiye
   links: [
     { 
