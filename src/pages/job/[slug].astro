@@ -4,13 +4,12 @@ import { allPosts } from '../../data/index.js';
 
 // --- 1. STATIC PATHS GENERATION ---
 export async function getStaticPaths() {
-  const { allPosts } = await import('../../data/index.js');
   return allPosts.map((post) => {
-    // Related Logic: Same Category + Randomize/Latest
+    // Related Logic: Same Category + Latest First
     const relatedPosts = allPosts
       .filter(p => p.category === post.category && p.slug !== post.slug)
-      .sort((a, b) => Number(b.id) - Number(a.id)) // Latest First
-      .slice(0, 6); // Max 6 items
+      .sort((a, b) => Number(b.id) - Number(a.id))
+      .slice(0, 6);
 
     return {
       params: { slug: post.slug },
@@ -23,12 +22,12 @@ const { post, relatedPosts } = Astro.props;
 
 // --- 🛠️ 2. SMART HELPERS ---
 
-// Text Formatter (Bold, New Lines)
+// Text Formatter
 const formatText = (text) => {
   if (!text) return "";
   return text
-    .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold">$1</strong>') // Bold
-    .replace(/\n/g, '<br />'); // New Line
+    .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold">$1</strong>')
+    .replace(/\n/g, '<br />');
 };
 
 // Link Color Logic
@@ -46,12 +45,11 @@ const getDaysLeft = (dates) => {
     const lastDateObj = dates.find(d => d.label.toLowerCase().includes('last date'));
     if (!lastDateObj) return null;
 
-    // Parse DD/MM/YYYY or similar
-    const dateStr = lastDateObj.value.replace(/ \(.*\)/, '').trim(); // Remove extra text like (5:00 PM)
-    const parts = dateStr.split(/[/-]/); // Handle / or -
+    const dateStr = lastDateObj.value.replace(/ \(.*\)/, '').trim(); 
+    const parts = dateStr.split(/[/-]/); 
     if (parts.length < 3) return null;
     
-    // Assuming DD/MM/YYYY format
+    // Parse DD/MM/YYYY
     const targetDate = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
     const today = new Date();
     const diffTime = targetDate - today;
@@ -68,7 +66,7 @@ const shareMsg = `Check this Govt Job: ${post.shortTitle || post.title}`;
 
 <Layout title={post.title} description={post.shortInfo} keywords={post.tags}>
   
-  {/* 🍞 BREADCRUMBS (SEO Navigation) */}
+  {/* 🍞 BREADCRUMBS */}
   <nav class="flex text-xs md:text-sm text-gray-500 mb-4 px-1" aria-label="Breadcrumb">
     <ol class="inline-flex items-center space-x-1 md:space-x-3">
       <li><a href="/" class="hover:text-blue-600">Home</a></li>
@@ -79,7 +77,7 @@ const shareMsg = `Check this Govt Job: ${post.shortTitle || post.title}`;
     </ol>
   </nav>
 
-  {/* 📄 MAIN ARTICLE CONTAINER */}
+  {/* 📄 MAIN ARTICLE */}
   <article class="bg-white p-4 md:p-8 rounded-xl shadow-sm border border-gray-200 font-sans mb-10">
     
     {/* 1. HEADER & COUNTDOWN */}
@@ -97,7 +95,7 @@ const shareMsg = `Check this Govt Job: ${post.shortTitle || post.title}`;
         </span>
       </div>
 
-      {/* ⏳ COUNTDOWN TIMER */}
+      {/* Timer */}
       {daysLeft !== null && daysLeft >= 0 && (
         <div class={`inline-block px-4 py-2 rounded-full font-bold text-sm shadow-sm ${daysLeft <= 3 ? 'bg-red-100 text-red-700 animate-pulse border border-red-200' : 'bg-green-100 text-green-800 border border-green-200'}`}>
           ⏳ {daysLeft === 0 ? "Last Date Today!" : `Only ${daysLeft} Days Left to Apply!`}
@@ -120,10 +118,26 @@ const shareMsg = `Check this Govt Job: ${post.shortTitle || post.title}`;
       </div>
     )}
 
-    {/* 3. DATES & FEES (Grid) */}
+    {/* 📋 TABLE OF CONTENTS (Google Sitelinks Booster) */}
+    <div class="mb-8 bg-gray-50 border border-gray-200 rounded-xl p-4 md:p-5 shadow-sm">
+        <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2 text-sm uppercase tracking-wide">
+            <span class="text-blue-600">📑</span> Table of Contents
+        </h3>
+        <nav class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 text-sm font-medium text-blue-700 underline-offset-2">
+            <a href="#important-dates" class="hover:underline hover:text-blue-900 transition">📅 Important Dates</a>
+            <a href="#application-fee" class="hover:underline hover:text-blue-900 transition">💸 Application Fee</a>
+            <a href="#vacancy-details" class="hover:underline hover:text-blue-900 transition">📦 Vacancy & Eligibility</a>
+            {post.examPattern && <a href="#exam-pattern" class="hover:underline hover:text-blue-900 transition">📝 Exam Pattern</a>}
+            {post.howToApply && <a href="#how-to-apply" class="hover:underline hover:text-blue-900 transition">📝 How to Apply</a>}
+            <a href="#important-links" class="hover:underline hover:text-red-700 transition text-red-600">🔗 Important Links</a>
+            <a href="#faqs" class="hover:underline hover:text-blue-900 transition">❓ FAQs</a>
+        </nav>
+    </div>
+
+    {/* 3. DATES & FEES GRID */}
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
       {/* Dates */}
-      <div class="border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition">
+      <div id="important-dates" class="border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition">
         <div class="bg-gradient-to-r from-red-50 to-white px-4 py-3 border-b border-red-100 flex items-center gap-2">
           <span class="text-xl">📅</span> <h3 class="font-bold text-red-800">Important Dates</h3>
         </div>
@@ -140,7 +154,7 @@ const shareMsg = `Check this Govt Job: ${post.shortTitle || post.title}`;
       </div>
 
       {/* Fees */}
-      <div class="border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition">
+      <div id="application-fee" class="border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition">
         <div class="bg-gradient-to-r from-blue-50 to-white px-4 py-3 border-b border-blue-100 flex items-center gap-2">
           <span class="text-xl">💸</span> <h3 class="font-bold text-blue-800">Application Fee</h3>
         </div>
@@ -157,10 +171,10 @@ const shareMsg = `Check this Govt Job: ${post.shortTitle || post.title}`;
       </div>
     </div>
 
-    {/* 4. AGE & ELIGIBILITY */}
-    <div class="mb-8 border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+    {/* 4. VACANCY & ELIGIBILITY */}
+    <div id="vacancy-details" class="mb-8 border border-gray-200 rounded-xl overflow-hidden shadow-sm">
         <div class="bg-gray-100 px-4 py-3 border-b border-gray-200 font-bold text-gray-800">
-            🎓 Eligibility & Age Limit
+            🎓 Vacancy Details, Age & Eligibility
         </div>
         <div class="p-4 md:p-6 bg-white">
             <p class="mb-4 text-sm md:text-base text-gray-700 bg-blue-50 p-3 rounded border-l-4 border-blue-500">
@@ -168,7 +182,6 @@ const shareMsg = `Check this Govt Job: ${post.shortTitle || post.title}`;
                 {post.ageRelaxation && <span class="block text-xs mt-1 text-gray-500">(Age Relaxation Extra as per Rules)</span>}
             </p>
             
-            {/* Vacancy Table */}
             {post.vacancyDetails && (
                 <div class="overflow-x-auto rounded border border-gray-200">
                     <table class="w-full text-sm text-left">
@@ -194,24 +207,19 @@ const shareMsg = `Check this Govt Job: ${post.shortTitle || post.title}`;
         </div>
     </div>
 
-    {/* 5. 💰 PAY SCALE / SALARY SECTION (New Feature) */}
+    {/* 5. 💰 SALARY SECTION */}
     {(post.salary || post.salaryDetails) && (
       <div class="mb-8 border border-green-200 rounded-xl overflow-hidden shadow-sm bg-green-50">
         <div class="px-4 py-3 border-b border-green-200 flex items-center gap-2">
            <span class="text-xl">💰</span>
            <h3 class="font-bold text-green-900 text-lg">Pay Scale & Salary Details</h3>
         </div>
-        
         <div class="p-4">
-            {/* Case A: Detailed Table */}
             {post.salaryDetails ? (
                 <div class="overflow-x-auto bg-white rounded border border-green-200">
                     <table class="w-full text-sm">
                         <thead class="bg-green-100 text-green-900">
-                            <tr>
-                                <th class="p-2 border border-green-200">Post Name</th>
-                                <th class="p-2 border border-green-200">Pay Level / Salary</th>
-                            </tr>
+                            <tr><th class="p-2 border border-green-200">Post Name</th><th class="p-2 border border-green-200">Pay Level / Salary</th></tr>
                         </thead>
                         <tbody>
                             {post.salaryDetails.map(row => (
@@ -224,7 +232,6 @@ const shareMsg = `Check this Govt Job: ${post.shortTitle || post.title}`;
                     </table>
                 </div>
             ) : (
-                /* Case B: Simple Text */
                 <p class="text-gray-800 font-medium bg-white p-3 rounded border border-green-200 shadow-sm inline-block">
                     ✅ <strong>Salary:</strong> {post.salary}
                 </p>
@@ -237,7 +244,7 @@ const shareMsg = `Check this Govt Job: ${post.shortTitle || post.title}`;
     {post.stateWiseVacancy && post.stateWiseVacancy.length > 0 && (
       <div class="mb-8">
         <h3 class="text-lg font-bold text-gray-800 mb-2 px-1 border-l-4 border-gray-800 pl-2">
-          {post.vacancyTableTitle || "Detailed Vacancy Distribution"}
+          {post.vacancyTableTitle || "Detailed Vacancy Breakdown"}
         </h3>
         <div class="overflow-x-auto rounded border border-gray-300 shadow-sm">
           <table class="w-full text-sm text-left whitespace-nowrap">
@@ -262,10 +269,9 @@ const shareMsg = `Check this Govt Job: ${post.shortTitle || post.title}`;
       </div>
     )}
 
-    {/* 7. EXAM PATTERN & EXTRA SECTIONS */}
-    {/* Exam Pattern */}
+    {/* 7. EXAM PATTERN & SELECTION */}
     {post.examPattern && (
-      <div class="mb-8">
+      <div id="exam-pattern" class="mb-8">
         <h3 class="text-xl font-bold text-gray-800 mb-3">Exam Pattern & Selection Process</h3>
         <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-100">
             {post.examPattern.details && (
@@ -274,7 +280,6 @@ const shareMsg = `Check this Govt Job: ${post.shortTitle || post.title}`;
                 </ul>
             )}
             
-            {/* Logic for Tables (Simple or Stages) */}
             {[
                ...(post.examPattern.stages || []),
                post.examPattern.table ? { title: "Exam Pattern", data: post.examPattern.table } : null,
@@ -297,15 +302,11 @@ const shareMsg = `Check this Govt Job: ${post.shortTitle || post.title}`;
                         <tr class="border-b">
                            {stage.tableType === 'pet' ? (
                              <>
-                               <td class="p-2 font-medium">{r.activity}</td>
-                               <td class="p-2 text-center">{r.male}</td>
-                               <td class="p-2 text-center">{r.female}</td>
+                               <td class="p-2 font-medium">{r.activity}</td><td class="p-2 text-center">{r.male}</td><td class="p-2 text-center">{r.female}</td>
                              </>
                            ) : (
                              <>
-                               <td class="p-2 font-medium">{r.subject}</td>
-                               <td class="p-2 text-center">{r.questions}</td>
-                               <td class="p-2 text-center">{r.marks}</td>
+                               <td class="p-2 font-medium">{r.subject}</td><td class="p-2 text-center">{r.questions}</td><td class="p-2 text-center">{r.marks}</td>
                              </>
                            )}
                         </tr>
@@ -319,17 +320,13 @@ const shareMsg = `Check this Govt Job: ${post.shortTitle || post.title}`;
       </div>
     )}
 
-    {/* Extra Sections (Documents, Venues) */}
+    {/* Extra Sections */}
     {post.extraSections && post.extraSections.map(section => (
       <div class="mb-8">
         <h3 class="text-lg font-bold text-gray-800 mb-2">{section.title}</h3>
         <div class="bg-gray-50 p-4 rounded border border-gray-200 text-sm">
             {section.text && <p class="mb-2 whitespace-pre-line" set:html={formatText(section.text)}></p>}
-            {section.list && (
-                <ul class="list-disc pl-5 space-y-1 text-gray-700">
-                    {section.list.map(l => <li set:html={formatText(l)}></li>)}
-                </ul>
-            )}
+            {section.list && <ul class="list-disc pl-5 space-y-1 text-gray-700">{section.list.map(l => <li set:html={formatText(l)}></li>)}</ul>}
             {section.tableData && (
                 <div class="overflow-x-auto mt-2 bg-white rounded border border-gray-200">
                     <table class="w-full text-sm"><thead class="bg-gray-100 font-bold"><tr>{Object.keys(section.tableData[0]).map(k => <th class="p-2 border capitalize">{k}</th>)}</tr></thead><tbody>{section.tableData.map(row => <tr>{Object.values(row).map(v => <td class="p-2 border text-center">{v}</td>)}</tr>)}</tbody></table>
@@ -339,9 +336,9 @@ const shareMsg = `Check this Govt Job: ${post.shortTitle || post.title}`;
       </div>
     ))}
 
-    {/* 8. 📝 HOW TO APPLY (Moved Before Links) */}
+    {/* 8. 📝 HOW TO APPLY (Before Links) */}
     {post.howToApply && (
-      <div class="mb-8">
+      <div id="how-to-apply" class="mb-8">
         <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
           <span class="bg-yellow-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm">?</span>
           How to Apply
@@ -354,70 +351,48 @@ const shareMsg = `Check this Govt Job: ${post.shortTitle || post.title}`;
       </div>
     )}
 
-    {/* 9. 🔗 IMPORTANT LINKS (Modern Pill Design) */}
+    {/* 9. 🔗 IMPORTANT LINKS (Modern) */}
     {post.links && (
       <div id="important-links" class="mb-8 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
-        
-        {/* Header */}
         <div class="bg-red-600 p-4 text-center">
-          <h2 class="text-xl md:text-2xl font-black text-white tracking-wide uppercase">
-            🔗 Important Links
-          </h2>
+          <h2 class="text-xl md:text-2xl font-black text-white tracking-wide uppercase">🔗 Important Links</h2>
         </div>
-
-        {/* Links Container */}
         <div class="p-4 md:p-6 flex flex-col gap-4 bg-gray-50">
           {post.links.map(link => (
             <div class="flex flex-col md:flex-row items-center justify-between bg-white p-3 md:p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition gap-3">
-              
-              {/* Link Label */}
               <div class="flex items-center gap-3 w-full md:w-auto">
                 <span class="text-red-500 text-xl hidden md:block">👉</span>
-                <span class="font-bold text-gray-800 text-sm md:text-base uppercase tracking-tight text-center md:text-left w-full">
-                  {link.title}
-                </span>
+                <span class="font-bold text-gray-800 text-sm md:text-base uppercase tracking-tight text-center md:text-left w-full">{link.title}</span>
               </div>
-
-              {/* Action Button */}
-              <a 
-                href={link.url} 
-                target="_blank" 
-                class={`w-full md:w-auto px-6 py-2.5 rounded-full text-xs md:text-sm font-bold uppercase tracking-wider text-center shadow-sm transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2 border ${getLinkColor(link.title)}`}
-              >
+              <a href={link.url} target="_blank" class={`w-full md:w-auto px-6 py-2.5 rounded-full text-xs md:text-sm font-bold uppercase tracking-wider text-center shadow-sm transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2 border ${getLinkColor(link.title)}`}>
                 Click Here <span class="text-lg leading-none">↗</span>
               </a>
-
             </div>
           ))}
         </div>
       </div>
     )}
 
-    {/* 10. ⚠️ DISCLAIMER */}
+    {/* 10. DISCLAIMER & SOCIAL */}
     <div class="mb-8 p-4 bg-gray-100 text-gray-500 text-xs text-center rounded border border-gray-200 italic">
-        <strong>Disclaimer:</strong> While we try to provide accurate information, TopOnlineForm.com is not responsible for any errors. Please verify details from the official website notification before applying.
+        <strong>Disclaimer:</strong> Verify details from official websites before applying.
     </div>
 
-    {/* 11. 📲 SOCIAL SHARE */}
     <div class="mb-10 bg-white p-6 rounded-xl border border-gray-200 shadow-sm text-center">
-        <h3 class="text-gray-800 font-bold mb-4 text-sm md:text-base uppercase tracking-wide">
-            Join Our Community for Instant Updates
-        </h3>
+        <h3 class="text-gray-800 font-bold mb-4 text-sm md:text-base uppercase tracking-wide">Join Our Community</h3>
         <div class="flex flex-wrap justify-center gap-4">
-            <a href="https://telegram.me" target="_blank" class="bg-[#229ED9] hover:bg-[#1f8ubc] text-white font-bold py-3 px-8 rounded-full shadow-lg flex items-center gap-2 transition transform hover:scale-105">
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.694 0Zm5.216 8.784-1.76 8.297c-.13.587-.48.73-.974.454l-2.696-1.986-1.3 1.253c-.144.144-.265.265-.54.265l.192-2.738 4.985-4.506c.217-.193-.047-.3-.337-.107l-6.16 3.878-2.656-.83c-.577-.18-.588-.577.12-.852l10.378-4.004c.48-.173.9.117.748.876Z"/></svg>
-              Join Telegram
+            <a href="https://telegram.me" target="_blank" class="bg-[#229ED9] text-white font-bold py-3 px-8 rounded-full shadow-lg flex items-center gap-2 hover:opacity-90">
+              <span>Telegram</span>
             </a>
-            <a href={`https://api.whatsapp.com/send?text=${encodeURIComponent(shareMsg)} ${shareUrl}`} target="_blank" class="bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold py-3 px-8 rounded-full shadow-lg flex items-center gap-2 transition transform hover:scale-105">
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
-              Share on WhatsApp
+            <a href={`https://api.whatsapp.com/send?text=${encodeURIComponent(shareMsg)} ${shareUrl}`} target="_blank" class="bg-[#25D366] text-white font-bold py-3 px-8 rounded-full shadow-lg flex items-center gap-2 hover:opacity-90">
+              <span>WhatsApp</span>
             </a>
         </div>
     </div>
 
-    {/* 12. ❓ FAQs (Accordion) */}
+    {/* 11. ❓ FAQs */}
     {post.faqs && (
-      <div class="mb-8">
+      <div id="faqs" class="mb-8">
         <h3 class="text-2xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h3>
         <div class="space-y-3">
           {post.faqs.map(faq => (
@@ -426,9 +401,7 @@ const shareMsg = `Check this Govt Job: ${post.shortTitle || post.title}`;
                 {faq.question}
                 <span class="text-blue-500 group-open:rotate-180 transition transform duration-200">▼</span>
               </summary>
-              <div class="px-4 pb-4 pt-0 text-gray-600 text-sm leading-relaxed border-t border-gray-100 mt-2">
-                {faq.answer}
-              </div>
+              <div class="px-4 pb-4 pt-0 text-gray-600 text-sm leading-relaxed border-t border-gray-100 mt-2">{faq.answer}</div>
             </details>
           ))}
         </div>
@@ -437,7 +410,7 @@ const shareMsg = `Check this Govt Job: ${post.shortTitle || post.title}`;
 
   </article>
 
-  {/* 🔍 YOU MAY ALSO LIKE (Outside Article, at Bottom) */}
+  {/* 🔍 YOU MAY ALSO LIKE */}
   {relatedPosts.length > 0 && (
     <div class="max-w-6xl mx-auto mb-16 px-4">
       <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center uppercase tracking-wide flex items-center justify-center gap-2">
@@ -447,12 +420,8 @@ const shareMsg = `Check this Govt Job: ${post.shortTitle || post.title}`;
         {relatedPosts.map(p => (
           <a href={`/job/${p.slug}`} class="group bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition transform hover:-translate-y-1">
             <div class="p-5">
-              <span class="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-1 rounded mb-2 inline-block">
-                {p.category}
-              </span>
-              <h4 class="font-bold text-gray-800 text-lg leading-snug group-hover:text-blue-600 transition mb-2">
-                {p.shortTitle || p.title}
-              </h4>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-1 rounded mb-2 inline-block">{p.category}</span>
+              <h4 class="font-bold text-gray-800 text-lg leading-snug group-hover:text-blue-600 transition mb-2">{p.shortTitle || p.title}</h4>
               <div class="flex justify-between items-center text-xs text-gray-500 mt-4 border-t border-gray-100 pt-3">
                 <span>📅 {p.postDate}</span>
                 <span class="text-red-500 font-bold group-hover:underline">View Details »</span>
@@ -464,17 +433,37 @@ const shareMsg = `Check this Govt Job: ${post.shortTitle || post.title}`;
     </div>
   )}
 
-  {/* 🤖 JSON-LD SCHEMA */}
+  {/* 🤖 ULTIMATE PRO SCHEMA */}
   <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
-    "@type": "JobPosting",
-    "title": post.title,
-    "description": post.shortInfo,
-    "datePosted": post.postDate ? new Date(post.postDate.split('/').reverse().join('-')).toISOString() : new Date().toISOString(),
-    "validThrough": post.importantDates?.find(d => d.label.toLowerCase().includes("last date"))?.value.replace(/\//g, '-') || "2026-12-31",
-    "hiringOrganization": { "@type": "Organization", "name": "Top Online Form" },
-    "jobLocation": { "@type": "Place", "address": { "@type": "PostalAddress", "addressCountry": "IN", "addressRegion": post.state || "India" } },
-    "baseSalary": post.salary ? { "@type": "MonetaryAmount", "currency": "INR", "value": { "@type": "QuantitativeValue", "value": post.salary } } : undefined
+    "@graph": [
+      {
+        "@type": "JobPosting",
+        "title": post.title,
+        "description": post.shortInfo,
+        "datePosted": post.postDate ? new Date(post.postDate.split('/').reverse().join('-')).toISOString() : new Date().toISOString(),
+        "validThrough": post.importantDates?.find(d => d.label.toLowerCase().includes("last date"))?.value.replace(/\//g, '-') || "2026-12-31",
+        "hiringOrganization": { "@type": "Organization", "name": "Top Online Form", "url": "https://toponlineform.com" },
+        "jobLocation": { "@type": "Place", "address": { "@type": "PostalAddress", "addressCountry": "IN", "addressRegion": post.state || "India" } },
+        "baseSalary": post.salary ? { "@type": "MonetaryAmount", "currency": "INR", "value": { "@type": "QuantitativeValue", "value": post.salary } } : undefined
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://toponlineform.com" },
+          { "@type": "ListItem", "position": 2, "name": post.category, "item": `https://toponlineform.com/${post.category.toLowerCase().replace(/\s+/g, '-')}` },
+          { "@type": "ListItem", "position": 3, "name": post.shortTitle || post.title }
+        ]
+      },
+      post.faqs ? {
+        "@type": "FAQPage",
+        "mainEntity": post.faqs.map(faq => ({
+          "@type": "Question",
+          "name": faq.question,
+          "acceptedAnswer": { "@type": "Answer", "text": faq.answer }
+        }))
+      } : null
+    ].filter(Boolean)
   })} />
 
 </Layout>
