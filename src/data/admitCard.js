@@ -1,0 +1,1155 @@
+export const admitCard = [
+  // ==================================================
+  //                ADMIT CARDS (ID 1001 - 2000)
+  // ==================================================
+
+  // --- 1021. DFCCIL Stage 2 Admit Card 2025 (MTS, Executive, Jr. Manager) ---
+  {
+    id: 1021,
+    slug: "dfccil-stage-2-admit-card-2025",
+    shortTitle: "DFCCIL Stage 2 Admit Card 2025",
+    title: "DFCCIL MTS, Executive & Jr. Manager Stage 2 Admit Card 2025 Out (Direct Link) - Download Hall Ticket",
+    shortInfo: "Dedicated Freight Corridor Corporation of India Ltd (DFCCIL), under the Ministry of Railways, has officially released the Stage 2 Admit Card for the recruitment of 642 posts including Executive (Civil, Electrical, S&T), Multi Tasking Staff (MTS), and Junior Manager (Finance). The Stage 2 exam is scheduled for 13th December 2025. Candidates can download their hall ticket from the direct link below.",
+    postDate: "09/12/2025",
+    category: "Admit Card",
+
+    salary: "₹16,000 - ₹1,60,000 (Post Wise Pay Scale)",
+
+    importantDates: [
+      { label: "Notification No.", value: "01/DR/2025" },
+      { label: "Stage-I Result Declared", value: "29/10/2025" },
+      { label: "Stage-2 Exam City Link", value: "26/11/2025" },
+      { label: "Stage-2 Admit Card Released", value: "09/12/2025" },
+      { label: "Stage-2 Exam Date", value: "13th December 2025" }
+    ],
+
+    applicationFee: [
+      { category: "Note", amount: "No Fee for downloading Admit Card." }
+    ],
+
+    ageLimit: "As on 01/07/2025",
+
+    // ✅ Detailed Vacancy Table (Cross-checked from PDF)
+    vacancyDetails: [
+      { postName: "Multi Tasking Staff (MTS)", totalPost: "464", eligibility: "Matric + ITI (NCVT/SCVT) with min 60% marks" },
+      { postName: "Executive (Signal & Telecommunication)", totalPost: "75", eligibility: "3 Years Diploma in ECE/EE/IT/CS etc. with 60% marks" },
+      { postName: "Executive (Electrical)", totalPost: "64", eligibility: "3 Years Diploma in Electrical/Electronics etc. with 60% marks" },
+      { postName: "Executive (Civil)", totalPost: "36", eligibility: "3 Years Diploma in Civil Engg with 60% marks" },
+      { postName: "Junior Manager (Finance)", totalPost: "03", eligibility: "Pass in CA/CMA Final Exam" }
+    ],
+
+    vacancyTableTitle: "Post & Category Wise Vacancy Details (Total: 642 Posts)",
+    vacancyColumnName: "Post Name",
+
+    // ✅ Exact Category Breakup from PDF Table
+    stateWiseVacancy: [
+      { "Post Name": "MTS", "UR": "194", "OBC": "122", "EWS": "46", "SC": "70", "ST": "32", "Total": "464" },
+      { "Post Name": "Executive (S&T)", "UR": "28", "OBC": "23", "EWS": "08", "SC": "09", "ST": "07", "Total": "75" },
+      { "Post Name": "Executive (Electrical)", "UR": "28", "OBC": "14", "EWS": "06", "SC": "11", "ST": "05", "Total": "64" },
+      { "Post Name": "Executive (Civil)", "UR": "16", "OBC": "09", "EWS": "03", "SC": "05", "ST": "03", "Total": "36" },
+      { "Post Name": "Junior Manager (Finance)", "UR": "01", "OBC": "02", "EWS": "00", "SC": "00", "ST": "00", "Total": "03" }
+    ],
+
+    salaryDetails: [
+      { post: "Junior Manager (E2 Level)", level: "₹50,000 - ₹1,60,000 (IDA)" },
+      { post: "Executive (E0 Level)", level: "₹30,000 - ₹1,20,000 (IDA)" },
+      { post: "Multi Tasking Staff (N-1 Level)", level: "₹16,000 - ₹45,000 (IDA)" }
+    ],
+
+    selectionProcess: [
+      "Stage 1: CBT (Computer Based Test) - Completed",
+      "Stage 2: CBT (For Executive & Jr Manager)",
+      "Physical Efficiency Test (PET) - For MTS Only",
+      "Document Verification (DV)",
+      "Medical Examination"
+    ],
+
+    extraSections: [
+      {
+        title: "How to Download Stage 2 Admit Card?",
+        list: [
+          "Click on the direct 'Download Stage 2 Admit Card' link below.",
+          "You will be redirected to the DFCCIL login page.",
+          "Enter your **User ID** and **Password**.",
+          "Enter the Captcha code shown.",
+          "Click on the 'Login' button.",
+          "Go to the 'Admit Card' tab and download your Hall Ticket.",
+          "Print a copy for the exam day."
+        ]
+      }
+    ],
+
+    howToApply: [
+      "Visit the official website dfccil.com.",
+      "Go to the 'Career' section.",
+      "Click on 'Advt No. 01/DR/2025'.",
+      "Click on the link for 'Stage 2 E-Admit Card'.",
+      "Login with your credentials to download."
+    ],
+
+    links: [
+      { title: "Download Stage 2 Admit Card", url: "https://cdn.digialm.com/EForms/configuredHtml/1258/91218/login.html" },
+      { title: "Download Mock Test Link (MTS)", url: "https://cdn4.digialm.com/OnlineAssessment/index.html?1258@@M617" }, 
+      { title: "Download Mock Test Link (Executive & Jr. Manager)", url: "https://cdn4.digialm.com/OnlineAssessment/index.html?1258@@M616" },
+      { title: "Download Notificaiton Pdf", url: "https://dfccil.com/" },
+      { title: "Official Website", url: "https://dfccil.com/" }
+    ],
+
+    faqs: [
+      { question: "What is the exam date for DFCCIL Stage 2?", answer: "The Stage 2 exam is scheduled for 13th December 2025." },
+      { question: "How many vacancies are there in DFCCIL 2025?", answer: "There are a total of 642 vacancies for MTS, Executive, and Junior Manager posts." },
+      { question: "Is there a negative marking in DFCCIL Stage 2?", answer: "Yes, there is negative marking (usually 1/4th) for wrong answers in the CBT." },
+      { question: "What is the selection process for MTS?", answer: "MTS selection involves Stage 1 CBT, Stage 2 CBT, Physical Efficiency Test (PET), DV, and Medical." }
+    ]
+  },
+  // --- 1020. RRB Paramedical Staff Application Status 2025 (ID 33) ---
+  {
+    id: 1020,
+    slug: "rrb-paramedical-application-status-2025-check-online",
+    shortTitle: "RRB Paramedical Application Status 2025",
+    title: "RRB Paramedical Staff Application Status 2025 Out (CEN 03/2025) - Check Form Status & Exam Date",
+    shortInfo: "Railway Recruitment Board (RRB) has officially released the Application Status for the recruitment of Paramedical Categories (CEN 03/2025). Candidates who applied for posts like Nursing Superintendent, Pharmacist, Lab Technician, and Health Inspector can now check whether their application form is Accepted or Rejected. Check the direct link below.",
+    postDate: "09/12/2025",
+    category: "Admit Card",
+
+    salary: "Level-3 to Level-7 (Post Wise)",
+
+    importantDates: [
+      { label: "Notification No.", value: "CEN 03/2025" },
+      { label: "Application Start", value: "09/08/2025" },
+      { label: "Last Date for Apply", value: "18/09/2025" },
+      { label: "Application Status Released", value: "09/12/2025" },
+      { label: "Exam Date", value: "To be notified soon" },
+      { label: "Admit Card", value: "4 Days before Exam" }
+    ],
+
+    applicationFee: [
+      { category: "Status Check Fee", amount: "₹0/- (Free)" },
+      { category: "Note", amount: "Login with Registration Number & DOB to check status." }
+    ],
+
+    ageLimit: "18-40 Years (Varies by Post). Relaxation as per RRB rules.",
+
+    vacancyDetails: [
+      { postName: "Nursing Superintendent", totalPost: "272", eligibility: "B.Sc Nursing / GNM (Pay Level 7)" },
+      { postName: "Pharmacist (Entry Grade)", totalPost: "105", eligibility: "10+2 + D.Pharm / B.Pharm (Pay Level 5)" },
+      { postName: "Health & Malaria Inspector Gr-III", totalPost: "33", eligibility: "B.Sc (Chemistry) + Diploma in Health/Sanitary Inspector (Pay Level 6)" },
+      { postName: "Laboratory Assistant Gr-II", totalPost: "12", eligibility: "12th (Science) + DMLT (Pay Level 3)" },
+      { postName: "Radiographer X-Ray Tech", totalPost: "04", eligibility: "10+2 + Diploma in Radiography (Pay Level 5)" },
+      { postName: "Dialysis Technician", totalPost: "04", eligibility: "B.Sc + Diploma in Haemodialysis (Pay Level 6)" },
+      { postName: "ECG Technician", totalPost: "04", eligibility: "10+2/Graduation + Diploma in ECG Tech (Pay Level 4)" }
+    ],
+
+    vacancyTableTitle: "RRB Zone Wise Vacancy Details",
+    vacancyColumnName: "RRB Name",
+
+    stateWiseVacancy: [
+      { "RRB Name": "RRB Ahmedabad", "Total Posts": "11" },
+      { "RRB Name": "RRB Ajmer", "Total Posts": "10" },
+      { "RRB Name": "RRB Bangalore", "Total Posts": "09" },
+      { "RRB Name": "RRB Bhopal", "Total Posts": "09" },
+      { "RRB Name": "RRB Bhubaneswar", "Total Posts": "08" },
+      { "RRB Name": "RRB Bilaspur", "Total Posts": "25" },
+      { "RRB Name": "RRB Chandigarh", "Total Posts": "04" },
+      { "RRB Name": "RRB Chennai", "Total Posts": "67" },
+      { "RRB Name": "RRB Gorakhpur", "Total Posts": "11" },
+      { "RRB Name": "RRB Guwahati", "Total Posts": "12" },
+      { "RRB Name": "RRB Jammu-Srinagar", "Total Posts": "15" },
+      { "RRB Name": "RRB Kolkata", "Total Posts": "68" },
+      { "RRB Name": "RRB Malda", "Total Posts": "05" },
+      { "RRB Name": "RRB Mumbai", "Total Posts": "80" },
+      { "RRB Name": "RRB Muzaffarpur", "Total Posts": "12" },
+      { "RRB Name": "RRB Patna", "Total Posts": "25" },
+      { "RRB Name": "RRB Prayagraj (Allahabad)", "Total Posts": "27" },
+      { "RRB Name": "RRB Ranchi", "Total Posts": "11" },
+      { "RRB Name": "RRB Secunderabad", "Total Posts": "10" },
+      { "RRB Name": "RRB Siliguri", "Total Posts": "15" }
+    ],
+
+    selectionProcess: [
+      "Computer Based Test (CBT) - 100 Marks",
+      "Document Verification (DV)",
+      "Medical Examination"
+    ],
+
+    // ✅ Exam Pattern as per PDF Page 6
+    examPattern: {
+      details: [
+        "Mode: Computer Based Test (CBT)",
+        "Total Questions: 100",
+        "Total Marks: 100",
+        "Duration: 90 Minutes (120 Mins for PwBD)",
+        "Negative Marking: 1/3rd marks deducted for wrong answers"
+      ],
+      table: [
+        { subject: "Professional Ability (Nursing/Tech)", questions: 70, marks: 70 },
+        { subject: "General Awareness", questions: 10, marks: 10 },
+        { subject: "General Arithmetic, Intelligence & Reasoning", questions: 10, marks: 10 },
+        { subject: "General Science", questions: 10, marks: 10 }
+      ]
+    },
+
+    howToApply: [
+      "Step 1: Click on the 'Check Application Status' link below.",
+      "Step 2: You will be redirected to the official RRB Login page.",
+      "Step 3: Enter your Registration Number and Date of Birth.",
+      "Step 4: Enter the Captcha Code and click 'Login'.",
+      "Step 5: Your application status (Provisionally Accepted / Rejected) will be displayed.",
+      "Step 6: If accepted, wait for the Admit Card. If rejected, check the reason provided."
+    ],
+
+    links: [
+      { title: "Check Application Status (Login)", url: "https://www.rrbapply.gov.in/#/auth/home" },
+      { title: "Download Application Status Notice", url: "https://www.rrbcdg.gov.in/" },
+      { title: "Official Website", url: "https://indianrailways.gov.in/" }
+    ],
+
+    faqs: [
+      { question: "When was RRB Paramedical Status 2025 released?", answer: "The application status was released on 09 December 2025." },
+      { question: "How can I check my RRB Paramedical Form Status?", answer: "By logging into the official portal rrbapply.gov.in using your Registration Number and DOB." },
+      { question: "What if my application is rejected?", answer: "RRB provides a valid reason for rejection (e.g., invalid photo/signature). The decision is usually final unless a correction window is announced." },
+      { question: "When will the Exam Date be announced?", answer: "The exam dates are expected to be announced shortly after the status check process is completed." }
+    ]
+  },
+// --- 1019. Patna High Court Mazdoor Admit Card 2025 ---
+  {
+    id: 1019,
+    slug: "patna-high-court-mazdoor-admit-card-2025-cycling-test",
+    shortTitle: "Patna High Court Mazdoor Admit Card 2025 (Cycling Test)",
+    title: "Patna High Court Mazdoor Cycling Test Admit Card 2025 Out (Direct Link) - Download Hall Ticket @patnahighcourt.gov.in",
+    shortInfo: "High Court of Judicature at Patna has officially released the Admit Card for the Cycling Test of Regular Mazdoor (Group-C) Recruitment 2025. Candidates who qualified the Written Examination can now download their Hall Ticket for the Cycling Test scheduled from 10th to 12th December 2025. Get the direct download link and instructions below.",
+    postDate: "08/12/2025",
+    category: "Admit Card",
+
+    salary: "Level-1 (₹14,800 - ₹40,300)",
+
+    importantDates: [
+      { label: "Notification No.", value: "PHC/01/2025" },
+      { label: "Written Exam Date", value: "22/06/2025" },
+      { label: "Written Result Released", value: "20/11/2025" },
+      { label: "Cycling Test Admit Card", value: "08/12/2025" },
+      { label: "Cycling Test Date", value: "10/12/2025 to 12/12/2025" },
+      { label: "Interview Date", value: "To be notified later" }
+    ],
+
+    applicationFee: [
+      { category: "Note", amount: "No Fee is required for downloading the Admit Card." }
+    ],
+
+    ageLimit: "18-37 Years (As on 01/01/2025). Relaxation as per rules.",
+
+    vacancyDetails: [
+      { 
+        postName: "Regular Mazdoor (Group C)", 
+        totalPost: "171", 
+        eligibility: "Minimum 8th Pass & Maximum 12th Pass + Knowledge of Cycling" 
+      }
+    ],
+
+    vacancyTableTitle: "Category Wise Vacancy Details",
+    vacancyColumnName: "Category Name",
+
+    stateWiseVacancy: [
+      { "Category Name": "Unreserved (UR)", "Total": "74"},
+      { "Category Name": "EWS", "Total": "17"},
+      { "Category Name": "BC", "Total": "20"},
+      { "Category Name": "EBC", "Total": "31"},
+      { "Category Name": "SC", "Total": "27"},
+      { "Category Name": "ST", "Total": "02"}
+    ],
+
+    selectionProcess: [
+      "Stage 1: Written Test (Completed)",
+      "Stage 2: Cycling Test (Qualifying Nature)",
+      "Stage 3: Interview (20 Marks)",
+      "Stage 4: Document Verification & Medical"
+    ],
+
+    extraSections: [
+      {
+        title: "Documents to Carry for Cycling Test",
+        list: [
+          "Printout of Cycling Test Admit Card.",
+          "Original Photo Identity Proof (Aadhaar Card/Voter ID/PAN Card/Driving License).",
+          "Two recent passport size photographs.",
+          "Self-declaration form (if attached with admit card)."
+        ]
+      },
+      {
+        title: "Cycling Test Details",
+        text: "The Cycling Test is of **Qualifying Nature** only. However, it is mandatory to pass this test to be eligible for the Interview stage. Male candidates are usually required to cycle a certain distance within a specific time limit to demonstrate proficiency."
+      }
+    ],
+
+    howToApply: [
+      "Step 1: Visit the official website patnahighcourt.gov.in.",
+      "Step 2: Scroll to the 'Recruitments' section.",
+      "Step 3: Click on the link 'Download Admit Card for Cycling Test - Regular Mazdoor Recruitment 2025'.",
+      "Step 4: Enter your Registration Number and Date of Birth (or Password).",
+      "Step 5: Click on Submit and download your Hall Ticket.",
+      "Step 6: Print the Admit Card and check the exam center details."
+    ],
+
+    links: [
+      { title: "Download Cycling Test Admit Card", url: "https://phc-recruitment.com/test-admit-login.aspx" },
+      { title: "Download Exam Notice", url: "https://patnahighcourt.gov.in/" },
+      { title: "Download Written Exam Result", url: "https://patnahighcourt.gov.in/" },
+      { title: "Official Website", url: "https://patnahighcourt.gov.in/" }
+    ],
+
+    faqs: [
+      { question: "When is the Patna High Court Mazdoor Cycling Test 2025?", answer: "The Cycling Test is scheduled to be held from 10th to 12th December 2025." },
+      { question: "How to download the Admit Card?", answer: "You can download it from the official website patnahighcourt.gov.in using your Registration Number and DOB." },
+      { question: "Is the Cycling Test mandatory?", answer: "Yes, the Cycling Test is mandatory and qualifying in nature." },
+      { question: "What is the next stage after the Cycling Test?", answer: "Candidates who qualify the Cycling Test will be called for an Interview." }
+    ]
+  },
+  // --- 1018. UPSC CSE Interview Call Letter 2025 ---
+  {
+    id: 1018,
+    slug: "upsc-cse-interview-call-letter-2025-download",
+    shortTitle: "UPSC CSE Interview Call Letter 2025",
+    title: "UPSC Civil Services (IAS) Interview Call Letter 2025 Released (e-Summon) - Download Personality Test Schedule",
+    shortInfo: "Union Public Service Commission (UPSC) has officially released the e-Summon Letters (Admit Cards) for the Civil Services (Main) Examination, 2025 Personality Test (Interview). Candidates who have qualified the Mains Exam can now download their Interview Schedule and Call Letter from the official website upsc.gov.in.",
+    postDate: "02/12/2025",
+    category: "Admit Card",
+
+    salary: "Level-10 to Level-14 (IAS/IPS/IFS Scales)",
+
+    importantDates: [
+      { label: "Mains Result Declared", value: "December 2025" },
+      { label: "DAF-II Submission", value: "December 2025" },
+      { label: "Interview Schedule Released", value: "02/12/2025" },
+      { label: "e-Summon Letter Available", value: "Active" },
+      { label: "Interview Begin Date", value: "08/12/2025 to 19/12/2025" }
+    ],
+
+    applicationFee: [
+      { category: "Note", amount: "No Fee is required to download the e-Summon Letter." }
+    ],
+
+    ageLimit: "21-32 Years (As per 2025 Notification)",
+
+    vacancyDetails: [
+      { 
+        postName: "Civil Services Exam 2025 (IAS & IFS)", 
+        totalPost: "1129 (979+150)", 
+        eligibility: "Qualified UPSC CSE Mains 2025 Examination." 
+      }
+    ],
+
+    extraSections: [
+      {
+        title: "Documents Required for UPSC Interview (Original + Photocopies)",
+        list: [
+          "Matriculation (10th) Certificate (Date of Birth Proof).",
+          "Degree Certificate (Graduation).",
+          "Caste Certificate (SC/ST/OBC/EWS) issued by competent authority.",
+          "Disability Certificate (PwBD) if applicable.",
+          "Two recent passport size photographs.",
+          "Photo Identity Proof (Aadhaar/PAN/Voter ID).",
+          "DAF-I and DAF-II Summary Sheets (Printout).",
+          "Questionnaire & Attestation Form (Available on UPSC website)."
+        ]
+      },
+      {
+        title: "Interview Guidelines",
+        text: "Candidates must report to the UPSC Office, Dholpur House, Shahjahan Road, New Delhi on the date and time mentioned in their e-Summon Letter. No request for change of date/time will be entertained. Electronic gadgets are strictly prohibited inside the campus."
+      }
+    ],
+
+    howToApply: [
+      "Step 1: Visit the official website upsc.gov.in.",
+      "Step 2: Scroll down to the 'What's New' section.",
+      "Step 3: Click on 'e-Summon Letter: Civil Services (Main) Examination, 2025'.",
+      "Step 4: Enter your Roll Number and Date of Birth (or Captcha code).",
+      "Step 5: Your Interview Call Letter will appear on the screen.",
+      "Step 6: Download and print the e-Summon Letter."
+    ],
+
+    links: [
+      { title: "Download e-Summon Letter", url: "https://upsconline.nic.in/e-summon/" },
+      { title: "Download Interview Schedule (PDF)", url: "https://upsc.gov.in/sites/default/files/Intv-CSM-2025-Engl-021225R.pdf" },
+      { title: "Official Website", url: "https://upsc.gov.in/" }
+    ],
+
+    faqs: [
+      { question: "How to download UPSC Interview Call Letter?", answer: "Visit upsc.gov.in -> e-Summon Letters -> Enter Roll No & DOB." },
+      { question: "Where is the UPSC Interview held?", answer: "The interview is held at UPSC Bhawan, Dholpur House, Shahjahan Road, New Delhi." },
+      { question: "Is reimbursement provided for travel?", answer: "Yes, outstation candidates are reimbursed 2nd Class Train fare (Mail/Express) as per rules." },
+      { question: "What documents are needed for the interview?", answer: "Original Degree, 10th Certificate, Caste Certificate, Photos, and ID Proof." }
+    ]
+  },
+  // --- SSC CPO Admit Card 2025 ---
+  {
+    id: 1017, // Unique ID for Admit Card Post
+    slug: "ssc-cpo-admit-card-2025-hall-ticket-download",
+    shortTitle: "SSC CPO Admit Card 2025 (Paper 1)",
+    title: "SSC CPO Admit Card 2025: Tier 1 Application Status & Hall Ticket Download Link (All Regions)",
+    shortInfo: "Staff Selection Commission (SSC) is going to conduct the Sub-Inspector in Delhi Police and CAPFs Examination, 2025 in the months of November-December 2025. The Application Status and Admit Cards for Paper-I will be released region-wise (NR, CR, ER, WR, SR, KKR, MPR, NER, NWR) about 10 days before the exam. Candidates can download their Hall Ticket using the direct links provided below.",
+    category: "Admit Card", // Changed Category to Admit Card
+
+    salary: "₹35,400 - ₹1,12,400 (Level-6)",
+
+    importantDates: [
+      { label: "Notification Released", value: "26/09/2025" },
+      { label: "Exam Date (Paper-I)", value: "November - December, 2025" }, // 
+      { label: "Application Status Release", value: "10 Days before Exam (Tentative)" }, // [cite: 376]
+      { label: "Admit Card Download", value: "3-4 Days before Exam Date" } // [cite: 381]
+    ],
+
+    applicationFee: [
+      { category: "Note", amount: "No Fee is required for downloading the Admit Card." }
+    ],
+
+    ageLimit: "20-25 Years (As on 01.08.2025)",
+
+    // ✅ NEW: Region Wise Admit Card Links Table
+    extraSections: [
+     
+      {
+        title: "Documents Required at Exam Centre",
+        text: "Candidates must carry the following documents to the examination center, otherwise entry will not be allowed[cite: 384]:\n\n1. **Printout of Admission Certificate** (Admit Card).\n2. **Two recent passport size color photographs**.\n3. **Original valid Photo-ID proof** having the Date of Birth as printed on the Admit Card (e.g., Aadhaar Card, Voter ID, Driving License, PAN Card, Passport, etc.).\n\n**Note:** If the Photo ID does not have the Date of Birth printed on it, the candidate must carry an additional original document (e.g., 10th Marksheet/Certificate) as proof of DOB[cite: 402]."
+      }
+    ],
+
+    // ✅ Exam Pattern Table (Paper-I)
+    examPattern: {
+      details: [
+        "Mode of Exam: Computer Based Test (CBT)",
+        "Question Type: Objective Multiple Choice",
+        "Negative Marking: 0.25 marks for each wrong answer [cite: 248]",
+        "Language: Hindi & English (except for English Comprehension part) [cite: 247]"
+      ],
+      table: [
+        { subject: "General Intelligence and Reasoning", questions: "50", marks: "50" },
+        { subject: "General Knowledge and General Awareness", questions: "50", marks: "50" },
+        { subject: "Quantitative Aptitude", questions: "50", marks: "50" },
+        { subject: "English Comprehension", questions: "50", marks: "50" },
+      ]
+    },
+
+    howToApply: [
+      "Step 1: Click on the specific Region Link (NR, CR, ER, etc.) in the table above.",
+      "Step 2: You will be redirected to the official regional website.",
+      "Step 3: Look for the link 'Status/Download Admit Card for Sub-Inspector in Delhi Police and CAPFs Exam, 2025'.",
+      "Step 4: Enter your Registration ID and Date of Birth (or Name and Date of Birth).",
+      "Step 5: Click on 'Search' to view your Application Status/City Intimation.",
+      "Step 6: The actual Admit Card will be available for download 3-4 days before your exam date.",
+      "Step 7: Download and take a printout of the Hall Ticket."
+    ],
+
+    links: [
+      { title: "Download Admit Card (Direct Link)", url: "https://ssc.gov.in/login" },
+      { title: "Check Application Status (All Regions)", url: "https://ssc.gov.in/" },
+      { title: "Download Notification PDF", url: "https://ssc.gov.in/api/attachment/uploads/masterData/NoticeBoards/Notice_of_adv_capf_2025.pdf" }, // You can replace this with your Telegram Link
+      { title: "Official Website", url: "https://ssc.gov.in/" }
+    ],
+
+    faqs: [
+      { question: "When will SSC CPO 2025 Admit Card be released?", answer: "The application status is usually released 10-15 days before the exam, and the final Admit Card is available to download 4 days before the exam date." },
+      { question: "What is the SSC CPO 2025 Exam Date?", answer: "The Paper-I examination is scheduled to be held in November-December 2025." },
+      { question: "Is there negative marking in SSC CPO Paper 1?", answer: "Yes, there is a negative marking of 0.25 marks for each wrong answer in Paper-I & Paper-II[cite: 248]." },
+      { question: "What to do if I forgot my Registration Number?", answer: "You can regenerate your Registration ID by clicking on the 'Forgot Registration ID' link on the SSC regional website and entering your Name, Father's Name, and Date of Birth." },
+      { question: "Is Aadhaar Card mandatory for the exam?", answer: "While Aadhaar is preferred, you can carry any original valid Photo ID proof like Voter ID, Driving License, PAN Card, or Passport [cite: 384-393]." }
+    ]
+  },
+// --- 1016. SSC CHTE Paper-II (Latest) ---
+  {
+    id: 1016,
+    slug: "ssc-chte-paper-ii-exam-city-2025",
+    shortTitle: "SSC CHTE Paper-II Exam City 2025",
+    title: "SSC JHT / CHT Paper-II Exam City Intimation 2025 Out | Check Status",
+    shortInfo: "Staff Selection Commission (SSC) has released the Exam City Intimation Slip for Junior Hindi Translator, Senior Hindi Translator & Hindi Pradhyapak Examination, 2025 (Paper-II). The descriptive exam is scheduled for 14th December 2025.",
+    postDate: "05/12/2025",
+    category: "Admit Card",
+    salary: "Level-6 to Level-8",
+
+    importantDates: [
+      { label: "Paper-II Exam Date", value: "14/12/2025" },
+      { label: "City Slip Released", value: "04/12/2025" },
+      { label: "Admit Card", value: "Available Soon" }
+    ],
+
+    applicationFee: [],
+
+    vacancyDetails: [
+      { postName: "Junior/Senior Hindi Translator", totalPost: 552, eligibility: "Master's Degree in Hindi/English + Diploma/Certificate" }
+    ],
+
+    examPattern: {
+      details: ["Mode: Descriptive (Pen & Paper)", "Total Marks: 200", "Time: 2 Hours"],
+      table: [
+        { subject: "Translation & Essay", questions: "Descriptive", marks: 200 }
+      ]
+    },
+
+    howToApply: [
+      "Visit ssc.gov.in.",
+      "Login with Registration Number and Password.",
+      "Check 'Exam City Status' in the dashboard.",
+      "Admit Card will be available 3-4 days before the exam."
+    ],
+
+    links: [
+      { title: "Check Exam City / Status", url: "https://ssc.gov.in/login" },
+      { title: "Official Website", url: "https://ssc.gov.in/" }
+    ]
+  },
+
+  // --- 1015. Bihar Jeevika ---
+  {
+    id: 1015,
+    slug: "bihar-jeevika-admit-card-2025",
+    shortTitle: "Bihar Jeevika Admit Card 2025",
+    title: "Bihar Jeevika Admit Card 2025 Out | Download Hall Ticket for 2747 Posts",
+    shortInfo: "Bihar Rural Livelihoods Promotion Society (BRLPS) has released the Admit Card for various posts like Community Coordinator, Area Coordinator, and Office Assistant. Exam is scheduled from 19 Nov to 15 Dec 2025.",
+    postDate: "05/12/2025",
+    category: "Admit Card",
+    salary: "₹15,000 - ₹45,000 (Approx)",
+
+    importantDates: [
+      { label: "Exam Date", value: "19 Nov to 15 Dec 2025" },
+      { label: "Admit Card Released", value: "13/11/2025" }
+    ],
+
+    applicationFee: [],
+
+    vacancyDetails: [
+      { postName: "Community Coordinator", totalPost: 1177, eligibility: "10th/12th Pass" },
+      { postName: "Area Coordinator", totalPost: "Various", eligibility: "Graduate" },
+      { postName: "Total Vacancies", totalPost: 2747, eligibility: "-" }
+    ],
+
+    howToApply: [
+      "Visit brlps.in.",
+      "Click on 'Career' -> 'Download Admit Card'.",
+      "Enter Application No. and DOB.",
+      "Print the Hall Ticket."
+    ],
+
+    links: [
+      { title: "Download Admit Card", url: "https://brlps.in/Career" },
+      { title: "Official Website", url: "https://brlps.in/" }
+    ]
+  },
+
+  // --- 1014. UP LT Grade Teacher ---
+  {
+    id: 1014,
+    slug: "up-lt-grade-assistant-teacher-admit-card-2025",
+    shortTitle: "UP LT Grade Admit Card 2025",
+    title: "UPPSC LT Grade Assistant Teacher Admit Card 2025 Out | Exam Date & Shift",
+    shortInfo: "Uttar Pradesh Public Service Commission (UPPSC) has released the Admit Card for LT Grade Assistant Teacher Recruitment 2025. Exams for Math, Hindi, Science etc. are scheduled in Dec 2025 & Jan 2026.",
+    postDate: "05/12/2025",
+    category: "Admit Card",
+    salary: "Pay Scale ₹44,900-₹1,42,400 (Level 7)",
+
+    importantDates: [
+      { label: "Exam Dates", value: "06, 07, 21 Dec 2025 & Jan 2026" },
+      { label: "Admit Card Status", value: "Released" }
+    ],
+
+    applicationFee: [],
+
+    vacancyDetails: [
+      { postName: "Assistant Teacher (Male)", totalPost: 4860, eligibility: "Graduate + B.Ed" },
+      { postName: "Assistant Teacher (Female)", totalPost: 2525, eligibility: "Graduate + B.Ed" },
+      { postName: "Total Vacancies", totalPost: 7466, eligibility: "-" }
+    ],
+
+    howToApply: [
+      "Visit uppsc.up.nic.in.",
+      "Click on 'Download Admit Card' in Activity Dashboard.",
+      "Enter OTR Number / Reg No and DOB.",
+      "Download the Hall Ticket."
+    ],
+
+    links: [
+      { title: "Download Admit Card", url: "https://uppsc.up.nic.in/" },
+      { title: "Check Exam Schedule", url: "https://uppsc.up.nic.in/" },
+      { title: "Official Website", url: "https://uppsc.up.nic.in/" }
+    ]
+  },
+
+  // --- 1013. Delhi Police Constable Slot Selection ---
+  {
+    id: 1013,
+    slug: "ssc-delhi-police-constable-slot-selection-2025",
+    shortTitle: "Delhi Police Constable Slot Selection",
+    title: "SSC Delhi Police Constable Self Slot Selection 2025 Open | Book Exam Date",
+    shortInfo: "SSC has activated the link for Self Slot Selection for Delhi Police Constable (Executive) Male & Female Examination 2025. Candidates must book their exam date and city to generate the admit card.",
+    postDate: "05/12/2025",
+    category: "Admit Card",
+    salary: "Level-3 (₹21,700 - ₹69,100)",
+
+    importantDates: [
+      { label: "Slot Booking Dates", value: "05 Dec to 30 Dec 2025" },
+      { label: "Exam Date", value: "18 Dec 2025 to 06 Jan 2026" }
+    ],
+
+    applicationFee: [],
+
+    vacancyDetails: [
+      { postName: "Constable (Exe.) Male", totalPost: 4453, eligibility: "12th Pass + DL" },
+      { postName: "Constable (Exe.) Female", totalPost: 2491, eligibility: "12th Pass" },
+      { postName: "Total Vacancies", totalPost: 7547, eligibility: "-" }
+    ],
+
+    howToApply: [
+      "Login to ssc.gov.in.",
+      "Go to 'Self Slot Selection' tab.",
+      "Select 'Delhi Police Constable Exam'.",
+      "Choose preferred Date and City.",
+      "Confirm to generate Admit Card (later)."
+    ],
+
+    links: [
+      { title: "Slot Selection Link", url: "https://ssc.gov.in/login" },
+      { title: "Official Website", url: "https://ssc.gov.in/" }
+    ]
+  },
+
+  // --- 1012. RRB Group D (Oldest in Batch) ---
+  {
+    id: 1012,
+    slug: "railway-rrb-group-d-admit-card-2025",
+    shortTitle: "RRB Group D Admit Card 2025",
+    title: "RRB Group D Admit Card 2025 Out | CBT-1 Hall Ticket Download Link",
+    shortInfo: "Railway Recruitment Board (RRB) has released the Admit Card and City Intimation for Group D (Level-1) Recruitment 2025 (CEN RRC 01/2019). Exam starts from 27 November 2025.",
+    postDate: "05/12/2025",
+    category: "Admit Card",
+    salary: "Level-1 (₹18,000 Basic)",
+
+    importantDates: [
+      { label: "Exam Date", value: "27 Nov 2025 to 16 Jan 2026" },
+      { label: "Admit Card", value: "4 Days before Exam" }
+    ],
+
+    applicationFee: [],
+
+    vacancyDetails: [
+      { postName: "Group D (Track Maintainer etc.)", totalPost: 32438, eligibility: "10th Pass / ITI" }
+    ],
+
+    howToApply: [
+      "Visit regional RRB website (e.g., rrbcdg.gov.in).",
+      "Click on 'E-Call Letter for CBT'.",
+      "Enter Registration Number and DOB.",
+      "Download the Hall Ticket."
+    ],
+
+    links: [
+      { title: "Download Admit Card (All Regions)", url: "https://rrbcdg.gov.in/" },
+      { title: "Check Exam City", url: "https://rrbcdg.gov.in/" },
+      { title: "Official Website", url: "https://indianrailways.gov.in/" }
+    ]
+  },
+  // --- 1011. Delhi Police Driver ---
+  {
+    id: 1011,
+    slug: "ssc-delhi-police-driver-admit-card-2025",
+    shortTitle: "Delhi Police Driver Admit Card 2025",
+    title: "Delhi Police Constable (Driver) Admit Card 2025 | Trade Test & Exam Date",
+    shortInfo: "SSC has announced the Exam Date and Status for Constable (Driver) Male in Delhi Police Examination 2025.",
+    postDate: "05/12/2025",
+    category: "Admit Card",
+    salary: "Level-3 (₹21,700 - ₹69,100)",
+
+    importantDates: [
+      { label: "CBT Exam Date", value: "16 & 17 Dec 2025" },
+      { label: "Admit Card", value: "Available Soon" }
+    ],
+
+    applicationFee: [],
+
+    vacancyDetails: [
+      { postName: "Constable (Driver) - Male", totalPost: 737, eligibility: "12th Pass + Heavy Motor Vehicle (HMV) License" }
+    ],
+
+    examPattern: {
+      details: ["Mode: CBT (100 Marks)", "Time: 90 Minutes", "Trade Test: Qualifying"],
+      table: [
+        { subject: "General Awareness", questions: 20, marks: 20 },
+        { subject: "General Intelligence", questions: 20, marks: 20 },
+        { subject: "Numerical Ability", questions: 10, marks: 10 },
+        { subject: "Road Sense, Vehicle Maintenance, Traffic Rules", questions: 50, marks: 50 }
+      ]
+    },
+
+    extraSections: [
+      {
+        title: "Physical Endurance Test (PET)",
+        list: ["Race: 1600m in 7 Minutes", "Long Jump: 12.5 Feet", "High Jump: 3.5 Feet"]
+      }
+    ],
+
+    howToApply: ["Check SSC Website for Regional Links", "Enter details", "Download PDF"],
+
+    links: [
+      { title: "Check Status (NR Region)", url: "https://sscnr.nic.in/" },
+      { title: "Official Website", url: "https://ssc.gov.in/" }
+    ]
+  },
+  // --- 1010. Delhi Police HC (Ministerial) ---
+  {
+    id: 1010,
+    slug: "ssc-delhi-police-hc-ministerial-admit-card-2025",
+    shortTitle: "Delhi Police HC (Ministerial) Admit Card",
+    title: "Delhi Police Head Constable (Ministerial) Admit Card 2025 | Exam City & Date",
+    shortInfo: "SSC has released the Admit Card and Status for Delhi Police Head Constable (Ministerial) Examination 2025.",
+    postDate: "05/12/2025",
+    category: "Admit Card",
+    salary: "Level-4 (₹25,500 - ₹81,100)",
+
+    importantDates: [
+      { label: "CBT Exam Date", value: "07 Jan to 12 Jan 2026" },
+      { label: "Admit Card", value: "4 Days before Exam" }
+    ],
+
+    applicationFee: [],
+
+    vacancyDetails: [
+      { postName: "Head Constable (Ministerial) Male", totalPost: 341, eligibility: "12th Pass + Typing Speed" },
+      { postName: "Head Constable (Ministerial) Female", totalPost: 168, eligibility: "12th Pass + Typing Speed" }
+    ],
+
+    examPattern: {
+      details: ["Mode: CBT (100 Marks)", "Time: 90 Minutes", "Typing Test: 30 wpm (Eng) / 25 wpm (Hindi)"],
+      table: [
+        { subject: "English Language", questions: 25, marks: 25 },
+        { subject: "Quant", questions: 20, marks: 20 },
+        { subject: "General Intelligence", questions: 25, marks: 25 },
+        { subject: "General Awareness", questions: 20, marks: 20 },
+        { subject: "Computer Basics", questions: 10, marks: 10 }
+      ]
+    },
+
+    howToApply: ["Go to SSC Regional Website", "Login with Roll No", "Download Ticket"],
+
+    links: [
+      { title: "Check Application Status (All Regions)", url: "https://ssc.gov.in/" },
+      { title: "Download Admit Card", url: "https://ssc.gov.in/" },
+      { title: "Official Website", url: "https://delhipolice.gov.in/" }
+    ]
+  },
+  // --- 1009. Delhi Police HC (AWO/TPO) ---
+  {
+    id: 1009,
+    slug: "ssc-delhi-police-hc-awo-tpo-admit-card-2025",
+    shortTitle: "Delhi Police HC (AWO/TPO) Admit Card",
+    title: "Delhi Police Head Constable (AWO/TPO) Admit Card 2025 | Exam Date & Status",
+    shortInfo: "SSC has released the Exam Date and Application Status for Delhi Police Head Constable (Assistant Wireless Operator / Tele-Printer Operator) Exam 2025.",
+    postDate: "05/12/2025",
+    category: "Admit Card",
+    salary: "Level-4 (₹25,500 - ₹81,100)",
+
+    importantDates: [
+      { label: "CBT Exam Date", value: "15 Jan to 22 Jan 2026" },
+      { label: "Admit Card Status", value: "Available Region Wise" }
+    ],
+
+    applicationFee: [],
+
+    vacancyDetails: [
+      { postName: "Head Constable (AWO/TPO) Male", totalPost: 370, eligibility: "12th (Science/Maths) + Mechanic/Operator Trade" },
+      { postName: "Head Constable (AWO/TPO) Female", totalPost: 182, eligibility: "12th (Science/Maths)" }
+    ],
+
+    examPattern: {
+      details: ["Mode: CBT (100 Marks) + Trade Test (Qualifying)", "Time: 90 Minutes", "No Negative Marking"],
+      table: [
+        { subject: "General Awareness", questions: 20, marks: 20 },
+        { subject: "General Science", questions: 25, marks: 25 },
+        { subject: "Mathematics", questions: 25, marks: 25 },
+        { subject: "Reasoning", questions: 20, marks: 20 },
+        { subject: "Computer Fundamentals", questions: 10, marks: 10 }
+      ]
+    },
+    
+    howToApply: ["Check status on SSC Regional website", "Download Admit Card 4 days before exam"],
+
+    links: [
+      { title: "Check Status / Admit Card (NR)", url: "https://sscnr.nic.in/" },
+      { title: "Check Status / Admit Card (CR)", url: "http://www.ssc-cr.org/" },
+      { title: "Official Website", url: "https://ssc.gov.in/" }
+    ]
+  },
+  // --- 1008. UP Police SI Exam Date ---
+  {
+    id: 1008,
+    slug: "up-police-si-exam-date-admit-card-2025",
+    shortTitle: "UP Police SI Exam Date & Admit Card",
+    title: "UP Police SI Exam Date 2025 Announced | Sub Inspector Admit Card & City Details",
+    shortInfo: "Uttar Pradesh Police Recruitment & Promotion Board (UPPRPB) has announced the written exam dates for Sub Inspector (SI) Recruitment 2025. The exam will be held on 14th & 15th March 2026. Admit Cards will be available soon.",
+    postDate: "05/12/2025",
+    category: "Admit Card",
+    salary: "₹9,300 - ₹34,800 (Grade Pay ₹4200)",
+
+    importantDates: [
+      { label: "Written Exam Date", value: "14 & 15 March 2026" },
+      { label: "Admit Card Available", value: "10 Days before Exam" }
+    ],
+
+    applicationFee: [],
+
+    vacancyDetails: [
+      { postName: "Sub Inspector (Civil Police)", totalPost: 4242, eligibility: "Graduation" },
+      { postName: "Platoon Commander", totalPost: 135, eligibility: "Graduation" },
+      { postName: "Fire Service Officer", totalPost: 23, eligibility: "Science Graduate" },
+      { postName: "Total Vacancies", totalPost: 4543, eligibility: "-" }
+    ],
+
+    examPattern: {
+      details: ["Mode: Online CBT", "Total Marks: 400", "Time: 2 Hours", "No Negative Marking"],
+      table: [
+        { subject: "General Hindi", questions: 40, marks: 100 },
+        { subject: "GK / Law / Constitution", questions: 40, marks: 100 },
+        { subject: "Numerical & Mental Ability", questions: 40, marks: 100 },
+        { subject: "Mental Aptitude / IQ / Reasoning", questions: 40, marks: 100 }
+      ]
+    },
+
+    extraSections: [
+      {
+        title: "Physical Efficiency Test (PET)",
+        list: [
+          "Male: 4.8 km Run in 28 Minutes.",
+          "Female: 2.4 km Run in 16 Minutes."
+        ]
+      }
+    ],
+
+    howToApply: ["Visit uppbpb.gov.in", "Click on Admit Card Link", "Enter Reg No & DOB", "Download"],
+    
+    links: [
+      { title: "Download Exam Date Notice", url: "https://uppbpb.gov.in/" },
+      { title: "Download Admit Card (Link Soon)", url: "https://uppbpb.gov.in/" },
+      { title: "Official Website", url: "https://uppbpb.gov.in/" }
+    ]
+  },
+  // --- 1007. SSC CHSL Tier-I 2025 ---
+  {
+    id: 1007,
+    slug: "ssc-chsl-tier-i-admit-card-2025",
+    shortTitle: "SSC CHSL Tier-I Admit Card 2025",
+    title: "SSC CHSL Tier-I Admit Card 2025 Out | 10+2 LDC, DEO & JSA Hall Ticket",
+    shortInfo: "Staff Selection Commission (SSC) has released the Admit Card and Application Status for Combined Higher Secondary Level (CHSL) 10+2 Examination 2025. Candidates can download their Tier-I Hall Ticket region-wise.",
+    postDate: "05/12/2025",
+    category: "Admit Card",
+    salary: "Level-2 to Level-5 (₹19,900 - ₹92,300)",
+    
+    importantDates: [
+      { label: "Tier-I Exam Date", value: "12 Nov 2025 to 30 Nov 2025" },
+      { label: "Status/Admit Card", value: "Available Now" },
+      { label: "Tier-II Exam Date", value: "March 2026 (Tentative)" }
+    ],
+    
+    applicationFee: [],
+
+    vacancyDetails: [
+      { postName: "Lower Division Clerk (LDC) / JSA", totalPost: "Various", eligibility: "12th Pass" },
+      { postName: "Data Entry Operator (DEO)", totalPost: "Various", eligibility: "12th Pass (Science/Maths)" },
+      { postName: "Total Vacancies", totalPost: 3131, eligibility: "-" }
+    ],
+
+    examPattern: {
+      details: ["Tier-I: Online Objective Test", "Time: 60 Minutes", "Negative Marking: 0.50 Marks"],
+      cbt1Title: "Tier-I Exam Pattern",
+      cbt1: [
+        { subject: "English Language", questions: 25, marks: 50 },
+        { subject: "General Intelligence", questions: 25, marks: 50 },
+        { subject: "Quantitative Aptitude", questions: 25, marks: 50 },
+        { subject: "General Awareness", questions: 25, marks: 50 }
+      ]
+    },
+
+    howToApply: [
+      "Visit the SSC Regional Website.",
+      "Click on 'Know Your Status' or 'Download Admit Card'.",
+      "Enter Registration ID & Date of Birth.",
+      "Download the PDF and print it."
+    ],
+
+    links: [
+      { title: "Download Admit Card (NR - Delhi)", url: "https://sscnr.nic.in/" },
+      { title: "Download Admit Card (CR - UP/Bihar)", url: "http://www.ssc-cr.org/" },
+      { title: "Download Admit Card (WR - Mumbai)", url: "http://www.sscwr.net/" },
+      { title: "Download Admit Card (ER - Kolkata)", url: "http://www.sscer.org/" },
+      { title: "Download Admit Card (SR - Chennai)", url: "http://www.sscsr.gov.in/" },
+      { title: "Official Website", url: "https://ssc.gov.in/" }
+    ]
+  },
+  // --- 6. SSC CPO SI Paper-I (ID 1006) ---
+  {
+    id: 1006,
+    slug: "ssc-cpo-si-paper-i-admit-card-2025",
+    shortTitle: "SSC CPO SI Admit Card 2025 (Paper-I)",
+    title: "SSC CPO SI Admit Card 2025 Out | Paper-I Exam City, Status & Pattern [3073 Posts]",
+    shortInfo: "Staff Selection Commission (SSC) has released the Exam City Intimation Slip and Application Status for Sub-Inspector in Delhi Police and CAPFs Examination 2025 (Paper-I). The Computer Based Examination (CBE) is scheduled from 09th to 12th December 2025. Candidates can check their exam date, shift, and city for all regions.",
+    postDate: "05/12/2025",
+    category: "Admit Card",
+
+    salary: "Level-6 (₹35,400 - ₹1,12,400) + Allowances",
+
+    importantDates: [
+      { label: "Application Begin", value: "26/09/2025" },
+      { label: "Last Date for Apply", value: "16/10/2025" },
+      { label: "Paper-I Exam Date", value: "09/12/2025 to 12/12/2025" },
+      { label: "Exam City / Status", value: "Available Now" },
+      { label: "Admit Card Download", value: "4 Days before Exam Date" }
+    ],
+
+    applicationFee: [
+      { category: "General / OBC / EWS", amount: "₹100/-" },
+      { category: "SC / ST / Ex-Servicemen", amount: "₹0 (Exempted)" },
+      { category: "All Female Candidates", amount: "₹0 (Exempted)" },
+      { category: "Payment Mode", amount: "Online (BHIM UPI, Net Banking, Cards)" }
+    ],
+    
+    vacancyDetails: [
+      { postName: "Sub-Inspector (Exe.) in Delhi Police (Male)", totalPost: 142, eligibility: "Bachelor Degree + LMV Driving License" },
+      { postName: "Sub-Inspector (Exe.) in Delhi Police (Female)", totalPost: 70, eligibility: "Bachelor Degree" },
+      { postName: "Sub-Inspector (GD) in CAPFs (BSF, CISF, CRPF, ITBP, SSB)", totalPost: 2861, eligibility: "Bachelor Degree in Any Stream" }
+    ],
+
+    examPattern: {
+      details: [
+        "Mode: Online Computer Based Examination (CBE)",
+        "Time Duration: 2 Hours",
+        "Total Questions: 200 | Total Marks: 200",
+        "Negative Marking: 0.25 marks for each wrong answer."
+      ],
+      cbt1Title: "Paper-I Exam Pattern",
+      cbt1: [
+        { subject: "General Intelligence and Reasoning", questions: 50, marks: 50 },
+        { subject: "General Knowledge and General Awareness", questions: 50, marks: 50 },
+        { subject: "Quantitative Aptitude", questions: 50, marks: 50 },
+        { subject: "English Comprehension", questions: 50, marks: 50 }
+      ]
+    },
+
+    extraSections: [
+      {
+        title: "Physical Standard Test (PST)",
+        tableData: [
+          { "Category": "Male (General/OBC/SC)", "Height": "170 cm", "Chest": "80-85 cm" },
+          { "Category": "Male (Hill Areas)", "Height": "165 cm", "Chest": "80-85 cm" },
+          { "Category": "Male (ST)", "Height": "162.5 cm", "Chest": "77-82 cm" },
+          { "Category": "Female (General/OBC/SC)", "Height": "157 cm", "Chest": "NA" },
+          { "Category": "Female (Hill Areas)", "Height": "155 cm", "Chest": "NA" },
+          { "Category": "Female (ST)", "Height": "154 cm", "Chest": "NA" }
+        ]
+      },
+      {
+        title: "Physical Efficiency Test (PET)",
+        list: [
+          "Male: 100m race in 16 sec, 1.6 Km race in 6.5 min, Long Jump 3.65m, High Jump 1.2m, Shot Put 4.5m.",
+          "Female: 100m race in 18 sec, 800m race in 4 min, Long Jump 2.7m, High Jump 0.9m."
+        ]
+      }
+    ],
+
+    howToApply: [
+      "Visit the official SSC regional website (Links given below).",
+      "Click on 'Know Your Status / Download Admit Card' for SI in Delhi Police & CAPFs Exam 2025.",
+      "Enter your Registration Number and Date of Birth (or Name/Father's Name).",
+      "Check your Exam Date, Shift, and City details.",
+      "Download the full Admit Card 3-4 days before your exam date."
+    ],
+    
+    links: [
+      { title: "Check Status / Admit Card (NR - Delhi/Raj/UK)", url: "https://sscnr.nic.in/" },
+      { title: "Check Status / Admit Card (CR - UP/Bihar)", url: "http://www.ssc-cr.org/" },
+      { title: "Check Status / Admit Card (WR - Maha/Guj/Goa)", url: "http://www.sscwr.net/" },
+      { title: "Check Status / Admit Card (ER - WB/Odisha/Jhar)", url: "http://www.sscer.org/" },
+      { title: "Check Status / Admit Card (SR - AP/Tel/TN)", url: "http://www.sscsr.gov.in/" },
+      { title: "Check Status / Admit Card (KKR - Kar/Ker)", url: "http://www.ssckkr.kar.nic.in/" },
+      { title: "Check Status / Admit Card (MPR - MP/Chattis)", url: "http://www.sscmpr.org/" },
+      { title: "Check Status / Admit Card (NWR - Chd/Pun/Har)", url: "http://www.sscnwr.org/" },
+      { title: "Check Status / Admit Card (NER - North East)", url: "http://www.sscner.org.in/" },
+      { title: "Download Exam City Slip (SSC HQ Login)", url: "https://ssc.gov.in/login" },
+      { title: "Download Notification PDF", url: "https://ssc.gov.in/api/attachment/uploads/master/notice_2025_09_26.pdf" },
+      { title: "Official Website", url: "https://ssc.gov.in/" }
+    ]
+  },
+
+  // --- 5. SSC JE (ID 1005) ---
+  {
+    id: 1005,
+    slug: "ssc-je-tier-1-admit-card-2025",
+    shortTitle: "SSC JE Admit Card 2025 (All Regions)",
+    title: "SSC JE Admit Card 2025 Out | Tier-1 Status & Hall Ticket for Civil, Mech, Electrical",
+    shortInfo: "Staff Selection Commission (SSC) has released the Application Status and Admit Cards for Junior Engineer (JE) Tier-1 Examination 2025. Candidates can check their exam date, shift, and city for all regions (NR, CR, WR, ER, SR, KKR, MPR, NER, NWR).",
+     postDate: "01/12/2025",
+    category: "Admit Card",
+
+    importantDates: [
+      { label: "Tier-1 Exam Date", value: "03/12/2025 to 06/12/2025" },
+      { label: "Status/Admit Card", value: "Released (Region Wise)" }
+    ],
+    
+    applicationFee: [], // Added for consistency
+    vacancyDetails: [
+      { postName: "Junior Engineer (Civil/Mech/Elect)", totalPost: 1731, eligibility: "Diploma/Degree in Engineering" }
+    ],
+
+    howToApply: [
+      "Visit the official SSC regional website (e.g., sscnr.nic.in, ssc-cr.org).",
+      "Click on 'Admit Card' or 'Status of Junior Engineer Exam 2025'.",
+      "Enter your Registration ID and Date of Birth.",
+      "Check your City & Date.",
+      "Download the Admit Card (available 4 days before exam)."
+    ],
+    
+    links: [
+      { title: "Download Admit Card (All Regions)", url: "https://ssc.gov.in/" },
+      { title: "Check Application Status", url: "https://ssc.gov.in/" },
+      { title: "Official Website", url: "https://ssc.gov.in/" }
+    ]
+  },
+
+  // --- 4. TN MRB Health Inspector (ID 1004) ---
+  {
+    id: 1004,
+    slug: "tn-mrb-health-inspector-admit-card-2025",
+    shortTitle: "TN MRB Health Inspector Admit Card 2025",
+    title: "TN MRB Health Inspector Grade-II Admit Card 2025 Out | Exam Date 07 Dec",
+    shortInfo: "Tamil Nadu Medical Services Recruitment Board (TN MRB) has released the Hall Ticket for the post of Health Inspector Grade-II. The Computer Based Test (CBT) is scheduled to be held on 07th December 2025.",
+    postDate: "04/12/2025",
+    category: "Admit Card",
+
+    importantDates: [
+      { label: "CBT Exam Date", value: "07/12/2025 (Sunday)" },
+      { label: "Admit Card Released", value: "29/11/2025" }
+    ],
+    
+    applicationFee: [], // Added for consistency
+    vacancyDetails: [
+      { postName: "Health Inspector Gr-II", totalPost: 1429, eligibility: "12th + Health Inspector Course" }
+    ],
+
+    howToApply: [
+      "Go to the official website mrb.tn.gov.in.",
+      "Click on 'Notifications' tab.",
+      "Find 'Health Inspector Grade II' and click on 'Download Admit Card'.",
+      "Enter your Application Number and Date of Birth.",
+      "Download and save the PDF."
+    ],
+    
+    links: [
+      { title: "Download Hall Ticket", url: "https://www.mrb.tn.gov.in/" },
+      { title: "Official Website", url: "https://www.mrb.tn.gov.in/" }
+    ]
+  },
+
+  // --- 3. IBPS RRB Clerk (ID 1003) ---
+  {
+    id: 1003,
+    slug: "ibps-rrb-clerk-prelims-admit-card-2025",
+    shortTitle: "IBPS RRB Clerk Prelims Admit Card 2025",
+    title: "IBPS RRB Clerk Admit Card 2025 Out | Office Assistant Prelims Hall Ticket Download",
+    shortInfo: "Institute of Banking Personnel Selection (IBPS) has released the Prelims Admit Card for RRB Office Assistant (Clerk) Recruitment 2025. The preliminary examination will be conducted in December 2025. Download your hall ticket from the direct link below.",
+    postDate: "04/12/2025",
+    category: "Admit Card",
+
+    importantDates: [
+      { label: "Prelims Exam Date", value: "06, 07, 13 & 14 Dec 2025" },
+      { label: "Admit Card Released", value: "30/11/2025" },
+      { label: "Mains Exam Date", value: "February 2026" }
+    ],
+    
+    applicationFee: [], // Added for consistency
+    vacancyDetails: [
+      { postName: "Office Assistant (Clerk)", totalPost: 8002, eligibility: "Bachelor Degree" }
+    ],
+
+    howToApply: [
+      "Visit the official website ibps.in.",
+      "Click on 'CRP RRBs' on the left side.",
+      "Select 'Common Recruitment Process - Regional Rural Banks Phase XIV'.",
+      "Click on 'Click here to download Online Preliminary Exam Call Letter'.",
+      "Enter Registration No / Roll No and Password / DOB.",
+      "Take a printout of your Admit Card."
+    ],
+    
+    links: [
+      { title: "Download Admit Card", url: "https://ibps.in/" },
+      { title: "Official Website", url: "https://ibps.in/" }
+    ]
+  },
+
+  // --- 2. Indian Overseas Bank LBO (ID 1002) ---
+  {
+    id: 1002,
+    slug: "iob-lbo-interview-call-letter-2025",
+    shortTitle: "IOB LBO Interview Call Letter 2025",
+    title: "Indian Overseas Bank (IOB) LBO Interview Call Letter 2025 Released | Download Hall Ticket",
+    shortInfo: "Indian Overseas Bank has released the Interview Call Letter for the post of Local Bank Officer (LBO). Candidates who qualified the written exam and LPT can now download their interview admit card. The interview is scheduled for December 2025.",
+    postDate: "04/12/2025",
+    category: "Admit Card",
+
+    importantDates: [
+      { label: "LPT Exam Date", value: "03/12/2025 & 04/12/2025" },
+      { label: "Interview Date", value: "08/12/2025 to 15/12/2025" },
+      { label: "Interview Call Letter", value: "03/12/2025" }
+    ],
+    
+    applicationFee: [], // Added for consistency
+    vacancyDetails: [
+      { postName: "Local Bank Officer (LBO)", totalPost: 400, eligibility: "Bachelor Degree + Experience" }
+    ],
+
+    howToApply: [
+      "Visit the official website iob.in.",
+      "Go to the 'Careers' section.",
+      "Click on 'Recruitment of Local Bank Officers'.",
+      "Click on 'Download Interview Call Letter'.",
+      "Login with Roll Number and Password/DOB.",
+      "Download and print the hall ticket."
+    ],
+    
+    links: [
+      { title: "Download Interview Call Letter", url: "https://www.iob.in/careers.aspx" },
+      { title: "Download LPT Call Letter", url: "https://www.iob.in/careers.aspx" },
+      { title: "Official Website", url: "https://www.iob.in/" }
+    ]
+  },
+
+  // --- 1. RRC Central Railway Sports Quota (ID 1001) ---
+  {
+    id: 1001,
+    slug: "rrc-cr-sports-quota-dv-call-letter-2025",
+    shortTitle: "RRC CR Sports Quota DV Call Letter 2025",
+    title: "RRC Central Railway Sports Quota Group C & D DV Call Letter 2025 Out | Download Link",
+    shortInfo: "Railway Recruitment Cell (RRC), Central Railway has released the E-Call Letter for Document Verification (DV) of Sports Quota (Group C & D) Recruitment 2025. Candidates can download their admit card using Registration Number and Date of Birth.",
+    postDate: "04/12/2025",
+    category: "Admit Card",
+
+    importantDates: [
+      { label: "DV Date", value: "02/12/2025 to 05/12/2025" },
+      { label: "Call Letter Released", value: "29/11/2025" },
+      { label: "Result Declaration", value: "To be notified" }
+    ],
+    
+    applicationFee: [],
+    
+    vacancyDetails: [
+      { postName: "Sports Quota (Group C & D)", totalPost: 59, eligibility: "Sports Achievement + 10th/12th/ITI" }
+    ], 
+
+    howToApply: [
+      "Visit the official website rrccr.com.",
+      "Click on 'Click here to download E-Call Letter for DV'.",
+      "Enter your Registration Number and Date of Birth.",
+      "Click on 'Login' and download your Call Letter.",
+      "Bring all original documents mentioned in the call letter."
+    ],
+    
+    links: [
+      { title: "Download DV Call Letter", url: "https://rrccr.com/" },
+      { title: "Download Notification", url: "https://rrccr.com/" },
+      { title: "Official Website", url: "https://rrccr.com/" }
+    ]
+  }
+  ];
