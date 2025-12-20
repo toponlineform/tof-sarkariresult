@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import { allPosts } from '../data/index.js';
 
 export async function getStaticPaths() {
-  // 1. Yahan hum URL Slug aur Data Category ko Match kar rahe hain
+  // 1. Categories Define karein
   const categories = [
     { slug: 'latest-jobs', name: 'Latest Jobs' },
     { slug: 'admit-card', name: 'Admit Card' },
@@ -17,11 +17,27 @@ export async function getStaticPaths() {
     // 2. Data Filter Logic: Sirf wahi posts lo jo is category ki hain
     const filteredPosts = allPosts.filter(post => post.category === cat.name);
     
-    // Sort by Date (Latest First) - Agar date format DD/MM/YYYY hai
+    // ✅ 3. ROBUST SORTING LOGIC (Newest First + ID Fallback)
     filteredPosts.sort((a, b) => {
-        const dateA = new Date(a.postDate.split('/').reverse().join('-'));
-        const dateB = new Date(b.postDate.split('/').reverse().join('-'));
-        return dateB - dateA;
+        // Helper: Date string (DD/MM/YYYY) ko number value me badlo
+        const parseDate = (dateStr) => {
+            if (!dateStr) return 0; // Agar date nahi hai to sabse neeche
+            const parts = dateStr.split('/');
+            // Format: YYYY-MM-DD convert karke timestamp lo
+            return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`).getTime();
+        };
+
+        const timeA = parseDate(a.postDate);
+        const timeB = parseDate(b.postDate);
+
+        // Step A: Date Compare karo (Bada time pehle = Newest First)
+        if (timeB !== timeA) {
+            return timeB - timeA;
+        }
+
+        // Step B: Agar Date Same hai, to ID Compare karo (Bada ID pehle)
+        // Isse "Aaj" ki 4 jobs bhi sahi order me aayengi
+        return (b.id || 0) - (a.id || 0);
     });
 
     return {
@@ -56,7 +72,7 @@ const { categoryName, posts } = Astro.props;
               {/* Left Side: Title */}
               <div class="flex-1">
                 <h2 class="text-lg md:text-xl font-bold text-blue-800 group-hover:text-red-700 transition leading-tight">
-                  {/* ✅ User Demand: Show Short Title if available */}
+                  {/* ✅ Short Title Logic */}
                   {post.shortTitle || post.title}
                 </h2>
                 {post.lastDate && (
