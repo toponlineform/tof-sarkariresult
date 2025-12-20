@@ -1,8 +1,8 @@
 export const admissionBox = {
-  id: "results",
-  title: "Results",
-  color: "green",
-  viewMoreLink: "/results",
+  id: "admission",
+  title: "Admission",
+  color: "purple",
+  viewMoreLink: "/admission",
     // ✅ BAS YE 2 LINE ADD KARNI HAIN AUTOMATIC KE LIYE:
   auto: true,               // Switch ON and Use false for OFF Automation
   categoryName: "Latest Jobs",   // Master Data wali Category ka naam match hona chahiye
