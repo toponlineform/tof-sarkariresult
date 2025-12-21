@@ -43,7 +43,7 @@ export const latestJobs = [
     ageRelaxation: "SC/ST: +5 Years, OBC: +3 Years, Govt Servants: +5 Years (As on 31/12/2025)",
 
     // 4. VACANCY DETAILS (Main Post Table)
-    vacancyTableTitle: "ITBP JAG Vacancy Details 2025",
+    vacancyTableTitle: "Vacancy Distribution (Category Wise)", // ✅ Header Name Updated
     vacancyDetails: [
       {
         "Post Name": "Deputy Judge Attorney General (Dy. Commandant)",
@@ -52,19 +52,15 @@ export const latestJobs = [
       }
     ],
 
-    // 5. STATE/CATEGORY WISE VACANCY (Separate Section)
+    // 5. STATE/CATEGORY WISE VACANCY (Now Horizontal ✅)
     stateWiseVacancy: [
-      // Table 1: Category Wise Distribution
-      {
-        type: "table",
-        title: "Category Wise Vacancy Distribution", // ✅ GREY HEADER
-        data: [
-          { Category: "UR (Unreserved)", Posts: "05" },
-          { Category: "OBC (NCL)", Posts: "01" },
-          { Category: "EWS", Posts: "01" },
-          { Category: "SC / ST", Posts: "00" },
-          { Category: "Total", Posts: "07" }
-        ]
+      { 
+        "Post Name": "Dy. Judge Attorney General", 
+        "UR": "05", 
+        "OBC": "01", 
+        "EWS": "01", 
+        "SC / ST": "00", 
+        "Total": "07" 
       }
     ],
 
@@ -91,7 +87,7 @@ export const latestJobs = [
       "Detailed Medical Examination (DME)"
     ],
 
-    // 9. EXAM PATTERN (Block Structure for Universal Renderer)
+    // 9. EXAM PATTERN
     examPattern: [
       // Block 1: Note
       {
@@ -102,7 +98,7 @@ export const latestJobs = [
       // Block 2: Paper I
       {
         type: "table",
-        title: "Paper-I: General Subjects (Objective Type)", // ✅ GREY HEADER
+        title: "Paper-I: General Subjects (Objective Type)",
         data: [
           { Subject: "General Intelligence", Questions: "25", Marks: "25" },
           { Subject: "General Awareness & GK", Questions: "25", Marks: "25" },
@@ -113,7 +109,7 @@ export const latestJobs = [
       // Block 3: Paper II
       {
         type: "table",
-        title: "Paper-II: Professional Subject (Law)", // ✅ GREY HEADER
+        title: "Paper-II: Professional Subject (Law)",
         data: [
           { Type: "Objective (MCQ)", Questions: "60", Marks: "60" },
           { Type: "Subjective (Descriptive)", Questions: "20", Marks: "40" },
@@ -123,7 +119,7 @@ export const latestJobs = [
       // Block 4: Interview
       {
         type: "table",
-        title: "Interview & Personality Test Breakdown", // ✅ GREY HEADER
+        title: "Interview & Personality Test Breakdown",
         data: [
           { Component: "Professional Qualification (LLM/PhD)", Marks: "05" },
           { Component: "Professional Knowledge", Marks: "10" },
@@ -170,11 +166,9 @@ export const latestJobs = [
     },
 
     // 11. EXTRA SECTIONS (Physical & Medical Standards)
-    // 🚀 Yeh hai "Infinity Pro" Feature. Yahan hum unlimited tables daal sakte hain.
     extraSections: [
       {
-        title: "Physical Efficiency Test (PET)", // BLUE HEADER
-        // Uses Universal Table Logic
+        title: "Physical Efficiency Test (PET)",
         table: [
           { Event: "Race 100 Mtrs", Male: "28 Seconds", Female: "30 Seconds" },
           { Event: "Race 800 Mtrs", Male: "6 Minutes", Female: "7 Minutes" },
@@ -182,7 +176,7 @@ export const latestJobs = [
         ]
       },
       {
-        title: "Physical Standard Test (PST)", // BLUE HEADER
+        title: "Physical Standard Test (PST)",
         table: [
           { Category: "Height (General)", Male: "165 cms", Female: "157 cms" },
           { Category: "Chest (General)", Male: "81-86 cms", Female: "N/A" },
@@ -190,7 +184,7 @@ export const latestJobs = [
         ]
       },
       {
-        title: "Medical Standards (Eye Sight)", // BLUE HEADER
+        title: "Medical Standards (Eye Sight)",
         table: [
           { Eye: "Better Eye", Distant_Vision: "6/6", Near_Vision: "0.6" },
           { Eye: "Worse Eye", Distant_Vision: "6/9", Near_Vision: "0.8" }
