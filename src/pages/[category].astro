@@ -3,635 +3,196 @@ import Layout from '../layouts/Layout.astro';
 import AdSlot from '../components/AdSlot.astro'; 
 import { allPosts } from '../data/index.js';
 
-// --- 1. DATA FETCHING ---
 export async function getStaticPaths() {
-  return allPosts.map((post) => {
-    const relatedPosts = allPosts
-      .filter(p => p.category === post.category && p.slug !== post.slug)
-      .sort((a, b) => {
-          const parseDate = (d) => {
-             if(!d) return 0;
-             const p = d.trim().split('/');
-             return new Date(`${p[2]}-${p[1]}-${p[0]}`).getTime();
-          };
-          return parseDate(b.updatedDate || b.postDate) - parseDate(a.updatedDate || a.postDate);
-      })
-      .slice(0, 6);
+  // 1. Categories Define karein (Ensure names match your file exports/types)
+  const categories = [
+    { slug: 'latest-jobs', name: 'Latest Jobs' },
+    { slug: 'admit-card', name: 'Admit Card' },
+    { slug: 'results', name: 'Result' },       // Note: Usually 'Result' singular in data
+    { slug: 'answer-key', name: 'Answer Key' },
+    { slug: 'admission', name: 'Admission' },
+    { slug: 'syllabus', name: 'Syllabus' },
+    { slug: 'previous-papers', name: 'Previous Paper' }
+  ];
 
-    return { params: { slug: post.slug }, props: { post, relatedPosts } };
+  return categories.map((cat) => {
+    // 2. Data Filter Logic (Updated for 'types' support)
+    // Ab ye 'Category Name' bhi check karega AUR 'types' array bhi check karega.
+    const filteredPosts = allPosts.filter(post => {
+        const isMainCategory = post.category === cat.name;
+        const isTagged = post.types && post.types.includes(cat.name);
+        return isMainCategory || isTagged;
+    });
+    
+    // ✅ 3. ULTIMATE SORTING LOGIC (With Syllabus & Reopen Support)
+    filteredPosts.sort((a, b) => {
+        const parseDate = (dateStr) => {
+            if (!dateStr) return 0;
+            const parts = dateStr.split('/');
+            return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`).getTime();
+        };
+
+        let dateA, dateB;
+
+        // 🧠 Category Specific Date Priority
+        if (cat.slug === 'latest-jobs') {
+            // Latest Jobs: Priority = Reopen Date > Post Date
+            // (Note: Generic 'updatedDate' yahan use nahi kiya taaki Answer Key aane par Job upar na kude)
+            dateA = parseDate(a.reopenDate || a.postDate);
+            dateB = parseDate(b.reopenDate || b.postDate);
+        } 
+        else if (cat.slug === 'admit-card') {
+            // Admit Card: Priority = Admit Card Date > Updated Date
+            dateA = parseDate(a.admitCardDate || a.updatedDate || a.postDate);
+            dateB = parseDate(b.admitCardDate || b.updatedDate || b.postDate);
+        } 
+        else if (cat.slug === 'answer-key') {
+            // Answer Key: Priority = Answer Key Date
+            dateA = parseDate(a.answerKeyDate || a.updatedDate || a.postDate);
+            dateB = parseDate(b.answerKeyDate || b.updatedDate || b.postDate);
+        }
+        else if (cat.slug === 'results') {
+            // Result: Priority = Result Date
+            dateA = parseDate(a.resultDate || a.updatedDate || a.postDate);
+            dateB = parseDate(b.resultDate || b.updatedDate || b.postDate);
+        }
+        else if (cat.slug === 'syllabus') {
+            // ✅ Syllabus: Priority = Syllabus Date
+            dateA = parseDate(a.syllabusDate || a.updatedDate || a.postDate);
+            dateB = parseDate(b.syllabusDate || b.updatedDate || b.postDate);
+        }
+        else {
+            // Default Fallback (Admission/Previous Paper)
+            dateA = parseDate(a.updatedDate || a.postDate);
+            dateB = parseDate(b.updatedDate || b.postDate);
+        }
+
+        // Step A: Date Compare (Newest First)
+        if (dateB !== dateA) {
+            return dateB - dateA;
+        }
+
+        // Step B: ID Compare (Fallback for same day posts)
+        return (b.id || 0) - (a.id || 0);
+    });
+
+    return {
+      params: { category: cat.slug },
+      props: { categoryName: cat.name, posts: filteredPosts },
+    };
   });
 }
 
-const { post, relatedPosts } = Astro.props;
+const { categoryName, posts } = Astro.props;
 
-// --- 🧠 2. LOGIC ADAPTER ---
-
-// A. SIMPLE MODE
-const catLower = post.category.toLowerCase();
-const isSimpleMode = catLower.includes("syllabus") || catLower.includes("previous") || catLower.includes("paper") || catLower.includes("answer key");
-
-// B. HEADER LOGIC
-let stepsHeader = "How to Apply";
-if (isSimpleMode) stepsHeader = "How to Download";
-else if (catLower.includes("admit card")) stepsHeader = "How to Download Admit Card";
-else if (catLower.includes("result")) stepsHeader = "How to Check Result";
-else if (catLower.includes("admission")) stepsHeader = "How to Apply for Admission";
-
-// C. AUTO TOTAL
-const calculateTotal = (data, key) => {
-    if (!data || !key) return null;
-    const skipKeys = ['age', 'year', 'code', 's.no', 'serial', 'qualification', 'eligibility'];
-    if (skipKeys.some(k => key.toLowerCase().includes(k))) return null;
-
-    let total = 0;
-    let hasNumbers = false;
-    for (let item of data) {
-        let val = item[key];
-        if (!val) continue;
-        let clean = String(val).replace(/,/g, '').trim();
-        if (clean && !isNaN(clean)) {
-            total += parseFloat(clean);
-            hasNumbers = true;
-        } else { return null; }
-    }
-    return hasNumbers ? total : null;
+// Helper: Button Border Color based on Category
+const getBorderColor = (cat) => {
+    const c = cat.toLowerCase();
+    if (c.includes('admit')) return 'border-blue-600';
+    if (c.includes('result')) return 'border-green-600';
+    return 'border-red-600';
 };
-
-// D. HEADER FORMATTER
-const formatHeader = (key) => {
-    const upperKeys = ["ur", "obc", "sc", "st", "ews", "pwbd", "esm", "gen", "ph", "cbt", "pet"];
-    if (upperKeys.includes(key.toLowerCase())) return key.toUpperCase();
-    return key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim();
-};
-
-// E. INFINITE DATA FINDER
-const standardKeys = [
-  'id', 'slug', 'title', 'shortTitle', 'category', 'postDate', 'updatedDate', 
-  'shortInfo', 'importantDates', 'applicationFee', 'links', 'faqs', 'tags', 
-  'state', 'ageLimit', 'ageRelaxation', 'vacancyDetails', 'stateWiseVacancy',
-  'salary', 'salaryDetails', 'selectionProcess', 'examPattern', 'syllabus', 'howToApply', 
-  'eligibility', 'extraSections', 'reopenDate', 'admitCardDate', 'answerKeyDate', 'resultDate', 'isReopen', 'syllabusDate', 'types'
-];
-const dynamicKeys = Object.keys(post).filter(key => !standardKeys.includes(key));
-
-// Helper: Data Type
-const getDataType = (data) => {
-    if (Array.isArray(data) && data.length > 0) {
-        return typeof data[0] === 'object' ? 'table' : 'list';
-    }
-    return 'text';
-};
-
-// F. SMART BUTTON STYLES
-const getBtnStyle = (title) => {
-  const t = title.toLowerCase();
-  if (t.includes('apply') || t.includes('login') || t.includes('registration')) return 'bg-blue-600 hover:bg-blue-700 border-blue-700 text-white';
-  if (t.includes('download') || t.includes('notification') || t.includes('result') || t.includes('pdf') || t.includes('notice')) return 'bg-red-600 hover:bg-red-700 border-red-700 text-white';
-  if (t.includes('official') || t.includes('website')) return 'bg-gray-800 hover:bg-black border-black text-white';
-  return 'bg-green-600 hover:bg-green-700 border-green-700 text-white';
-};
-
-// G. COUNTDOWN
-const getLastDateISO = () => {
-    if (!post.importantDates) return null;
-    const lastDateObj = post.importantDates.find(d => d.label.toLowerCase().includes('last date') || d.label.toLowerCase().includes('closing date'));
-    if (!lastDateObj) return null;
-    const dateStr = lastDateObj.value.replace(/ \(.*\)/, '').trim(); 
-    const parts = dateStr.split(/[/-]/);
-    if (parts.length !== 3) return null;
-    return `${parts[2]}-${parts[1]}-${parts[0]}`;
-};
-const lastDateISO = getLastDateISO();
-
-// Social Links
-const shareUrl = `https://toponlineform.com/${post.slug}`;
-const shareTitle = post.title;
-const waLink = `whatsapp://send?text=✅ *${encodeURIComponent(shareTitle)}* 👇%0A%0A${encodeURIComponent(shareUrl)}`;
-const tgLink = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=✅ *${encodeURIComponent(shareTitle)}* 👇`;
-
-const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br />');
-
 ---
 
-<Layout title={post.title} description={post.shortInfo} keywords={post.tags}>
+<Layout title={`${categoryName} - Top Online Form`} description={`Latest ${categoryName} updates.`}>
   
-  {/* 🍞 BREADCRUMBS */}
-  <div class="max-w-7xl mx-auto px-1">
-      <nav class="flex text-xs text-gray-500 mb-2 font-medium overflow-x-auto whitespace-nowrap">
+  <div class="max-w-7xl mx-auto px-2 mb-10">
+      
+      {/* 1. BREADCRUMB */}
+      <nav class="flex text-xs text-gray-500 mb-4 mt-2 px-1 font-medium">
         <a href="/" class="hover:text-blue-700">Home</a> <span class="mx-1">›</span>
-        <a href={`/${post.category.toLowerCase().replace(/\s+/g, '-')}`} class="hover:text-blue-700 text-blue-600">{post.category}</a> <span class="mx-1">›</span>
-        <span class="text-gray-600 truncate max-w-[250px]">{post.shortTitle || "Details"}</span>
+        <span class="text-gray-700 font-bold">{categoryName}</span>
       </nav>
+
+      {/* 2. PAGE HEADER */}
+      <div class="text-center mb-6">
+        <h1 class={`text-2xl md:text-3xl font-extrabold text-gray-800 border-b-4 inline-block pb-2 px-4 ${getBorderColor(categoryName)} uppercase tracking-tight`}>
+            {categoryName}
+        </h1>
+        <p class="text-xs text-gray-400 mt-1">Total Updates: {posts.length}</p>
+      </div>
+
+      {/* 💰 AD SLOT 1: TOP BANNER */}
+      <AdSlot type="horizontal" />
+
+      {/* 🏗️ MAIN LAYOUT (Content + Sidebar) */}
+      <div class="flex flex-col lg:flex-row gap-8 mt-6">
+          
+          {/* === LEFT SIDE: POST LIST === */}
+          <main class="flex-1 min-w-0">
+              {posts.length > 0 ? (
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {posts.map((post) => (
+                          // ✅ Smart Link: Agar Syllabus page hai, toh seedha #syllabus section par jump karega
+                          <a href={`/${post.slug}${categoryName === 'Syllabus' ? '#syllabus' : ''}`} class="group block bg-white border border-gray-300 rounded hover:shadow-lg hover:border-blue-400 transition-all duration-200 p-4 relative overflow-hidden">
+                              
+                              {/* Decorative Corner */}
+                              <div class="absolute top-0 right-0 w-2 h-2 bg-gray-200 group-hover:bg-blue-500 transition-colors"></div>
+                              
+                              {/* Title */}
+                              <h2 class="text-sm md:text-base font-bold text-blue-800 group-hover:text-red-700 leading-snug">
+                                  {post.shortTitle || post.title}
+                              </h2>
+
+                              {/* Dates / Info */}
+                              <div class="mt-3 flex items-center justify-between border-t border-gray-100 pt-2">
+                                  <div class="text-xs text-gray-500 font-mono">
+                                      📅 {post.postDate}
+                                  </div>
+                                  
+                                  {/* Logic to show appropriate Status Badge */}
+                                  {categoryName === 'Syllabus' ? (
+                                      <div class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">View Syllabus</div>
+                                  ) : post.lastDate ? (
+                                      <div class="text-xs font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded">Ends: {post.lastDate}</div>
+                                  ) : (
+                                      <div class="text-xs font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded">View Details</div>
+                                  )}
+                              </div>
+                          </a>
+                      ))}
+                  </div>
+              ) : (
+                  <div class="text-center p-10 bg-gray-50 border border-dashed border-gray-300 rounded">
+                      <p class="text-gray-500">No updates found in {categoryName} yet.</p>
+                      <a href="/" class="text-blue-600 font-bold hover:underline mt-2 block">Go Home</a>
+                  </div>
+              )}
+
+              {/* 💰 AD SLOT 2: BOTTOM (Pagination area) */}
+              <div class="mt-10">
+                 <AdSlot type="horizontal" />
+              </div>
+          </main>
+
+          {/* === RIGHT SIDE: SIDEBAR (Desktop Only) === */}
+          <aside class="hidden lg:block w-[300px] flex-shrink-0">
+              <div class="sticky top-4 space-y-6">
+                  
+                  {/* WhatsApp Box */}
+                  <a href="https://whatsapp.com/channel/0029Vb7TcG06LwHoTXhZKn2D" target="_blank" class="block bg-white border border-green-200 p-4 rounded shadow-sm hover:shadow-md transition text-center group">
+                      <div class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition">
+                          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+                      </div>
+                      <div class="font-bold text-green-700">Join WhatsApp Group</div>
+                      <div class="text-xs text-gray-500 mt-1">Get instant updates on your phone</div>
+                  </a>
+
+                  {/* Telegram Box */}
+                  <a href="https://t.me/toponlineform" target="_blank" class="block bg-white border border-blue-200 p-4 rounded shadow-sm hover:shadow-md transition text-center group">
+                      <div class="w-12 h-12 bg-blue-100 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition">
+                          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.694 0Zm5.216 8.784-1.76 8.297c-.13.587-.48.73-.974.454l-2.696-1.986-1.3 1.253c-.144.144-.265.265-.54.265l.192-2.738 4.985-4.506c.217-.193-.047-.3-.337-.107l-6.16 3.878-2.656-.83c-.577-.18-.588-.577.12-.852l10.378-4.004c.48-.173.9.117.748.876Z"/></svg>
+                      </div>
+                      <div class="font-bold text-blue-600">Join Telegram Channel</div>
+                      <div class="text-xs text-gray-500 mt-1">Daily PDF & Notes</div>
+                  </a>
+
+                  {/* 💰 AD SLOT 3: SIDEBAR STICKY */}
+                  <AdSlot type="square" />
+              </div>
+          </aside>
+
+      </div>
   </div>
-
-  {/* 🏗️ MAIN GRID LAYOUT */}
-  <div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-6 mb-10 items-start">
-
-    {/* ================= LEFT COLUMN: MAIN CONTENT ================= */}
-    <main class="flex-1 min-w-0 w-full">
-        <article class="bg-white p-3 md:p-5 border border-gray-400 font-sans shadow-sm">
-            
-            {/* 1. HEADER */}
-            <header class="text-center mb-6">
-            <h1 class="text-xl md:text-2xl lg:text-3xl font-extrabold text-[#d32f2f] mb-3 leading-snug">
-                {post.title}
-            </h1>
-            
-            <div class="flex flex-wrap justify-center gap-4 text-sm text-gray-700 font-bold mb-4">
-                <span class="bg-gray-100 px-2 py-1 rounded border border-gray-200">📅 Post: {post.postDate}</span>
-                {post.updatedDate && <span class="bg-green-50 text-green-700 px-2 py-1 rounded border border-green-200">📝 Update: {post.updatedDate}</span>}
-            </div>
-
-            {post.shortInfo && (
-                <div class="text-left bg-[#fffae6] border border-[#f0c14b] p-3 text-sm md:text-base text-gray-800 leading-relaxed">
-                <p><strong class="text-[#d32f2f]">Short Information:</strong> <span set:html={formatText(post.shortInfo)}></span></p>
-                </div>
-            )}
-
-            {/* ⏳ COUNTDOWN */}
-            {lastDateISO && !isSimpleMode && (
-                <div id="countdown-box" data-date={lastDateISO} class="hidden mt-4 bg-red-50 border border-red-200 rounded p-3 text-center animate-pulse">
-                    <p class="text-xs text-red-600 font-bold uppercase tracking-widest mb-1">Application Ends In:</p>
-                    <div id="timer-display" class="text-lg md:text-xl font-extrabold text-red-700 font-mono">Calculating...</div>
-                </div>
-            )}
-            </header>
-
-            {/* 💰 AD SLOT 1: TOP */}
-            <AdSlot type="horizontal" />
-
-            {/* 📑 TOC (NOW INFINITE SMART 🧠) */}
-            <div class="mb-6 bg-blue-50 border border-blue-200 p-3 rounded-sm">
-                <p class="text-[10px] font-bold text-blue-800 uppercase mb-2 tracking-wider">Table of Contents:</p>
-                <div class="flex flex-wrap gap-2 text-xs font-semibold text-blue-700">
-                    {!isSimpleMode && post.importantDates && <a href="#dates" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">📅 Dates & Fees</a>}
-                    {!isSimpleMode && (post.vacancyDetails || post.stateWiseVacancy) && <a href="#vacancy" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">📦 Vacancy</a>}
-                    {!isSimpleMode && (post.salary || post.salaryDetails) && <a href="#salary" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">💰 Salary</a>}
-                    {post.selectionProcess && <a href="#selection" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">🎯 Selection</a>}
-                    {post.examPattern && <a href="#pattern" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">📝 Pattern</a>}
-                    {post.syllabus && <a href="#syllabus" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">📖 Syllabus</a>}
-                    
-                    {/* 👇 THIS LOOP MAKES TOC INFINITE SMART */}
-                    {dynamicKeys.map(key => (
-                        <a href={`#${key}`} class="bg-white px-2 py-1 border border-purple-200 text-purple-700 rounded hover:shadow-sm">
-                            🔹 {formatHeader(key)}
-                        </a>
-                    ))}
-                    
-                    <a href="#links" class="bg-white px-2 py-1 border border-red-200 text-red-600 rounded hover:shadow-sm">🔗 Important Links</a>
-                </div>
-            </div>
-
-            {/* 2. DATES & FEES */}
-            {!isSimpleMode && post.importantDates && post.importantDates.length > 0 && (
-            <div id="dates" class="grid grid-cols-1 md:grid-cols-2 gap-0 border border-gray-400 mb-6 scroll-mt-20">
-            <div class="border-b md:border-b-0 md:border-r border-gray-400">
-                <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Important Dates</div>
-                <div class="bg-white p-2">
-                <ul class="space-y-2 text-sm">
-                    {post.importantDates.map((date) => (
-                    <li class="flex justify-between border-b border-gray-200 last:border-0 pb-1">
-                        <span class="font-bold text-gray-700">{date.label}</span><span class="text-gray-900 font-medium">{date.value}</span>
-                    </li>
-                    ))}
-                </ul>
-                </div>
-            </div>
-            <div>
-                <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Application Fee</div>
-                <div class="bg-white p-2">
-                {post.applicationFee ? (
-                    <ul class="space-y-2 text-sm">
-                        {post.applicationFee.map((fee) => (
-                        <li class="flex justify-between border-b border-gray-200 last:border-0 pb-1">
-                            <span class="font-bold text-gray-700">{fee.category}</span><span class="text-gray-900 font-medium">{fee.amount}</span>
-                        </li>
-                        ))}
-                    </ul>
-                ) : (<div class="text-center text-sm py-2">Check Notification</div>)}
-                <div class="mt-2 text-[11px] text-gray-500 text-center italic">Pay via: Net Banking / Debit Card / Credit Card / UPI</div>
-                </div>
-            </div>
-            </div>
-            )}
-
-            {/* 3. AGE & VACANCY */}
-            {!isSimpleMode && (post.ageLimit || post.vacancyDetails) && (
-            <div id="vacancy" class="mb-6 border border-gray-400 scroll-mt-20">
-                <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Vacancy Details & Age Limit</div>
-                {post.ageLimit && (
-                    <div class="p-3 text-center border-b border-gray-300 bg-gray-50">
-                        <p class="text-sm font-bold text-gray-800">Age Limit: <span class="font-normal">{post.ageLimit}</span></p>
-                        {post.ageRelaxation && <p class="text-xs text-gray-500 mt-1">({post.ageRelaxation})</p>}
-                    </div>
-                )}
-                {post.vacancyDetails && (
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm border-collapse text-center">
-                            <thead class="bg-gray-100 text-gray-800 text-xs uppercase font-bold">
-                                <tr>
-                                    <th class="border border-gray-300 px-2 py-2 text-left">Post Name</th>
-                                    <th class="border border-gray-300 px-2 py-2">Total</th>
-                                    <th class="border border-gray-300 px-2 py-2 text-left">Eligibility</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {post.vacancyDetails.map((v) => (
-                                    <tr class="hover:bg-yellow-50">
-                                        <td class="border border-gray-300 px-2 py-2 text-left font-bold text-gray-700">{v.postName}</td>
-                                        <td class="border border-gray-300 px-2 py-2 font-bold text-[#d32f2f]">{v.totalPost || v.total}</td>
-                                        <td class="border border-gray-300 px-2 py-2 text-left text-gray-600" set:html={formatText(v.eligibility)}></td>
-                                    </tr>
-                                ))}
-                                {(() => {
-                                    const total = calculateTotal(post.vacancyDetails, 'total') || calculateTotal(post.vacancyDetails, 'totalPost');
-                                    if(total) return (<tr class="bg-gray-200 font-bold"><td class="border px-2 py-2 text-right">Total</td><td class="border px-2 py-2 text-[#d32f2f]">{total}</td><td class="border px-2 py-2"></td></tr>);
-                                })()}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
-            </div>
-            )}
-
-            {/* 4. STATE VACANCY */}
-            {!isSimpleMode && post.stateWiseVacancy && post.stateWiseVacancy.length > 0 && (
-            <div class="mb-6 border border-gray-400">
-                <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">{post.vacancyTableTitle || "Category Wise Vacancy"}</div>
-                <div class="overflow-x-auto">
-                <table class="w-full text-sm border-collapse border border-gray-300 text-center">
-                    <thead class="bg-gray-100 font-bold text-gray-700 whitespace-nowrap">
-                    <tr>{Object.keys(post.stateWiseVacancy[0]).map(k => <th class="border border-gray-300 px-2 py-2">{formatHeader(k)}</th>)}</tr>
-                    </thead>
-                    <tbody>
-                    {post.stateWiseVacancy.map((row, i) => (
-                        <tr class={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                        {Object.values(row).map(val => <td class="border border-gray-300 px-2 py-2 font-medium">{val}</td>)}
-                        </tr>
-                    ))}
-                    <tr class="bg-gray-200 font-bold">
-                        {Object.keys(post.stateWiseVacancy[0]).map((key, index) => {
-                            if (index === 0) return <td class="border border-gray-300 px-2 py-2 text-right">Total</td>;
-                            const total = calculateTotal(post.stateWiseVacancy, key);
-                            return <td class="border border-gray-300 px-2 py-2 text-[#d32f2f]">{total || "-"}</td>;
-                        })}
-                    </tr>
-                    </tbody>
-                </table>
-                </div>
-            </div>
-            )}
-
-            {/* 5. ELIGIBILITY */}
-            {post.eligibility && (
-                <div class="mb-6">
-                    <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Eligibility Criteria</div>
-                    <ul class="border border-gray-400 p-4 list-disc pl-8 text-sm text-gray-800 bg-gray-50">
-                        {post.eligibility.map(item => <li class="mb-1" set:html={formatText(item)}></li>)}
-                    </ul>
-                </div>
-            )}
-
-            {/* 6. INFINITE DATA RENDERER (Updated with IDs) */}
-            {dynamicKeys.map((key) => {
-                const data = post[key];
-                const type = getDataType(data);
-                const title = formatHeader(key);
-
-                if (type === 'table') {
-                    const headers = Object.keys(data[0]);
-                    return (
-                        // ✅ Added ID here so TOC link works
-                        <div id={key} class="mb-6 border border-gray-400 scroll-mt-20">
-                            <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">{title}</div>
-                            <div class="overflow-x-auto">
-                                <table class="w-full text-sm border-collapse border border-gray-300 text-center">
-                                    <thead class="bg-gray-100 font-bold text-gray-700 whitespace-nowrap">
-                                        <tr>{headers.map(h => <th class="border border-gray-300 px-2 py-2">{formatHeader(h)}</th>)}</tr>
-                                    </thead>
-                                    <tbody>
-                                        {data.map((row, i) => (
-                                            <tr class={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                                                {Object.values(row).map(val => <td class="border border-gray-300 px-2 py-2" set:html={formatText(val)}></td>)}
-                                            </tr>
-                                        ))}
-                                        <tr class="bg-gray-200 font-bold">
-                                            {headers.map((h, i) => {
-                                                if(i===0) return <td class="border border-gray-300 px-2 py-2 text-right">Total</td>;
-                                                const t = calculateTotal(data, h);
-                                                return <td class="border border-gray-300 px-2 py-2 text-[#d32f2f]">{t || ""}</td>;
-                                            })}
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    );
-                }
-                if (type === 'list') {
-                    return (
-                        // ✅ Added ID here so TOC link works
-                        <div id={key} class="mb-6 border border-gray-400 scroll-mt-20">
-                            <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">{title}</div>
-                            <div class="bg-white p-4"><ul class="list-disc pl-6 space-y-1 text-sm text-gray-800">{data.map(item => <li set:html={formatText(item)}></li>)}</ul></div>
-                        </div>
-                    );
-                }
-                return null;
-            })}
-
-            {/* 7. SALARY */}
-            {!isSimpleMode && (post.salary || post.salaryDetails) && (
-            <div id="salary" class="mb-6 border border-gray-400 scroll-mt-20">
-                <div class="bg-[#008000] text-white text-center font-bold py-2 text-sm uppercase">Pay Scale / Salary</div>
-                {post.salaryDetails ? (
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm border-collapse border border-gray-300">
-                            <thead class="bg-green-50 text-green-900">
-                                <tr><th class="border border-gray-300 px-3 py-2 text-left">Post Name</th><th class="border border-gray-300 px-3 py-2 text-left">Level</th></tr>
-                            </thead>
-                            <tbody>
-                                {post.salaryDetails.map((row) => (
-                                    <tr class="hover:bg-green-50"><td class="border border-gray-300 px-3 py-2 font-medium">{row.post}</td><td class="border border-gray-300 px-3 py-2 font-bold">{row.level}</td></tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                ) : (<div class="p-4 bg-gray-50 text-center text-green-800 font-bold border-t">{post.salary}</div>)}
-            </div>
-            )}
-
-            {/* 8. SELECTION PROCESS */}
-            {post.selectionProcess && (
-            <div id="selection" class="mb-6 border border-gray-400 scroll-mt-20">
-                <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Selection Process</div>
-                <div class="bg-white p-4"><ol class="list-decimal pl-6 space-y-1 text-sm text-gray-900 font-medium">{post.selectionProcess.map(s => <li>{s}</li>)}</ol></div>
-            </div>
-            )}
-
-            {/* 9. EXAM PATTERN (Updated: Only Tables/Rules) */}
-            {post.examPattern && (
-            <div id="pattern" class="mb-6 border border-gray-400 scroll-mt-20">
-                <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Exam Pattern</div>
-                <div class="bg-white p-4">
-                    
-                    {/* Pattern Bullets (Negative Marking etc.) */}
-                    {post.examPattern.details && (
-                        <ul class="list-disc pl-5 text-sm text-gray-800 space-y-1 mb-4 bg-yellow-50 p-3 rounded border border-yellow-200">
-                            {post.examPattern.details.map(d => <li set:html={formatText(d)}></li>)}
-                        </ul>
-                    )}
-
-                    {/* Pattern Tables */}
-                    {post.examPattern.tables && post.examPattern.tables.map(table => (
-                    <div class="mb-4 border border-gray-300">
-                        <div class="bg-gray-100 px-3 py-1 font-bold text-sm text-gray-800 border-b border-gray-300 text-center">{table.title}</div>
-                        <div class="overflow-x-auto">
-                        <table class="w-full text-sm border-collapse text-center">
-                            <thead class="bg-gray-50 text-gray-700 text-xs uppercase">
-                                {/* Auto-detect Headers */}
-                                <tr>
-                                    {Object.keys(table.data[0]).map(header => (
-                                        <th class="border border-gray-300 px-2 py-2">{formatHeader(header)}</th>
-                                    ))}
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {table.data.map((row, i) => (
-                                <tr class={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                                {Object.values(row).map(val => (
-                                    <td class="border border-gray-300 px-2 py-2">{val}</td>
-                                ))}
-                                </tr>
-                            ))}
-                            </tbody>
-                        </table>
-                        </div>
-                    </div>
-                    ))}
-
-                    {/* Fallback for Old Data (Mixed list) */}
-                    {!post.examPattern.tables && !post.examPattern.details && post.examPattern.length && (
-                        <ul class="list-disc pl-6 text-sm text-gray-800 space-y-1 mb-4">{post.examPattern.map(d => <li set:html={formatText(d)}></li>)}</ul>
-                    )}
-                </div>
-            </div>
-            )}
-
-            {/* 10. SYLLABUS (Updated: Subject Wise Boxes) */}
-            {post.syllabus && (
-            <div id="syllabus" class="mb-6 border border-gray-400 scroll-mt-20">
-                <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Syllabus (Topic Wise)</div>
-                <div class="bg-white p-4">
-                    
-                    {/* Intro */}
-                    {post.syllabus.intro && (
-                        <p class="text-sm text-gray-700 mb-4 italic border-l-4 border-blue-500 pl-3 bg-blue-50 py-2">
-                            {post.syllabus.intro}
-                        </p>
-                    )}
-
-                    {/* Topic Grid */}
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {post.syllabus.topics && post.syllabus.topics.map((subject) => (
-                            <div class="border border-gray-300 rounded overflow-hidden">
-                                <div class="bg-gray-100 px-3 py-2 font-bold text-sm text-blue-800 border-b border-gray-300">
-                                    📚 {subject.subject}
-                                </div>
-                                <div class="p-3 bg-white">
-                                    <ul class="list-disc pl-5 text-sm text-gray-600 space-y-1">
-                                        {subject.details.map(topic => (
-                                            <li set:html={formatText(topic)}></li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-
-                </div>
-            </div>
-            )}
-
-            {/* 11. HOW TO APPLY */}
-            {post.howToApply && (
-            <div class="mb-6 border border-gray-400">
-                <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">{stepsHeader}</div>
-                <div class="bg-white p-4"><ol class="list-decimal pl-6 space-y-2 text-sm text-gray-800">{post.howToApply.map(s => <li set:html={formatText(s)}></li>)}</ol></div>
-            </div>
-            )}
-
-            {/* 12. IMPORTANT LINKS */}
-            <div id="links" class="mb-6 border border-gray-400 scroll-mt-20">
-                <div class="bg-[#d32f2f] text-white text-center font-bold py-2 text-lg uppercase">
-                {isSimpleMode ? "Download Links" : "Important Links"}
-                </div>
-                <div class="bg-white">
-                    <table class="w-full text-sm md:text-base border-collapse">
-                        <tbody>
-                            {post.links && post.links.map((link, index) => (
-                                <tr class={`hover:bg-red-50 transition ${index !== post.links.length - 1 ? 'border-b border-gray-300' : ''}`}>
-                                    <td class="px-4 py-3 font-bold text-gray-700 border-r border-gray-300 w-2/3">{link.title}</td>
-                                    <td class="px-4 py-2 text-center">
-                                        <a href={link.url} target="_blank" class={`inline-flex items-center gap-1 px-4 py-1.5 rounded text-xs font-bold uppercase shadow-sm border ${getBtnStyle(link.title)}`}>
-                                            Click Here ↗
-                                        </a>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            {/* DISCLAIMER */}
-            <div class="text-center text-[11px] text-gray-400 mt-2 mb-6">Disclaimer: Please verify all details from the official website before applying.</div>
-
-            {/* 💰 AD SLOT 2: BOTTOM (Before FAQs) */}
-            <AdSlot type="square" />
-
-            {/* 13. FAQs */}
-            {post.faqs && (
-            <div class="mb-8 border border-gray-300 p-2 rounded bg-gray-50">
-                <h3 class="text-lg font-bold text-gray-800 mb-3 text-center uppercase">Frequently Asked Questions</h3>
-                <div class="space-y-2">
-                {post.faqs.map((faq, i) => (
-                    <details class="group bg-white border border-gray-300 rounded">
-                    <summary class="font-semibold cursor-pointer p-3 text-sm flex justify-between items-center text-gray-800 hover:bg-gray-100">
-                        <span class="text-[#d32f2f] mr-2">Q.{i+1}</span> {faq.question}
-                        <span class="text-gray-500 group-open:rotate-180 transition">▼</span>
-                    </summary>
-                    <div class="px-4 pb-3 pt-0 text-gray-600 text-sm leading-relaxed border-t border-gray-100 mt-2"><strong>Ans:</strong> {faq.answer}</div>
-                    </details>
-                ))}
-                </div>
-            </div>
-            )}
-
-            {/* 14. SOCIAL SHARE */}
-            <div class="flex flex-wrap justify-center gap-3 mb-8">
-                <a href={waLink} class="bg-[#25D366] hover:bg-[#20bd5a] text-white px-5 py-2.5 rounded-full shadow-md text-sm font-bold flex items-center gap-2 transform hover:-translate-y-1 transition">
-                <span>Share on WhatsApp</span>
-                </a>
-                <a href={tgLink} target="_blank" class="bg-[#229ED9] hover:bg-[#1f8ubc] text-white px-5 py-2.5 rounded-full shadow-md text-sm font-bold flex items-center gap-2 transform hover:-translate-y-1 transition">
-                <span>Share on Telegram</span>
-                </a>
-            </div>
-
-            {/* 15. RELATED JOBS */}
-            {relatedPosts.length > 0 && (
-                <div class="mt-8 pt-6 border-t-4 border-[#d32f2f]">
-                    <h3 class="text-xl font-bold text-[#d32f2f] mb-4 pl-2">You May Also Like</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {relatedPosts.map(p => (
-                            <a href={`/${p.slug}`} class="block p-3 border border-gray-300 rounded hover:border-blue-500 hover:shadow-md transition bg-gray-50 hover:bg-white group">
-                                <div class="text-sm font-bold text-gray-800 group-hover:text-blue-700">👉 {p.shortTitle || p.title}</div>
-                                <div class="text-xs text-gray-500 mt-1">📅 {p.postDate}</div>
-                            </a>
-                        ))}
-                    </div>
-                </div>
-            )}
-
-        </article>
-    </main>
-
-    {/* ================= RIGHT COLUMN: SIDEBAR (Desktop Only) ================= */}
-    <aside class="hidden lg:block w-[300px] flex-shrink-0">
-        <div class="sticky top-4 space-y-6">
-            
-            {/* WhatsApp Box */}
-            <a href="https://whatsapp.com/channel/0029Vb7TcG06LwHoTXhZKn2D" target="_blank" class="block bg-white border-l-4 border-[#25D366] p-4 shadow-sm hover:shadow-md transition rounded">
-                <div class="flex items-center gap-3">
-                    <div class="bg-[#25D366] text-white p-2 rounded-full">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
-                    </div>
-                    <div>
-                        <div class="text-xs text-gray-500 font-bold uppercase">Join us on</div>
-                        <div class="text-lg font-bold text-gray-800 leading-none">WhatsApp</div>
-                    </div>
-                </div>
-            </a>
-
-            {/* Telegram Box */}
-            <a href="https://t.me/toponlineform" target="_blank" class="block bg-white border-l-4 border-[#229ED9] p-4 shadow-sm hover:shadow-md transition rounded">
-                <div class="flex items-center gap-3">
-                    <div class="bg-[#229ED9] text-white p-2 rounded-full">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.694 0Zm5.216 8.784-1.76 8.297c-.13.587-.48.73-.974.454l-2.696-1.986-1.3 1.253c-.144.144-.265.265-.54.265l.192-2.738 4.985-4.506c.217-.193-.047-.3-.337-.107l-6.16 3.878-2.656-.83c-.577-.18-.588-.577.12-.852l10.378-4.004c.48-.173.9.117.748.876Z"/></svg>
-                    </div>
-                    <div>
-                        <div class="text-xs text-gray-500 font-bold uppercase">Join us on</div>
-                        <div class="text-lg font-bold text-gray-800 leading-none">Telegram</div>
-                    </div>
-                </div>
-            </a>
-
-            {/* 💰 3. SIDEBAR AD (Sticky) */}
-            <AdSlot type="square" />
-
-        </div>
-    </aside>
-
-  </div>
-
-  {/* SEO SCHEMA */}
-  <script type="application/ld+json" set:html={JSON.stringify({
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "JobPosting",
-        "title": post.title,
-        "description": post.shortInfo,
-        "datePosted": post.postDate ? new Date(post.postDate.split('/').reverse().join('-')).toISOString() : new Date().toISOString(),
-        "validThrough": post.importantDates?.find(d => d.label.toLowerCase().includes("last date"))?.value.replace(/\//g, '-') || "2026-12-31",
-        "hiringOrganization": { "@type": "Organization", "name": "Top Online Form", "url": "https://toponlineform.com" },
-        "jobLocation": { "@type": "Place", "address": { "@type": "PostalAddress", "addressCountry": "IN", "addressRegion": post.state || "India" } }
-      },
-      {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://toponlineform.com" },
-          { "@type": "ListItem", "position": 2, "name": post.category, "item": `https://toponlineform.com/${post.category.toLowerCase().replace(/\s+/g, '-')}` },
-          { "@type": "ListItem", "position": 3, "name": post.shortTitle || "Details" }
-        ]
-      }
-    ]
-  })} />
-
-  {/* ⏳ CLIENT SIDE COUNTDOWN SCRIPT */}
-  <script>
-    const box = document.getElementById('countdown-box');
-    const display = document.getElementById('timer-display');
-    
-    if (box && display) {
-        const targetDate = new Date(box.dataset.date);
-        targetDate.setHours(23, 59, 59);
-
-        const updateTimer = () => {
-            const now = new Date();
-            const diff = targetDate - now;
-
-            if (diff <= 0) {
-                display.innerText = "Application Closed";
-                display.classList.remove('text-red-700');
-                display.classList.add('text-gray-500');
-                box.classList.remove('animate-pulse');
-                clearInterval(interval);
-                return;
-            }
-
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-            display.innerText = `${days}d : ${hours}h : ${minutes}m : ${seconds}s`;
-            box.classList.remove('hidden');
-        };
-
-        const interval = setInterval(updateTimer, 1000);
-        updateTimer();
-    }
-  </script>
 
 </Layout>
