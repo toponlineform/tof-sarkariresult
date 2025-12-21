@@ -3,7 +3,6 @@ import Layout from '../layouts/Layout.astro';
 import AdSlot from '../components/AdSlot.astro'; 
 import { allPosts } from '../data/index.js';
 
-// --- 1. DATA FETCHING ---
 export async function getStaticPaths() {
   return allPosts.map((post) => {
     const relatedPosts = allPosts
@@ -24,23 +23,20 @@ export async function getStaticPaths() {
 
 const { post, relatedPosts } = Astro.props;
 
-// --- 🧠 2. LOGIC ADAPTER ---
+// --- 🧠 LOGIC ADAPTERS ---
 
-// A. SIMPLE MODE
 const catLower = post.category.toLowerCase();
 const isSimpleMode = catLower.includes("syllabus") || catLower.includes("previous") || catLower.includes("paper") || catLower.includes("answer key");
 
-// B. HEADER LOGIC
 let stepsHeader = "How to Apply";
 if (isSimpleMode) stepsHeader = "How to Download";
 else if (catLower.includes("admit card")) stepsHeader = "How to Download Admit Card";
 else if (catLower.includes("result")) stepsHeader = "How to Check Result";
 else if (catLower.includes("admission")) stepsHeader = "How to Apply for Admission";
 
-// C. AUTO TOTAL (Updated: Universal Logic - Smarter Detection)
+// 1. Universal Total Calculator
 const calculateTotal = (data, key) => {
     if (!data || !key) return null;
-    // Skip non-numeric columns explicitly
     const skipKeys = ['age', 'year', 'code', 's.no', 'serial', 'qualification', 'eligibility', 'post name', 'category', 'subject', 'activity', 'trade', 'pay scale'];
     if (skipKeys.some(k => key.toLowerCase().includes(k))) return null;
 
@@ -58,15 +54,17 @@ const calculateTotal = (data, key) => {
     return hasNumbers ? total : null;
 };
 
-// D. HEADER FORMATTER
+// 2. Header Formatter (Smart Case)
 const formatHeader = (key) => {
-    const upperKeys = ["ur", "obc", "sc", "st", "ews", "pwbd", "esm", "gen", "ph", "cbt", "pet", "pst", "dob", "gk", "ga"];
+    // Agar key already sentence hai (spaces hain), toh mat chedo
+    if (key.includes(' ')) return key;
+    
+    const upperKeys = ["ur", "obc", "sc", "st", "ews", "pwbd", "esm", "gen", "ph", "cbt", "pet", "pst", "dob", "gk", "ga", "mcq"];
     if (upperKeys.includes(key.toLowerCase())) return key.toUpperCase();
-    // CamelCase to Title Case
     return key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim();
 };
 
-// E. INFINITE DATA FINDER
+// 3. Dynamic Keys Filter
 const standardKeys = [
   'id', 'slug', 'title', 'shortTitle', 'category', 'postDate', 'updatedDate', 
   'shortInfo', 'importantDates', 'applicationFee', 'links', 'faqs', 'tags', 
@@ -76,17 +74,21 @@ const standardKeys = [
 ];
 const dynamicKeys = Object.keys(post).filter(key => !standardKeys.includes(key));
 
-// Helper: Data Type Detector
+// 4. SMART DATA TYPE DETECTOR 🕵️‍♂️
 const getDataType = (data) => {
     if (Array.isArray(data) && data.length > 0) {
+        // Case: Nested Block (Old Website Style - Array of Objects with title & data)
+        if (data[0].title && data[0].data && Array.isArray(data[0].data)) return 'complex-block';
+        // Case: Standard Table
         if (typeof data[0] === 'object') return 'table';
+        // Case: List
         return 'list';
     }
     if (typeof data === 'string') return 'text';
     return 'unknown';
 };
 
-// F. SMART BUTTON STYLES
+// Button Styles
 const getBtnStyle = (title) => {
   const t = title.toLowerCase();
   if (t.includes('apply') || t.includes('login') || t.includes('registration')) return 'bg-blue-600 hover:bg-blue-700 border-blue-700 text-white';
@@ -95,7 +97,7 @@ const getBtnStyle = (title) => {
   return 'bg-green-600 hover:bg-green-700 border-green-700 text-white';
 };
 
-// G. COUNTDOWN & SOCIAL
+// Dates & URLs
 const getLastDateISO = () => {
     if (!post.importantDates) return null;
     const lastDateObj = post.importantDates.find(d => d.label.toLowerCase().includes('last date') || d.label.toLowerCase().includes('closing date'));
@@ -160,10 +162,10 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             )}
             </header>
 
-            {/* 💰 AD SLOT 1: TOP */}
+            {/* 💰 AD SLOT 1 */}
             <AdSlot type="horizontal" />
 
-            {/* 📑 TOC (FIXED MODE) */}
+            {/* 📑 TOC (Fixed Buttons) */}
             <div class="mb-6 bg-blue-50 border border-blue-200 p-3 rounded-sm">
                 <p class="text-[10px] font-bold text-blue-800 uppercase mb-2 tracking-wider">Table of Contents:</p>
                 <div class="flex flex-wrap gap-2 text-xs font-semibold text-blue-700">
@@ -171,10 +173,8 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                     {!isSimpleMode && (post.vacancyDetails || post.stateWiseVacancy) && <a href="#vacancy" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">📦 Vacancy</a>}
                     {!isSimpleMode && (post.salary || post.salaryDetails) && <a href="#salary" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">💰 Salary</a>}
                     {post.selectionProcess && <a href="#selection" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">🎯 Selection</a>}
-                    
                     {post.examPattern && <a href="#pattern" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">📝 Pattern</a>}
                     {post.syllabus && <a href="#syllabus" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">📖 Syllabus</a>}
-                    
                     <a href="#links" class="bg-white px-2 py-1 border border-red-200 text-red-600 rounded hover:shadow-sm">🔗 Important Links</a>
                 </div>
             </div>
@@ -212,7 +212,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             </div>
             )}
 
-            {/* 3. VACANCY & AGE (🔥 UNIVERSAL COLUMNS APPLIED 🔥) */}
+            {/* 3. VACANCY & AGE (Infinity Smart Logic) */}
             {!isSimpleMode && (post.ageLimit || post.vacancyDetails) && (
             <div id="vacancy" class="mb-6 border border-gray-400 scroll-mt-20">
                 <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Vacancy Details & Age Limit</div>
@@ -224,42 +224,66 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                     </div>
                 )}
 
-                {post.vacancyDetails && post.vacancyDetails.length > 0 && (
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm border-collapse text-center">
-                            <thead class="bg-gray-100 text-gray-800 text-xs uppercase font-bold">
-                                <tr>
-                                    {/* Auto-Generate Headers from First Row (Universal) */}
-                                    {Object.keys(post.vacancyDetails[0]).map(key => (
-                                        <th class="border border-gray-300 px-2 py-2 text-left">{formatHeader(key)}</th>
-                                    ))}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {post.vacancyDetails.map((row, i) => (
-                                    <tr class="hover:bg-yellow-50">
-                                        {/* Auto-Generate Cells */}
-                                        {Object.values(row).map((val, idx) => (
-                                            <td class={`border border-gray-300 px-2 py-2 text-left ${idx===0 ? 'font-bold text-gray-700' : 'text-gray-600'}`} set:html={formatText(val)}></td>
+                {/* UNIVERSAL VACANCY RENDERER */}
+                {post.vacancyDetails && (
+                    getDataType(post.vacancyDetails) === 'table' ? (
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm border-collapse text-center">
+                                <thead class="bg-gray-100 text-gray-800 text-xs uppercase font-bold">
+                                    <tr>
+                                        {/* Auto-Headers */}
+                                        {Object.keys(post.vacancyDetails[0]).map(key => (
+                                            <th class="border border-gray-300 px-2 py-2 text-left">{formatHeader(key)}</th>
                                         ))}
                                     </tr>
-                                ))}
-                                {/* Smart Total Row */}
-                                <tr class="bg-gray-200 font-bold">
-                                    {Object.keys(post.vacancyDetails[0]).map((key, index) => {
-                                        if (index === 0) return <td class="border border-gray-300 px-2 py-2 text-right">Total</td>;
-                                        const total = calculateTotal(post.vacancyDetails, key);
-                                        return <td class="border border-gray-300 px-2 py-2 text-[#d32f2f]">{total || ""}</td>;
-                                    })}
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                                </thead>
+                                <tbody>
+                                    {post.vacancyDetails.map((row, i) => (
+                                        <tr class="hover:bg-yellow-50">
+                                            {/* Auto-Cells */}
+                                            {Object.values(row).map((val, idx) => (
+                                                <td class={`border border-gray-300 px-2 py-2 text-left ${idx===0 ? 'font-bold text-gray-700' : 'text-gray-600'}`} set:html={formatText(val)}></td>
+                                            ))}
+                                        </tr>
+                                    ))}
+                                    {/* Smart Total */}
+                                    <tr class="bg-gray-200 font-bold">
+                                        {Object.keys(post.vacancyDetails[0]).map((key, index) => {
+                                            if (index === 0) return <td class="border border-gray-300 px-2 py-2 text-right">Total</td>;
+                                            const total = calculateTotal(post.vacancyDetails, key);
+                                            return <td class="border border-gray-300 px-2 py-2 text-[#d32f2f]">{total || ""}</td>;
+                                        })}
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    ) : getDataType(post.vacancyDetails) === 'complex-block' ? (
+                        /* Handle Array of Objects with {title, data} in Vacancy too */
+                        post.vacancyDetails.map(block => (
+                            <div class="border-t border-gray-300">
+                                <div class="bg-gray-200 px-3 py-1 font-bold text-sm text-gray-800 border-b border-gray-300">{block.title}</div>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-sm border-collapse text-center">
+                                        <thead class="bg-gray-100 font-bold text-gray-700 whitespace-nowrap">
+                                            <tr>{Object.keys(block.data[0]).map(h => <th class="border border-gray-300 px-2 py-2">{formatHeader(h)}</th>)}</tr>
+                                        </thead>
+                                        <tbody>
+                                            {block.data.map(row => (
+                                                <tr class="hover:bg-white bg-gray-50">
+                                                    {Object.values(row).map(val => <td class="border border-gray-300 px-2 py-2">{val}</td>)}
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        ))
+                    ) : null
                 )}
             </div>
             )}
 
-            {/* 4. STATE/CATEGORY VACANCY (🔥 UNIVERSAL COLUMNS APPLIED 🔥) */}
+            {/* 4. STATE/CATEGORY VACANCY */}
             {!isSimpleMode && post.stateWiseVacancy && post.stateWiseVacancy.length > 0 && (
             <div class="mb-6 border border-gray-400">
                 <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">{post.vacancyTableTitle || "Category Wise Vacancy"}</div>
@@ -297,7 +321,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                 </div>
             )}
 
-            {/* 6. INFINITE DATA RENDERER (Universal Logic for Extra Tables) */}
+            {/* 6. INFINITE DATA RENDERER (Smartest Table Logic) */}
             {dynamicKeys.map((key) => {
                 const data = post[key];
                 const type = getDataType(data);
@@ -319,24 +343,9 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                                                 {Object.values(row).map(val => <td class="border border-gray-300 px-2 py-2" set:html={formatText(val)}></td>)}
                                             </tr>
                                         ))}
-                                        <tr class="bg-gray-200 font-bold">
-                                            {headers.map((h, i) => {
-                                                if(i===0) return <td class="border border-gray-300 px-2 py-2 text-right">Total</td>;
-                                                const t = calculateTotal(data, h);
-                                                return <td class="border border-gray-300 px-2 py-2 text-[#d32f2f]">{t || ""}</td>;
-                                            })}
-                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
-                        </div>
-                    );
-                }
-                if (type === 'list') {
-                    return (
-                        <div class="mb-6 border border-gray-400">
-                            <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">{title}</div>
-                            <div class="bg-white p-4"><ul class="list-disc pl-6 space-y-1 text-sm text-gray-800">{data.map(item => <li set:html={formatText(item)}></li>)}</ul></div>
                         </div>
                     );
                 }
@@ -372,19 +381,65 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             </div>
             )}
 
-            {/* 9. EXAM PATTERN (🔥 INFINITY PRO LOGIC 🔥) */}
+            {/* 9. EXAM PATTERN (🔥 UNIVERSAL BLOCK RENDERER 🔥) */}
             {post.examPattern && (
             <div id="pattern" class="mb-6 border border-gray-400 scroll-mt-20">
                 <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Exam Pattern</div>
                 <div class="bg-white p-4">
-                    
-                    {/* Loop through EVERYTHING in examPattern */}
+                    {/* Loop through all keys in examPattern */}
                     {Object.entries(post.examPattern).map(([key, value]) => {
+                        const type = getDataType(value);
                         const title = formatHeader(key);
-                        const dataType = getDataType(value);
 
-                        // Case 1: List (like 'details')
-                        if (dataType === 'list') {
+                        // 1. COMPLEX BLOCK (Array of {title, data}) - Solves [object Object]
+                        if (type === 'complex-block') {
+                            return value.map(block => (
+                                <div class="mb-4 border border-gray-300">
+                                    {/* Blue Header for sub-section */}
+                                    <div class="bg-[#004B8D] px-3 py-2 font-bold text-sm text-white border-b border-gray-300 text-center">{block.title}</div>
+                                    <div class="overflow-x-auto">
+                                        <table class="w-full text-sm border-collapse text-center">
+                                            <thead class="bg-gray-100 font-bold text-gray-700 whitespace-nowrap">
+                                                <tr>{Object.keys(block.data[0]).map(h => <th class="border border-gray-300 px-2 py-2">{formatHeader(h)}</th>)}</tr>
+                                            </thead>
+                                            <tbody>
+                                                {block.data.map((row, i) => (
+                                                    <tr class={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                                                        {Object.values(row).map(val => <td class="border border-gray-300 px-2 py-2">{val}</td>)}
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            ));
+                        }
+
+                        // 2. SIMPLE TABLE
+                        if (type === 'table') {
+                            return (
+                                <div class="mb-4 border border-gray-300">
+                                    <div class="bg-gray-100 px-3 py-1 font-bold text-sm text-gray-800 border-b border-gray-300 text-center">{title}</div>
+                                    <div class="overflow-x-auto">
+                                        <table class="w-full text-sm border-collapse text-center">
+                                            <thead class="bg-gray-50 text-gray-700 text-xs uppercase">
+                                                <tr>{Object.keys(value[0]).map(h => <th class="border border-gray-300 px-2 py-2">{formatHeader(h)}</th>)}</tr>
+                                            </thead>
+                                            <tbody>
+                                                {value.map((row, i) => (
+                                                    <tr class={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                                                        {Object.values(row).map(val => <td class="border border-gray-300 px-2 py-2">{val}</td>)}
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            );
+                        }
+
+                        // 3. LIST
+                        if (type === 'list') {
                             return (
                                 <div class="mb-4">
                                     {key !== 'details' && <h4 class="font-bold text-gray-700 mb-2">{title}</h4>}
@@ -395,64 +450,31 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                             );
                         }
 
-                        // Case 2: Table (like 'tier1', 'pet')
-                        if (dataType === 'table') {
-                            return (
-                                <div class="mb-4 border border-gray-300">
-                                    <div class="bg-gray-100 px-3 py-1 font-bold text-sm text-gray-800 border-b border-gray-300 text-center">{title}</div>
-                                    <div class="overflow-x-auto">
-                                        <table class="w-full text-sm border-collapse text-center">
-                                            <thead class="bg-gray-50 text-gray-700 text-xs uppercase">
-                                                <tr>
-                                                    {/* Auto-Headers from first row */}
-                                                    {Object.keys(value[0]).map(header => (
-                                                        <th class="border border-gray-300 px-2 py-2">{formatHeader(header)}</th>
-                                                    ))}
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {value.map((row, i) => (
-                                                    <tr class={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                                                        {Object.values(row).map(val => (
-                                                            <td class="border border-gray-300 px-2 py-2">{val}</td>
-                                                        ))}
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            );
-                        }
-
-                        // Case 3: Text (like 'markingScheme' string)
-                        if (dataType === 'text') {
+                        // 4. TEXT
+                        if (type === 'text') {
                             return (
                                 <div class="mb-4 p-3 bg-gray-50 border-l-4 border-blue-500">
                                     <p class="text-sm text-gray-700 font-medium" set:html={formatText(value)}></p>
                                 </div>
                             );
                         }
-                        
                         return null;
                     })}
                 </div>
             </div>
             )}
 
-            {/* 10. SYLLABUS (Topic Wise Boxes) */}
+            {/* 10. SYLLABUS SECTION */}
             {post.syllabus && (
             <div id="syllabus" class="mb-6 border border-gray-400 scroll-mt-20">
                 <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Syllabus (Topic Wise)</div>
                 <div class="bg-white p-4">
-                    
                     {/* Intro */}
                     {post.syllabus.intro && (
                         <p class="text-sm text-gray-700 mb-4 italic border-l-4 border-blue-500 pl-3 bg-blue-50 py-2">
                             {post.syllabus.intro}
                         </p>
                     )}
-
                     {/* Topic Grid */}
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {post.syllabus.topics && post.syllabus.topics.map((subject) => (
@@ -470,7 +492,6 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                             </div>
                         ))}
                     </div>
-
                 </div>
             </div>
             )}
@@ -509,7 +530,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             {/* DISCLAIMER */}
             <div class="text-center text-[11px] text-gray-400 mt-2 mb-6">Disclaimer: Please verify all details from the official website before applying.</div>
 
-            {/* 💰 AD SLOT 2: BOTTOM (Before FAQs) */}
+            {/* 💰 AD SLOT 2 */}
             <AdSlot type="square" />
 
             {/* 13. FAQs */}
@@ -558,7 +579,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
         </article>
     </main>
 
-    {/* ================= RIGHT COLUMN: SIDEBAR (Desktop Only) ================= */}
+    {/* ================= RIGHT COLUMN: SIDEBAR ================= */}
     <aside class="hidden lg:block w-[300px] flex-shrink-0">
         <div class="sticky top-4 space-y-6">
             
@@ -588,7 +609,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                 </div>
             </a>
 
-            {/* 💰 3. SIDEBAR AD (Sticky) */}
+            {/* 💰 3. SIDEBAR AD */}
             <AdSlot type="square" />
 
         </div>
