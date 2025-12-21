@@ -3,27 +3,69 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="Disclaimer - TopOnlineForm">
-  <div class="max-w-4xl mx-auto bg-white p-6 md:p-10 rounded-lg shadow-sm border-t-4 border-red-600">
-    <h1 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-2">Disclaimer</h1>
+  <div class="bg-gray-100 text-center py-12 px-4 border-b border-gray-200">
+    <h1 class="text-3xl md:text-4xl font-bold text-gray-800 uppercase tracking-wide">Disclaimer</h1>
+    <p class="mt-2 text-gray-600">Please read this important information carefully.</p>
+  </div>
+
+  <div class="max-w-4xl mx-auto px-4 py-12">
     
-    <div class="space-y-4 text-gray-700 leading-relaxed text-sm md:text-base">
-      <p class="bg-yellow-100 p-4 border-l-4 border-yellow-500 font-bold text-yellow-800">
-        IMPORTANT: TopOnlineForm.com is NOT a Government Website. We are a private information portal.
-      </p>
-
-      <p>
-        The information provided on <strong>TopOnlineForm.com</strong> is collected from various official websites, news papers, and other reliable sources. While we try our best to provide 100% accurate information, errors may occur.
-      </p>
-
-      <h3 class="font-bold text-black mt-2">No Responsibility for Errors</h3>
-      <p>
-        We are not responsible for any loss or damage caused by the use of information on this website. Users are strongly advised to verify the details (like dates, fees, eligibility) from the official notification before applying.
-      </p>
-
-      <h3 class="font-bold text-black mt-2">External Links</h3>
-      <p>
-        Our website contains links to other external websites (Official Govt Sites). We have no control over the content and nature of these sites.
+    <div class="bg-yellow-50 border-l-8 border-yellow-500 p-6 md:p-8 rounded-r-lg shadow-sm mb-10">
+      <h2 class="text-xl md:text-2xl font-bold text-yellow-800 flex items-center gap-3 mb-4">
+        <span class="text-3xl">⚠️</span> Not a Government Website
+      </h2>
+      <p class="text-gray-800 text-lg leading-relaxed">
+        <strong>TopOnlineForm.com</strong> is a privately owned informational website. We are <strong>NOT</strong> affiliated, associated, authorized, endorsed by, or in any way officially connected with the <strong>Government of India</strong>, any State Government, or any Government organization.
       </p>
     </div>
+
+    <div class="space-y-8 text-gray-700 leading-relaxed">
+      
+      <section>
+        <h3 class="text-xl font-bold text-gray-900 mb-3 border-b pb-2">1. Source of Information</h3>
+        <p>
+          The information provided on this website (recruitment news, exam dates, results) is collected from various official sources including:
+        </p>
+        <ul class="list-disc pl-6 mt-3 space-y-2">
+          <li>Official Government Websites (e.g., upsc.gov.in, ssc.nic.in)</li>
+          <li>Official Notification PDFs</li>
+          <li>Employment News Papers</li>
+        </ul>
+        <p class="mt-3">
+          While we strive to provide 100% accurate information, we do not claim ownership of any government logos or trademarks used on this site. They are used for informational purposes only.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="text-xl font-bold text-gray-900 mb-3 border-b pb-2">2. Accuracy & User Responsibility</h3>
+        <p>
+          We try our best to keep the information updated and error-free. However, mistakes can happen. 
+          <strong>We strongly advise all users to verify the details from the Official Notification PDF</strong> link provided in every post before applying for any job or paying any fee.
+        </p>
+        <p class="mt-3 bg-red-50 text-red-700 p-4 rounded border border-red-100 font-medium">
+          TopOnlineForm.com and its team will not be responsible for any loss, financial damage, or inconvenience caused due to any inadvertent error in the information provided.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="text-xl font-bold text-gray-900 mb-3 border-b pb-2">3. Third-Party Links</h3>
+        <p>
+          Our website contains links to external official websites. We have no control over the content and availability of those sites. The inclusion of any links does not imply a recommendation or endorse the views expressed within them.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="text-xl font-bold text-gray-900 mb-3 border-b pb-2">4. No Job Guarantee</h3>
+        <p>
+          We are an information provider, not a recruitment agency. We do not guarantee a job to any user. We never ask for money for job placement or interviews. Please be aware of fraudulent calls.
+        </p>
+      </section>
+
+    </div>
+
+    <div class="mt-12 text-center text-sm text-gray-500 border-t pt-6">
+      <p>If you have any questions regarding this disclaimer, please contact us at <a href="mailto:help@toponlineform.com" class="text-blue-600 hover:underline">help@toponlineform.com</a>.</p>
+    </div>
+
   </div>
 </Layout>
