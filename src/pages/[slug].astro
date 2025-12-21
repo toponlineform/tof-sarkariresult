@@ -2,431 +2,252 @@
 import Layout from '../layouts/Layout.astro';
 import { allPosts } from '../data/index.js';
 
-// --- 1. DATA FETCHING & SORTING ---
+// --- 1. DATA FETCHING ---
 export async function getStaticPaths() {
   return allPosts.map((post) => {
     const relatedPosts = allPosts
       .filter(p => p.category === post.category && p.slug !== post.slug)
-      .sort((a, b) => {
-          const parseDate = (d) => {
-             if(!d) return 0;
-             const p = d.trim().split('/');
-             if(p.length!==3) return 0;
-             return new Date(`${p[2]}-${p[1]}-${p[0]}`).getTime();
-          };
-          return parseDate(b.updatedDate || b.postDate) - parseDate(a.updatedDate || a.postDate);
-      })
+      .sort((a, b) => new Date(b.postDate) - new Date(a.postDate)) // Simplistic sort
       .slice(0, 6);
-
-    return {
-      params: { slug: post.slug },
-      props: { post, relatedPosts },
-    };
+    return { params: { slug: post.slug }, props: { post, relatedPosts } };
   });
 }
 
 const { post, relatedPosts } = Astro.props;
 
-// --- 🛠️ 2. INTELLIGENT HELPERS ---
+// --- 🧠 2. UNIVERSAL LOGIC ENGINE (THE BRAIN) ---
 
-// Text Formatter (Bold, Newline, Links)
+// A. Keys jo hume "Auto Loop" mein nahi dikhani (kyunki ye hum manually upar/niche dikha rahe hain)
+const ignoredKeys = [
+  'id', 'slug', 'title', 'shortTitle', 'category', 'postDate', 'updatedDate', 
+  'shortInfo', 'importantDates', 'applicationFee', 'links', 'faqs', 'tags', 
+  'state', 'ageLimit', 'ageRelaxation', 'vacancyDetails'
+];
+
+// B. Baki sab keys dhundo (Jo aapne nayi add ki hain)
+const dynamicKeys = Object.keys(post).filter(key => !ignoredKeys.includes(key));
+
+// C. Helper: CamelCase to Title Case (e.g. "branchWiseVacancy" -> "Branch Wise Vacancy")
+const formatTitle = (key) => {
+  const result = key.replace(/([A-Z])/g, " $1");
+  return result.charAt(0).toUpperCase() + result.slice(1);
+};
+
+// D. Helper: Content Text Formatter
 const formatText = (text) => {
   if (!text) return "";
   return String(text)
-    .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold">$1</strong>')
-    .replace(/\n/g, '<br />');
+    .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold">$1</strong>') // Bold
+    .replace(/\n/g, '<br />'); // New line
 };
 
-// Auto Total Calculator 🧮
-const calculateColumnTotal = (data, key) => {
-    // Check if data is array
-    if (!Array.isArray(data) || data.length === 0) return null;
-    
-    // Check if values are numbers
+// E. Helper: Check Data Type
+const getDataType = (data) => {
+    if (Array.isArray(data)) {
+        if (data.length > 0 && typeof data[0] === 'object') return 'table'; // Array of Objects = Table
+        return 'list'; // Array of Strings = List
+    }
+    if (typeof data === 'object' && data !== null) return 'complex-object'; // Nested Object
+    return 'text'; // Simple String
+};
+
+// F. Helper: Auto Total Logic
+const calculateTotal = (data, key) => {
     let total = 0;
     let isNumeric = true;
-    
     for (let item of data) {
-        let val = item[key];
-        if (!val) continue;
-        // Clean string (remove commas, spaces) to check number
-        let cleanVal = String(val).replace(/,/g, '').trim();
-        if (isNaN(cleanVal) || cleanVal === '') {
-            isNumeric = false;
-            break;
-        }
-        total += parseFloat(cleanVal);
+        let val = String(item[key] || '').replace(/,/g, '').trim();
+        if (!val || isNaN(val)) { isNumeric = false; break; }
+        total += parseFloat(val);
     }
-
     return isNumeric && total > 0 ? total : null;
 };
 
-// Days Left Logic
-const getDaysLeft = (dates) => {
-    if (!dates) return null;
-    const lastDateObj = dates.find(d => d.label.toLowerCase().includes('last date'));
-    if (!lastDateObj) return null;
-    const dateStr = lastDateObj.value.replace(/ \(.*\)/, '').trim(); 
-    const parts = dateStr.split(/[/-]/); 
-    if (parts.length < 3) return null;
-    const targetDate = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
-    const today = new Date();
-    const diffTime = targetDate - today;
-    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-};
-
-// Button Color Logic
+// G. Helper: Button Color
 const getBtnStyle = (title) => {
   const t = title.toLowerCase();
   if (t.includes('apply') || t.includes('login') || t.includes('registration')) return 'bg-blue-600 hover:bg-blue-700 text-white';
-  if (t.includes('download') || t.includes('notification') || t.includes('result') || t.includes('pdf')) return 'bg-red-600 hover:bg-red-700 text-white';
-  if (t.includes('official') || t.includes('website')) return 'bg-gray-700 hover:bg-gray-800 text-white';
+  if (t.includes('download') || t.includes('notice') || t.includes('result')) return 'bg-red-600 hover:bg-red-700 text-white';
   return 'bg-green-600 hover:bg-green-700 text-white';
 };
 
-const daysLeft = getDaysLeft(post.importantDates);
-
-// Social Share Links
+// Social Links
 const shareUrl = `https://toponlineform.com/${post.slug}`;
-const shareTitle = post.title;
-const waLink = `https://api.whatsapp.com/send?text=✅ *${encodeURIComponent(shareTitle)}* 👇%0A%0A${encodeURIComponent(shareUrl)}`;
-const tgLink = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=✅ *${encodeURIComponent(shareTitle)}* 👇`;
+const waLink = `https://api.whatsapp.com/send?text=✅ *${encodeURIComponent(post.title)}* 👇%0A%0A${encodeURIComponent(shareUrl)}`;
+const tgLink = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=✅ *${encodeURIComponent(post.title)}* 👇`;
 
 ---
 
 <Layout title={post.title} description={post.shortInfo} keywords={post.tags}>
-  
-  {/* 🍞 BREADCRUMBS */}
-  <nav class="flex text-xs text-gray-500 mb-3 px-1 font-medium overflow-x-auto whitespace-nowrap" aria-label="Breadcrumb">
-    <ol class="inline-flex items-center space-x-1">
-      <li><a href="/" class="hover:text-blue-700">Home</a></li>
-      <li>›</li>
-      <li>
-          <a href={`/${post.category.toLowerCase().replace(/\s+/g, '-')}`} class="hover:text-blue-700 text-blue-600">
-              {post.category}
-          </a>
-      </li>
-      <li>›</li>
-      <li class="text-gray-600">{post.shortTitle || "Details"}</li>
-    </ol>
+
+  {/* Breadcrumb */}
+  <nav class="flex text-xs text-gray-500 mb-3 px-1 font-medium overflow-x-auto whitespace-nowrap">
+    <a href="/" class="hover:text-blue-700">Home</a> <span class="mx-1">›</span>
+    <a href={`/${post.category.toLowerCase().replace(/\s+/g, '-')}`} class="hover:text-blue-700 text-blue-600">{post.category}</a> <span class="mx-1">›</span>
+    <span class="text-gray-600">{post.shortTitle || "Details"}</span>
   </nav>
 
-  {/* 📄 MAIN CONTENT CARD */}
-  <article class="bg-white p-3 md:p-6 border border-gray-300 shadow-sm rounded-sm font-sans mb-10">
-    
-    {/* 1. HEADER SECTION */}
-    <header class="text-center mb-6">
-      <h1 class="text-xl md:text-2xl lg:text-3xl font-extrabold text-[#d91e18] mb-3 leading-snug">
-        {post.title}
-      </h1>
-      
-      <div class="flex flex-wrap justify-center gap-3 text-xs md:text-sm text-gray-600 font-bold mb-4">
-        <span class="bg-gray-100 px-2 py-1 rounded border border-gray-200">📅 Post Date: {post.postDate}</span>
-        {post.updatedDate && <span class="bg-green-50 text-green-700 px-2 py-1 rounded border border-green-200">📝 Updated: {post.updatedDate}</span>}
-        <span class="bg-blue-50 text-blue-700 px-2 py-1 rounded border border-blue-200">📍 {post.state || "India"}</span>
-      </div>
+  <article class="bg-white p-3 md:p-5 border border-gray-300 shadow-sm rounded-sm font-sans mb-10">
 
-      {/* 🟡 SHORT INFO (The Hook) */}
+    {/* 1. HEADER & SHORT INFO */}
+    <header class="text-center mb-6">
+      <h1 class="text-xl md:text-2xl lg:text-3xl font-extrabold text-[#d91e18] mb-3 leading-snug">{post.title}</h1>
+      <div class="flex flex-wrap justify-center gap-3 text-xs md:text-sm text-gray-600 font-bold mb-4">
+        <span class="bg-gray-100 px-2 py-1 rounded border border-gray-200">📅 Post: {post.postDate}</span>
+        {post.updatedDate && <span class="bg-green-50 text-green-700 px-2 py-1 rounded border border-green-200">📝 Update: {post.updatedDate}</span>}
+      </div>
       {post.shortInfo && (
-        <div class="text-left bg-[#fffae6] border-l-4 border-[#f0c14b] p-4 text-sm md:text-base text-gray-800 leading-relaxed shadow-sm my-4">
-          <p><strong class="text-[#b91c1c]">Short Information:</strong> <span set:html={formatText(post.shortInfo)}></span></p>
+        <div class="text-left bg-[#fffae6] border-l-4 border-[#f0c14b] p-4 text-sm text-gray-800 leading-relaxed shadow-sm my-4">
+          <p><strong class="text-[#b91c1c]">Short Info:</strong> <span set:html={formatText(post.shortInfo)}></span></p>
         </div>
       )}
     </header>
 
-    {/* 📑 DYNAMIC TABLE OF CONTENTS */}
-    <div class="mb-6 bg-blue-50 border border-blue-100 p-3 rounded-sm">
-        <p class="text-[10px] font-bold text-blue-800 uppercase mb-2 tracking-wider">Page Contents:</p>
-        <div class="flex flex-wrap gap-2 text-xs font-semibold text-blue-700">
-            <a href="#dates-fees" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">📅 Dates & Fee</a>
-            {post.vacancyDetails && <a href="#vacancy" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">📦 Vacancy</a>}
-            {/* Dynamic Tables Link */}
-            {post.dynamicTables && post.dynamicTables.length > 0 && <a href="#details" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">📊 Detailed Lists</a>}
-            {(post.salary || post.salaryDetails) && <a href="#salary" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">💰 Salary</a>}
-            {post.examPattern && <a href="#pattern" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">📝 Syllabus</a>}
-            <a href="#links" class="bg-white px-2 py-1 border border-red-200 text-red-600 rounded hover:shadow-sm">🔗 Apply Links</a>
-        </div>
-    </div>
-
-    {/* 2. DATES & FEES GRID */}
-    <div id="dates-fees" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-      
-      {/* Dates Table */}
+    {/* 2. DATES & FEES (Standard Fixed Layout) */}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+      {/* Dates */}
       <div class="border border-gray-300 rounded-sm overflow-hidden">
-        <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase tracking-wide">
-          Important Dates
-        </div>
+        <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Important Dates</div>
         <div class="bg-white p-2">
           <ul class="space-y-2 text-sm">
-            {post.importantDates?.map((date) => (
+            {post.importantDates?.map((d) => (
               <li class="flex justify-between border-b border-gray-100 last:border-0 pb-1">
-                <span class="font-bold text-gray-700">{date.label}</span>
-                <span class="text-gray-900 text-right font-medium">{date.value}</span>
+                <span class="font-bold text-gray-700">{d.label}</span><span class="text-gray-900 font-medium">{d.value}</span>
               </li>
             ))}
           </ul>
         </div>
       </div>
-
-      {/* Fees Table */}
+      {/* Fees */}
       <div class="border border-gray-300 rounded-sm overflow-hidden">
-        <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase tracking-wide">
-          Application Fee
-        </div>
+        <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Application Fee</div>
         <div class="bg-white p-2">
           <ul class="space-y-2 text-sm">
-            {post.applicationFee?.map((fee) => (
+            {post.applicationFee?.map((f) => (
               <li class="flex justify-between border-b border-gray-100 last:border-0 pb-1">
-                <span class="font-bold text-gray-700">{fee.category}</span>
-                <span class="text-gray-900 text-right font-medium">{fee.amount}</span>
+                <span class="font-bold text-gray-700">{f.category}</span><span class="text-gray-900 font-medium">{f.amount}</span>
               </li>
             ))}
           </ul>
-          <div class="mt-2 text-[10px] text-gray-500 text-center bg-gray-50 p-1 rounded">
-            Pay via: Net Banking / Debit Card / Credit Card / UPI
-          </div>
         </div>
       </div>
     </div>
 
-    {/* 3. VACANCY & AGE LIMIT (Standard) */}
+    {/* 3. MAIN VACANCY & AGE (Standard Fixed Layout) */}
     {(post.vacancyDetails || post.ageLimit) && (
-    <div id="vacancy" class="mb-8 border border-gray-300 rounded-sm overflow-hidden">
-        <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase tracking-wide">
-           Vacancy Details & Eligibility
-        </div>
-        
-        {/* Age Limit Box */}
+      <div class="mb-8 border border-gray-300 rounded-sm overflow-hidden">
+        <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Vacancy Details & Eligibility</div>
         {post.ageLimit && (
-        <div class="p-3 bg-gray-50 border-b border-gray-300 text-center">
-            <p class="text-sm font-bold text-gray-800">
-                Age Limit: <span class="font-normal">{post.ageLimit}</span>
-            </p>
-            {post.ageRelaxation && <p class="text-xs text-gray-500 mt-1">(Age Relaxation Extra as per Rules)</p>}
-        </div>
+            <div class="p-3 bg-gray-50 border-b border-gray-300 text-center">
+                <p class="text-sm font-bold text-gray-800">Age Limit: <span class="font-normal">{post.ageLimit}</span></p>
+                {post.ageRelaxation && <p class="text-xs text-gray-500 mt-1">({post.ageRelaxation})</p>}
+            </div>
         )}
-
-        {/* Vacancy Table */}
         {post.vacancyDetails && (
             <div class="overflow-x-auto">
                 <table class="w-full text-sm border-collapse">
                     <thead class="bg-gray-100 text-gray-800 text-xs uppercase">
                         <tr>
                             <th class="border border-gray-300 px-3 py-2 text-left">Post Name</th>
-                            <th class="border border-gray-300 px-3 py-2 text-center whitespace-nowrap">Total</th>
+                            <th class="border border-gray-300 px-3 py-2 text-center">Total</th>
                             <th class="border border-gray-300 px-3 py-2 text-left">Eligibility</th>
                         </tr>
                     </thead>
                     <tbody>
                         {post.vacancyDetails.map((v) => (
-                            <tr class="hover:bg-yellow-50 transition-colors">
+                            <tr class="hover:bg-yellow-50">
                                 <td class="border border-gray-300 px-3 py-2 font-bold text-gray-700">{v.postName}</td>
                                 <td class="border border-gray-300 px-3 py-2 text-center font-bold text-[#d91e18]">{v.totalPost || v.total}</td>
-                                <td class="border border-gray-300 px-3 py-2 text-gray-600 leading-snug" set:html={formatText(v.eligibility)}></td>
+                                <td class="border border-gray-300 px-3 py-2 text-gray-600" set:html={formatText(v.eligibility)}></td>
                             </tr>
                         ))}
-                        {/* Auto Total Logic for Vacancy */}
+                        {/* Auto Total for Main Vacancy */}
                         {(() => {
-                            const total = calculateColumnTotal(post.vacancyDetails, 'total') || calculateColumnTotal(post.vacancyDetails, 'totalPost');
-                            if (total) return (
-                                <tr class="bg-gray-200 font-bold">
-                                    <td class="border border-gray-300 px-3 py-2 text-right">Total Vacancy</td>
-                                    <td class="border border-gray-300 px-3 py-2 text-center text-[#d91e18]">{total}</td>
-                                    <td class="border border-gray-300 px-3 py-2"></td>
-                                </tr>
-                            );
+                            const total = calculateTotal(post.vacancyDetails, 'total') || calculateTotal(post.vacancyDetails, 'totalPost');
+                            if(total) return (<tr class="bg-gray-200 font-bold"><td class="border px-3 py-2 text-right">Total</td><td class="border px-3 py-2 text-center text-red-600">{total}</td><td class="border px-3 py-2"></td></tr>);
                         })()}
                     </tbody>
                 </table>
             </div>
         )}
-    </div>
-    )}
-
-    {/* 4. ♾️ INFINITE DYNAMIC TABLES (The "Everything Else" Section) */}
-    {/* Use this for: Center Wise, Region Wise, Category Wise, Physical Standards, etc. */}
-    {post.dynamicTables && post.dynamicTables.map((tableSection, index) => (
-      <div id={index === 0 ? "details" : undefined} class="mb-8 border border-gray-300 rounded-sm overflow-hidden">
-        <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase tracking-wide">
-          {tableSection.title || "Detailed Information"}
-        </div>
-        
-        {/* Optional Description above table */}
-        {tableSection.description && (
-             <div class="p-2 bg-gray-50 text-sm text-gray-600 border-b border-gray-200 text-center" set:html={formatText(tableSection.description)}></div>
-        )}
-
-        <div class="overflow-x-auto">
-          <table class="w-full text-sm border-collapse text-center">
-            {/* Auto Detect Headers */}
-            <thead class="bg-gray-100 font-bold text-gray-700 whitespace-nowrap">
-              <tr>
-                {Object.keys(tableSection.data[0]).map(key => (
-                  <th class="border border-gray-300 px-3 py-2 capitalize">{key.replace(/_/g, ' ')}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {tableSection.data.map((row, i) => (
-                <tr class={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                  {Object.values(row).map(val => (
-                    <td class="border border-gray-300 px-3 py-2 font-medium whitespace-nowrap" set:html={formatText(val)}></td>
-                  ))}
-                </tr>
-              ))}
-              
-              {/* 🧮 Auto Total for Dynamic Tables */}
-              {(() => {
-                   const keys = Object.keys(tableSection.data[0]);
-                   // Check if last column is total-able
-                   const lastKey = keys[keys.length - 1];
-                   const total = calculateColumnTotal(tableSection.data, lastKey);
-                   
-                   if (total) return (
-                     <tr class="bg-gray-200 font-bold">
-                        <td class="border border-gray-300 px-3 py-2 text-right" colspan={keys.length - 1}>Total</td>
-                        <td class="border border-gray-300 px-3 py-2">{total}</td>
-                     </tr>
-                   )
-              })()}
-
-            </tbody>
-          </table>
-        </div>
-      </div>
-    ))}
-
-    {/* 5. 🧩 GENERIC "EXTRA SECTIONS" (Text/Lists) */}
-    {/* Use this for: Selection Process, Rules, Training Details, etc. */}
-    {post.extraSections && post.extraSections.map(section => (
-      <div class="mb-8 border border-gray-300 rounded-sm overflow-hidden">
-         <div class="bg-gray-700 text-white text-center font-bold py-2 text-sm uppercase tracking-wide">
-           {section.title}
-         </div>
-         <div class="bg-gray-50 p-4 text-sm text-gray-800">
-             {section.type === 'list' ? (
-                 <ul class="list-disc pl-5 space-y-2">
-                     {section.data.map(item => <li set:html={formatText(item)}></li>)}
-                 </ul>
-             ) : (
-                 <div class="whitespace-pre-line leading-relaxed" set:html={formatText(section.data)}></div>
-             )}
-         </div>
-      </div>
-    ))}
-
-    {/* 6. 💰 SALARY SECTION */}
-    {(post.salary || post.salaryDetails) && (
-      <div id="salary" class="mb-8 border border-gray-300 rounded-sm overflow-hidden">
-        <div class="bg-green-700 text-white text-center font-bold py-2 text-sm uppercase flex items-center justify-center gap-2">
-           <span>💰</span> Pay Scale & Salary
-        </div>
-        
-        {post.salaryDetails ? (
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm border-collapse">
-                    <thead class="bg-green-50 text-green-900 border-b border-green-200">
-                        <tr>
-                            <th class="border border-gray-300 px-3 py-2 text-left">Post Name</th>
-                            <th class="border border-gray-300 px-3 py-2 text-left">Pay Level / Salary</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {post.salaryDetails.map((row) => (
-                            <tr class="hover:bg-green-50">
-                                <td class="border border-gray-300 px-3 py-2 font-medium text-gray-700">{row.post}</td>
-                                <td class="border border-gray-300 px-3 py-2 font-bold text-gray-800">{row.level}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        ) : (
-            <div class="p-4 bg-green-50 text-center">
-                 <p class="text-green-800 font-bold text-lg">{post.salary}</p>
-            </div>
-        )}
       </div>
     )}
 
-    {/* 7. 📝 EXAM PATTERN & SYLLABUS (Multi-Tier) */}
-    {post.examPattern && (
-      <div id="pattern" class="mb-8">
-        <h3 class="text-lg font-bold text-gray-800 mb-2 px-2 border-l-4 border-[#d91e18]">Exam Pattern & Syllabus</h3>
-        
-        <div class="border border-gray-300 rounded-sm overflow-hidden">
-            {post.examPattern.details && (
-                <div class="bg-[#fffbe6] p-3 border-b border-gray-300">
-                    <ul class="list-disc pl-5 text-sm text-gray-800 space-y-1">
-                        {post.examPattern.details.map(d => <li set:html={formatText(d)}></li>)}
-                    </ul>
-                </div>
-            )}
-            
-            {/* Dynamic Stages Renderer */}
-            {[
-               post.examPattern.table ? { title: "Exam Pattern", data: post.examPattern.table } : null,
-               post.examPattern.tier1 ? { title: "Tier-I Pattern", data: post.examPattern.tier1 } : null,
-               post.examPattern.tier2 ? { title: "Tier-II Pattern", data: post.examPattern.tier2 } : null,
-               post.examPattern.physical ? { title: "Physical Test (PET/PST)", tableType: 'pet', data: post.examPattern.physical } : null
-            ].filter(Boolean).map(stage => (
-              <div class="border-t border-gray-300 first:border-t-0">
-                <div class="bg-gray-100 px-3 py-2 font-bold text-sm text-gray-700 border-b border-gray-200">
-                    {stage.title}
-                </div>
-                <div class="overflow-x-auto">
-                  <table class="w-full text-sm border-collapse text-center">
-                    <thead class="bg-white text-gray-800 text-xs uppercase">
-                        {stage.tableType === 'pet' 
-                           ? <tr><th class="border px-2 py-2 text-left">Activity</th><th class="border px-2 py-2">Male</th><th class="border px-2 py-2">Female</th></tr>
-                           : <tr><th class="border px-2 py-2 text-left">Subject</th><th class="border px-2 py-2 w-20">Qs</th><th class="border px-2 py-2 w-20">Marks</th></tr>
-                        }
-                    </thead>
-                    <tbody>
-                      {stage.data.map(r => (
-                        <tr class="hover:bg-gray-50">
-                           {stage.tableType === 'pet' ? (
-                             <>
-                               <td class="border border-gray-300 px-2 py-2 text-left font-medium">{r.activity}</td>
-                               <td class="border border-gray-300 px-2 py-2">{r.male}</td>
-                               <td class="border border-gray-300 px-2 py-2">{r.female}</td>
-                             </>
-                           ) : (
-                             <>
-                               <td class="border border-gray-300 px-2 py-2 text-left font-medium">{r.subject}</td>
-                               <td class="border border-gray-300 px-2 py-2">{r.questions}</td>
-                               <td class="border border-gray-300 px-2 py-2">{r.marks}</td>
-                             </>
-                           )}
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            ))}
-        </div>
-      </div>
-    )}
+    {/* 🔥 4. INFINITE AUTO-RENDERER (The Magic Part) 🔥 */}
+    {dynamicKeys.map((key) => {
+        const data = post[key];
+        const type = getDataType(data);
+        const title = formatTitle(key); // e.g. "documentsRequired" -> "Documents Required"
 
-    {/* 8. 🔗 IMPORTANT LINKS (Pill Buttons) */}
+        // SCENARIO A: TABLE (Array of Objects)
+        if (type === 'table') {
+            const headers = Object.keys(data[0]);
+            return (
+                <div class="mb-8 border border-gray-300 rounded-sm overflow-hidden">
+                    <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">{title}</div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm border-collapse text-center">
+                            <thead class="bg-gray-100 font-bold text-gray-700 whitespace-nowrap">
+                                <tr>{headers.map(h => <th class="border border-gray-300 px-3 py-2 capitalize">{h.replace(/_/g, ' ')}</th>)}</tr>
+                            </thead>
+                            <tbody>
+                                {data.map((row, i) => (
+                                    <tr class={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                                        {Object.values(row).map(val => <td class="border border-gray-300 px-3 py-2 font-medium whitespace-nowrap" set:html={formatText(val)}></td>)}
+                                    </tr>
+                                ))}
+                                {/* Auto Total for Dynamic Tables */}
+                                {(() => {
+                                    const lastKey = headers[headers.length - 1];
+                                    const total = calculateTotal(data, lastKey);
+                                    if(total) return (<tr class="bg-gray-200 font-bold"><td class="border px-3 py-2 text-right" colspan={headers.length-1}>Total</td><td class="border px-3 py-2">{total}</td></tr>);
+                                })()}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            );
+        }
+
+        // SCENARIO B: LIST (Array of Strings) - Like "Selection Process", "Documents"
+        if (type === 'list') {
+            return (
+                <div class="mb-8 border border-gray-300 rounded-sm overflow-hidden">
+                    <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">{title}</div>
+                    <div class="bg-gray-50 p-4">
+                        <ul class="list-disc pl-5 space-y-2 text-sm text-gray-800 font-medium">
+                            {data.map(item => <li set:html={formatText(item)}></li>)}
+                        </ul>
+                    </div>
+                </div>
+            );
+        }
+
+        // SCENARIO C: TEXT BLOCK (Simple String) - Like "Experience Note"
+        if (type === 'text') {
+            return (
+                <div class="mb-8 border border-gray-300 rounded-sm overflow-hidden">
+                    <div class="bg-gray-700 text-white text-center font-bold py-2 text-sm uppercase">{title}</div>
+                    <div class="bg-gray-50 p-4 text-sm text-gray-800 leading-relaxed whitespace-pre-line" set:html={formatText(data)}></div>
+                </div>
+            );
+        }
+
+        return null;
+    })}
+
+    {/* 5. IMPORTANT LINKS (Standard) */}
     {post.links && (
       <div id="links" class="mb-8 border border-gray-400 rounded-sm overflow-hidden">
-        <div class="bg-[#d91e18] text-white text-center font-bold py-2 text-lg uppercase tracking-wide">
-          Important Links
-        </div>
+        <div class="bg-[#d91e18] text-white text-center font-bold py-2 text-lg uppercase">Important Links</div>
         <div class="bg-white">
             <table class="w-full text-sm md:text-base border-collapse">
                 <tbody>
-                    {post.links.map((link, index) => (
-                        <tr class={`hover:bg-red-50 transition ${index !== post.links.length - 1 ? 'border-b border-gray-300' : ''}`}>
-                            <td class="px-4 py-3 font-bold text-gray-700 border-r border-gray-300 w-2/3">
-                                {link.title}
-                            </td>
+                    {post.links.map((link, i) => (
+                        <tr class={`hover:bg-red-50 transition ${i !== post.links.length - 1 ? 'border-b border-gray-300' : ''}`}>
+                            <td class="px-4 py-3 font-bold text-gray-700 border-r border-gray-300 w-2/3">{link.title}</td>
                             <td class="px-4 py-2 text-center">
-                                <a href={link.url} target="_blank" class={`inline-block px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide shadow-sm transform hover:-translate-y-0.5 transition ${getBtnStyle(link.title)}`}>
-                                    Click Here ↗
-                                </a>
+                                <a href={link.url} target="_blank" class={`inline-block px-4 py-1.5 rounded-full text-xs font-bold uppercase shadow-sm ${getBtnStyle(link.title)}`}>Click Here ↗</a>
                             </td>
                         </tr>
                     ))}
@@ -436,74 +257,29 @@ const tgLink = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=
       </div>
     )}
 
-    {/* 9. HOW TO APPLY */}
-    {post.howToApply && (
-      <div class="mb-8 bg-gray-50 border border-gray-300 p-4 rounded-sm">
-        <h3 class="text-lg font-bold text-gray-800 mb-3 border-b border-gray-200 pb-2">How to Apply</h3>
-        <ol class="list-decimal pl-5 space-y-2 text-sm text-gray-700">
-           {post.howToApply.map(step => <li class="pl-1" set:html={formatText(step)}></li>)}
-        </ol>
-      </div>
-    )}
-
-    {/* 10. FAQs (Accordion) */}
+    {/* 6. FAQS (Standard) */}
     {post.faqs && (
       <div class="mb-8">
         <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">Frequently Asked Questions</h3>
         <div class="border border-gray-300 rounded divide-y divide-gray-300">
-          {post.faqs.map(faq => (
+          {post.faqs.map(f => (
             <details class="group bg-white">
-              <summary class="font-semibold cursor-pointer p-4 list-none flex justify-between items-center text-gray-800 hover:bg-gray-50 bg-gray-50">
-                {faq.question}
-                <span class="text-blue-500 font-bold text-lg group-open:rotate-180 transition transform">▼</span>
-              </summary>
-              <div class="px-4 pb-4 pt-2 text-gray-600 text-sm leading-relaxed border-t border-gray-100">{faq.answer}</div>
+              <summary class="font-semibold cursor-pointer p-4 flex justify-between items-center text-gray-800 hover:bg-gray-50">{f.question}<span class="text-blue-500 font-bold">▼</span></summary>
+              <div class="px-4 pb-4 pt-2 text-gray-600 text-sm border-t border-gray-100">{f.answer}</div>
             </details>
           ))}
         </div>
       </div>
     )}
 
-    <div class="text-center text-[11px] text-gray-400 mt-8 mb-4">
-        Disclaimer: This is an information portal. Please verify details from the official notification.
-    </div>
+    <div class="text-center text-[11px] text-gray-400 mt-8 mb-4">Disclaimer: Verify details from official notification.</div>
 
   </article>
 
   {/* SOCIAL SHARE */}
   <div class="flex justify-center gap-4 mb-10">
-      <a href={waLink} target="_blank" class="bg-[#25D366] hover:bg-[#20bd5a] text-white px-5 py-2.5 rounded-full shadow-lg text-sm font-bold flex items-center gap-2 transform hover:-translate-y-1 transition">
-         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
-         Share on WhatsApp
-      </a>
-      <a href={tgLink} target="_blank" class="bg-[#229ED9] hover:bg-[#1f8ubc] text-white px-5 py-2.5 rounded-full shadow-lg text-sm font-bold flex items-center gap-2 transform hover:-translate-y-1 transition">
-         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.694 0Zm5.216 8.784-1.76 8.297c-.13.587-.48.73-.974.454l-2.696-1.986-1.3 1.253c-.144.144-.265.265-.54.265l.192-2.738 4.985-4.506c.217-.193-.047-.3-.337-.107l-6.16 3.878-2.656-.83c-.577-.18-.588-.577.12-.852l10.378-4.004c.48-.173.9.117.748.876Z"/></svg>
-         Share on Telegram
-      </a>
+      <a href={waLink} target="_blank" class="bg-[#25D366] text-white px-5 py-2.5 rounded-full shadow-lg text-sm font-bold flex items-center gap-2">WhatsApp</a>
+      <a href={tgLink} target="_blank" class="bg-[#229ED9] text-white px-5 py-2.5 rounded-full shadow-lg text-sm font-bold flex items-center gap-2">Telegram</a>
   </div>
-
-  {/* PRO SEO SCHEMA */}
-  <script type="application/ld+json" set:html={JSON.stringify({
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "JobPosting",
-        "title": post.title,
-        "description": post.shortInfo,
-        "datePosted": post.postDate ? new Date(post.postDate.split('/').reverse().join('-')).toISOString() : new Date().toISOString(),
-        "validThrough": post.importantDates?.find(d => d.label.toLowerCase().includes("last date"))?.value.replace(/\//g, '-') || "2026-12-31",
-        "hiringOrganization": { "@type": "Organization", "name": "Top Online Form", "url": "https://toponlineform.com" },
-        "jobLocation": { "@type": "Place", "address": { "@type": "PostalAddress", "addressCountry": "IN", "addressRegion": post.state || "India" } }
-      },
-      {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://toponlineform.com" },
-          { "@type": "ListItem", "position": 2, "name": post.category, "item": `https://toponlineform.com/${post.category.toLowerCase().replace(/\s+/g, '-')}` },
-          { "@type": "ListItem", "position": 3, "name": post.shortTitle || post.title }
-        ]
-      }
-    ]
-  })} />
 
 </Layout>
