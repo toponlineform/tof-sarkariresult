@@ -37,7 +37,7 @@ else if (catLower.includes("admission")) stepsHeader = "How to Apply for Admissi
 // 1. Universal Total Calculator
 const calculateTotal = (data, key) => {
     if (!data || !key) return null;
-    const skipKeys = ['age', 'year', 'code', 's.no', 'serial', 'qualification', 'eligibility', 'post name', 'category', 'subject', 'activity', 'trade', 'pay scale'];
+    const skipKeys = ['age', 'year', 'code', 's.no', 'serial', 'qualification', 'eligibility', 'post name', 'category', 'subject', 'activity', 'trade', 'pay scale', 'event', 'eye'];
     if (skipKeys.some(k => key.toLowerCase().includes(k))) return null;
 
     let total = 0;
@@ -75,6 +75,7 @@ const dynamicKeys = Object.keys(post).filter(key => !standardKeys.includes(key))
 // 4. Data Type Helper
 const getDataType = (data) => {
     if (Array.isArray(data) && data.length > 0) {
+        if (data[0].title && (data[0].data || data[0].table)) return 'complex-block'; 
         if (typeof data[0] === 'object') return 'table';
         return 'list';
     }
@@ -113,7 +114,6 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
 
 <Layout title={post.title} description={post.shortInfo} keywords={post.tags}>
   
-  {/* 🍞 BREADCRUMBS */}
   <div class="max-w-7xl mx-auto px-1">
       <nav class="flex text-xs text-gray-500 mb-2 font-medium overflow-x-auto whitespace-nowrap">
         <a href="/" class="hover:text-blue-700">Home</a> <span class="mx-1">›</span>
@@ -122,10 +122,9 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
       </nav>
   </div>
 
-  {/* 🏗️ MAIN GRID LAYOUT */}
   <div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-6 mb-10 items-start">
 
-    {/* ================= LEFT COLUMN: MAIN CONTENT ================= */}
+    {/* LEFT COLUMN */}
     <main class="flex-1 min-w-0 w-full">
         <article class="bg-white p-3 md:p-5 border border-gray-400 font-sans shadow-sm">
             
@@ -146,7 +145,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                 </div>
             )}
 
-            {/* ⏳ COUNTDOWN */}
+            {/* COUNTDOWN */}
             {lastDateISO && !isSimpleMode && (
                 <div id="countdown-box" data-date={lastDateISO} class="hidden mt-4 bg-red-50 border border-red-200 rounded p-3 text-center animate-pulse">
                     <p class="text-xs text-red-600 font-bold uppercase tracking-widest mb-1">Application Ends In:</p>
@@ -155,10 +154,9 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             )}
             </header>
 
-            {/* 💰 AD SLOT 1 */}
             <AdSlot type="horizontal" />
 
-            {/* 📑 TOC */}
+            {/* TOC */}
             <div class="mb-6 bg-blue-50 border border-blue-200 p-3 rounded-sm">
                 <p class="text-[10px] font-bold text-blue-800 uppercase mb-2 tracking-wider">Table of Contents:</p>
                 <div class="flex flex-wrap gap-2 text-xs font-semibold text-blue-700">
@@ -168,6 +166,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                     {post.selectionProcess && <a href="#selection" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">🎯 Selection</a>}
                     {post.examPattern && <a href="#pattern" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">📝 Pattern</a>}
                     {post.syllabus && <a href="#syllabus" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">📖 Syllabus</a>}
+                    {post.faqs && post.faqs.length > 0 && <a href="#faqs" class="bg-white px-2 py-1 border border-yellow-200 text-yellow-700 rounded hover:shadow-sm">❓ FAQs</a>}
                     <a href="#links" class="bg-white px-2 py-1 border border-red-200 text-red-600 rounded hover:shadow-sm">🔗 Important Links</a>
                 </div>
             </div>
@@ -205,19 +204,18 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             </div>
             )}
 
-            {/* 3. VACANCY & AGE (Only Main Vacancy Table Here) */}
+            {/* 3. VACANCY & AGE */}
             {!isSimpleMode && (post.ageLimit || post.vacancyDetails) && (
             <div id="vacancy" class="mb-6 border border-gray-400 scroll-mt-20">
                 <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Vacancy Details & Age Limit</div>
-                
                 {post.ageLimit && (
                     <div class="p-3 text-center border-b border-gray-300 bg-gray-50">
                         <p class="text-sm font-bold text-gray-800">Age Limit: <span class="font-normal">{post.ageLimit}</span></p>
                         {post.ageRelaxation && <p class="text-xs text-gray-500 mt-1">({post.ageRelaxation})</p>}
                     </div>
                 )}
-
-                {post.vacancyDetails && post.vacancyDetails.length > 0 && (
+                {/* Main Vacancy Table */}
+                {post.vacancyDetails && (
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm border-collapse text-center">
                             <thead class="bg-gray-100 text-gray-800 text-xs uppercase font-bold">
@@ -249,13 +247,10 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             </div>
             )}
 
-            {/* 4. STATE/CATEGORY VACANCY (SEPARATE SECTION) */}
+            {/* 4. STATE/CATEGORY VACANCY */}
             {!isSimpleMode && post.stateWiseVacancy && post.stateWiseVacancy.length > 0 && (
             <div class="mb-6 border border-gray-400">
                 <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">{post.vacancyTableTitle || "Category Wise Vacancy"}</div>
-                
-                {/* Loop through State Wise Vacancy Blocks if it's Array of Blocks */}
-                {/* CHECK 1: If simple table */}
                 {getDataType(post.stateWiseVacancy) === 'table' ? (
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm border-collapse border border-gray-300 text-center">
@@ -279,10 +274,10 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                         </table>
                     </div>
                 ) : (
-                    /* CHECK 2: If Array of Blocks (New Standard) */
+                    /* Blocks for multiple tables */
                     post.stateWiseVacancy.map(block => (
                         <div class="mb-4 mt-4 border-t border-b border-gray-300">
-                            {block.title && <div class="bg-gray-200 px-3 py-2 font-bold text-sm text-gray-800 border-b border-gray-300 text-center">{block.title}</div>}
+                            {block.title && <div class="bg-gray-200 px-3 py-2 font-bold text-sm text-gray-800 border-b border-gray-300 text-center uppercase">{block.title}</div>}
                             <div class="overflow-x-auto">
                                 <table class="w-full text-sm border-collapse text-center">
                                     <thead class="bg-gray-100 font-bold text-gray-700 whitespace-nowrap">
@@ -313,71 +308,6 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                 </div>
             )}
 
-            {/* 6. INFINITE DATA RENDERER */}
-            {dynamicKeys.map((key) => {
-                const data = post[key];
-                const type = getDataType(data);
-                const title = formatHeader(key);
-
-                if (type === 'table') {
-                    const headers = Object.keys(data[0]);
-                    return (
-                        <div class="mb-6 border border-gray-400">
-                            <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">{title}</div>
-                            <div class="overflow-x-auto">
-                                <table class="w-full text-sm border-collapse border border-gray-300 text-center">
-                                    <thead class="bg-gray-100 font-bold text-gray-700 whitespace-nowrap">
-                                        <tr>{headers.map(h => <th class="border border-gray-300 px-2 py-2">{formatHeader(h)}</th>)}</tr>
-                                    </thead>
-                                    <tbody>
-                                        {data.map((row, i) => (
-                                            <tr class={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                                                {Object.values(row).map(val => <td class="border border-gray-300 px-2 py-2" set:html={formatText(val)}></td>)}
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    );
-                }
-                
-                // 🔥 NEW: Handle Block Arrays in Extra Sections too
-                if (type === 'complex-block' || (Array.isArray(data) && data[0].type === 'table')) {
-                     return (
-                        <div class="mb-6 border border-gray-400">
-                            <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">{title}</div>
-                            <div class="bg-white p-4">
-                                {data.map(block => (
-                                    <div class="mb-6 border border-gray-300">
-                                        {block.title && <div class="bg-gray-200 px-3 py-2 font-bold text-sm text-gray-800 border-b border-gray-300 text-center uppercase">{block.title}</div>}
-                                        {block.table && (
-                                            <div class="overflow-x-auto">
-                                                <table class="w-full text-sm border-collapse text-center">
-                                                    <thead class="bg-gray-100 font-bold text-gray-700 text-xs uppercase">
-                                                        <tr>{Object.keys(block.table[0]).map(h => <th class="border border-gray-300 px-2 py-2">{formatHeader(h)}</th>)}</tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {block.table.map(row => (
-                                                            <tr class="hover:bg-white bg-gray-50">
-                                                                {Object.values(row).map(val => <td class="border border-gray-300 px-2 py-2">{val}</td>)}
-                                                            </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        )}
-                                        {block.content && <p class="p-3 text-sm text-gray-700">{block.content}</p>}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                     );
-                }
-
-                return null;
-            })}
-
             {/* 7. SALARY */}
             {!isSimpleMode && (post.salary || post.salaryDetails) && (
             <div id="salary" class="mb-6 border border-gray-400 scroll-mt-20">
@@ -407,19 +337,18 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             </div>
             )}
 
-            {/* 9. EXAM PATTERN (🔥 FIXED LOGIC FOR NEW ARRAY FORMAT 🔥) */}
+            {/* 9. EXAM PATTERN (🔥 Fixed: Supports Text/Note & Tables 🔥) */}
             {post.examPattern && (
             <div id="pattern" class="mb-6 border border-gray-400 scroll-mt-20">
                 <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Exam Pattern</div>
                 <div class="bg-white p-4">
-                    {/* Check if Array (New Standard) */}
+                    {/* Handle Array (New Standard) */}
                     {Array.isArray(post.examPattern) ? (
                         post.examPattern.map(block => {
                             // CASE A: TABLE BLOCK
                             if (block.type === 'table') {
                                 return (
                                     <div class="mb-6 border border-gray-300">
-                                        {/* Grey Header for Table Title */}
                                         {block.title && <div class="bg-gray-200 px-3 py-2 font-bold text-sm text-gray-800 border-b border-gray-300 text-center uppercase">{block.title}</div>}
                                         <div class="overflow-x-auto">
                                             <table class="w-full text-sm border-collapse text-center">
@@ -444,19 +373,19 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                                     </div>
                                 );
                             }
-                            // CASE B: TEXT BLOCK
-                            if (block.type === 'text') {
+                            // CASE B: TEXT / NOTE BLOCK (FIXED)
+                            if (block.type === 'text' || block.type === 'note') {
                                 return (
                                     <div class="mb-4 p-3 bg-gray-50 border-l-4 border-blue-500">
                                         {block.title && <h4 class="font-bold text-gray-800 mb-1">{block.title}</h4>}
-                                        <p class="text-sm text-gray-700" set:html={formatText(block.data)}></p>
+                                        <p class="text-sm text-gray-700" set:html={formatText(block.data || block.content)}></p>
                                     </div>
                                 );
                             }
                             return null;
                         })
                     ) : (
-                        /* Fallback for Old Object Data (To prevent blank screen) */
+                        /* Fallback for Old Objects */
                         Object.entries(post.examPattern).map(([key, value]) => {
                              if(Array.isArray(value) && typeof value[0] === 'object') {
                                 return (
@@ -476,29 +405,17 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             </div>
             )}
 
-            {/* 10. SYLLABUS SECTION */}
+            {/* 10. SYLLABUS */}
             {post.syllabus && (
             <div id="syllabus" class="mb-6 border border-gray-400 scroll-mt-20">
                 <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Syllabus (Topic Wise)</div>
                 <div class="bg-white p-4">
-                    {post.syllabus.intro && (
-                        <p class="text-sm text-gray-700 mb-4 italic border-l-4 border-blue-500 pl-3 bg-blue-50 py-2">
-                            {post.syllabus.intro}
-                        </p>
-                    )}
+                    {post.syllabus.intro && <p class="text-sm text-gray-700 mb-4 italic border-l-4 border-blue-500 pl-3 bg-blue-50 py-2">{post.syllabus.intro}</p>}
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {post.syllabus.topics && post.syllabus.topics.map((subject) => (
                             <div class="border border-gray-300 rounded overflow-hidden">
-                                <div class="bg-gray-100 px-3 py-2 font-bold text-sm text-blue-800 border-b border-gray-300">
-                                    📚 {subject.subject}
-                                </div>
-                                <div class="p-3 bg-white">
-                                    <ul class="list-disc pl-5 text-sm text-gray-600 space-y-1">
-                                        {subject.details.map(topic => (
-                                            <li set:html={formatText(topic)}></li>
-                                        ))}
-                                    </ul>
-                                </div>
+                                <div class="bg-gray-100 px-3 py-2 font-bold text-sm text-blue-800 border-b border-gray-300">📚 {subject.subject}</div>
+                                <div class="p-3 bg-white"><ul class="list-disc pl-5 text-sm text-gray-600 space-y-1">{subject.details.map(topic => <li set:html={formatText(topic)}></li>)}</ul></div>
                             </div>
                         ))}
                     </div>
@@ -506,7 +423,37 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             </div>
             )}
 
-            {/* 11. HOW TO APPLY */}
+            {/* 11. EXTRA SECTIONS (PET/PST/Medical) */}
+            {post.extraSections && post.extraSections.length > 0 && (
+                <div id="extra-sections" class="mb-6">
+                    {post.extraSections.map((section) => (
+                        <div class="mb-6 border border-gray-400">
+                            <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">{section.title}</div>
+                            <div class="bg-white p-4">
+                                {section.table && (
+                                    <div class="overflow-x-auto border border-gray-300">
+                                        <table class="w-full text-sm border-collapse text-center">
+                                            <thead class="bg-gray-100 font-bold text-gray-700 whitespace-nowrap">
+                                                <tr>{Object.keys(section.table[0]).map(h => <th class="border border-gray-300 px-2 py-2">{formatHeader(h)}</th>)}</tr>
+                                            </thead>
+                                            <tbody>
+                                                {section.table.map(row => (
+                                                    <tr class="hover:bg-white bg-gray-50">
+                                                        {Object.values(row).map(val => <td class="border border-gray-300 px-2 py-2">{val}</td>)}
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                )}
+                                {section.content && <p class="text-sm text-gray-800" set:html={formatText(section.content)}></p>}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            {/* 12. HOW TO APPLY */}
             {post.howToApply && (
             <div class="mb-6 border border-gray-400">
                 <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">{stepsHeader}</div>
@@ -514,7 +461,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             </div>
             )}
 
-            {/* 12. IMPORTANT LINKS */}
+            {/* 13. LINKS */}
             <div id="links" class="mb-6 border border-gray-400 scroll-mt-20">
                 <div class="bg-[#d32f2f] text-white text-center font-bold py-2 text-lg uppercase">
                 {isSimpleMode ? "Download Links" : "Important Links"}
@@ -526,9 +473,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                                 <tr class={`hover:bg-red-50 transition ${index !== post.links.length - 1 ? 'border-b border-gray-300' : ''}`}>
                                     <td class="px-4 py-3 font-bold text-gray-700 border-r border-gray-300 w-2/3">{link.title}</td>
                                     <td class="px-4 py-2 text-center">
-                                        <a href={link.url} target="_blank" class={`inline-flex items-center gap-1 px-4 py-1.5 rounded text-xs font-bold uppercase shadow-sm border ${getBtnStyle(link.title)}`}>
-                                            Click Here ↗
-                                        </a>
+                                        <a href={link.url} target="_blank" class={`inline-flex items-center gap-1 px-4 py-1.5 rounded text-xs font-bold uppercase shadow-sm border ${getBtnStyle(link.title)}`}>Click Here ↗</a>
                                     </td>
                                 </tr>
                             ))}
@@ -537,15 +482,13 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                 </div>
             </div>
 
-            {/* DISCLAIMER */}
             <div class="text-center text-[11px] text-gray-400 mt-2 mb-6">Disclaimer: Please verify all details from the official website before applying.</div>
 
-            {/* 💰 AD SLOT 2 */}
             <AdSlot type="square" />
 
-            {/* 13. FAQs */}
-            {post.faqs && (
-            <div class="mb-8 border border-gray-300 p-2 rounded bg-gray-50">
+            {/* 14. FAQs (Fixed Logic) */}
+            {post.faqs && post.faqs.length > 0 && (
+            <div id="faqs" class="mb-8 border border-gray-300 p-2 rounded bg-gray-50 scroll-mt-20">
                 <h3 class="text-lg font-bold text-gray-800 mb-3 text-center uppercase">Frequently Asked Questions</h3>
                 <div class="space-y-2">
                 {post.faqs.map((faq, i) => (
@@ -561,17 +504,13 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             </div>
             )}
 
-            {/* 14. SOCIAL SHARE */}
+            {/* 15. SOCIAL */}
             <div class="flex flex-wrap justify-center gap-3 mb-8">
-                <a href={waLink} class="bg-[#25D366] hover:bg-[#20bd5a] text-white px-5 py-2.5 rounded-full shadow-md text-sm font-bold flex items-center gap-2 transform hover:-translate-y-1 transition">
-                <span>Share on WhatsApp</span>
-                </a>
-                <a href={tgLink} target="_blank" class="bg-[#229ED9] hover:bg-[#1f8ubc] text-white px-5 py-2.5 rounded-full shadow-md text-sm font-bold flex items-center gap-2 transform hover:-translate-y-1 transition">
-                <span>Share on Telegram</span>
-                </a>
+                <a href={waLink} class="bg-[#25D366] hover:bg-[#20bd5a] text-white px-5 py-2.5 rounded-full shadow-md text-sm font-bold flex items-center gap-2 transform hover:-translate-y-1 transition"><span>Share on WhatsApp</span></a>
+                <a href={tgLink} target="_blank" class="bg-[#229ED9] hover:bg-[#1f8ubc] text-white px-5 py-2.5 rounded-full shadow-md text-sm font-bold flex items-center gap-2 transform hover:-translate-y-1 transition"><span>Share on Telegram</span></a>
             </div>
 
-            {/* 15. RELATED JOBS */}
+            {/* 16. RELATED JOBS */}
             {relatedPosts.length > 0 && (
                 <div class="mt-8 pt-6 border-t-4 border-[#d32f2f]">
                     <h3 class="text-xl font-bold text-[#d32f2f] mb-4 pl-2">You May Also Like</h3>
@@ -589,45 +528,21 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
         </article>
     </main>
 
-    {/* ================= RIGHT COLUMN: SIDEBAR ================= */}
+    {/* RIGHT SIDEBAR */}
     <aside class="hidden lg:block w-[300px] flex-shrink-0">
         <div class="sticky top-4 space-y-6">
-            
-            {/* WhatsApp Box */}
             <a href="https://whatsapp.com/channel/0029Vb7TcG06LwHoTXhZKn2D" target="_blank" class="block bg-white border-l-4 border-[#25D366] p-4 shadow-sm hover:shadow-md transition rounded">
-                <div class="flex items-center gap-3">
-                    <div class="bg-[#25D366] text-white p-2 rounded-full">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
-                    </div>
-                    <div>
-                        <div class="text-xs text-gray-500 font-bold uppercase">Join us on</div>
-                        <div class="text-lg font-bold text-gray-800 leading-none">WhatsApp</div>
-                    </div>
-                </div>
+                <div class="flex items-center gap-3"><div class="bg-[#25D366] text-white p-2 rounded-full"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg></div><div><div class="text-xs text-gray-500 font-bold uppercase">Join us on</div><div class="text-lg font-bold text-gray-800 leading-none">WhatsApp</div></div></div>
             </a>
-
-            {/* Telegram Box */}
             <a href="https://t.me/toponlineform" target="_blank" class="block bg-white border-l-4 border-[#229ED9] p-4 shadow-sm hover:shadow-md transition rounded">
-                <div class="flex items-center gap-3">
-                    <div class="bg-[#229ED9] text-white p-2 rounded-full">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.694 0Zm5.216 8.784-1.76 8.297c-.13.587-.48.73-.974.454l-2.696-1.986-1.3 1.253c-.144.144-.265.265-.54.265l.192-2.738 4.985-4.506c.217-.193-.047-.3-.337-.107l-6.16 3.878-2.656-.83c-.577-.18-.588-.577.12-.852l10.378-4.004c.48-.173.9.117.748.876Z"/></svg>
-                    </div>
-                    <div>
-                        <div class="text-xs text-gray-500 font-bold uppercase">Join us on</div>
-                        <div class="text-lg font-bold text-gray-800 leading-none">Telegram</div>
-                    </div>
-                </div>
+                <div class="flex items-center gap-3"><div class="bg-[#229ED9] text-white p-2 rounded-full"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.694 0Zm5.216 8.784-1.76 8.297c-.13.587-.48.73-.974.454l-2.696-1.986-1.3 1.253c-.144.144-.265.265-.54.265l.192-2.738 4.985-4.506c.217-.193-.047-.3-.337-.107l-6.16 3.878-2.656-.83c-.577-.18-.588-.577.12-.852l10.378-4.004c.48-.173.9.117.748.876Z"/></svg></div><div><div class="text-xs text-gray-500 font-bold uppercase">Join us on</div><div class="text-lg font-bold text-gray-800 leading-none">Telegram</div></div></div>
             </a>
-
-            {/* 💰 3. SIDEBAR AD */}
             <AdSlot type="square" />
-
         </div>
     </aside>
 
   </div>
 
-  {/* SEO SCHEMA */}
   <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@graph": [
@@ -651,19 +566,15 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
     ]
   })} />
 
-  {/* ⏳ CLIENT SIDE COUNTDOWN SCRIPT */}
   <script>
     const box = document.getElementById('countdown-box');
     const display = document.getElementById('timer-display');
-    
     if (box && display) {
         const targetDate = new Date(box.dataset.date);
         targetDate.setHours(23, 59, 59);
-
         const updateTimer = () => {
             const now = new Date();
             const diff = targetDate - now;
-
             if (diff <= 0) {
                 display.innerText = "Application Closed";
                 display.classList.remove('text-red-700');
@@ -672,16 +583,13 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                 clearInterval(interval);
                 return;
             }
-
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
             const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
             display.innerText = `${days}d : ${hours}h : ${minutes}m : ${seconds}s`;
             box.classList.remove('hidden');
         };
-
         const interval = setInterval(updateTimer, 1000);
         updateTimer();
     }
