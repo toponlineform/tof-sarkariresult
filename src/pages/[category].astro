@@ -1,26 +1,30 @@
 ---
 import Layout from '../layouts/Layout.astro';
-// ✅ Import AdSlot
 import AdSlot from '../components/AdSlot.astro'; 
 import { allPosts } from '../data/index.js';
 
 export async function getStaticPaths() {
-  // 1. Categories Define karein
+  // 1. Categories Define karein (Ensure names match your file exports/types)
   const categories = [
     { slug: 'latest-jobs', name: 'Latest Jobs' },
     { slug: 'admit-card', name: 'Admit Card' },
-    { slug: 'results', name: 'Results' },
+    { slug: 'results', name: 'Result' },       // Note: Usually 'Result' singular in data
     { slug: 'answer-key', name: 'Answer Key' },
     { slug: 'admission', name: 'Admission' },
     { slug: 'syllabus', name: 'Syllabus' },
-    { slug: 'previous-papers', name: 'Previous Paper' } // Agar ye bhi chahiye
+    { slug: 'previous-papers', name: 'Previous Paper' }
   ];
 
   return categories.map((cat) => {
-    // 2. Data Filter Logic
-    const filteredPosts = allPosts.filter(post => post.category === cat.name);
+    // 2. Data Filter Logic (Updated for 'types' support)
+    // Ab ye 'Category Name' bhi check karega AUR 'types' array bhi check karega.
+    const filteredPosts = allPosts.filter(post => {
+        const isMainCategory = post.category === cat.name;
+        const isTagged = post.types && post.types.includes(cat.name);
+        return isMainCategory || isTagged;
+    });
     
-    // ✅ 3. YOUR ROBUST SORTING LOGIC (Preserved 100%)
+    // ✅ 3. ULTIMATE SORTING LOGIC (With Syllabus & Reopen Support)
     filteredPosts.sort((a, b) => {
         const parseDate = (dateStr) => {
             if (!dateStr) return 0;
@@ -28,15 +32,47 @@ export async function getStaticPaths() {
             return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`).getTime();
         };
 
-        const timeA = parseDate(a.postDate);
-        const timeB = parseDate(b.postDate);
+        let dateA, dateB;
 
-        // Step A: Date Compare
-        if (timeB !== timeA) {
-            return timeB - timeA;
+        // 🧠 Category Specific Date Priority
+        if (cat.slug === 'latest-jobs') {
+            // Latest Jobs: Priority = Reopen Date > Post Date
+            // (Note: Generic 'updatedDate' yahan use nahi kiya taaki Answer Key aane par Job upar na kude)
+            dateA = parseDate(a.reopenDate || a.postDate);
+            dateB = parseDate(b.reopenDate || b.postDate);
+        } 
+        else if (cat.slug === 'admit-card') {
+            // Admit Card: Priority = Admit Card Date > Updated Date
+            dateA = parseDate(a.admitCardDate || a.updatedDate || a.postDate);
+            dateB = parseDate(b.admitCardDate || b.updatedDate || b.postDate);
+        } 
+        else if (cat.slug === 'answer-key') {
+            // Answer Key: Priority = Answer Key Date
+            dateA = parseDate(a.answerKeyDate || a.updatedDate || a.postDate);
+            dateB = parseDate(b.answerKeyDate || b.updatedDate || b.postDate);
+        }
+        else if (cat.slug === 'results') {
+            // Result: Priority = Result Date
+            dateA = parseDate(a.resultDate || a.updatedDate || a.postDate);
+            dateB = parseDate(b.resultDate || b.updatedDate || b.postDate);
+        }
+        else if (cat.slug === 'syllabus') {
+            // ✅ Syllabus: Priority = Syllabus Date
+            dateA = parseDate(a.syllabusDate || a.updatedDate || a.postDate);
+            dateB = parseDate(b.syllabusDate || b.updatedDate || b.postDate);
+        }
+        else {
+            // Default Fallback (Admission/Previous Paper)
+            dateA = parseDate(a.updatedDate || a.postDate);
+            dateB = parseDate(b.updatedDate || b.postDate);
         }
 
-        // Step B: ID Compare (Fallback)
+        // Step A: Date Compare (Newest First)
+        if (dateB !== dateA) {
+            return dateB - dateA;
+        }
+
+        // Step B: ID Compare (Fallback for same day posts)
         return (b.id || 0) - (a.id || 0);
     });
 
@@ -49,12 +85,12 @@ export async function getStaticPaths() {
 
 const { categoryName, posts } = Astro.props;
 
-// Helper: Button Border Color based on Category (Optional Styling)
+// Helper: Button Border Color based on Category
 const getBorderColor = (cat) => {
     const c = cat.toLowerCase();
     if (c.includes('admit')) return 'border-blue-600';
     if (c.includes('result')) return 'border-green-600';
-    return 'border-red-600'; // Default
+    return 'border-red-600';
 };
 ---
 
@@ -87,7 +123,9 @@ const getBorderColor = (cat) => {
               {posts.length > 0 ? (
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {posts.map((post) => (
-                          <a href={`/${post.slug}`} class="group block bg-white border border-gray-300 rounded hover:shadow-lg hover:border-blue-400 transition-all duration-200 p-4 relative overflow-hidden">
+                          // ✅ Smart Link: Agar Syllabus page hai, toh seedha #syllabus section par jump karega
+                          <a href={`/${post.slug}${categoryName === 'Syllabus' ? '#syllabus' : ''}`} class="group block bg-white border border-gray-300 rounded hover:shadow-lg hover:border-blue-400 transition-all duration-200 p-4 relative overflow-hidden">
+                              
                               {/* Decorative Corner */}
                               <div class="absolute top-0 right-0 w-2 h-2 bg-gray-200 group-hover:bg-blue-500 transition-colors"></div>
                               
@@ -101,14 +139,14 @@ const getBorderColor = (cat) => {
                                   <div class="text-xs text-gray-500 font-mono">
                                       📅 {post.postDate}
                                   </div>
-                                  {post.lastDate ? (
-                                      <div class="text-xs font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded">
-                                          Ends: {post.lastDate}
-                                      </div>
+                                  
+                                  {/* Logic to show appropriate Status Badge */}
+                                  {categoryName === 'Syllabus' ? (
+                                      <div class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">View Syllabus</div>
+                                  ) : post.lastDate ? (
+                                      <div class="text-xs font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded">Ends: {post.lastDate}</div>
                                   ) : (
-                                      <div class="text-xs font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded">
-                                          View Details
-                                      </div>
+                                      <div class="text-xs font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded">View Details</div>
                                   )}
                               </div>
                           </a>
