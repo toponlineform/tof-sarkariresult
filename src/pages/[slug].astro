@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import AdSlot from '../components/AdSlot.astro'; 
+import AdSlot from '../components/AdSlot.astro';
 import { allPosts } from '../data/index.js';
 
 export async function getStaticPaths() {
@@ -10,7 +10,10 @@ export async function getStaticPaths() {
       .sort((a, b) => {
           const parseDate = (d) => {
              if(!d) return 0;
-             const p = d.trim().split('/');
+             // Handle both / and - separators safely
+             const cleanDate = d.trim().replace(/-/g, '/');
+             const p = cleanDate.split('/');
+             if(p.length !== 3) return 0;
              return new Date(`${p[2]}-${p[1]}-${p[0]}`).getTime();
           };
           return parseDate(b.updatedDate || b.postDate) - parseDate(a.updatedDate || a.postDate);
@@ -23,9 +26,9 @@ export async function getStaticPaths() {
 
 const { post, relatedPosts } = Astro.props;
 
-// --- 🧠 LOGIC ADAPTERS ---
+// --- 🧠 LOGIC ADAPTERS (Fixed & Improved) ---
 
-const catLower = post.category.toLowerCase();
+const catLower = post.category ? post.category.toLowerCase() : "";
 const isSimpleMode = catLower.includes("syllabus") || catLower.includes("previous") || catLower.includes("paper") || catLower.includes("answer key");
 
 let stepsHeader = "How to Apply";
@@ -34,18 +37,21 @@ else if (catLower.includes("admit card")) stepsHeader = "How to Download Admit C
 else if (catLower.includes("result")) stepsHeader = "How to Check Result";
 else if (catLower.includes("admission")) stepsHeader = "How to Apply for Admission";
 
-// 1. Universal Total Calculator
+// 1. Universal Total Calculator (More Robust)
 const calculateTotal = (data, key) => {
     if (!data || !key) return null;
-    const skipKeys = ['age', 'year', 'code', 's.no', 'serial', 'qualification', 'eligibility', 'post name', 'category', 'subject', 'activity', 'trade', 'pay scale', 'event', 'eye'];
+    // Skip columns that usually don't have totals
+    const skipKeys = ['age', 'year', 'code', 's.no', 'serial', 'qualification', 'eligibility', 'post name', 'category', 'subject', 'activity', 'trade', 'pay scale', 'event', 'eye', 'exam'];
     if (skipKeys.some(k => key.toLowerCase().includes(k))) return null;
 
     let total = 0;
     let hasNumbers = false;
+    
     for (let item of data) {
         let val = item[key];
         if (!val) continue;
-        let clean = String(val).replace(/,/g, '').trim(); 
+        // Clean string: remove commas, 'Posts', brackets, etc. to find numbers
+        let clean = String(val).replace(/,/g, '').replace(/\(.*\)/, '').replace(/[^\d.]/g, '').trim(); 
         if (clean && !isNaN(clean)) {
             total += parseFloat(clean);
             hasNumbers = true;
@@ -57,24 +63,15 @@ const calculateTotal = (data, key) => {
 // 2. Header Formatter
 const formatHeader = (key) => {
     if (key.includes(' ')) return key;
-    const upperKeys = ["ur", "obc", "sc", "st", "ews", "pwbd", "esm", "gen", "ph", "cbt", "pet", "pst", "dob", "gk", "ga", "mcq"];
+    const upperKeys = ["ur", "obc", "sc", "st", "ews", "pwbd", "esm", "gen", "ph", "cbt", "pet", "pst", "dob", "gk", "ga", "mcq", "it", "ti"];
     if (upperKeys.includes(key.toLowerCase())) return key.toUpperCase();
     return key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim();
 };
 
-// 3. Dynamic Keys Filter
-const standardKeys = [
-  'id', 'slug', 'title', 'shortTitle', 'category', 'postDate', 'updatedDate', 
-  'shortInfo', 'importantDates', 'applicationFee', 'links', 'faqs', 'tags', 
-  'state', 'ageLimit', 'ageRelaxation', 'vacancyDetails', 'stateWiseVacancy',
-  'salary', 'salaryDetails', 'selectionProcess', 'examPattern', 'syllabus', 'howToApply', 
-  'eligibility', 'extraSections', 'reopenDate', 'admitCardDate', 'answerKeyDate', 'resultDate', 'isReopen', 'syllabusDate', 'types', 'vacancyTableTitle'
-];
-const dynamicKeys = Object.keys(post).filter(key => !standardKeys.includes(key));
-
-// 4. Data Type Helper
+// 3. Data Type Helper (For Vacancy/Tables)
 const getDataType = (data) => {
     if (Array.isArray(data) && data.length > 0) {
+        // Check if elements are objects with specific structure
         if (data[0].title && (data[0].data || data[0].table)) return 'complex-block'; 
         if (typeof data[0] === 'object') return 'table';
         return 'list';
@@ -99,6 +96,7 @@ const getLastDateISO = () => {
     const dateStr = lastDateObj.value.replace(/ \(.*\)/, '').trim(); 
     const parts = dateStr.split(/[/-]/);
     if (parts.length !== 3) return null;
+    // Assuming DD-MM-YYYY
     return `${parts[2]}-${parts[1]}-${parts[0]}`;
 };
 const lastDateISO = getLastDateISO();
@@ -337,16 +335,20 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             </div>
             )}
 
-            {/* 9. EXAM PATTERN (🔥 Fixed: Supports Text/Note & Tables 🔥) */}
+            {/* 9. EXAM PATTERN (🔥 Fixed: Auto-detects structure 🔥) */}
             {post.examPattern && (
             <div id="pattern" class="mb-6 border border-gray-400 scroll-mt-20">
                 <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Exam Pattern</div>
                 <div class="bg-white p-4">
-                    {/* Handle Array (New Standard) */}
                     {Array.isArray(post.examPattern) ? (
                         post.examPattern.map(block => {
-                            // CASE A: TABLE BLOCK
-                            if (block.type === 'table') {
+                            // CASE A: TABLE BLOCK (Flexible Check)
+                            // Checks for 'type=table', OR presence of 'table' key, OR if 'data' is an array
+                            const isTable = block.type === 'table' || block.table || (Array.isArray(block.data) && block.data.length > 0);
+                            
+                            if (isTable) {
+                                const tableData = block.table || block.data;
+                                if (!tableData || !tableData[0]) return null;
                                 return (
                                     <div class="mb-6 border border-gray-300">
                                         {block.title && <div class="bg-gray-200 px-3 py-2 font-bold text-sm text-gray-800 border-b border-gray-300 text-center uppercase">{block.title}</div>}
@@ -354,13 +356,13 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                                             <table class="w-full text-sm border-collapse text-center">
                                                 <thead class="bg-gray-100 font-bold text-gray-700 text-xs uppercase">
                                                     <tr>
-                                                        {block.data && block.data[0] && Object.keys(block.data[0]).map(h => (
+                                                        {Object.keys(tableData[0]).map(h => (
                                                             <th class="border border-gray-300 px-2 py-2">{formatHeader(h)}</th>
                                                         ))}
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {block.data && block.data.map(row => (
+                                                    {tableData.map(row => (
                                                         <tr class="hover:bg-white bg-gray-50">
                                                             {Object.values(row).map(val => (
                                                                 <td class="border border-gray-300 px-2 py-2">{val}</td>
@@ -373,19 +375,24 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                                     </div>
                                 );
                             }
-                            // CASE B: TEXT / NOTE BLOCK (FIXED)
-                            if (block.type === 'text' || block.type === 'note') {
+
+                            // CASE B: TEXT / NOTE BLOCK (Flexible Check)
+                            // Checks for 'type=text/note' OR presence of 'content' key OR if 'data' is string
+                            const isText = block.type === 'text' || block.type === 'note' || block.content || typeof block.data === 'string';
+                            
+                            if (isText) {
+                                const textContent = block.content || block.data;
                                 return (
                                     <div class="mb-4 p-3 bg-gray-50 border-l-4 border-blue-500">
                                         {block.title && <h4 class="font-bold text-gray-800 mb-1">{block.title}</h4>}
-                                        <p class="text-sm text-gray-700" set:html={formatText(block.data || block.content)}></p>
+                                        <p class="text-sm text-gray-700" set:html={formatText(textContent)}></p>
                                     </div>
                                 );
                             }
                             return null;
                         })
                     ) : (
-                        /* Fallback for Old Objects */
+                        /* Fallback for Old Objects (Supports Arrays and Objects) */
                         Object.entries(post.examPattern).map(([key, value]) => {
                              if(Array.isArray(value) && typeof value[0] === 'object') {
                                 return (
@@ -395,6 +402,14 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                                             <thead class="bg-gray-100"><tr>{Object.keys(value[0]).map(h=><th class="border px-2 py-2">{h}</th>)}</tr></thead>
                                             <tbody>{value.map(r=>(<tr>{Object.values(r).map(v=><td class="border px-2 py-2">{v}</td>)}</tr>))}</tbody>
                                         </table>
+                                    </div>
+                                )
+                             }
+                             // Fallback for Text inside Object
+                             if(typeof value === 'string') {
+                                return (
+                                    <div class="mb-2 p-2 bg-gray-50">
+                                        <strong>{formatHeader(key)}:</strong> {value}
                                     </div>
                                 )
                              }
@@ -486,7 +501,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
 
             <AdSlot type="square" />
 
-            {/* 14. FAQs (Fixed Logic) */}
+            {/* 14. FAQs */}
             {post.faqs && post.faqs.length > 0 && (
             <div id="faqs" class="mb-8 border border-gray-300 p-2 rounded bg-gray-50 scroll-mt-20">
                 <h3 class="text-lg font-bold text-gray-800 mb-3 text-center uppercase">Frequently Asked Questions</h3>
