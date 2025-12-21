@@ -3,7 +3,205 @@ export const latestJobs = [
   //                  LATEST JOBS (ID 1 - 1000)
   // ==================================================
 
+  
+  {
+    id: 251201, // Unique ID
+    slug: "itbp-deputy-judge-attorney-general-recruitment-2025new",
+    title: "ITBP Deputy Judge Attorney General Online Form 2025",
+    shortTitle: "ITBP JAG Deputy Commandant",
+    category: "Latest Jobs",
+    
+    // Dates for Sorting
+    postDate: "22/12/2025",
+    updatedDate: "22/12/2025",
+    lastDate: "31/12/2025", // For Countdown
 
+    // SEO Rich Info
+    shortInfo: "Indo-Tibetan Border Police Force (ITBP) has invited online applications for the recruitment of <strong>Deputy Judge Attorney General (Deputy Commandant)</strong> vacancies. Candidates with a Bachelor's or Master's Degree in Law and registered Advocates are eligible. Interested candidates can check the Physical Standards (PST), Exam Pattern, and apply online before the last date.",
+    
+    tags: "ITBP Recruitment 2025, Deputy Judge Attorney General, Law Degree Jobs, ITBP JAG Vacancy, Deputy Commandant Legal, Defence Jobs 2025",
+
+    // 1. IMPORTANT DATES
+    importantDates: [
+      { label: "Application Start", value: "02/12/2025" },
+      { label: "Last Date to Apply", value: "31/12/2025 (11:59 PM)" },
+      { label: "Fee Payment Last Date", value: "31/12/2025" },
+      { label: "Admit Card Date", value: "Before Exam" },
+      { label: "Exam Date", value: "To be notified" }
+    ],
+
+    // 2. APPLICATION FEE
+    applicationFee: [
+      { category: "Gen / OBC / EWS", amount: "₹ 400/-" },
+      { category: "SC / ST / Female", amount: "₹ 0/- (Exempted)" },
+      { category: "Ex-Servicemen", amount: "₹ 0/-" }
+    ],
+
+    // 3. AGE LIMIT
+    ageLimit: "Maximum 40 Years",
+    ageRelaxation: "SC/ST: +5 Years, OBC: +3 Years, Govt Servants: +5 Years (As on 31/12/2025)",
+
+    // 4. VACANCY DETAILS (Universal Table Logic)
+    vacancyTableTitle: "ITBP JAG Vacancy Details 2025",
+    vacancyDetails: [
+      // Table 1: Category Wise Distribution
+      {
+        type: "table",
+        title: "Category Wise Vacancy Distribution", // ✅ GREY HEADER
+        data: [
+          { Category: "UR (Unreserved)", Posts: "05" },
+          { Category: "OBC (NCL)", Posts: "01" },
+          { Category: "EWS", Posts: "01" },
+          { Category: "SC / ST", Posts: "00" },
+          { Category: "Total", Posts: "07" }
+        ]
+      }
+    ],
+
+    // 5. ELIGIBILITY CRITERIA
+    eligibility: [
+      "<strong>Bachelor Degree in Law (LLB)</strong> with 7 Years of Legal Practice Experience OR",
+      "<strong>Master Degree in Law (LLM)</strong> with 5 Years of Legal Practice Experience.",
+      "Must be qualified for enrolment as an Advocate.",
+      "<strong>Desirable:</strong> Experience in trials under special laws related to Armed Forces."
+    ],
+
+    // 6. PAY SCALE
+    salaryDetails: [
+      { post: "Deputy Judge Attorney General", level: "Level-11 (₹ 67,700 - ₹ 2,08,700) + Allowances" }
+    ],
+
+    // 7. SELECTION PROCESS
+    selectionProcess: [
+      "Documentation & Verification of Biometrics",
+      "Physical Standard Test (PST)",
+      "Physical Efficiency Test (PET)",
+      "Written Examination (Paper I & II)",
+      "Interview (Personality Test)",
+      "Detailed Medical Examination (DME)"
+    ],
+
+    // 8. EXAM PATTERN (Block Structure for Universal Renderer)
+    examPattern: [
+      // Block 1: Note
+      {
+        type: "text",
+        title: "Important Rules",
+        data: "The written exam will consist of two papers. There will be <strong>Negative Marking</strong> for wrong answers. The minimum qualifying marks are 55% for UR/OBC/EWS and 50% for SC/ST."
+      },
+      // Block 2: Paper I
+      {
+        type: "table",
+        title: "Paper-I: General Subjects (Objective Type)", // ✅ GREY HEADER
+        data: [
+          { Subject: "General Intelligence", Questions: "25", Marks: "25" },
+          { Subject: "General Awareness & GK", Questions: "25", Marks: "25" },
+          { Subject: "General English", Questions: "50", Marks: "50" },
+          { Subject: "Total", Questions: "100", Marks: "100 (2 Hours)" }
+        ]
+      },
+      // Block 3: Paper II
+      {
+        type: "table",
+        title: "Paper-II: Professional Subject (Law)", // ✅ GREY HEADER
+        data: [
+          { Type: "Objective (MCQ)", Questions: "60", Marks: "60" },
+          { Type: "Subjective (Descriptive)", Questions: "20", Marks: "40" },
+          { Type: "Total", Questions: "80", Marks: "100 (3 Hours)" }
+        ]
+      },
+      // Block 4: Interview
+      {
+        type: "table",
+        title: "Interview & Personality Test Breakdown", // ✅ GREY HEADER
+        data: [
+          { Component: "Professional Qualification (LLM/PhD)", Marks: "05" },
+          { Component: "Professional Knowledge", Marks: "10" },
+          { Component: "Personality & Appearance", Marks: "05" },
+          { Component: "Extra Curricular (NCC/Sports)", Marks: "05" },
+          { Component: "Total Interview Marks", Marks: "25" }
+        ]
+      }
+    ],
+
+    // 9. SYLLABUS
+    syllabus: {
+      intro: "The professional subject paper will cover the following laws and codes:",
+      topics: [
+        {
+          subject: "Criminal & Civil Laws",
+          details: [
+            "The Constitution of India",
+            "Indian Penal Code (IPC) / Bharatiya Nyaya Sanhita (BNS)",
+            "Civil and Criminal Procedure Code (CrPC)",
+            "The Law of Evidence"
+          ]
+        },
+        {
+          subject: "Special & Local Laws",
+          details: [
+            "Narcotic Drugs and Psychotropic Substances (NDPS) Act",
+            "Prevention of SC/ST Atrocities Act",
+            "Laws related to Cyber Crime & Electricity Theft",
+            "Domestic Violence Act"
+          ]
+        },
+        {
+          subject: "Corporate & Property Laws",
+          details: [
+            "Law of Contract and Partnership",
+            "Motor Accidental Claims",
+            "Arbitration and Conciliation",
+            "Transfer of Property Act",
+            "Hindu Law and Muslim Law"
+          ]
+        }
+      ]
+    },
+
+    // 10. EXTRA SECTIONS (Physical & Medical Standards)
+    // 🚀 Yeh hai "Infinity Pro" Feature. Yahan hum unlimited tables daal sakte hain.
+    extraSections: [
+      {
+        title: "Physical Efficiency Test (PET)", // BLUE HEADER
+        // Uses Universal Table Logic
+        table: [
+          { Event: "Race 100 Mtrs", Male: "28 Seconds", Female: "30 Seconds" },
+          { Event: "Race 800 Mtrs", Male: "6 Minutes", Female: "7 Minutes" },
+          { Event: "Shot Put (7.26 Kg)", Male: "4.5 Mtrs (3 Chances)", Female: "Not Applicable" }
+        ]
+      },
+      {
+        title: "Physical Standard Test (PST)", // BLUE HEADER
+        table: [
+          { Category: "Height (General)", Male: "165 cms", Female: "157 cms" },
+          { Category: "Chest (General)", Male: "81-86 cms", Female: "N/A" },
+          { Category: "Weight", Male: "Proportionate to Height", Female: "Proportionate to Height" }
+        ]
+      },
+      {
+        title: "Medical Standards (Eye Sight)", // BLUE HEADER
+        table: [
+          { Eye: "Better Eye", Distant_Vision: "6/6", Near_Vision: "0.6" },
+          { Eye: "Worse Eye", Distant_Vision: "6/9", Near_Vision: "0.8" }
+        ]
+      }
+    ],
+
+    // 11. LINKS
+    links: [
+      { title: "Apply Online", url: "https://recruitment.itbpolice.nic.in" },
+      { title: "Download Notification PDF", url: "#" },
+      { title: "Official Website", url: "https://itbpolice.nic.in" }
+    ],
+
+    // 12. FAQs
+    faqs: [
+      { question: "What is the age limit for ITBP JAG Recruitment 2025?", answer: "The maximum age limit is 40 years as on 31/12/2025. Age relaxation applies for reserved categories." },
+      { question: "Is there any physical test for Deputy Judge Attorney General?", answer: "Yes, candidates must qualify both PST (Height/Chest) and PET (Race & Shotput). PET is qualifying in nature." },
+      { question: "What is the salary of ITBP Deputy Commandant (JAG)?", answer: "The post carries a Pay Scale of Level-11 (Rs. 67,700 - 2,08,700) plus central government allowances." }
+    ]
+  },
     {
     id: 45,
     title: "Chhattisgarh CGPSC State Service Exam 2025 Apply Online (238 Posts)",
