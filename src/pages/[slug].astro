@@ -8,7 +8,6 @@ export async function getStaticPaths() {
     const relatedPosts = allPosts
       .filter(p => p.category === post.category && p.slug !== post.slug)
       .sort((a, b) => {
-          // Date sorting logic
           const parseDate = (d) => {
              if(!d) return 0;
              const p = d.trim().split('/');
@@ -16,7 +15,7 @@ export async function getStaticPaths() {
           };
           return parseDate(b.updatedDate || b.postDate) - parseDate(a.updatedDate || a.postDate);
       })
-      .slice(0, 6);
+      .slice(0, 6); // Top 6 related jobs
 
     return { params: { slug: post.slug }, props: { post, relatedPosts } };
   });
@@ -24,63 +23,55 @@ export async function getStaticPaths() {
 
 const { post, relatedPosts } = Astro.props;
 
-// --- 🧠 2. LOGIC ADAPTER (React Logic converted to Astro) ---
+// --- 🧠 2. LOGIC ADAPTER ---
 
-// A. SIMPLE MODE LOGIC (Adapted from React)
-// Agar Syllabus/Previous Paper/Answer Key hai toh Age/Vacancy mat dikhao
+// A. SIMPLE MODE LOGIC
 const catLower = post.category.toLowerCase();
 const isSimpleMode = catLower.includes("syllabus") || catLower.includes("previous") || catLower.includes("paper") || catLower.includes("answer key");
 
-// B. DYNAMIC HEADER LOGIC (Adapted from React)
-// Category k hisaab se "How to Apply" ka text change karo
+// B. DYNAMIC HEADER LOGIC
 let stepsHeader = "How to Apply";
 if (isSimpleMode) stepsHeader = "How to Download";
 else if (catLower.includes("admit card")) stepsHeader = "How to Download Admit Card";
 else if (catLower.includes("result")) stepsHeader = "How to Check Result";
 else if (catLower.includes("admission")) stepsHeader = "How to Apply for Admission";
 
-// C. AUTO TOTAL LOGIC (Adapted from React)
-// Sirf numeric columns ka total karo, Age/Year/Code ko chhod do
+// C. AUTO TOTAL LOGIC
 const calculateTotal = (data, key) => {
     if (!data || !key) return null;
-    const skipKeys = ['age', 'year', 'code', 's.no', 'serial', 'qualification'];
+    const skipKeys = ['age', 'year', 'code', 's.no', 'serial', 'qualification', 'eligibility'];
     if (skipKeys.some(k => key.toLowerCase().includes(k))) return null;
 
     let total = 0;
     let hasNumbers = false;
-    
     for (let item of data) {
         let val = item[key];
         if (!val) continue;
-        // Clean value (remove commas, spaces)
         let clean = String(val).replace(/,/g, '').trim();
         if (clean && !isNaN(clean)) {
             total += parseFloat(clean);
             hasNumbers = true;
         } else {
-            // Agar ek bhi non-number mila (jaise text), toh total mat karo
             return null;
         }
     }
     return hasNumbers ? total : null;
 };
 
-// D. HEADER FORMATTER (camelCase to Title Case)
+// D. HEADER FORMATTER
 const formatHeader = (key) => {
-    // React code se list uthayi hai
     const upperKeys = ["ur", "obc", "sc", "st", "ews", "pwbd", "esm", "gen", "ph", "cbt", "pet"];
     if (upperKeys.includes(key.toLowerCase())) return key.toUpperCase();
     return key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim();
 };
 
-// E. INFINITE DATA FINDER (New Logic)
-// Wo keys dhundo jo standard nahi hain (jaise branchWiseVacancy)
+// E. INFINITE DATA FINDER
 const standardKeys = [
   'id', 'slug', 'title', 'shortTitle', 'category', 'postDate', 'updatedDate', 
   'shortInfo', 'importantDates', 'applicationFee', 'links', 'faqs', 'tags', 
   'state', 'ageLimit', 'ageRelaxation', 'vacancyDetails', 'stateWiseVacancy',
   'salary', 'salaryDetails', 'selectionProcess', 'examPattern', 'howToApply', 
-  'eligibility', 'extraSections' // We handle these explicitly
+  'eligibility', 'extraSections'
 ];
 const dynamicKeys = Object.keys(post).filter(key => !standardKeys.includes(key));
 
@@ -92,7 +83,20 @@ const getDataType = (data) => {
     return 'text';
 };
 
-// Share Links
+// F. SMART BUTTON STYLES (Improvement #1)
+const getBtnStyle = (title) => {
+  const t = title.toLowerCase();
+  // Apply / Login / Registration -> BLUE
+  if (t.includes('apply') || t.includes('login') || t.includes('registration')) return 'bg-blue-600 hover:bg-blue-700 border-blue-700 text-white';
+  // Download / Notification / Result / PDF -> RED
+  if (t.includes('download') || t.includes('notification') || t.includes('result') || t.includes('pdf') || t.includes('notice')) return 'bg-red-600 hover:bg-red-700 border-red-700 text-white';
+  // Official Website -> BLACK/GRAY
+  if (t.includes('official') || t.includes('website')) return 'bg-gray-800 hover:bg-black border-black text-white';
+  // Default -> GREEN
+  return 'bg-green-600 hover:bg-green-700 border-green-700 text-white';
+};
+
+// Social Links
 const shareUrl = `https://toponlineform.com/${post.slug}`;
 const shareTitle = post.title;
 const waLink = `https://api.whatsapp.com/send?text=✅ *${encodeURIComponent(shareTitle)}* 👇%0A%0A${encodeURIComponent(shareUrl)}`;
@@ -122,11 +126,11 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
       </h1>
       
       <div class="flex flex-wrap justify-center gap-4 text-sm text-gray-700 font-bold mb-4">
-        <span>📅 Post Date: {post.postDate}</span>
-        {post.updatedDate && <span class="text-green-700">| 📝 Updated: {post.updatedDate}</span>}
+        <span class="bg-gray-100 px-2 py-1 rounded border border-gray-200">📅 Post: {post.postDate}</span>
+        {post.updatedDate && <span class="bg-green-50 text-green-700 px-2 py-1 rounded border border-green-200">📝 Update: {post.updatedDate}</span>}
       </div>
 
-      {/* Short Info (Yellow Box) */}
+      {/* Short Info */}
       {post.shortInfo && (
         <div class="text-left bg-[#fffae6] border border-[#f0c14b] p-3 text-sm md:text-base text-gray-800 leading-relaxed">
           <p><strong class="text-[#d32f2f]">Short Information:</strong> <span set:html={formatText(post.shortInfo)}></span></p>
@@ -134,9 +138,23 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
       )}
     </header>
 
-    {/* 2. DATES & FEES (Only if NOT Simple Mode) */}
+    {/* 📑 TABLE OF CONTENTS (Improvement #2) */}
+    {/* Only show sections that actually exist */}
+    <div class="mb-6 bg-blue-50 border border-blue-200 p-3 rounded-sm">
+        <p class="text-[10px] font-bold text-blue-800 uppercase mb-2 tracking-wider">Table of Contents:</p>
+        <div class="flex flex-wrap gap-2 text-xs font-semibold text-blue-700">
+            {!isSimpleMode && post.importantDates && <a href="#dates" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">📅 Dates & Fees</a>}
+            {!isSimpleMode && (post.vacancyDetails || post.stateWiseVacancy) && <a href="#vacancy" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">📦 Vacancy</a>}
+            {!isSimpleMode && (post.salary || post.salaryDetails) && <a href="#salary" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">💰 Salary</a>}
+            {post.selectionProcess && <a href="#selection" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">🎯 Selection</a>}
+            {post.examPattern && <a href="#pattern" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">📝 Pattern</a>}
+            <a href="#links" class="bg-white px-2 py-1 border border-red-200 text-red-600 rounded hover:shadow-sm">🔗 Important Links</a>
+        </div>
+    </div>
+
+    {/* 2. DATES & FEES */}
     {!isSimpleMode && post.importantDates && post.importantDates.length > 0 && (
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-0 border border-gray-400 mb-6">
+    <div id="dates" class="grid grid-cols-1 md:grid-cols-2 gap-0 border border-gray-400 mb-6">
       <div class="border-b md:border-b-0 md:border-r border-gray-400">
         <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Important Dates</div>
         <div class="bg-white p-2">
@@ -167,9 +185,9 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
     </div>
     )}
 
-    {/* 3. AGE LIMIT & VACANCY (Smart Logic: Show only if data exists & Not Simple Mode) */}
+    {/* 3. AGE LIMIT & VACANCY */}
     {!isSimpleMode && (post.ageLimit || post.vacancyDetails) && (
-    <div class="mb-6 border border-gray-400">
+    <div id="vacancy" class="mb-6 border border-gray-400">
         <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Vacancy Details & Age Limit</div>
         
         {post.ageLimit && (
@@ -197,7 +215,6 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                                 <td class="border border-gray-300 px-2 py-2 text-left text-gray-600" set:html={formatText(v.eligibility)}></td>
                             </tr>
                         ))}
-                        {/* Logic: Auto Total for Main Vacancy */}
                         {(() => {
                             const total = calculateTotal(post.vacancyDetails, 'total') || calculateTotal(post.vacancyDetails, 'totalPost');
                             if(total) return (<tr class="bg-gray-200 font-bold"><td class="border px-2 py-2 text-right">Total</td><td class="border px-2 py-2 text-[#d32f2f]">{total}</td><td class="border px-2 py-2"></td></tr>);
@@ -209,7 +226,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
     </div>
     )}
 
-    {/* 4. STATE/CATEGORY VACANCY (Logic: Skip total for 'Qualification' etc) */}
+    {/* 4. STATE/CATEGORY VACANCY */}
     {!isSimpleMode && post.stateWiseVacancy && post.stateWiseVacancy.length > 0 && (
       <div class="mb-6 border border-gray-400">
         <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">{post.vacancyTableTitle || "Category Wise Vacancy"}</div>
@@ -224,7 +241,6 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                   {Object.values(row).map(val => <td class="border border-gray-300 px-2 py-2 font-medium">{val}</td>)}
                 </tr>
               ))}
-              {/* Logic: Smart Auto Total Row */}
               <tr class="bg-gray-200 font-bold">
                  {Object.keys(post.stateWiseVacancy[0]).map((key, index) => {
                      if (index === 0) return <td class="border border-gray-300 px-2 py-2 text-right">Total</td>;
@@ -248,8 +264,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
         </div>
     )}
 
-    {/* 🔥 6. INFINITE DATA RENDERER (Smartest Logic) 🔥 */}
-    {/* Ye section 'branchWiseVacancy', 'regionCoverage' etc ko dhund k display karega */}
+    {/* 6. INFINITE DATA RENDERER */}
     {dynamicKeys.map((key) => {
         const data = post[key];
         const type = getDataType(data);
@@ -271,7 +286,6 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                                         {Object.values(row).map(val => <td class="border border-gray-300 px-2 py-2" set:html={formatText(val)}></td>)}
                                     </tr>
                                 ))}
-                                {/* Auto Total for Infinite Tables */}
                                 <tr class="bg-gray-200 font-bold">
                                     {headers.map((h, i) => {
                                         if(i===0) return <td class="border border-gray-300 px-2 py-2 text-right">Total</td>;
@@ -298,7 +312,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
 
     {/* 7. SALARY */}
     {!isSimpleMode && (post.salary || post.salaryDetails) && (
-      <div class="mb-6 border border-gray-400">
+      <div id="salary" class="mb-6 border border-gray-400">
         <div class="bg-[#008000] text-white text-center font-bold py-2 text-sm uppercase">Pay Scale / Salary</div>
         {post.salaryDetails ? (
             <div class="overflow-x-auto">
@@ -319,19 +333,17 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
 
     {/* 8. EXAM PATTERN & SELECTION */}
     {post.selectionProcess && (
-      <div class="mb-6 border border-gray-400">
+      <div id="selection" class="mb-6 border border-gray-400">
          <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Selection Process</div>
          <div class="bg-white p-4"><ol class="list-decimal pl-6 space-y-1 text-sm text-gray-900 font-medium">{post.selectionProcess.map(s => <li>{s}</li>)}</ol></div>
       </div>
     )}
 
     {post.examPattern && (
-      <div class="mb-6">
+      <div id="pattern" class="mb-6">
         <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Exam Pattern & Syllabus</div>
         <div class="border border-gray-400 p-2 bg-gray-50">
             {post.examPattern.details && <ul class="list-disc pl-6 text-sm text-gray-800 space-y-1 mb-4">{post.examPattern.details.map(d => <li set:html={formatText(d)}></li>)}</ul>}
-            
-            {/* Logic: Render all stages dynamically */}
             {[
                post.examPattern.table ? { title: "Exam Pattern", data: post.examPattern.table } : null,
                post.examPattern.tier1 ? { title: "Tier-I", data: post.examPattern.tier1 } : null,
@@ -369,7 +381,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
       </div>
     )}
 
-    {/* 9. HOW TO APPLY (Dynamic Header) */}
+    {/* 9. HOW TO APPLY */}
     {post.howToApply && (
       <div class="mb-6 border border-gray-400">
         <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">{stepsHeader}</div>
@@ -377,8 +389,8 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
       </div>
     )}
 
-    {/* 10. IMPORTANT LINKS (Logic: Table format) */}
-    <div class="mb-8 border border-gray-400">
+    {/* 10. IMPORTANT LINKS (Updated Colors) */}
+    <div id="links" class="mb-8 border border-gray-400">
         <div class="bg-[#d32f2f] text-white text-center font-bold py-2 text-lg uppercase">
           {isSimpleMode ? "Download Links" : "Important Links"}
         </div>
@@ -389,8 +401,8 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                         <tr class={`hover:bg-red-50 transition ${index !== post.links.length - 1 ? 'border-b border-gray-300' : ''}`}>
                             <td class="px-4 py-3 font-bold text-gray-700 border-r border-gray-300 w-2/3">{link.title}</td>
                             <td class="px-4 py-2 text-center">
-                                {/* Hybrid Logic: Title check for button color */}
-                                <a href={link.url} target="_blank" class={`inline-flex items-center gap-1 px-4 py-1.5 rounded text-xs font-bold uppercase shadow-sm text-white ${link.title.toLowerCase().includes('apply') ? 'bg-[#1a56db]' : 'bg-[#2e7d32]'} hover:opacity-90`}>
+                                {/* Smart Button Styling */}
+                                <a href={link.url} target="_blank" class={`inline-flex items-center gap-1 px-4 py-1.5 rounded text-xs font-bold uppercase shadow-sm border ${getBtnStyle(link.title)}`}>
                                     Click Here ↗
                                 </a>
                             </td>
@@ -419,14 +431,42 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
       </div>
     )}
 
-    {/* SHARE */}
-    <div class="flex justify-center gap-4 mb-8">
-        <a href={waLink} target="_blank" class="bg-[#25D366] hover:bg-[#20bd5a] text-white px-6 py-3 rounded-full shadow-md text-sm font-bold flex items-center gap-2">Share on WhatsApp ✈️</a>
+    {/* 12. SOCIAL SHARE (Improvement #3: 3 Buttons) */}
+    <div class="flex flex-wrap justify-center gap-3 mb-8">
+        {/* WhatsApp */}
+        <a href={waLink} target="_blank" class="bg-[#25D366] hover:bg-[#20bd5a] text-white px-5 py-2.5 rounded-full shadow-md text-sm font-bold flex items-center gap-2 transform hover:-translate-y-1 transition">
+           <span>Share on WhatsApp</span>
+        </a>
+        {/* Telegram */}
+        <a href={tgLink} target="_blank" class="bg-[#229ED9] hover:bg-[#1f8ubc] text-white px-5 py-2.5 rounded-full shadow-md text-sm font-bold flex items-center gap-2 transform hover:-translate-y-1 transition">
+           <span>Share on Telegram</span>
+        </a>
+        {/* Arattai / Generic Share */}
+        <button onclick={`navigator.share({title: '${post.title}', url: '${shareUrl}'})`} class="bg-gray-800 hover:bg-black text-white px-5 py-2.5 rounded-full shadow-md text-sm font-bold flex items-center gap-2 transform hover:-translate-y-1 transition">
+           <span>Share on Arattai</span>
+        </button>
     </div>
+
+    {/* 13. YOU MAY ALSO LIKE (Improvement #4) */}
+    {relatedPosts.length > 0 && (
+        <div class="mt-8 pt-6 border-t-4 border-[#d32f2f]">
+            <h3 class="text-xl font-bold text-[#d32f2f] mb-4 pl-2">You May Also Like</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {relatedPosts.map(p => (
+                    <a href={`/${p.slug}`} class="block p-3 border border-gray-300 rounded hover:border-blue-500 hover:shadow-md transition bg-gray-50 hover:bg-white group">
+                        <div class="text-sm font-bold text-gray-800 group-hover:text-blue-700">👉 {p.shortTitle || p.title}</div>
+                        <div class="text-xs text-gray-500 mt-1">📅 {p.postDate}</div>
+                    </a>
+                ))}
+            </div>
+        </div>
+    )}
+
+    <div class="text-center text-[11px] text-gray-400 mt-8">Disclaimer: Please verify all details from the official website before applying.</div>
 
   </article>
 
-  {/* SEO SCHEMA */}
+  {/* SEO SCHEMA (Improvement #6: Breadcrumbs Added) */}
   <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@graph": [
@@ -438,6 +478,14 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
         "validThrough": post.importantDates?.find(d => d.label.toLowerCase().includes("last date"))?.value.replace(/\//g, '-') || "2026-12-31",
         "hiringOrganization": { "@type": "Organization", "name": "Top Online Form", "url": "https://toponlineform.com" },
         "jobLocation": { "@type": "Place", "address": { "@type": "PostalAddress", "addressCountry": "IN", "addressRegion": post.state || "India" } }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://toponlineform.com" },
+          { "@type": "ListItem", "position": 2, "name": post.category, "item": `https://toponlineform.com/${post.category.toLowerCase().replace(/\s+/g, '-')}` },
+          { "@type": "ListItem", "position": 3, "name": post.shortTitle || "Details" }
+        ]
       }
     ]
   })} />
