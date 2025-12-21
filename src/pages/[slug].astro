@@ -59,7 +59,7 @@ const calculateTotal = (data, key) => {
 
 // D. HEADER FORMATTER
 const formatHeader = (key) => {
-    const upperKeys = ["ur", "obc", "sc", "st", "ews", "pwbd", "esm", "gen", "ph", "cbt", "pet"];
+    const upperKeys = ["ur", "obc", "sc", "st", "ews", "pwbd", "esm", "gen", "ph", "cbt", "pet", "pst"];
     if (upperKeys.includes(key.toLowerCase())) return key.toUpperCase();
     return key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim();
 };
@@ -91,7 +91,34 @@ const getBtnStyle = (title) => {
   return 'bg-green-600 hover:bg-green-700 border-green-700 text-white';
 };
 
-// G. COUNTDOWN
+// G. EXAM PATTERN DATA GATHERER (Fix for missing tables)
+// Ye function purane data format (tier1, paper1) ko naye format me convert karta hai
+const getPatternTables = () => {
+    if (!post.examPattern) return [];
+    
+    // Agar seedha 'tables' array hai toh wo use karo
+    if (post.examPattern.tables) return post.examPattern.tables;
+
+    // Nahi toh purani keys check karo
+    const list = [
+        post.examPattern.table ? { title: "Exam Pattern", data: post.examPattern.table } : null,
+        post.examPattern.tier1 ? { title: "Tier-I Exam", data: post.examPattern.tier1 } : null,
+        post.examPattern.tier2 ? { title: "Tier-II Exam", data: post.examPattern.tier2 } : null,
+        post.examPattern.paper1 ? { title: "Paper-I", data: post.examPattern.paper1 } : null,
+        post.examPattern.paper2 ? { title: "Paper-II", data: post.examPattern.paper2 } : null,
+        post.examPattern.cbt1 ? { title: "CBT-1", data: post.examPattern.cbt1 } : null,
+        post.examPattern.cbt2 ? { title: "CBT-2", data: post.examPattern.cbt2 } : null,
+        post.examPattern.pre ? { title: "Preliminary Exam", data: post.examPattern.pre } : null,
+        post.examPattern.mains ? { title: "Mains Exam", data: post.examPattern.mains } : null,
+        post.examPattern.pet ? { title: "Physical Efficiency Test (PET)", tableType: 'pet', data: post.examPattern.pet } : null,
+        post.examPattern.pst ? { title: "Physical Standard Test (PST)", tableType: 'pet', data: post.examPattern.pst } : null,
+    ];
+    return list.filter(Boolean); // Jo null hain unhe hata do
+};
+const examPatternTables = getPatternTables();
+
+
+// G. COUNTDOWN & SOCIAL
 const getLastDateISO = () => {
     if (!post.importantDates) return null;
     const lastDateObj = post.importantDates.find(d => d.label.toLowerCase().includes('last date') || d.label.toLowerCase().includes('closing date'));
@@ -103,7 +130,6 @@ const getLastDateISO = () => {
 };
 const lastDateISO = getLastDateISO();
 
-// Social Links
 const shareUrl = `https://toponlineform.com/${post.slug}`;
 const shareTitle = post.title;
 const waLink = `whatsapp://send?text=✅ *${encodeURIComponent(shareTitle)}* 👇%0A%0A${encodeURIComponent(shareUrl)}`;
@@ -160,7 +186,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             {/* 💰 AD SLOT 1: TOP */}
             <AdSlot type="horizontal" />
 
-            {/* 📑 TOC (NOW INFINITE SMART 🧠) */}
+            {/* 📑 TOC (FIXED MODE - NO INFINITE LOOP) */}
             <div class="mb-6 bg-blue-50 border border-blue-200 p-3 rounded-sm">
                 <p class="text-[10px] font-bold text-blue-800 uppercase mb-2 tracking-wider">Table of Contents:</p>
                 <div class="flex flex-wrap gap-2 text-xs font-semibold text-blue-700">
@@ -168,15 +194,10 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                     {!isSimpleMode && (post.vacancyDetails || post.stateWiseVacancy) && <a href="#vacancy" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">📦 Vacancy</a>}
                     {!isSimpleMode && (post.salary || post.salaryDetails) && <a href="#salary" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">💰 Salary</a>}
                     {post.selectionProcess && <a href="#selection" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">🎯 Selection</a>}
+                    
+                    {/* Fixed Links */}
                     {post.examPattern && <a href="#pattern" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">📝 Pattern</a>}
                     {post.syllabus && <a href="#syllabus" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">📖 Syllabus</a>}
-                    
-                    {/* 👇 THIS LOOP MAKES TOC INFINITE SMART */}
-                    {dynamicKeys.map(key => (
-                        <a href={`#${key}`} class="bg-white px-2 py-1 border border-purple-200 text-purple-700 rounded hover:shadow-sm">
-                            🔹 {formatHeader(key)}
-                        </a>
-                    ))}
                     
                     <a href="#links" class="bg-white px-2 py-1 border border-red-200 text-red-600 rounded hover:shadow-sm">🔗 Important Links</a>
                 </div>
@@ -292,7 +313,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                 </div>
             )}
 
-            {/* 6. INFINITE DATA RENDERER (Updated with IDs) */}
+            {/* 6. INFINITE DATA RENDERER */}
             {dynamicKeys.map((key) => {
                 const data = post[key];
                 const type = getDataType(data);
@@ -301,8 +322,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                 if (type === 'table') {
                     const headers = Object.keys(data[0]);
                     return (
-                        // ✅ Added ID here so TOC link works
-                        <div id={key} class="mb-6 border border-gray-400 scroll-mt-20">
+                        <div class="mb-6 border border-gray-400">
                             <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">{title}</div>
                             <div class="overflow-x-auto">
                                 <table class="w-full text-sm border-collapse border border-gray-300 text-center">
@@ -330,8 +350,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                 }
                 if (type === 'list') {
                     return (
-                        // ✅ Added ID here so TOC link works
-                        <div id={key} class="mb-6 border border-gray-400 scroll-mt-20">
+                        <div class="mb-6 border border-gray-400">
                             <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">{title}</div>
                             <div class="bg-white p-4"><ul class="list-disc pl-6 space-y-1 text-sm text-gray-800">{data.map(item => <li set:html={formatText(item)}></li>)}</ul></div>
                         </div>
@@ -369,31 +388,39 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             </div>
             )}
 
-            {/* 9. EXAM PATTERN (Updated: Only Tables/Rules) */}
+            {/* 9. EXAM PATTERN (Corrected: Checks ALL old keys) */}
             {post.examPattern && (
             <div id="pattern" class="mb-6 border border-gray-400 scroll-mt-20">
                 <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Exam Pattern</div>
                 <div class="bg-white p-4">
                     
-                    {/* Pattern Bullets (Negative Marking etc.) */}
+                    {/* Pattern Bullets */}
                     {post.examPattern.details && (
                         <ul class="list-disc pl-5 text-sm text-gray-800 space-y-1 mb-4 bg-yellow-50 p-3 rounded border border-yellow-200">
                             {post.examPattern.details.map(d => <li set:html={formatText(d)}></li>)}
                         </ul>
                     )}
 
-                    {/* Pattern Tables */}
-                    {post.examPattern.tables && post.examPattern.tables.map(table => (
+                    {/* Pattern Tables (Looping through the collected list) */}
+                    {examPatternTables.map(table => (
                     <div class="mb-4 border border-gray-300">
                         <div class="bg-gray-100 px-3 py-1 font-bold text-sm text-gray-800 border-b border-gray-300 text-center">{table.title}</div>
                         <div class="overflow-x-auto">
                         <table class="w-full text-sm border-collapse text-center">
                             <thead class="bg-gray-50 text-gray-700 text-xs uppercase">
-                                {/* Auto-detect Headers */}
                                 <tr>
-                                    {Object.keys(table.data[0]).map(header => (
-                                        <th class="border border-gray-300 px-2 py-2">{formatHeader(header)}</th>
-                                    ))}
+                                    {/* Handle PET type table (Activity/Male/Female) OR Subject type */}
+                                    {table.tableType === 'pet' || (table.data[0] && table.data[0].activity) ? (
+                                        <>
+                                            <th class="border border-gray-300 px-2 py-2">Activity</th>
+                                            <th class="border border-gray-300 px-2 py-2">Male</th>
+                                            <th class="border border-gray-300 px-2 py-2">Female</th>
+                                        </>
+                                    ) : (
+                                        Object.keys(table.data[0]).map(header => (
+                                            <th class="border border-gray-300 px-2 py-2">{formatHeader(header)}</th>
+                                        ))
+                                    )}
                                 </tr>
                             </thead>
                             <tbody>
@@ -410,15 +437,15 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                     </div>
                     ))}
 
-                    {/* Fallback for Old Data (Mixed list) */}
-                    {!post.examPattern.tables && !post.examPattern.details && post.examPattern.length && (
+                    {/* Fallback (Simple List) */}
+                    {!examPatternTables.length && !post.examPattern.details && post.examPattern.length && (
                         <ul class="list-disc pl-6 text-sm text-gray-800 space-y-1 mb-4">{post.examPattern.map(d => <li set:html={formatText(d)}></li>)}</ul>
                     )}
                 </div>
             </div>
             )}
 
-            {/* 10. SYLLABUS (Updated: Subject Wise Boxes) */}
+            {/* 10. SYLLABUS (Subject Wise Boxes) */}
             {post.syllabus && (
             <div id="syllabus" class="mb-6 border border-gray-400 scroll-mt-20">
                 <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Syllabus (Topic Wise)</div>
