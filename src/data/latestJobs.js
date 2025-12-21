@@ -4,16 +4,17 @@ export const latestJobs = [
   // ==================================================
 
   
+  
   {
     id: 251201, // Unique ID
-    slug: "itbp-deputy-judge-attorney-general-recruitment-2025new",
+    slug: "itbp-deputy-judge-attorney-general-recruitment-2025",
     title: "ITBP Deputy Judge Attorney General Online Form 2025",
     shortTitle: "ITBP JAG Deputy Commandant",
     category: "Latest Jobs",
     
     // Dates for Sorting
-    postDate: "22/12/2025",
-    updatedDate: "22/12/2025",
+    postDate: "02/12/2025",
+    updatedDate: "02/12/2025",
     lastDate: "31/12/2025", // For Countdown
 
     // SEO Rich Info
@@ -41,9 +42,18 @@ export const latestJobs = [
     ageLimit: "Maximum 40 Years",
     ageRelaxation: "SC/ST: +5 Years, OBC: +3 Years, Govt Servants: +5 Years (As on 31/12/2025)",
 
-    // 4. VACANCY DETAILS (Universal Table Logic)
+    // 4. VACANCY DETAILS (Main Post Table)
     vacancyTableTitle: "ITBP JAG Vacancy Details 2025",
     vacancyDetails: [
+      {
+        "Post Name": "Deputy Judge Attorney General (Dy. Commandant)",
+        "Total": "07",
+        "Eligibility": "Bachelor Degree in Law (LLB) + 7 Yrs Exp OR Master Degree in Law (LLM) + 5 Yrs Exp."
+      }
+    ],
+
+    // 5. STATE/CATEGORY WISE VACANCY (Separate Section)
+    stateWiseVacancy: [
       // Table 1: Category Wise Distribution
       {
         type: "table",
@@ -58,20 +68,20 @@ export const latestJobs = [
       }
     ],
 
-    // 5. ELIGIBILITY CRITERIA
+    // 6. ELIGIBILITY CRITERIA
     eligibility: [
-      "<strong>Bachelor Degree in Law (LLB)</strong> with 7 Years of Legal Practice Experience OR",
+      "<strong>Bachelor Degree in Law (LLB)</strong> from a recognized University with 7 Years of Legal Practice Experience OR",
       "<strong>Master Degree in Law (LLM)</strong> with 5 Years of Legal Practice Experience.",
       "Must be qualified for enrolment as an Advocate.",
-      "<strong>Desirable:</strong> Experience in trials under special laws related to Armed Forces."
+      "<strong>Desirable:</strong> Two years experience in dealing with trials under special laws related to Armed Forces."
     ],
 
-    // 6. PAY SCALE
+    // 7. PAY SCALE
     salaryDetails: [
       { post: "Deputy Judge Attorney General", level: "Level-11 (₹ 67,700 - ₹ 2,08,700) + Allowances" }
     ],
 
-    // 7. SELECTION PROCESS
+    // 8. SELECTION PROCESS
     selectionProcess: [
       "Documentation & Verification of Biometrics",
       "Physical Standard Test (PST)",
@@ -81,13 +91,13 @@ export const latestJobs = [
       "Detailed Medical Examination (DME)"
     ],
 
-    // 8. EXAM PATTERN (Block Structure for Universal Renderer)
+    // 9. EXAM PATTERN (Block Structure for Universal Renderer)
     examPattern: [
       // Block 1: Note
       {
         type: "text",
         title: "Important Rules",
-        data: "The written exam will consist of two papers. There will be <strong>Negative Marking</strong> for wrong answers. The minimum qualifying marks are 55% for UR/OBC/EWS and 50% for SC/ST."
+        data: "The written exam will consist of two papers. There will be <strong>Negative Marking</strong> for each wrong answer. The minimum qualifying marks are 55% for UR/OBC/EWS and 50% for SC/ST."
       },
       // Block 2: Paper I
       {
@@ -124,7 +134,7 @@ export const latestJobs = [
       }
     ],
 
-    // 9. SYLLABUS
+    // 10. SYLLABUS
     syllabus: {
       intro: "The professional subject paper will cover the following laws and codes:",
       topics: [
@@ -159,7 +169,7 @@ export const latestJobs = [
       ]
     },
 
-    // 10. EXTRA SECTIONS (Physical & Medical Standards)
+    // 11. EXTRA SECTIONS (Physical & Medical Standards)
     // 🚀 Yeh hai "Infinity Pro" Feature. Yahan hum unlimited tables daal sakte hain.
     extraSections: [
       {
@@ -188,14 +198,14 @@ export const latestJobs = [
       }
     ],
 
-    // 11. LINKS
+    // 12. LINKS
     links: [
       { title: "Apply Online", url: "https://recruitment.itbpolice.nic.in" },
       { title: "Download Notification PDF", url: "#" },
       { title: "Official Website", url: "https://itbpolice.nic.in" }
     ],
 
-    // 12. FAQs
+    // 13. FAQs
     faqs: [
       { question: "What is the age limit for ITBP JAG Recruitment 2025?", answer: "The maximum age limit is 40 years as on 31/12/2025. Age relaxation applies for reserved categories." },
       { question: "Is there any physical test for Deputy Judge Attorney General?", answer: "Yes, candidates must qualify both PST (Height/Chest) and PET (Race & Shotput). PET is qualifying in nature." },
