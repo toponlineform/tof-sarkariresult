@@ -15,7 +15,7 @@ export async function getStaticPaths() {
           };
           return parseDate(b.updatedDate || b.postDate) - parseDate(a.updatedDate || a.postDate);
       })
-      .slice(0, 6); // Top 6 related jobs
+      .slice(0, 6);
 
     return { params: { slug: post.slug }, props: { post, relatedPosts } };
   });
@@ -83,26 +83,35 @@ const getDataType = (data) => {
     return 'text';
 };
 
-// F. SMART BUTTON STYLES (Improvement #1)
+// F. SMART BUTTON STYLES
 const getBtnStyle = (title) => {
   const t = title.toLowerCase();
-  // Apply / Login / Registration -> BLUE
   if (t.includes('apply') || t.includes('login') || t.includes('registration')) return 'bg-blue-600 hover:bg-blue-700 border-blue-700 text-white';
-  // Download / Notification / Result / PDF -> RED
   if (t.includes('download') || t.includes('notification') || t.includes('result') || t.includes('pdf') || t.includes('notice')) return 'bg-red-600 hover:bg-red-700 border-red-700 text-white';
-  // Official Website -> BLACK/GRAY
   if (t.includes('official') || t.includes('website')) return 'bg-gray-800 hover:bg-black border-black text-white';
-  // Default -> GREEN
   return 'bg-green-600 hover:bg-green-700 border-green-700 text-white';
 };
 
-// Social Links
+// G. ⏳ COUNTDOWN HELPER
+const getLastDateISO = () => {
+    if (!post.importantDates) return null;
+    const lastDateObj = post.importantDates.find(d => d.label.toLowerCase().includes('last date') || d.label.toLowerCase().includes('closing date'));
+    if (!lastDateObj) return null;
+    
+    const dateStr = lastDateObj.value.replace(/ \(.*\)/, '').trim(); 
+    const parts = dateStr.split(/[/-]/);
+    if (parts.length !== 3) return null;
+    return `${parts[2]}-${parts[1]}-${parts[0]}`;
+};
+const lastDateISO = getLastDateISO();
+
+// Social Links (UPDATED: Direct App Open)
 const shareUrl = `https://toponlineform.com/${post.slug}`;
 const shareTitle = post.title;
-const waLink = `https://api.whatsapp.com/send?text=✅ *${encodeURIComponent(shareTitle)}* 👇%0A%0A${encodeURIComponent(shareUrl)}`;
+// ✅ CHANGE: Used whatsapp:// scheme for direct app open
+const waLink = `whatsapp://send?text=✅ *${encodeURIComponent(shareTitle)}* 👇%0A%0A${encodeURIComponent(shareUrl)}`;
 const tgLink = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=✅ *${encodeURIComponent(shareTitle)}* 👇`;
 
-// Text Formatter
 const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br />');
 
 ---
@@ -136,10 +145,19 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
           <p><strong class="text-[#d32f2f]">Short Information:</strong> <span set:html={formatText(post.shortInfo)}></span></p>
         </div>
       )}
+
+      {/* ⏳ 1. LIVE COUNTDOWN TIMER */}
+      {lastDateISO && !isSimpleMode && (
+        <div id="countdown-box" data-date={lastDateISO} class="hidden mt-4 bg-red-50 border border-red-200 rounded p-3 text-center animate-pulse">
+            <p class="text-xs text-red-600 font-bold uppercase tracking-widest mb-1">Application Ends In:</p>
+            <div id="timer-display" class="text-lg md:text-xl font-extrabold text-red-700 font-mono">
+                Calculating...
+            </div>
+        </div>
+      )}
     </header>
 
-    {/* 📑 TABLE OF CONTENTS (Improvement #2) */}
-    {/* Only show sections that actually exist */}
+    {/* 📑 TABLE OF CONTENTS */}
     <div class="mb-6 bg-blue-50 border border-blue-200 p-3 rounded-sm">
         <p class="text-[10px] font-bold text-blue-800 uppercase mb-2 tracking-wider">Table of Contents:</p>
         <div class="flex flex-wrap gap-2 text-xs font-semibold text-blue-700">
@@ -389,8 +407,8 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
       </div>
     )}
 
-    {/* 10. IMPORTANT LINKS (Updated Colors) */}
-    <div id="links" class="mb-8 border border-gray-400">
+    {/* 10. IMPORTANT LINKS */}
+    <div id="links" class="mb-6 border border-gray-400">
         <div class="bg-[#d32f2f] text-white text-center font-bold py-2 text-lg uppercase">
           {isSimpleMode ? "Download Links" : "Important Links"}
         </div>
@@ -413,6 +431,9 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
         </div>
     </div>
 
+    {/* DISCLAIMER (Below Links) */}
+    <div class="text-center text-[11px] text-gray-400 mt-2 mb-6">Disclaimer: Please verify all details from the official website before applying.</div>
+
     {/* 11. FAQs */}
     {post.faqs && (
       <div class="mb-8 border border-gray-300 p-2 rounded bg-gray-50">
@@ -431,23 +452,17 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
       </div>
     )}
 
-    {/* 12. SOCIAL SHARE (Improvement #3: 3 Buttons) */}
+    {/* 12. SOCIAL SHARE (Arattai Removed) */}
     <div class="flex flex-wrap justify-center gap-3 mb-8">
-        {/* WhatsApp */}
-        <a href={waLink} target="_blank" class="bg-[#25D366] hover:bg-[#20bd5a] text-white px-5 py-2.5 rounded-full shadow-md text-sm font-bold flex items-center gap-2 transform hover:-translate-y-1 transition">
+        <a href={waLink} class="bg-[#25D366] hover:bg-[#20bd5a] text-white px-5 py-2.5 rounded-full shadow-md text-sm font-bold flex items-center gap-2 transform hover:-translate-y-1 transition">
            <span>Share on WhatsApp</span>
         </a>
-        {/* Telegram */}
         <a href={tgLink} target="_blank" class="bg-[#229ED9] hover:bg-[#1f8ubc] text-white px-5 py-2.5 rounded-full shadow-md text-sm font-bold flex items-center gap-2 transform hover:-translate-y-1 transition">
            <span>Share on Telegram</span>
         </a>
-        {/* Arattai / Generic Share */}
-        <button onclick={`navigator.share({title: '${post.title}', url: '${shareUrl}'})`} class="bg-gray-800 hover:bg-black text-white px-5 py-2.5 rounded-full shadow-md text-sm font-bold flex items-center gap-2 transform hover:-translate-y-1 transition">
-           <span>Share on Arattai</span>
-        </button>
     </div>
 
-    {/* 13. YOU MAY ALSO LIKE (Improvement #4) */}
+    {/* 13. RELATED JOBS */}
     {relatedPosts.length > 0 && (
         <div class="mt-8 pt-6 border-t-4 border-[#d32f2f]">
             <h3 class="text-xl font-bold text-[#d32f2f] mb-4 pl-2">You May Also Like</h3>
@@ -462,11 +477,9 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
         </div>
     )}
 
-    <div class="text-center text-[11px] text-gray-400 mt-8">Disclaimer: Please verify all details from the official website before applying.</div>
-
   </article>
 
-  {/* SEO SCHEMA (Improvement #6: Breadcrumbs Added) */}
+  {/* SEO SCHEMA */}
   <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@graph": [
@@ -489,5 +502,41 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
       }
     ]
   })} />
+
+  {/* ⏳ CLIENT SIDE COUNTDOWN SCRIPT */}
+  <script>
+    const box = document.getElementById('countdown-box');
+    const display = document.getElementById('timer-display');
+    
+    if (box && display) {
+        const targetDate = new Date(box.dataset.date);
+        targetDate.setHours(23, 59, 59);
+
+        const updateTimer = () => {
+            const now = new Date();
+            const diff = targetDate - now;
+
+            if (diff <= 0) {
+                display.innerText = "Application Closed";
+                display.classList.remove('text-red-700');
+                display.classList.add('text-gray-500');
+                box.classList.remove('animate-pulse');
+                clearInterval(interval);
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            display.innerText = `${days}d : ${hours}h : ${minutes}m : ${seconds}s`;
+            box.classList.remove('hidden');
+        };
+
+        const interval = setInterval(updateTimer, 1000);
+        updateTimer();
+    }
+  </script>
 
 </Layout>
