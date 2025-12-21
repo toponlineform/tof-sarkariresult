@@ -2,10 +2,15 @@
 // src/components/AdSlot.astro
 const { type = "horizontal" } = Astro.props;
 
-// Jab future me Ads lagane hon, isko TRUE kar dena
+// 🔒 CONTROL CENTER
+// Abhi 'false' hai -> Website par kuch nahi dikhega (Clean).
+// Jab Ads mil jayein, isse 'true' kar dena.
 const showAds = false; 
 
-// Ad Sizes Styles
+// 🛑 MAGIC LINE: Agar ads off hain, to component yahin khatam.
+if (!showAds) return null;
+
+// Ad Sizes Styles (Ye tabhi chalega jab showAds = true hoga)
 const styles = {
   horizontal: "min-h-[90px] max-w-[728px]", // Standard Banner
   square: "min-h-[250px] max-w-[300px]",    // Sidebar/Mobile Square
@@ -13,15 +18,7 @@ const styles = {
 ---
 
 <div class={`ad-slot-container my-6 mx-auto flex justify-center items-center ${styles[type]}`}>
-  {showAds ? (
-    // 🟢 FUTURE: Yahan Google AdSense ka code aayega
+    {/* 🟢 FUTURE: Yahan Google AdSense ka code aayega */}
     <div class="w-full h-full bg-white">
        </div>
-  ) : (
-    // 🔴 NOW: Placeholder (Layout Stable rakhne ke liye)
-    // Agar aap chahte hain ki abhi kuch na dikhe, toh niche wali div ko hata dein
-    <div class="w-full h-full bg-gray-50 border border-dashed border-gray-200 rounded flex flex-col items-center justify-center p-4">
-        <span class="text-[10px] text-gray-400 uppercase tracking-widest font-semibold">Advertisement Space</span>
-    </div>
-  )}
 </div>
