@@ -54,11 +54,9 @@ const calculateTotal = (data, key) => {
     return hasNumbers ? total : null;
 };
 
-// 2. Header Formatter (Smart Case)
+// 2. Header Formatter
 const formatHeader = (key) => {
-    // Agar key already sentence hai (spaces hain), toh mat chedo
     if (key.includes(' ')) return key;
-    
     const upperKeys = ["ur", "obc", "sc", "st", "ews", "pwbd", "esm", "gen", "ph", "cbt", "pet", "pst", "dob", "gk", "ga", "mcq"];
     if (upperKeys.includes(key.toLowerCase())) return key.toUpperCase();
     return key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim();
@@ -70,21 +68,16 @@ const standardKeys = [
   'shortInfo', 'importantDates', 'applicationFee', 'links', 'faqs', 'tags', 
   'state', 'ageLimit', 'ageRelaxation', 'vacancyDetails', 'stateWiseVacancy',
   'salary', 'salaryDetails', 'selectionProcess', 'examPattern', 'syllabus', 'howToApply', 
-  'eligibility', 'extraSections', 'reopenDate', 'admitCardDate', 'answerKeyDate', 'resultDate', 'isReopen', 'syllabusDate', 'types'
+  'eligibility', 'extraSections', 'reopenDate', 'admitCardDate', 'answerKeyDate', 'resultDate', 'isReopen', 'syllabusDate', 'types', 'vacancyTableTitle'
 ];
 const dynamicKeys = Object.keys(post).filter(key => !standardKeys.includes(key));
 
-// 4. SMART DATA TYPE DETECTOR 🕵️‍♂️
+// 4. Data Type Helper
 const getDataType = (data) => {
     if (Array.isArray(data) && data.length > 0) {
-        // Case: Nested Block (Old Website Style - Array of Objects with title & data)
-        if (data[0].title && data[0].data && Array.isArray(data[0].data)) return 'complex-block';
-        // Case: Standard Table
         if (typeof data[0] === 'object') return 'table';
-        // Case: List
         return 'list';
     }
-    if (typeof data === 'string') return 'text';
     return 'unknown';
 };
 
@@ -165,7 +158,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             {/* 💰 AD SLOT 1 */}
             <AdSlot type="horizontal" />
 
-            {/* 📑 TOC (Fixed Buttons) */}
+            {/* 📑 TOC */}
             <div class="mb-6 bg-blue-50 border border-blue-200 p-3 rounded-sm">
                 <p class="text-[10px] font-bold text-blue-800 uppercase mb-2 tracking-wider">Table of Contents:</p>
                 <div class="flex flex-wrap gap-2 text-xs font-semibold text-blue-700">
@@ -212,7 +205,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             </div>
             )}
 
-            {/* 3. VACANCY & AGE (Infinity Smart Logic) */}
+            {/* 3. VACANCY & AGE (Only Main Vacancy Table Here) */}
             {!isSimpleMode && (post.ageLimit || post.vacancyDetails) && (
             <div id="vacancy" class="mb-6 border border-gray-400 scroll-mt-20">
                 <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Vacancy Details & Age Limit</div>
@@ -224,90 +217,89 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                     </div>
                 )}
 
-                {/* UNIVERSAL VACANCY RENDERER */}
-                {post.vacancyDetails && (
-                    getDataType(post.vacancyDetails) === 'table' ? (
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-sm border-collapse text-center">
-                                <thead class="bg-gray-100 text-gray-800 text-xs uppercase font-bold">
-                                    <tr>
-                                        {/* Auto-Headers */}
-                                        {Object.keys(post.vacancyDetails[0]).map(key => (
-                                            <th class="border border-gray-300 px-2 py-2 text-left">{formatHeader(key)}</th>
+                {post.vacancyDetails && post.vacancyDetails.length > 0 && (
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm border-collapse text-center">
+                            <thead class="bg-gray-100 text-gray-800 text-xs uppercase font-bold">
+                                <tr>
+                                    {Object.keys(post.vacancyDetails[0]).map(key => (
+                                        <th class="border border-gray-300 px-2 py-2 text-left">{formatHeader(key)}</th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {post.vacancyDetails.map((row, i) => (
+                                    <tr class="hover:bg-yellow-50">
+                                        {Object.values(row).map((val, idx) => (
+                                            <td class={`border border-gray-300 px-2 py-2 text-left ${idx===0 ? 'font-bold text-gray-700' : 'text-gray-600'}`} set:html={formatText(val)}></td>
                                         ))}
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    {post.vacancyDetails.map((row, i) => (
-                                        <tr class="hover:bg-yellow-50">
-                                            {/* Auto-Cells */}
-                                            {Object.values(row).map((val, idx) => (
-                                                <td class={`border border-gray-300 px-2 py-2 text-left ${idx===0 ? 'font-bold text-gray-700' : 'text-gray-600'}`} set:html={formatText(val)}></td>
-                                            ))}
-                                        </tr>
-                                    ))}
-                                    {/* Smart Total */}
-                                    <tr class="bg-gray-200 font-bold">
-                                        {Object.keys(post.vacancyDetails[0]).map((key, index) => {
-                                            if (index === 0) return <td class="border border-gray-300 px-2 py-2 text-right">Total</td>;
-                                            const total = calculateTotal(post.vacancyDetails, key);
-                                            return <td class="border border-gray-300 px-2 py-2 text-[#d32f2f]">{total || ""}</td>;
-                                        })}
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    ) : getDataType(post.vacancyDetails) === 'complex-block' ? (
-                        /* Handle Array of Objects with {title, data} in Vacancy too */
-                        post.vacancyDetails.map(block => (
-                            <div class="border-t border-gray-300">
-                                <div class="bg-gray-200 px-3 py-1 font-bold text-sm text-gray-800 border-b border-gray-300">{block.title}</div>
-                                <div class="overflow-x-auto">
-                                    <table class="w-full text-sm border-collapse text-center">
-                                        <thead class="bg-gray-100 font-bold text-gray-700 whitespace-nowrap">
-                                            <tr>{Object.keys(block.data[0]).map(h => <th class="border border-gray-300 px-2 py-2">{formatHeader(h)}</th>)}</tr>
-                                        </thead>
-                                        <tbody>
-                                            {block.data.map(row => (
-                                                <tr class="hover:bg-white bg-gray-50">
-                                                    {Object.values(row).map(val => <td class="border border-gray-300 px-2 py-2">{val}</td>)}
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        ))
-                    ) : null
+                                ))}
+                                <tr class="bg-gray-200 font-bold">
+                                    {Object.keys(post.vacancyDetails[0]).map((key, index) => {
+                                        if (index === 0) return <td class="border border-gray-300 px-2 py-2 text-right">Total</td>;
+                                        const total = calculateTotal(post.vacancyDetails, key);
+                                        return <td class="border border-gray-300 px-2 py-2 text-[#d32f2f]">{total || ""}</td>;
+                                    })}
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 )}
             </div>
             )}
 
-            {/* 4. STATE/CATEGORY VACANCY */}
+            {/* 4. STATE/CATEGORY VACANCY (SEPARATE SECTION) */}
             {!isSimpleMode && post.stateWiseVacancy && post.stateWiseVacancy.length > 0 && (
             <div class="mb-6 border border-gray-400">
                 <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">{post.vacancyTableTitle || "Category Wise Vacancy"}</div>
-                <div class="overflow-x-auto">
-                <table class="w-full text-sm border-collapse border border-gray-300 text-center">
-                    <thead class="bg-gray-100 font-bold text-gray-700 whitespace-nowrap">
-                        <tr>{Object.keys(post.stateWiseVacancy[0]).map(k => <th class="border border-gray-300 px-2 py-2">{formatHeader(k)}</th>)}</tr>
-                    </thead>
-                    <tbody>
-                    {post.stateWiseVacancy.map((row, i) => (
-                        <tr class={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                        {Object.values(row).map(val => <td class="border border-gray-300 px-2 py-2 font-medium">{val}</td>)}
-                        </tr>
-                    ))}
-                    <tr class="bg-gray-200 font-bold">
-                        {Object.keys(post.stateWiseVacancy[0]).map((key, index) => {
-                            if (index === 0) return <td class="border border-gray-300 px-2 py-2 text-right">Total</td>;
-                            const total = calculateTotal(post.stateWiseVacancy, key);
-                            return <td class="border border-gray-300 px-2 py-2 text-[#d32f2f]">{total || "-"}</td>;
-                        })}
-                    </tr>
-                    </tbody>
-                </table>
-                </div>
+                
+                {/* Loop through State Wise Vacancy Blocks if it's Array of Blocks */}
+                {/* CHECK 1: If simple table */}
+                {getDataType(post.stateWiseVacancy) === 'table' ? (
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm border-collapse border border-gray-300 text-center">
+                            <thead class="bg-gray-100 font-bold text-gray-700 whitespace-nowrap">
+                                <tr>{Object.keys(post.stateWiseVacancy[0]).map(k => <th class="border border-gray-300 px-2 py-2">{formatHeader(k)}</th>)}</tr>
+                            </thead>
+                            <tbody>
+                            {post.stateWiseVacancy.map((row, i) => (
+                                <tr class={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                                {Object.values(row).map(val => <td class="border border-gray-300 px-2 py-2 font-medium">{val}</td>)}
+                                </tr>
+                            ))}
+                            <tr class="bg-gray-200 font-bold">
+                                {Object.keys(post.stateWiseVacancy[0]).map((key, index) => {
+                                    if (index === 0) return <td class="border border-gray-300 px-2 py-2 text-right">Total</td>;
+                                    const total = calculateTotal(post.stateWiseVacancy, key);
+                                    return <td class="border border-gray-300 px-2 py-2 text-[#d32f2f]">{total || "-"}</td>;
+                                })}
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                ) : (
+                    /* CHECK 2: If Array of Blocks (New Standard) */
+                    post.stateWiseVacancy.map(block => (
+                        <div class="mb-4 mt-4 border-t border-b border-gray-300">
+                            {block.title && <div class="bg-gray-200 px-3 py-2 font-bold text-sm text-gray-800 border-b border-gray-300 text-center">{block.title}</div>}
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-sm border-collapse text-center">
+                                    <thead class="bg-gray-100 font-bold text-gray-700 whitespace-nowrap">
+                                        <tr>{Object.keys(block.data[0]).map(h => <th class="border border-gray-300 px-2 py-2">{formatHeader(h)}</th>)}</tr>
+                                    </thead>
+                                    <tbody>
+                                        {block.data.map(row => (
+                                            <tr class="hover:bg-white bg-gray-50">
+                                                {Object.values(row).map(val => <td class="border border-gray-300 px-2 py-2">{val}</td>)}
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    ))
+                )}
             </div>
             )}
 
@@ -321,7 +313,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                 </div>
             )}
 
-            {/* 6. INFINITE DATA RENDERER (Smartest Table Logic) */}
+            {/* 6. INFINITE DATA RENDERER */}
             {dynamicKeys.map((key) => {
                 const data = post[key];
                 const type = getDataType(data);
@@ -349,6 +341,40 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                         </div>
                     );
                 }
+                
+                // 🔥 NEW: Handle Block Arrays in Extra Sections too
+                if (type === 'complex-block' || (Array.isArray(data) && data[0].type === 'table')) {
+                     return (
+                        <div class="mb-6 border border-gray-400">
+                            <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">{title}</div>
+                            <div class="bg-white p-4">
+                                {data.map(block => (
+                                    <div class="mb-6 border border-gray-300">
+                                        {block.title && <div class="bg-gray-200 px-3 py-2 font-bold text-sm text-gray-800 border-b border-gray-300 text-center uppercase">{block.title}</div>}
+                                        {block.table && (
+                                            <div class="overflow-x-auto">
+                                                <table class="w-full text-sm border-collapse text-center">
+                                                    <thead class="bg-gray-100 font-bold text-gray-700 text-xs uppercase">
+                                                        <tr>{Object.keys(block.table[0]).map(h => <th class="border border-gray-300 px-2 py-2">{formatHeader(h)}</th>)}</tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {block.table.map(row => (
+                                                            <tr class="hover:bg-white bg-gray-50">
+                                                                {Object.values(row).map(val => <td class="border border-gray-300 px-2 py-2">{val}</td>)}
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        )}
+                                        {block.content && <p class="p-3 text-sm text-gray-700">{block.content}</p>}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                     );
+                }
+
                 return null;
             })}
 
@@ -381,85 +407,71 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             </div>
             )}
 
-            {/* 9. EXAM PATTERN (🔥 UNIVERSAL BLOCK RENDERER 🔥) */}
+            {/* 9. EXAM PATTERN (🔥 FIXED LOGIC FOR NEW ARRAY FORMAT 🔥) */}
             {post.examPattern && (
             <div id="pattern" class="mb-6 border border-gray-400 scroll-mt-20">
                 <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Exam Pattern</div>
                 <div class="bg-white p-4">
-                    {/* Loop through all keys in examPattern */}
-                    {Object.entries(post.examPattern).map(([key, value]) => {
-                        const type = getDataType(value);
-                        const title = formatHeader(key);
-
-                        // 1. COMPLEX BLOCK (Array of {title, data}) - Solves [object Object]
-                        if (type === 'complex-block') {
-                            return value.map(block => (
-                                <div class="mb-4 border border-gray-300">
-                                    {/* Blue Header for sub-section */}
-                                    <div class="bg-[#004B8D] px-3 py-2 font-bold text-sm text-white border-b border-gray-300 text-center">{block.title}</div>
-                                    <div class="overflow-x-auto">
-                                        <table class="w-full text-sm border-collapse text-center">
-                                            <thead class="bg-gray-100 font-bold text-gray-700 whitespace-nowrap">
-                                                <tr>{Object.keys(block.data[0]).map(h => <th class="border border-gray-300 px-2 py-2">{formatHeader(h)}</th>)}</tr>
-                                            </thead>
-                                            <tbody>
-                                                {block.data.map((row, i) => (
-                                                    <tr class={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                                                        {Object.values(row).map(val => <td class="border border-gray-300 px-2 py-2">{val}</td>)}
+                    {/* Check if Array (New Standard) */}
+                    {Array.isArray(post.examPattern) ? (
+                        post.examPattern.map(block => {
+                            // CASE A: TABLE BLOCK
+                            if (block.type === 'table') {
+                                return (
+                                    <div class="mb-6 border border-gray-300">
+                                        {/* Grey Header for Table Title */}
+                                        {block.title && <div class="bg-gray-200 px-3 py-2 font-bold text-sm text-gray-800 border-b border-gray-300 text-center uppercase">{block.title}</div>}
+                                        <div class="overflow-x-auto">
+                                            <table class="w-full text-sm border-collapse text-center">
+                                                <thead class="bg-gray-100 font-bold text-gray-700 text-xs uppercase">
+                                                    <tr>
+                                                        {block.data && block.data[0] && Object.keys(block.data[0]).map(h => (
+                                                            <th class="border border-gray-300 px-2 py-2">{formatHeader(h)}</th>
+                                                        ))}
                                                     </tr>
-                                                ))}
-                                            </tbody>
+                                                </thead>
+                                                <tbody>
+                                                    {block.data && block.data.map(row => (
+                                                        <tr class="hover:bg-white bg-gray-50">
+                                                            {Object.values(row).map(val => (
+                                                                <td class="border border-gray-300 px-2 py-2">{val}</td>
+                                                            ))}
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                );
+                            }
+                            // CASE B: TEXT BLOCK
+                            if (block.type === 'text') {
+                                return (
+                                    <div class="mb-4 p-3 bg-gray-50 border-l-4 border-blue-500">
+                                        {block.title && <h4 class="font-bold text-gray-800 mb-1">{block.title}</h4>}
+                                        <p class="text-sm text-gray-700" set:html={formatText(block.data)}></p>
+                                    </div>
+                                );
+                            }
+                            return null;
+                        })
+                    ) : (
+                        /* Fallback for Old Object Data (To prevent blank screen) */
+                        Object.entries(post.examPattern).map(([key, value]) => {
+                             if(Array.isArray(value) && typeof value[0] === 'object') {
+                                return (
+                                    <div class="mb-4 border border-gray-300">
+                                        <div class="bg-gray-200 px-3 py-1 font-bold text-sm text-gray-800 text-center uppercase">{formatHeader(key)}</div>
+                                        <table class="w-full text-sm border-collapse text-center">
+                                            <thead class="bg-gray-100"><tr>{Object.keys(value[0]).map(h=><th class="border px-2 py-2">{h}</th>)}</tr></thead>
+                                            <tbody>{value.map(r=>(<tr>{Object.values(r).map(v=><td class="border px-2 py-2">{v}</td>)}</tr>))}</tbody>
                                         </table>
                                     </div>
-                                </div>
-                            ));
-                        }
-
-                        // 2. SIMPLE TABLE
-                        if (type === 'table') {
-                            return (
-                                <div class="mb-4 border border-gray-300">
-                                    <div class="bg-gray-100 px-3 py-1 font-bold text-sm text-gray-800 border-b border-gray-300 text-center">{title}</div>
-                                    <div class="overflow-x-auto">
-                                        <table class="w-full text-sm border-collapse text-center">
-                                            <thead class="bg-gray-50 text-gray-700 text-xs uppercase">
-                                                <tr>{Object.keys(value[0]).map(h => <th class="border border-gray-300 px-2 py-2">{formatHeader(h)}</th>)}</tr>
-                                            </thead>
-                                            <tbody>
-                                                {value.map((row, i) => (
-                                                    <tr class={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                                                        {Object.values(row).map(val => <td class="border border-gray-300 px-2 py-2">{val}</td>)}
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            );
-                        }
-
-                        // 3. LIST
-                        if (type === 'list') {
-                            return (
-                                <div class="mb-4">
-                                    {key !== 'details' && <h4 class="font-bold text-gray-700 mb-2">{title}</h4>}
-                                    <ul class="list-disc pl-5 text-sm text-gray-800 space-y-1 bg-yellow-50 p-3 rounded border border-yellow-200">
-                                        {value.map(item => <li set:html={formatText(item)}></li>)}
-                                    </ul>
-                                </div>
-                            );
-                        }
-
-                        // 4. TEXT
-                        if (type === 'text') {
-                            return (
-                                <div class="mb-4 p-3 bg-gray-50 border-l-4 border-blue-500">
-                                    <p class="text-sm text-gray-700 font-medium" set:html={formatText(value)}></p>
-                                </div>
-                            );
-                        }
-                        return null;
-                    })}
+                                )
+                             }
+                             return null;
+                        })
+                    )}
                 </div>
             </div>
             )}
@@ -469,13 +481,11 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             <div id="syllabus" class="mb-6 border border-gray-400 scroll-mt-20">
                 <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Syllabus (Topic Wise)</div>
                 <div class="bg-white p-4">
-                    {/* Intro */}
                     {post.syllabus.intro && (
                         <p class="text-sm text-gray-700 mb-4 italic border-l-4 border-blue-500 pl-3 bg-blue-50 py-2">
                             {post.syllabus.intro}
                         </p>
                     )}
-                    {/* Topic Grid */}
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {post.syllabus.topics && post.syllabus.topics.map((subject) => (
                             <div class="border border-gray-300 rounded overflow-hidden">
