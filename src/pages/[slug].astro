@@ -37,11 +37,11 @@ else if (catLower.includes("admit card")) stepsHeader = "How to Download Admit C
 else if (catLower.includes("result")) stepsHeader = "How to Check Result";
 else if (catLower.includes("admission")) stepsHeader = "How to Apply for Admission";
 
-// C. AUTO TOTAL (Updated for Universal Logic)
+// C. AUTO TOTAL (Updated: Universal Logic - Smarter Detection)
 const calculateTotal = (data, key) => {
     if (!data || !key) return null;
-    // In keys ka total mat karo
-    const skipKeys = ['age', 'year', 'code', 's.no', 'serial', 'qualification', 'eligibility', 'post name', 'category', 'subject', 'activity'];
+    // Skip non-numeric columns explicitly
+    const skipKeys = ['age', 'year', 'code', 's.no', 'serial', 'qualification', 'eligibility', 'post name', 'category', 'subject', 'activity', 'trade', 'pay scale'];
     if (skipKeys.some(k => key.toLowerCase().includes(k))) return null;
 
     let total = 0;
@@ -49,22 +49,20 @@ const calculateTotal = (data, key) => {
     for (let item of data) {
         let val = item[key];
         if (!val) continue;
-        let clean = String(val).replace(/,/g, '').trim(); // Remove commas
-        // Check if it's a pure number
+        let clean = String(val).replace(/,/g, '').trim(); 
         if (clean && !isNaN(clean)) {
             total += parseFloat(clean);
             hasNumbers = true;
         } 
     }
-    // Agar number mila hi nahi, toh total return mat karo
     return hasNumbers ? total : null;
 };
 
 // D. HEADER FORMATTER
 const formatHeader = (key) => {
-    const upperKeys = ["ur", "obc", "sc", "st", "ews", "pwbd", "esm", "gen", "ph", "cbt", "pet", "pst", "dob"];
+    const upperKeys = ["ur", "obc", "sc", "st", "ews", "pwbd", "esm", "gen", "ph", "cbt", "pet", "pst", "dob", "gk", "ga"];
     if (upperKeys.includes(key.toLowerCase())) return key.toUpperCase();
-    // CamelCase to Title Case (e.g. postName -> Post Name)
+    // CamelCase to Title Case
     return key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim();
 };
 
@@ -78,12 +76,14 @@ const standardKeys = [
 ];
 const dynamicKeys = Object.keys(post).filter(key => !standardKeys.includes(key));
 
-// Helper: Data Type
+// Helper: Data Type Detector
 const getDataType = (data) => {
     if (Array.isArray(data) && data.length > 0) {
-        return typeof data[0] === 'object' ? 'table' : 'list';
+        if (typeof data[0] === 'object') return 'table';
+        return 'list';
     }
-    return 'text';
+    if (typeof data === 'string') return 'text';
+    return 'unknown';
 };
 
 // F. SMART BUTTON STYLES
@@ -95,30 +95,7 @@ const getBtnStyle = (title) => {
   return 'bg-green-600 hover:bg-green-700 border-green-700 text-white';
 };
 
-// G. EXAM PATTERN HELPER (Fix for Missing Tables)
-const getPatternTables = () => {
-    if (!post.examPattern) return [];
-    if (post.examPattern.tables) return post.examPattern.tables; // New Standard
-
-    // Old Standard Support
-    const list = [
-        post.examPattern.table ? { title: "Exam Pattern", data: post.examPattern.table } : null,
-        post.examPattern.tier1 ? { title: "Tier-I Exam", data: post.examPattern.tier1 } : null,
-        post.examPattern.tier2 ? { title: "Tier-II Exam", data: post.examPattern.tier2 } : null,
-        post.examPattern.paper1 ? { title: "Paper-I", data: post.examPattern.paper1 } : null,
-        post.examPattern.paper2 ? { title: "Paper-II", data: post.examPattern.paper2 } : null,
-        post.examPattern.cbt1 ? { title: "CBT-1", data: post.examPattern.cbt1 } : null,
-        post.examPattern.cbt2 ? { title: "CBT-2", data: post.examPattern.cbt2 } : null,
-        post.examPattern.pre ? { title: "Preliminary Exam", data: post.examPattern.pre } : null,
-        post.examPattern.mains ? { title: "Mains Exam", data: post.examPattern.mains } : null,
-        post.examPattern.pet ? { title: "Physical Efficiency Test (PET)", tableType: 'pet', data: post.examPattern.pet } : null,
-        post.examPattern.pst ? { title: "Physical Standard Test (PST)", tableType: 'pet', data: post.examPattern.pst } : null,
-    ];
-    return list.filter(Boolean);
-};
-const examPatternTables = getPatternTables();
-
-// H. COUNTDOWN & SOCIAL
+// G. COUNTDOWN & SOCIAL
 const getLastDateISO = () => {
     if (!post.importantDates) return null;
     const lastDateObj = post.importantDates.find(d => d.label.toLowerCase().includes('last date') || d.label.toLowerCase().includes('closing date'));
@@ -186,7 +163,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             {/* 💰 AD SLOT 1: TOP */}
             <AdSlot type="horizontal" />
 
-            {/* 📑 TOC (Fixed Buttons Only) */}
+            {/* 📑 TOC (FIXED MODE) */}
             <div class="mb-6 bg-blue-50 border border-blue-200 p-3 rounded-sm">
                 <p class="text-[10px] font-bold text-blue-800 uppercase mb-2 tracking-wider">Table of Contents:</p>
                 <div class="flex flex-wrap gap-2 text-xs font-semibold text-blue-700">
@@ -195,7 +172,6 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                     {!isSimpleMode && (post.salary || post.salaryDetails) && <a href="#salary" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">💰 Salary</a>}
                     {post.selectionProcess && <a href="#selection" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">🎯 Selection</a>}
                     
-                    {/* Fixed Headers for Pattern & Syllabus */}
                     {post.examPattern && <a href="#pattern" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">📝 Pattern</a>}
                     {post.syllabus && <a href="#syllabus" class="bg-white px-2 py-1 border border-blue-200 rounded hover:shadow-sm">📖 Syllabus</a>}
                     
@@ -205,7 +181,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
 
             {/* 2. DATES & FEES */}
             {!isSimpleMode && post.importantDates && post.importantDates.length > 0 && (
-            <div id="dates" class="grid grid-cols-1 md:grid-cols-2 gap-0 border border-gray-400 mb-6">
+            <div id="dates" class="grid grid-cols-1 md:grid-cols-2 gap-0 border border-gray-400 mb-6 scroll-mt-20">
             <div class="border-b md:border-b-0 md:border-r border-gray-400">
                 <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Important Dates</div>
                 <div class="bg-white p-2">
@@ -236,12 +212,11 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             </div>
             )}
 
-            {/* 3. VACANCY & AGE (🔥 UNIVERSAL TABLE LOGIC APPLIED 🔥) */}
+            {/* 3. VACANCY & AGE (🔥 UNIVERSAL COLUMNS APPLIED 🔥) */}
             {!isSimpleMode && (post.ageLimit || post.vacancyDetails) && (
-            <div id="vacancy" class="mb-6 border border-gray-400">
+            <div id="vacancy" class="mb-6 border border-gray-400 scroll-mt-20">
                 <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Vacancy Details & Age Limit</div>
                 
-                {/* Age Limit Box */}
                 {post.ageLimit && (
                     <div class="p-3 text-center border-b border-gray-300 bg-gray-50">
                         <p class="text-sm font-bold text-gray-800">Age Limit: <span class="font-normal">{post.ageLimit}</span></p>
@@ -249,13 +224,12 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                     </div>
                 )}
 
-                {/* Universal Table Logic for Vacancy */}
                 {post.vacancyDetails && post.vacancyDetails.length > 0 && (
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm border-collapse text-center">
                             <thead class="bg-gray-100 text-gray-800 text-xs uppercase font-bold">
                                 <tr>
-                                    {/* Auto-Generate Headers from First Row */}
+                                    {/* Auto-Generate Headers from First Row (Universal) */}
                                     {Object.keys(post.vacancyDetails[0]).map(key => (
                                         <th class="border border-gray-300 px-2 py-2 text-left">{formatHeader(key)}</th>
                                     ))}
@@ -266,7 +240,6 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                                     <tr class="hover:bg-yellow-50">
                                         {/* Auto-Generate Cells */}
                                         {Object.values(row).map((val, idx) => (
-                                            // First column is usually bold, others normal
                                             <td class={`border border-gray-300 px-2 py-2 text-left ${idx===0 ? 'font-bold text-gray-700' : 'text-gray-600'}`} set:html={formatText(val)}></td>
                                         ))}
                                     </tr>
@@ -286,7 +259,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             </div>
             )}
 
-            {/* 4. STATE/CATEGORY VACANCY (🔥 UNIVERSAL TABLE LOGIC APPLIED 🔥) */}
+            {/* 4. STATE/CATEGORY VACANCY (🔥 UNIVERSAL COLUMNS APPLIED 🔥) */}
             {!isSimpleMode && post.stateWiseVacancy && post.stateWiseVacancy.length > 0 && (
             <div class="mb-6 border border-gray-400">
                 <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">{post.vacancyTableTitle || "Category Wise Vacancy"}</div>
@@ -372,7 +345,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
 
             {/* 7. SALARY */}
             {!isSimpleMode && (post.salary || post.salaryDetails) && (
-            <div id="salary" class="mb-6 border border-gray-400">
+            <div id="salary" class="mb-6 border border-gray-400 scroll-mt-20">
                 <div class="bg-[#008000] text-white text-center font-bold py-2 text-sm uppercase">Pay Scale / Salary</div>
                 {post.salaryDetails ? (
                     <div class="overflow-x-auto">
@@ -393,72 +366,83 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
 
             {/* 8. SELECTION PROCESS */}
             {post.selectionProcess && (
-            <div id="selection" class="mb-6 border border-gray-400">
+            <div id="selection" class="mb-6 border border-gray-400 scroll-mt-20">
                 <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Selection Process</div>
                 <div class="bg-white p-4"><ol class="list-decimal pl-6 space-y-1 text-sm text-gray-900 font-medium">{post.selectionProcess.map(s => <li>{s}</li>)}</ol></div>
             </div>
             )}
 
-            {/* 9. EXAM PATTERN SECTION (Strictly Separated) */}
+            {/* 9. EXAM PATTERN (🔥 INFINITY PRO LOGIC 🔥) */}
             {post.examPattern && (
-            <div id="pattern" class="mb-6 border border-gray-400">
+            <div id="pattern" class="mb-6 border border-gray-400 scroll-mt-20">
                 <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Exam Pattern</div>
                 <div class="bg-white p-4">
                     
-                    {/* Pattern Bullets */}
-                    {post.examPattern.details && (
-                        <ul class="list-disc pl-5 text-sm text-gray-800 space-y-1 mb-4 bg-yellow-50 p-3 rounded border border-yellow-200">
-                            {post.examPattern.details.map(d => <li set:html={formatText(d)}></li>)}
-                        </ul>
-                    )}
+                    {/* Loop through EVERYTHING in examPattern */}
+                    {Object.entries(post.examPattern).map(([key, value]) => {
+                        const title = formatHeader(key);
+                        const dataType = getDataType(value);
 
-                    {/* Pattern Tables (Universal Logic applied implicitly via keys) */}
-                    {examPatternTables.map(table => (
-                    <div class="mb-4 border border-gray-300">
-                        <div class="bg-gray-100 px-3 py-1 font-bold text-sm text-gray-800 border-b border-gray-300 text-center">{table.title}</div>
-                        <div class="overflow-x-auto">
-                        <table class="w-full text-sm border-collapse text-center">
-                            <thead class="bg-gray-50 text-gray-700 text-xs uppercase">
-                                <tr>
-                                    {/* Auto-Detect Headers from first row */}
-                                    {table.tableType === 'pet' || (table.data[0] && table.data[0].activity) ? (
-                                        <>
-                                            <th class="border border-gray-300 px-2 py-2">Activity</th>
-                                            <th class="border border-gray-300 px-2 py-2">Male</th>
-                                            <th class="border border-gray-300 px-2 py-2">Female</th>
-                                        </>
-                                    ) : (
-                                        Object.keys(table.data[0]).map(header => (
-                                            <th class="border border-gray-300 px-2 py-2">{formatHeader(header)}</th>
-                                        ))
-                                    )}
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {table.data.map((row, i) => (
-                                <tr class={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                                {Object.values(row).map(val => (
-                                    <td class="border border-gray-300 px-2 py-2">{val}</td>
-                                ))}
-                                </tr>
-                            ))}
-                            </tbody>
-                        </table>
-                        </div>
-                    </div>
-                    ))}
+                        // Case 1: List (like 'details')
+                        if (dataType === 'list') {
+                            return (
+                                <div class="mb-4">
+                                    {key !== 'details' && <h4 class="font-bold text-gray-700 mb-2">{title}</h4>}
+                                    <ul class="list-disc pl-5 text-sm text-gray-800 space-y-1 bg-yellow-50 p-3 rounded border border-yellow-200">
+                                        {value.map(item => <li set:html={formatText(item)}></li>)}
+                                    </ul>
+                                </div>
+                            );
+                        }
 
-                    {/* Fallback for simple lists */}
-                    {!examPatternTables.length && !post.examPattern.details && post.examPattern.length && (
-                        <ul class="list-disc pl-6 text-sm text-gray-800 space-y-1 mb-4">{post.examPattern.map(d => <li set:html={formatText(d)}></li>)}</ul>
-                    )}
+                        // Case 2: Table (like 'tier1', 'pet')
+                        if (dataType === 'table') {
+                            return (
+                                <div class="mb-4 border border-gray-300">
+                                    <div class="bg-gray-100 px-3 py-1 font-bold text-sm text-gray-800 border-b border-gray-300 text-center">{title}</div>
+                                    <div class="overflow-x-auto">
+                                        <table class="w-full text-sm border-collapse text-center">
+                                            <thead class="bg-gray-50 text-gray-700 text-xs uppercase">
+                                                <tr>
+                                                    {/* Auto-Headers from first row */}
+                                                    {Object.keys(value[0]).map(header => (
+                                                        <th class="border border-gray-300 px-2 py-2">{formatHeader(header)}</th>
+                                                    ))}
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {value.map((row, i) => (
+                                                    <tr class={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                                                        {Object.values(row).map(val => (
+                                                            <td class="border border-gray-300 px-2 py-2">{val}</td>
+                                                        ))}
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            );
+                        }
+
+                        // Case 3: Text (like 'markingScheme' string)
+                        if (dataType === 'text') {
+                            return (
+                                <div class="mb-4 p-3 bg-gray-50 border-l-4 border-blue-500">
+                                    <p class="text-sm text-gray-700 font-medium" set:html={formatText(value)}></p>
+                                </div>
+                            );
+                        }
+                        
+                        return null;
+                    })}
                 </div>
             </div>
             )}
 
-            {/* 10. SYLLABUS SECTION (Strictly Separated) */}
+            {/* 10. SYLLABUS (Topic Wise Boxes) */}
             {post.syllabus && (
-            <div id="syllabus" class="mb-6 border border-gray-400">
+            <div id="syllabus" class="mb-6 border border-gray-400 scroll-mt-20">
                 <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Syllabus (Topic Wise)</div>
                 <div class="bg-white p-4">
                     
@@ -500,7 +484,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             )}
 
             {/* 12. IMPORTANT LINKS */}
-            <div id="links" class="mb-6 border border-gray-400">
+            <div id="links" class="mb-6 border border-gray-400 scroll-mt-20">
                 <div class="bg-[#d32f2f] text-white text-center font-bold py-2 text-lg uppercase">
                 {isSimpleMode ? "Download Links" : "Important Links"}
                 </div>
