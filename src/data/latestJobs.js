@@ -7,7 +7,7 @@ export const latestJobs = [
   
   {
     id: 251201, // Unique ID
-    slug: "itbp-deputy-judge-attorney-general-recruitment-2025",
+    slug: "itbp-deputy-judge-attorney-general-recruitment-2025new",
     title: "ITBP Deputy Judge Attorney General Online Form 2025",
     shortTitle: "ITBP JAG Deputy Commandant",
     category: "Latest Jobs",
