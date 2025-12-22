@@ -1,8 +1,37 @@
 ---
-import MarketingPopup from '../components/MarketingPopup.astro'; // ✅ 1. Import Added
+import MarketingPopup from '../components/MarketingPopup.astro';
 
-const { title, description = "Latest Government Jobs, Admit Cards, and Results at TopOnlineForm.com" } = Astro.props;
+const { 
+  title, 
+  description, 
+  isPost = false, // Post page ke liye extra check
+  categoryName = "" 
+} = Astro.props;
+
 const siteUrl = "https://toponlineform.com";
+const canonicalURL = new URL(Astro.url.pathname, siteUrl);
+
+// --- 🚀 INFINITY SEO TITLE LOGIC ---
+// Google 60-char limit aur keyword priority ko dhyan me rakh kar banaya gaya hai.
+let seoTitle = "";
+let seoDescription = description;
+
+const currentPath = Astro.url.pathname;
+
+if (currentPath === "/" || currentPath === "") {
+  // 1. HOME PAGE: Branding + High Volume Keywords
+  seoTitle = "Top Online Form: Sarkari Result, Latest Govt Jobs & Admit Card 2025";
+  seoDescription = seoDescription || "India's No.1 Portal for Sarkari Result, Latest Government Jobs, Admit Cards, and Results updates at TopOnlineForm.com.";
+} 
+else if (isPost) {
+  // 2. SINGLE POST PAGE: [Job Name] + Action Keywords
+  // Format: "SSC GD Online Form 2025 | Eligibility, Last Date - Top Online Form"
+  seoTitle = `${title} 2025 Online Form | Eligibility, Last Date - Top Online Form`;
+} 
+else {
+  // 3. CATEGORY/OTHER PAGES: [Category] + 2025
+  seoTitle = `${title} 2025 | Latest Updates & Online Form - Top Online Form`;
+}
 ---
 
 <!DOCTYPE html>
@@ -10,13 +39,22 @@ const siteUrl = "https://toponlineform.com";
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title} | Top Online Form</title>
-    <meta name="description" content={description} />
-    <link rel="canonical" href={new URL(Astro.url.pathname, siteUrl)} />
+    
+    <title>{seoTitle}</title>
+    <meta name="title" content={seoTitle} />
+    <meta name="description" content={seoDescription} />
+    
+    <link rel="canonical" href={canonicalURL} />
     <meta name="robots" content="index, follow" />
+    
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={seoTitle} />
+    <meta property="og:description" content={seoDescription} />
+
     <script is:inline src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 flex flex-col min-h-screen font-sans">
@@ -39,22 +77,19 @@ const siteUrl = "https://toponlineform.com";
                 <a href="/results" class="hover:text-yellow-300 transition">Results</a>
                 <a href="/answer-key" class="hover:text-yellow-300 transition">Answer Key</a>
 
-                {/* ✅ DROPDOWN MENU (More) */}
+                {/* DROPDOWN MENU (More) */}
                 <div class="relative group">
                     <button class="flex items-center gap-1 hover:text-yellow-300 transition focus:outline-none py-2">
                         More <span>▾</span>
                     </button>
                     
-                    {/* Dropdown List */}
                     <div class="absolute right-0 mt-0 w-48 bg-white text-gray-800 rounded-md shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right z-50 border border-gray-200 text-left overflow-hidden">
                         <a href="/state-wise-jobs" class="block px-4 py-3 hover:bg-blue-50 border-b border-gray-100 transition hover:text-blue-700">🌍 State Wise Jobs</a>
                         <a href="/admission" class="block px-4 py-3 hover:bg-blue-50 border-b border-gray-100 transition hover:text-blue-700">🎓 Admission</a>
                         <a href="/syllabus" class="block px-4 py-3 hover:bg-blue-50 transition hover:text-blue-700">📖 Syllabus</a>
                     </div>
                 </div>
-
             </nav>
-
         </div>
     </header>
 
@@ -94,7 +129,6 @@ const siteUrl = "https://toponlineform.com";
         </a>
     </div>
 
-    {/* ✅ MARKETING POPUP (Auto Logic) */}
     <MarketingPopup />
 
 </body>
