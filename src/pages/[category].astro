@@ -4,11 +4,10 @@ import AdSlot from '../components/AdSlot.astro';
 import { allPosts } from '../data/index.js';
 
 export async function getStaticPaths() {
-  // 1. Categories Define karein (Ensure names match your file exports/types)
   const categories = [
     { slug: 'latest-jobs', name: 'Latest Jobs' },
     { slug: 'admit-card', name: 'Admit Card' },
-    { slug: 'results', name: 'Result' },       // Note: Usually 'Result' singular in data
+    { slug: 'results', name: 'Result' }, 
     { slug: 'answer-key', name: 'Answer Key' },
     { slug: 'admission', name: 'Admission' },
     { slug: 'syllabus', name: 'Syllabus' },
@@ -16,15 +15,12 @@ export async function getStaticPaths() {
   ];
 
   return categories.map((cat) => {
-    // 2. Data Filter Logic (Updated for 'types' support)
-    // Ab ye 'Category Name' bhi check karega AUR 'types' array bhi check karega.
     const filteredPosts = allPosts.filter(post => {
         const isMainCategory = post.category === cat.name;
         const isTagged = post.types && post.types.includes(cat.name);
         return isMainCategory || isTagged;
     });
     
-    // ✅ 3. ULTIMATE SORTING LOGIC (With Syllabus & Reopen Support)
     filteredPosts.sort((a, b) => {
         const parseDate = (dateStr) => {
             if (!dateStr) return 0;
@@ -34,45 +30,32 @@ export async function getStaticPaths() {
 
         let dateA, dateB;
 
-        // 🧠 Category Specific Date Priority
         if (cat.slug === 'latest-jobs') {
-            // Latest Jobs: Priority = Reopen Date > Post Date
-            // (Note: Generic 'updatedDate' yahan use nahi kiya taaki Answer Key aane par Job upar na kude)
             dateA = parseDate(a.reopenDate || a.postDate);
             dateB = parseDate(b.reopenDate || b.postDate);
         } 
         else if (cat.slug === 'admit-card') {
-            // Admit Card: Priority = Admit Card Date > Updated Date
             dateA = parseDate(a.admitCardDate || a.updatedDate || a.postDate);
             dateB = parseDate(b.admitCardDate || b.updatedDate || b.postDate);
         } 
         else if (cat.slug === 'answer-key') {
-            // Answer Key: Priority = Answer Key Date
             dateA = parseDate(a.answerKeyDate || a.updatedDate || a.postDate);
             dateB = parseDate(b.answerKeyDate || b.updatedDate || b.postDate);
         }
         else if (cat.slug === 'results') {
-            // Result: Priority = Result Date
             dateA = parseDate(a.resultDate || a.updatedDate || a.postDate);
             dateB = parseDate(b.resultDate || b.updatedDate || b.postDate);
         }
         else if (cat.slug === 'syllabus') {
-            // ✅ Syllabus: Priority = Syllabus Date
             dateA = parseDate(a.syllabusDate || a.updatedDate || a.postDate);
             dateB = parseDate(b.syllabusDate || b.updatedDate || b.postDate);
         }
         else {
-            // Default Fallback (Admission/Previous Paper)
             dateA = parseDate(a.updatedDate || a.postDate);
             dateB = parseDate(b.updatedDate || b.postDate);
         }
 
-        // Step A: Date Compare (Newest First)
-        if (dateB !== dateA) {
-            return dateB - dateA;
-        }
-
-        // Step B: ID Compare (Fallback for same day posts)
+        if (dateB !== dateA) return dateB - dateA;
         return (b.id || 0) - (a.id || 0);
     });
 
@@ -85,16 +68,24 @@ export async function getStaticPaths() {
 
 const { categoryName, posts } = Astro.props;
 
-// Helper: Button Border Color based on Category
+// Helper: Button Border Color
 const getBorderColor = (cat) => {
     const c = cat.toLowerCase();
     if (c.includes('admit')) return 'border-blue-600';
     if (c.includes('result')) return 'border-green-600';
     return 'border-red-600';
 };
+
+// --- 🚀 INFINITY SEO DESCRIPTION LOGIC ---
+// Har category ke liye alag description jo Google me dikhega
+const seoDesc = `Check Latest ${categoryName} 2025 updates. Get direct links for ${categoryName} and online forms for various government exams at TopOnlineForm.com.`;
 ---
 
-<Layout title={`${categoryName} - Top Online Form`} description={`Latest ${categoryName} updates.`}>
+{/* ✅ SEO UPDATE: Passing categoryName and optimized description */}
+<Layout 
+    title={categoryName} 
+    description={seoDesc}
+>
   
   <div class="max-w-7xl mx-auto px-2 mb-10">
       
@@ -107,46 +98,35 @@ const getBorderColor = (cat) => {
       {/* 2. PAGE HEADER */}
       <div class="text-center mb-6">
         <h1 class={`text-2xl md:text-3xl font-extrabold text-gray-800 border-b-4 inline-block pb-2 px-4 ${getBorderColor(categoryName)} uppercase tracking-tight`}>
-            {categoryName}
+            {categoryName} <span class="text-red-600">2025</span>
         </h1>
-        <p class="text-xs text-gray-400 mt-1">Total Updates: {posts.length}</p>
+        <p class="text-xs text-gray-400 mt-1 italic uppercase tracking-widest">Fastest Updates on TopOnlineForm.com</p>
       </div>
 
-      {/* 💰 AD SLOT 1: TOP BANNER */}
       <AdSlot type="horizontal" />
 
-      {/* 🏗️ MAIN LAYOUT (Content + Sidebar) */}
+      {/* 🏗️ MAIN LAYOUT */}
       <div class="flex flex-col lg:flex-row gap-8 mt-6">
           
-          {/* === LEFT SIDE: POST LIST === */}
           <main class="flex-1 min-w-0">
               {posts.length > 0 ? (
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {posts.map((post) => (
-                          // ✅ Smart Link: Agar Syllabus page hai, toh seedha #syllabus section par jump karega
                           <a href={`/${post.slug}${categoryName === 'Syllabus' ? '#syllabus' : ''}`} class="group block bg-white border border-gray-300 rounded hover:shadow-lg hover:border-blue-400 transition-all duration-200 p-4 relative overflow-hidden">
-                              
-                              {/* Decorative Corner */}
                               <div class="absolute top-0 right-0 w-2 h-2 bg-gray-200 group-hover:bg-blue-500 transition-colors"></div>
-                              
-                              {/* Title */}
                               <h2 class="text-sm md:text-base font-bold text-blue-800 group-hover:text-red-700 leading-snug">
                                   {post.shortTitle || post.title}
                               </h2>
-
-                              {/* Dates / Info */}
                               <div class="mt-3 flex items-center justify-between border-t border-gray-100 pt-2">
                                   <div class="text-xs text-gray-500 font-mono">
                                       📅 {post.postDate}
                                   </div>
-                                  
-                                  {/* Logic to show appropriate Status Badge */}
                                   {categoryName === 'Syllabus' ? (
-                                      <div class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">View Syllabus</div>
+                                      <div class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded uppercase">Syllabus PDF</div>
                                   ) : post.lastDate ? (
                                       <div class="text-xs font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded">Ends: {post.lastDate}</div>
                                   ) : (
-                                      <div class="text-xs font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded">View Details</div>
+                                      <div class="text-xs font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded">Check Now</div>
                                   )}
                               </div>
                           </a>
@@ -159,39 +139,30 @@ const getBorderColor = (cat) => {
                   </div>
               )}
 
-              {/* 💰 AD SLOT 2: BOTTOM (Pagination area) */}
               <div class="mt-10">
                  <AdSlot type="horizontal" />
               </div>
           </main>
 
-          {/* === RIGHT SIDE: SIDEBAR (Desktop Only) === */}
           <aside class="hidden lg:block w-[300px] flex-shrink-0">
               <div class="sticky top-4 space-y-6">
-                  
-                  {/* WhatsApp Box */}
                   <a href="https://whatsapp.com/channel/0029Vb7TcG06LwHoTXhZKn2D" target="_blank" class="block bg-white border border-green-200 p-4 rounded shadow-sm hover:shadow-md transition text-center group">
                       <div class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition">
-                          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+                          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
                       </div>
-                      <div class="font-bold text-green-700">Join WhatsApp Group</div>
-                      <div class="text-xs text-gray-500 mt-1">Get instant updates on your phone</div>
+                      <div class="font-bold text-green-700">Join WhatsApp Updates</div>
                   </a>
 
-                  {/* Telegram Box */}
                   <a href="https://t.me/toponlineform" target="_blank" class="block bg-white border border-blue-200 p-4 rounded shadow-sm hover:shadow-md transition text-center group">
                       <div class="w-12 h-12 bg-blue-100 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition">
                           <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.694 0Zm5.216 8.784-1.76 8.297c-.13.587-.48.73-.974.454l-2.696-1.986-1.3 1.253c-.144.144-.265.265-.54.265l.192-2.738 4.985-4.506c.217-.193-.047-.3-.337-.107l-6.16 3.878-2.656-.83c-.577-.18-.588-.577.12-.852l10.378-4.004c.48-.173.9.117.748.876Z"/></svg>
                       </div>
-                      <div class="font-bold text-blue-600">Join Telegram Channel</div>
-                      <div class="text-xs text-gray-500 mt-1">Daily PDF & Notes</div>
+                      <div class="font-bold text-blue-600">Join Telegram Alerts</div>
                   </a>
 
-                  {/* 💰 AD SLOT 3: SIDEBAR STICKY */}
                   <AdSlot type="square" />
               </div>
           </aside>
-
       </div>
   </div>
 
