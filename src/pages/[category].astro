@@ -73,6 +73,9 @@ const getBorderColor = (cat) => {
     const c = cat.toLowerCase();
     if (c.includes('admit')) return 'border-blue-600';
     if (c.includes('result')) return 'border-green-600';
+    if (c.includes('answer-key')) return 'border-orange-600';
+    if (c.includes('admission')) return 'border-purple-600';
+    if (c.includes('syllabus')) return 'border-pink-600';
     return 'border-red-600';
 };
 
