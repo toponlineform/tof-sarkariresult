@@ -3,18 +3,30 @@ import Layout from '../layouts/Layout.astro';
 import AdSlot from '../components/AdSlot.astro';
 import { allPosts } from '../data/index.js';
 
-// --- 🧠 COMPLETE MASTER LIST OF STATES & UTs ---
-const masterStates = [
-  "Central Govt", 
-  "Uttar Pradesh", "Bihar", "Rajasthan", "Delhi", "Haryana", 
-  "Madhya Pradesh", "Jharkhand", "Uttarakhand", "Chhattisgarh",
-  "Maharashtra", "West Bengal", "Odisha", "Punjab", "Himachal Pradesh", 
-  "Jammu & Kashmir", "Chandigarh", "Gujarat", "Karnataka", "Tamil Nadu", 
-  "Telangana", "Andhra Pradesh", "Kerala", "Goa", "Assam", 
-  "Arunachal Pradesh", "Manipur", "Meghalaya", "Mizoram", "Nagaland", 
-  "Sikkim", "Tripura", "Ladakh", "Puducherry", "Andaman & Nicobar", 
-  "Lakshadweep", "Dadra & Nagar Haveli", "Other States"
+// --- 🧠 CATEGORIZED MASTER LISTS ---
+
+// 1. Central & High Priority
+const centralList = [
+  "Central Govt", "Other States"
 ];
+
+// 2. Union Territories (UTs) - High Demand like Delhi/Chandigarh
+const utList = [
+  "Delhi", "Chandigarh", "Jammu & Kashmir", "Ladakh", 
+  "Puducherry", "Andaman & Nicobar", "Lakshadweep", "Dadra & Nagar Haveli"
+];
+
+// 3. States (Alphabetical Order A-Z)
+const stateList = [
+  "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", 
+  "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", 
+  "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", 
+  "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", 
+  "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal"
+];
+
+// Combined list for rendering the tables below
+const allLocations = [...centralList, ...utList, ...stateList];
 
 // --- 🧠 SERVER SIDE LOGIC ---
 const getJobsByState = (stateName) => {
@@ -29,7 +41,7 @@ const getJobsByState = (stateName) => {
     // Central Govt Handling
     if (stateName === "Central Govt" && (postState === "All India" || postState === "Central Govt")) return true;
     
-    // Dadra & Nagar Haveli handling (Short match)
+    // Dadra & Nagar Haveli handling
     if (stateName.includes("Dadra") && postState.includes("Dadra")) return true;
 
     return postState.toLowerCase() === stateName.toLowerCase();
@@ -51,15 +63,8 @@ const getJobsByState = (stateName) => {
   return jobs;
 };
 
-// Colors for Grid
-const bgColors = [
-  "bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-600 hover:text-white",
-  "bg-green-50 border-green-200 text-green-700 hover:bg-green-600 hover:text-white",
-  "bg-orange-50 border-orange-200 text-orange-700 hover:bg-orange-600 hover:text-white",
-  "bg-purple-50 border-purple-200 text-purple-700 hover:bg-purple-600 hover:text-white",
-  "bg-red-50 border-red-200 text-red-700 hover:bg-red-600 hover:text-white",
-  "bg-teal-50 border-teal-200 text-teal-700 hover:bg-teal-600 hover:text-white",
-];
+// Colors for Buttons
+const btnBaseClass = "text-center py-2 px-2 rounded border text-[11px] md:text-xs font-bold uppercase transition transform hover:scale-105 shadow-sm";
 ---
 
 <Layout title="State Wise Govt Jobs 2025 - Sarkari Naukri by State" description="Find latest government jobs in UP, Bihar, Rajasthan, Delhi, Haryana and all over India. State wise vacancy sorted list.">
@@ -78,39 +83,77 @@ const bgColors = [
             State Wise <span class="text-[#1a56db]">Govt Jobs</span>
           </h1>
           <p class="text-xs md:text-sm text-gray-500 font-bold tracking-widest uppercase">
-            Click on your state below to check active vacancies
+            Select your state below to find active recruitment
           </p>
         </div>
 
         {/* 💰 TOP AD SLOT */}
         <AdSlot type="horizontal" />
 
-        {/* 2. STATE NAVIGATION GRID (Filter Buttons) */}
-        <div class="bg-white border border-gray-200 p-4 rounded-lg shadow-sm mb-8">
-            <h3 class="text-xs font-bold text-gray-500 uppercase mb-3 tracking-wider border-b border-gray-100 pb-2">Filter by State:</h3>
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                
-                {/* 'Show All' Button */}
-                <button 
-                    onclick="filterState('all')"
-                    class="state-btn py-2 px-2 rounded border border-gray-300 bg-gray-800 text-white text-[11px] md:text-xs font-bold uppercase transition transform hover:scale-105 shadow-sm">
-                    Show All States
+        {/* 2. STATE NAVIGATION PANEL (Categorized) */}
+        <div class="bg-white border border-gray-200 p-4 rounded-lg shadow-sm mb-8 space-y-6">
+            
+            {/* Show All Button */}
+            <div class="text-center border-b border-gray-100 pb-4">
+                <button onclick="filterState('all')" class={`${btnBaseClass} bg-gray-900 text-white border-gray-900 hover:bg-gray-700 w-full md:w-1/3`}>
+                    Show All India Jobs
                 </button>
-
-                {/* Individual State Buttons */}
-                {masterStates.map((state, index) => (
-                    <button 
-                       onclick={`filterState('${state.replace(/\s+/g, '-').toLowerCase()}')`}
-                       class={`state-btn py-2 px-2 rounded border text-[11px] md:text-xs font-bold uppercase transition transform hover:scale-105 shadow-sm ${bgColors[index % bgColors.length]}`}>
-                        {state}
-                    </button>
-                ))}
             </div>
+
+            {/* Section A: Central & UTs */}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                {/* Central Govt */}
+                <div>
+                    <h3 class="text-xs font-bold text-[#d32f2f] uppercase mb-2 flex items-center gap-1">
+                        🏛️ Central & All India
+                    </h3>
+                    <div class="grid grid-cols-2 gap-2">
+                        {centralList.map(state => (
+                            <button onclick={`filterState('${state.replace(/\s+/g, '-').toLowerCase()}')`} 
+                                class={`${btnBaseClass} bg-red-50 border-red-200 text-red-700 hover:bg-red-600 hover:text-white`}>
+                                {state}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Union Territories */}
+                <div>
+                    <h3 class="text-xs font-bold text-[#1976d2] uppercase mb-2 flex items-center gap-1">
+                        🏙️ Union Territories (UTs)
+                    </h3>
+                    <div class="grid grid-cols-2 gap-2">
+                        {utList.map(state => (
+                            <button onclick={`filterState('${state.replace(/\s+/g, '-').toLowerCase()}')`} 
+                                class={`${btnBaseClass} bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-600 hover:text-white`}>
+                                {state}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+            {/* Section B: States (A-Z) */}
+            <div>
+                <h3 class="text-xs font-bold text-[#388e3c] uppercase mb-2 flex items-center gap-1 border-t border-gray-100 pt-4">
+                    📍 States (A-Z)
+                </h3>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                    {stateList.map(state => (
+                        <button onclick={`filterState('${state.replace(/\s+/g, '-').toLowerCase()}')`} 
+                            class={`${btnBaseClass} bg-green-50 border-green-200 text-green-700 hover:bg-green-600 hover:text-white`}>
+                            {state}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
         </div>
 
         {/* 3. STATE WISE LISTINGS (Container) */}
         <div id="states-container" class="space-y-8 min-h-[300px]">
-            {masterStates.map((state) => {
+            {allLocations.map((state) => {
                 const stateJobs = getJobsByState(state);
                 const stateId = state.replace(/\s+/g, '-').toLowerCase();
 
@@ -120,10 +163,10 @@ const bgColors = [
                         {/* State Header Strip */}
                         <div class="bg-gray-800 text-white px-4 py-2 rounded-t-lg flex items-center justify-between shadow-sm">
                             <h2 class="text-sm md:text-base font-bold uppercase tracking-wide flex items-center gap-2">
-                                📍 {state} Jobs
+                                {state} Jobs
                             </h2>
                             <span class="text-xs bg-white text-gray-800 px-2 py-0.5 rounded-full font-bold">
-                                {stateJobs.length} Active
+                                {stateJobs.length}
                             </span>
                         </div>
 
@@ -176,7 +219,7 @@ const bgColors = [
 
       </main>
 
-      {/* --- RIGHT COLUMN: SIDEBAR (Standard Sticky) --- */}
+      {/* --- RIGHT COLUMN: SIDEBAR --- */}
       <aside class="hidden lg:block w-[300px] flex-shrink-0">
         <div class="sticky top-4 space-y-6">
             
@@ -197,7 +240,7 @@ const bgColors = [
             <a href="https://t.me/toponlineform" target="_blank" class="block bg-white border-l-4 border-[#229ED9] p-4 shadow-sm hover:shadow-md transition rounded">
                 <div class="flex items-center gap-3">
                     <div class="bg-[#229ED9] text-white p-2 rounded-full">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.694 0Zm5.216 8.784-1.76 8.297c-.13.587-.48.73-.974.454l-2.696-1.986-1.3 1.253c-.144.144-.265.265-.54.265l.192-2.738 4.985-4.506c.217-.193-.047-.3-.337-.107l-6.16 3.878-2.656-.83c-.577-.18-.588-.577.12-.852l10.378-4.004c.48-.173.9.117.748.876Z"/></svg>
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 11.944 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.8-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
                     </div>
                     <div>
                         <div class="text-xs text-gray-500 font-bold uppercase">Join us on</div>
