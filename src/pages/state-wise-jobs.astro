@@ -3,13 +3,17 @@ import Layout from '../layouts/Layout.astro';
 import AdSlot from '../components/AdSlot.astro';
 import { allPosts } from '../data/index.js';
 
-// --- 🧠 STATIC MASTER LIST OF STATES ---
+// --- 🧠 COMPLETE MASTER LIST OF STATES & UTs ---
 const masterStates = [
-  "Central Govt", "Uttar Pradesh", "Bihar", "Rajasthan", "Delhi", "Haryana", 
-  "Madhya Pradesh", "Maharashtra", "Jharkhand", "Uttarakhand", "Chhattisgarh",
-  "West Bengal", "Odisha", "Punjab", "Himachal Pradesh", "Jammu & Kashmir",
-  "Assam", "Gujarat", "Karnataka", "Tamil Nadu", "Telangana", "Andhra Pradesh",
-  "Kerala", "Goa", "Chandigarh", "Other States"
+  "Central Govt", 
+  "Uttar Pradesh", "Bihar", "Rajasthan", "Delhi", "Haryana", 
+  "Madhya Pradesh", "Jharkhand", "Uttarakhand", "Chhattisgarh",
+  "Maharashtra", "West Bengal", "Odisha", "Punjab", "Himachal Pradesh", 
+  "Jammu & Kashmir", "Chandigarh", "Gujarat", "Karnataka", "Tamil Nadu", 
+  "Telangana", "Andhra Pradesh", "Kerala", "Goa", "Assam", 
+  "Arunachal Pradesh", "Manipur", "Meghalaya", "Mizoram", "Nagaland", 
+  "Sikkim", "Tripura", "Ladakh", "Puducherry", "Andaman & Nicobar", 
+  "Lakshadweep", "Dadra & Nagar Haveli", "Other States"
 ];
 
 // --- 🧠 SERVER SIDE LOGIC ---
@@ -21,7 +25,13 @@ const getJobsByState = (stateName) => {
   let jobs = allPosts.filter(post => {
     if (post.category !== 'Latest Jobs' && post.category !== 'Admission') return false;
     let postState = post.state || "Other States";
+    
+    // Central Govt Handling
     if (stateName === "Central Govt" && (postState === "All India" || postState === "Central Govt")) return true;
+    
+    // Dadra & Nagar Haveli handling (Short match)
+    if (stateName.includes("Dadra") && postState.includes("Dadra")) return true;
+
     return postState.toLowerCase() === stateName.toLowerCase();
   });
 
