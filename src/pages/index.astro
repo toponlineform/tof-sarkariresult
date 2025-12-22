@@ -1,68 +1,51 @@
 ---
 import Layout from '../layouts/Layout.astro';
-// ✅ 1. Manual Boxes Config
+// ✅ Manual Boxes Config
 import { homeBoxes } from '../data/home/index.js';
-// ✅ 2. Master Data (Automatic ke liye zaroori hai)
+// ✅ Master Data (Automatic ke liye zaroori hai)
 import { allPosts } from '../data/index.js';
 
 // --- 🧠 HYBRID LOGIC ENGINE (With Smart 'Updated Date' Sorting) ---
 const getBoxLinks = (box) => {
-  // 1. Agar Box MANUAL mode me hai (auto: false) toh manual links return karo
   if (!box.auto) {
     return box.links;
   }
 
-  // --- AUTOMATIC MODE START ---
-  
-  // 2. Data Filter karo (Category match karke)
   const filtered = allPosts.filter(post => post.category === box.categoryName);
   
-  // 3. SMART SORTING: (Updated Date > Post Date > ID)
   filtered.sort((a, b) => {
       const parseDate = (dateStr) => {
           if (!dateStr) return 0;
-          const cleanDate = String(dateStr).trim(); // Remove extra spaces
-          const parts = cleanDate.split('/'); // 26/11/2025 -> [26, 11, 2025]
-          
+          const cleanDate = String(dateStr).trim();
+          const parts = cleanDate.split('/');
           if (parts.length !== 3) return 0; 
-
-          // Format: YYYY-MM-DD (ISO format)
           return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`).getTime();
       };
 
-      // ✅ TRICK: Agar 'updatedDate' hai toh usse use karo, nahi toh 'postDate'
       const dateA = parseDate(a.updatedDate || a.postDate);
       const dateB = parseDate(b.updatedDate || b.postDate);
       
-      // Compare Dates (Bada Time = Newest First)
-      if (dateA > 0 && dateB > 0) {
-          if (dateA !== dateB) return dateB - dateA; 
-      }
-      
-      // Fallback: Agar Date same hai, to Bada ID pehle
+      if (dateA !== dateB) return dateB - dateA; 
       return (Number(b.id) || 0) - (Number(a.id) || 0); 
   });
 
-  // 4. LIMIT LOGIC (Aapki Demand: Top 30, Bottom 10)
   const topRowIds = ['latest-jobs', 'admit-card', 'results'];
   const limit = topRowIds.includes(box.id) ? 30 : 10;
 
-  // 5. Return Processed Data
   return filtered.slice(0, limit).map(post => ({
     title: post.shortTitle || post.title, 
-    url: `/${post.slug}`, // 🚨 FIXED: Removed /job/ prefix
+    url: `/${post.slug}`, 
     tag: post.tag, 
-    tagColor: post.tagColor || "green", // Default color Green
+    tagColor: post.tagColor || "green", 
     emoji: post.emoji || null
   }));
 };
 ---
 
-<Layout title="Home - Top Online Form | Latest Govt Jobs & Sarkari Results">
+{/* ✅ SEO UPDATE: Ab yahan sirf "Home" pass karna hai, poora title Layout.astro automatic generate karega */}
+<Layout title="Home">
     
-    {/* ================================================================== */}
     {/* 1. HERO / WELCOME SECTION */}
-    {/* ================================================================== */}
     <section class="text-center mb-8 bg-white p-6 rounded-lg shadow-sm border-b-4 border-red-600">
         <h1 class="text-2xl md:text-4xl font-extrabold text-gray-800 uppercase tracking-tight">
             Welcome to <span class="text-red-600">TopOnlineForm.com</span>
@@ -72,12 +55,8 @@ const getBoxLinks = (box) => {
         </p>
     </section>
 
-    {/* ================================================================== */}
-    {/* 🚀 2. SOCIAL JOIN BUTTONS (WhatsApp, Telegram, X) */}
-    {/* ================================================================== */}
+    {/* 🚀 2. SOCIAL JOIN BUTTONS */}
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        
-        {/* WhatsApp Channel */}
         <a href="https://whatsapp.com/channel/0029Vb7TcG06LwHoTXhZKn2D" target="_blank" class="flex items-center justify-center gap-3 bg-[#25D366] hover:bg-[#20bd5a] text-white p-4 rounded-lg shadow-md transition transform hover:-translate-y-1 group border border-green-600">
             <svg class="w-8 h-8 group-hover:scale-110 transition" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
             <div class="text-left">
@@ -85,65 +64,39 @@ const getBoxLinks = (box) => {
                 <div class="text-lg font-bold leading-none">Get Daily Updates</div>
             </div>
         </a>
-
-        {/* Telegram Channel */}
-        <a href="https://t.me/toponlineform" target="_blank" class="flex items-center justify-center gap-3 bg-[#229ED9] hover:bg-[#1f8ubc] text-white p-4 rounded-lg shadow-md transition transform hover:-translate-y-1 group border border-blue-400">
+        <a href="https://t.me/toponlineform" target="_blank" class="flex items-center justify-center gap-3 bg-[#229ED9] hover:bg-[#1f8bc1] text-white p-4 rounded-lg shadow-md transition transform hover:-translate-y-1 group border border-blue-400">
             <svg class="w-8 h-8 group-hover:scale-110 transition" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.694 0Zm5.216 8.784-1.76 8.297c-.13.587-.48.73-.974.454l-2.696-1.986-1.3 1.253c-.144.144-.265.265-.54.265l.192-2.738 4.985-4.506c.217-.193-.047-.3-.337-.107l-6.16 3.878-2.656-.83c-.577-.18-.588-.577.12-.852l10.378-4.004c.48-.173.9.117.748.876Z"/></svg>
             <div class="text-left">
                 <div class="text-xs font-medium opacity-90">Join on Telegram</div>
                 <div class="text-lg font-bold leading-none">Fastest Alerts</div>
             </div>
         </a>
-
-        {/* Follow on X */}
-        <a href="https://x.com/toponlineform?s=21&t=ZOgaGuNJBPILmxkqCu8PYw" target="_blank" class="flex items-center justify-center gap-3 bg-black hover:bg-gray-800 text-white p-4 rounded-lg shadow-md transition transform hover:-translate-y-1 group border border-gray-700">
+        <a href="https://x.com/toponlineform" target="_blank" class="flex items-center justify-center gap-3 bg-black hover:bg-gray-800 text-white p-4 rounded-lg shadow-md transition transform hover:-translate-y-1 group border border-gray-700">
             <svg class="w-7 h-7 group-hover:scale-110 transition" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
             <div class="text-left">
                 <div class="text-xs font-medium opacity-90">Follow on X</div>
                 <div class="text-lg font-bold leading-none">Latest News</div>
             </div>
         </a>
-
     </div>
 
-    {/* ================================================================== */}
-    {/* 3. MAIN JOB GRID (Hybrid Logic) */}
-    {/* ================================================================== */}
+    {/* 3. MAIN JOB GRID */}
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        
         {homeBoxes.map(box => {
-            // 🔄 Logic Call: Ye function decide karega ki link kahan se aayenge
             const activeLinks = getBoxLinks(box);
-
             return (
                 <div id={box.id} class={`bg-white border-2 border-${box.color}-600 rounded-lg shadow-sm h-full flex flex-col`}>
-                    
-                    {/* Box Header */}
                     <div class={`bg-${box.color}-600 text-white font-bold p-2 text-center text-lg uppercase tracking-wide`}>
                         {box.title}
                     </div>
-
-                    {/* Box Links */}
                     <div class="p-3 flex flex-col gap-2 flex-grow">
                         {activeLinks.length > 0 ? (
                             activeLinks.map(link => (
                                 <a href={link.url} class={`text-blue-700 font-semibold hover:underline hover:text-${box.color}-600 text-sm md:text-base border-b border-gray-100 pb-2 block`}>
-                                    
-                                    {/* Emoji */}
                                     {link.emoji && <span class="mr-1">{link.emoji}</span>}
-                                    
-                                    {/* Title */}
                                     {link.title}
-
-                                    {/* Tag (Only if exists) */}
                                     {link.tag && (
-                                        <span class={`
-                                            ml-2 text-[9px] uppercase font-bold px-1.5 py-[1px] rounded-sm text-white inline-block align-middle tracking-wide leading-none
-                                            ${link.tagColor === 'red' ? 'bg-red-600 animate-pulse' : ''}
-                                            ${link.tagColor === 'green' ? 'bg-green-600' : ''}
-                                            ${link.tagColor === 'blue' ? 'bg-blue-600' : ''}
-                                            ${link.tagColor === 'purple' ? 'bg-purple-600' : ''}
-                                        `}>
+                                        <span class={`ml-2 text-[9px] uppercase font-bold px-1.5 py-[1px] rounded-sm text-white inline-block align-middle tracking-wide leading-none ${link.tagColor === 'red' ? 'bg-red-600 animate-pulse' : ''} ${link.tagColor === 'green' ? 'bg-green-600' : ''} ${link.tagColor === 'blue' ? 'bg-blue-600' : ''} ${link.tagColor === 'purple' ? 'bg-purple-600' : ''}`}>
                                             {link.tag}
                                         </span>
                                     )}
@@ -153,35 +106,23 @@ const getBoxLinks = (box) => {
                             <p class="text-gray-400 text-center text-sm py-4">No updates available yet.</p>
                         )}
                     </div>
-
-                    {/* View More Button */}
                     <div class="p-2 text-right border-t border-gray-100 bg-gray-50 rounded-b-lg">
                         <a href={box.viewMoreLink} class="text-xs font-bold text-gray-500 hover:text-black uppercase tracking-wider">
                             View More »
                         </a>
                     </div>
-
                 </div>
             );
         })}
-
     </div>
 
-    {/* ================================================================== */}
-    {/* 🔥 4. 1000x PRO SEO SECTION (Sitemap & Content) */}
-    {/* ================================================================== */}
-
+    {/* 🔥 4. PRO SEO SECTION */}
     <div class="mt-12">
-        
-        {/* A. QUICK BROWSE LINKS */}
         <div class="bg-slate-800 text-white rounded-t-xl p-6 md:p-8">
             <h3 class="text-xl font-bold text-yellow-400 mb-6 uppercase tracking-wider border-b border-slate-600 pb-2">
                 🚀 Explore Jobs by Category
             </h3>
-            
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-sm">
-                
-                {/* Column 1: By Qualification */}
                 <div>
                     <h4 class="font-bold text-white mb-3 text-base">By Qualification</h4>
                     <ul class="space-y-2 text-slate-300">
@@ -192,20 +133,18 @@ const getBoxLinks = (box) => {
                         <li><a href="/search?q=diploma" class="hover:text-yellow-300 transition">Diploma Engineering</a></li>
                     </ul>
                 </div>
-
-                {/* Column 2: By State */}
                 <div>
                     <h4 class="font-bold text-white mb-3 text-base">Jobs by State</h4>
                     <ul class="space-y-2 text-slate-300">
-                        <li><a href="/search?q=up" class="hover:text-yellow-300 transition">Uttar Pradesh (UP)</a></li>
-                        <li><a href="/search?q=bihar" class="hover:text-yellow-300 transition">Bihar Sarkari Job</a></li>
-                        <li><a href="/search?q=delhi" class="hover:text-yellow-300 transition">Delhi Govt Jobs</a></li>
-                        <li><a href="/search?q=rajasthan" class="hover:text-yellow-300 transition">Rajasthan Police/PSC</a></li>
-                        <li><a href="/search?q=haryana" class="hover:text-yellow-300 transition">Haryana CET/HSSC</a></li>
+                        {/* ✅ FIXED: Direct Anchor Links to State Sections */}
+                        <li><a href="/state-wise-jobs#uttar-pradesh" class="hover:text-yellow-300 transition">Uttar Pradesh (UP)</a></li>
+                        <li><a href="/state-wise-jobs#bihar" class="hover:text-yellow-300 transition">Bihar Sarkari Job</a></li>
+                        <li><a href="/state-wise-jobs#delhi" class="hover:text-yellow-300 transition">Delhi Govt Jobs</a></li>
+                        <li><a href="/state-wise-jobs#rajasthan" class="hover:text-yellow-300 transition">Rajasthan Police/PSC</a></li>
+                        <li><a href="/state-wise-jobs#haryana" class="hover:text-yellow-300 transition">Haryana CET/HSSC</a></li>
+                        <li><a href="/state-wise-jobs" class="text-yellow-400 font-bold hover:underline transition italic">View All States »</a></li>
                     </ul>
                 </div>
-
-                {/* Column 3: Top Boards */}
                 <div>
                     <h4 class="font-bold text-white mb-3 text-base">Top Exam Boards</h4>
                     <ul class="space-y-2 text-slate-300">
@@ -216,8 +155,6 @@ const getBoxLinks = (box) => {
                         <li><a href="/search?q=defence" class="hover:text-yellow-300 transition">Army / Navy / Airforce</a></li>
                     </ul>
                 </div>
-
-                {/* Column 4: Important Tools */}
                 <div>
                     <h4 class="font-bold text-white mb-3 text-base">Useful Resources</h4>
                     <ul class="space-y-2 text-slate-300">
@@ -225,27 +162,20 @@ const getBoxLinks = (box) => {
                         <li><a href="/answer-key" class="hover:text-yellow-300 transition">Answer Keys</a></li>
                         <li><a href="/admission" class="hover:text-yellow-300 transition">Admission Forms</a></li>
                         <li><a href="/contact" class="hover:text-yellow-300 transition">Contact Support</a></li>
-                        <li><a href="/join-telegram" class="hover:text-yellow-300 transition text-green-400 font-bold">Join Telegram Channel</a></li>
+                        <li><a href="https://t.me/toponlineform" class="hover:text-yellow-300 transition text-green-400 font-bold">Join Telegram Channel</a></li>
                     </ul>
                 </div>
-
             </div>
         </div>
 
-        {/* B. SEO CONTENT BLOCK */}
-        <div class="bg-white p-6 md:p-10 border-x border-b border-gray-200 shadow-sm">
+        <div class="bg-white p-6 md:p-10 border-x border-b border-gray-200 shadow-sm rounded-b-xl">
             <h2 class="text-2xl font-bold text-gray-800 mb-4">
                 Welcome to <span class="text-red-600">TopOnlineForm.com</span> - India's No.1 Sarkari Job Portal
             </h2>
-            
             <div class="prose max-w-none text-gray-600 text-sm leading-relaxed">
                 <p class="mb-4">
-                    <strong>TopOnlineForm.com</strong> is your one-stop destination for the latest 
-                    <strong>Sarkari Result</strong>, <strong>Sarkari Naukri</strong>, and Government Job notifications in 2025. 
-                    We provide instant updates on <em>Admit Cards, Answer Keys, Syllabus, and Online Application Forms</em> for various sectors 
-                    including Railway, SSC, Banking, Police, and Defence.
+                    <strong>TopOnlineForm.com</strong> is your one-stop destination for the latest <strong>Sarkari Result</strong>, <strong>Sarkari Naukri</strong>, and Government Job notifications in 2025. We provide instant updates on <em>Admit Cards, Answer Keys, Syllabus, and Online Application Forms</em> for various sectors including Railway, SSC, Banking, Police, and Defence.
                 </p>
-
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                     <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
                         <h5 class="font-bold text-blue-800 mb-2">Why Choose Us?</h5>
@@ -266,14 +196,10 @@ const getBoxLinks = (box) => {
                         </ul>
                     </div>
                 </div>
-
-                <p class="mt-4 text-xs text-gray-400">
-                    Disclaimer: TopOnlineForm.com is an information portal and not associated with any government organization. 
-                    Please verify details from official websites before applying.
+                <p class="mt-4 text-xs text-gray-400 italic">
+                    Disclaimer: TopOnlineForm.com is an information portal and not associated with any government organization. Please verify details from official websites before applying.
                 </p>
             </div>
         </div>
-
     </div>
-
 </Layout>
