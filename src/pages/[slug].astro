@@ -595,24 +595,65 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
 
   </div>
 
+  {/* ✅ INFINITY PRO SEO SCHEMA (Multi-Layer Strategy) */}
   <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@graph": [
+      // 1. ASLI JOB KI DETAIL (Traffic ke liye - Google Jobs Box)
       {
         "@type": "JobPosting",
         "title": post.title,
         "description": post.shortInfo,
         "datePosted": post.postDate ? new Date(post.postDate.split('/').reverse().join('-')).toISOString() : new Date().toISOString(),
         "validThrough": post.importantDates?.find(d => d.label.toLowerCase().includes("last date"))?.value.replace(/\//g, '-') || "2026-12-31",
-        "hiringOrganization": { "@type": "Organization", "name": "Top Online Form", "url": "https://toponlineform.com" },
-        "jobLocation": { "@type": "Place", "address": { "@type": "PostalAddress", "addressCountry": "IN", "addressRegion": post.state || "India" } }
+        "hiringOrganization": { 
+          "@type": "Organization", 
+          // 💡 AUTO-LOGIC: Agar board missing hai toh State se naam bana lega
+          "name": post.board || (post.state ? post.state + " Recruitment Board" : "Government Recruitment Board"),
+          "logo": "https://toponlineform.com/gov-logo.png" 
+        },
+        "jobLocation": {
+          "@type": "Place",
+          "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "IN",
+            "addressRegion": post.state || "India"
+          }
+        }
       },
+      
+      // 2. AAPKI WEBSITE AS A NEWS SOURCE (Authority & Branding)
       {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://toponlineform.com" },
-          { "@type": "ListItem", "position": 2, "name": post.category, "item": `https://toponlineform.com/${post.category.toLowerCase().replace(/\s+/g, '-')}` },
-          { "@type": "ListItem", "position": 3, "name": post.shortTitle || "Details" }
+        "@type": "NewsArticle",
+        "headline": post.title,
+        "datePublished": post.postDate ? new Date(post.postDate.split('/').reverse().join('-')).toISOString() : new Date().toISOString(),
+        "dateModified": post.updatedDate ? new Date(post.updatedDate.split('/').reverse().join('-')).toISOString() : new Date().toISOString(),
+        "author": {
+          "@type": "Organization",
+          "name": "Top Online Form",
+          "url": "https://toponlineform.com"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Top Online Form",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://toponlineform.com/logo.png" // Naya Logo
+          }
+        }
+      },
+
+      // 3. BRAND IDENTITY (TOF Keyword ke liye)
+      {
+        "@type": "Organization",
+        "@id": "https://toponlineform.com/#organization",
+        "name": "Top Online Form",
+        "alternateName": "TOF",
+        "url": "https://toponlineform.com",
+        "logo": "https://toponlineform.com/logo.png",
+        "sameAs": [
+          "https://whatsapp.com/channel/0029Vb7TcG06LwHoTXhZKn2D", 
+          "https://t.me/toponlineform"
         ]
       }
     ]
