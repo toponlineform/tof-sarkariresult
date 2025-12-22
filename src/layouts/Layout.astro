@@ -25,19 +25,34 @@ const siteUrl = "https://toponlineform.com";
     <header class="bg-red-700 text-white shadow-lg sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center">
             
+            {/* Logo */}
             <a href="/" class="text-2xl md:text-3xl font-extrabold uppercase tracking-tighter hover:text-gray-200 transition mb-2 md:mb-0">
                 TOP ONLINE FORM
             </a>
             
-            <nav class="flex flex-wrap justify-center gap-3 md:gap-6 font-semibold text-xs md:text-sm uppercase tracking-wide">
+            {/* Navigation Menu */}
+            <nav class="flex flex-wrap justify-center items-center gap-3 md:gap-6 font-semibold text-xs md:text-sm uppercase tracking-wide">
                 <a href="/" class="hover:text-yellow-300 transition">Home</a>
                 <a href="/active-jobs" class="hover:text-yellow-300 transition text-yellow-100 font-bold">Active Jobs</a>
                 <a href="/latest-jobs" class="hover:text-yellow-300 transition">Latest Jobs</a>
                 <a href="/admit-card" class="hover:text-yellow-300 transition">Admit Card</a>
                 <a href="/results" class="hover:text-yellow-300 transition">Results</a>
                 <a href="/answer-key" class="hover:text-yellow-300 transition">Answer Key</a>
-                <a href="/admission" class="hover:text-yellow-300 transition">Admission</a>
-                <a href="/syllabus" class="hover:text-yellow-300 transition">Syllabus</a>
+
+                {/* ✅ DROPDOWN MENU (More) */}
+                <div class="relative group">
+                    <button class="flex items-center gap-1 hover:text-yellow-300 transition focus:outline-none py-2">
+                        More <span>▾</span>
+                    </button>
+                    
+                    {/* Dropdown List */}
+                    <div class="absolute right-0 mt-0 w-48 bg-white text-gray-800 rounded-md shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right z-50 border border-gray-200 text-left overflow-hidden">
+                        <a href="/state-wise-jobs" class="block px-4 py-3 hover:bg-blue-50 border-b border-gray-100 transition hover:text-blue-700">🌍 State Wise Jobs</a>
+                        <a href="/admission" class="block px-4 py-3 hover:bg-blue-50 border-b border-gray-100 transition hover:text-blue-700">🎓 Admission</a>
+                        <a href="/syllabus" class="block px-4 py-3 hover:bg-blue-50 transition hover:text-blue-700">📖 Syllabus</a>
+                    </div>
+                </div>
+
             </nav>
 
         </div>
@@ -48,7 +63,7 @@ const siteUrl = "https://toponlineform.com";
         <slot />
     </main>
 
-    {/* FOOTER (Updated with Terms & Sitemap) */}
+    {/* FOOTER */}
     <footer class="bg-gray-900 text-white py-8 mt-auto border-t-4 border-red-700">
         <div class="max-w-7xl mx-auto px-4 text-center">
             <h2 class="text-xl font-bold mb-2">TopOnlineForm.com</h2>
