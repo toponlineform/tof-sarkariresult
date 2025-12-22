@@ -42,7 +42,7 @@ const getBoxLinks = (box) => {
 };
 ---
 
-{/* ✅ SEO UPDATE: Ab yahan sirf "Home" pass karna hai, poora title Layout.astro automatic generate karega */}
+{/* ✅ SEO UPDATE: Passing simplified "Home" title */}
 <Layout title="Home">
     
     {/* 1. HERO / WELCOME SECTION */}
@@ -136,7 +136,6 @@ const getBoxLinks = (box) => {
                 <div>
                     <h4 class="font-bold text-white mb-3 text-base">Jobs by State</h4>
                     <ul class="space-y-2 text-slate-300">
-                        {/* ✅ FIXED: Direct Anchor Links to State Sections */}
                         <li><a href="/state-wise-jobs#uttar-pradesh" class="hover:text-yellow-300 transition">Uttar Pradesh (UP)</a></li>
                         <li><a href="/state-wise-jobs#bihar" class="hover:text-yellow-300 transition">Bihar Sarkari Job</a></li>
                         <li><a href="/state-wise-jobs#delhi" class="hover:text-yellow-300 transition">Delhi Govt Jobs</a></li>
@@ -169,12 +168,14 @@ const getBoxLinks = (box) => {
         </div>
 
         <div class="bg-white p-6 md:p-10 border-x border-b border-gray-200 shadow-sm rounded-b-xl">
+            {/* 👇 UPDATED YEAR HERE */}
             <h2 class="text-2xl font-bold text-gray-800 mb-4">
                 Welcome to <span class="text-red-600">TopOnlineForm.com</span> - India's No.1 Sarkari Job Portal
             </h2>
             <div class="prose max-w-none text-gray-600 text-sm leading-relaxed">
                 <p class="mb-4">
-                    <strong>TopOnlineForm.com</strong> is your one-stop destination for the latest <strong>Sarkari Result</strong>, <strong>Sarkari Naukri</strong>, and Government Job notifications in 2025. We provide instant updates on <em>Admit Cards, Answer Keys, Syllabus, and Online Application Forms</em> for various sectors including Railway, SSC, Banking, Police, and Defence.
+                    {/* 👇 UPDATED YEAR HERE */}
+                    <strong>TopOnlineForm.com</strong> is your one-stop destination for the latest <strong>Sarkari Result</strong>, <strong>Sarkari Naukri</strong>, and Government Job notifications in <strong>2026</strong>. We provide instant updates on <em>Admit Cards, Answer Keys, Syllabus, and Online Application Forms</em> for various sectors including Railway, SSC, Banking, Police, and Defence.
                 </p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                     <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
@@ -202,4 +203,50 @@ const getBoxLinks = (box) => {
             </div>
         </div>
     </div>
+
+    {/* ✅ GOOGLE SITELINKS SEARCH BOX & BRAND SCHEMA */}
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        // 1. WEBSITE IDENTITY & SEARCH BOX
+        {
+          "@type": "WebSite",
+          "name": "Top Online Form",
+          "url": "https://toponlineform.com",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://toponlineform.com/search?q={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+          }
+        },
+        // 2. ORGANIZATION BRANDING (Google Knowledge Graph)
+        {
+          "@type": "Organization",
+          "@id": "https://toponlineform.com/#organization",
+          "name": "Top Online Form",
+          "url": "https://toponlineform.com",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://toponlineform.com/logo.png",
+            "width": 512,
+            "height": 512
+          },
+          "sameAs": [
+            "https://whatsapp.com/channel/0029Vb7TcG06LwHoTXhZKn2D",
+            "https://t.me/toponlineform",
+            "https://www.facebook.com/toponlineform",
+            "https://twitter.com/toponlineform"
+          ],
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "email": "contact@toponlineform.com",
+            "contactType": "customer support"
+          }
+        }
+      ]
+    })} />
+
 </Layout>
