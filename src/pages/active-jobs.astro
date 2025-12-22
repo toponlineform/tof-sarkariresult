@@ -1,38 +1,40 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import AdSlot from '../components/AdSlot.astro'; // ✅ Smart Ad Component
 import { allPosts } from '../data/index.js';
 
 // --- 🧠 SERVER SIDE LOGIC: FILTER ACTIVE JOBS ---
 
 const getActiveJobs = () => {
   const today = new Date();
-  today.setHours(0, 0, 0, 0); // Midnight set karo taaki comparison sahi ho
+  today.setHours(0, 0, 0, 0); 
 
   // 1. Filter Logic
   const active = allPosts.filter(post => {
-    // Last Date dhoondo
+    
+    // ✅ CATEGORY FILTER
+    if (post.category !== 'Latest Jobs' && post.category !== 'Admission') {
+        return false;
+    }
+
+    // Last Date Check
     const lastDateObj = post.importantDates?.find(d => 
       d.label.toLowerCase().includes('last date') || 
       d.label.toLowerCase().includes('closing date')
     );
 
-    // Agar date nahi likhi, toh maan lo Active hai (Safety)
     if (!lastDateObj) return true;
 
-    // Date Parse (DD/MM/YYYY handle karega)
     const dateStr = lastDateObj.value.replace(/ \(.*\)/, '').trim(); 
-    const parts = dateStr.split(/[/-]/); // slash ya dash handle karega
+    const parts = dateStr.split(/[/-]/); 
     
     if (parts.length !== 3) return true; 
 
-    // Date Object banao (YYYY, MM-1, DD)
     const jobDate = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
-    
-    // Check karo future date hai ya aaj ki
     return jobDate >= today;
   });
 
-  // 2. Sort Logic (Jo jaldi khatam ho raha hai wo upar)
+  // 2. Sort Logic
   active.sort((a, b) => {
     const getDate = (p) => {
        const dObj = p.importantDates?.find(d => d.label.toLowerCase().includes('last date'));
@@ -52,106 +54,160 @@ const activePosts = getActiveJobs();
 
 <Layout title="Active Jobs Tracker - Top Online Form" description="Track all live government job applications and deadlines.">
 
-  <div class="bg-gray-50 min-h-screen p-3 md:p-8 font-sans">
+  <div class="max-w-7xl mx-auto px-2 md:px-4 py-6 font-sans">
     
-    {/* --- HEADER SECTION --- */}
-    <div class="text-center mb-6">
-      <h1 class="text-2xl md:text-4xl font-extrabold text-[#1a56db] uppercase tracking-tight mb-2">
-        Current Active Applications
-      </h1>
-      <p class="text-xs md:text-sm text-gray-500 font-bold tracking-widest uppercase">
-        Live Central & State Govt Recruitment Deadline Tracker
-      </p>
-    </div>
+    <div class="flex flex-col lg:flex-row gap-6 items-start">
 
-    {/* --- MAIN TABLE CONTAINER --- */}
-    <div class="max-w-5xl mx-auto bg-white border border-gray-300 shadow-sm rounded-t-lg overflow-hidden">
-      
-      {/* 1. BLUE HEADER BAR */}
-      <div class="bg-[#004B8D] text-white text-center font-bold py-3 text-sm md:text-base uppercase tracking-wide">
-        Active Govt Jobs & Admissions (Live)
-      </div>
+      {/* --- LEFT COLUMN: MAIN CONTENT --- */}
+      <main class="flex-1 min-w-0 w-full">
+        
+        {/* 1. HEADER SECTION */}
+        <div class="text-center mb-6 bg-white p-6 border border-gray-200 shadow-sm rounded-lg">
+          <h1 class="text-2xl md:text-3xl font-extrabold text-[#1a56db] uppercase tracking-tight mb-2">
+            Current Active Applications
+          </h1>
+          <p class="text-xs md:text-sm text-gray-500 font-bold tracking-widest uppercase">
+            Live Central & State Govt Recruitment Deadline Tracker
+          </p>
+        </div>
 
-      {/* 2. SEARCH BOX ROW */}
-      <div class="p-2 border-b border-gray-300 bg-gray-50">
-        <input 
-          type="text" 
-          id="jobSearchInput" 
-          placeholder="Search within active jobs..." 
-          class="w-full p-2 text-sm border border-gray-300 rounded focus:outline-none focus:border-blue-500 shadow-inner"
-        />
-      </div>
+        {/* 💰 AD SLOT 1: BELOW TITLE */}
+        <AdSlot type="horizontal" />
 
-      {/* 3. TABLE HEADERS */}
-      <div class="grid grid-cols-[100px_1fr] bg-[#f1f1f1] border-b border-gray-300 text-xs md:text-sm font-bold text-gray-700 uppercase">
-        <div class="p-3 border-r border-gray-300 text-center flex items-center justify-center">Last Date</div>
-        <div class="p-3 pl-4">Post Name / Details</div>
-      </div>
-
-      {/* 4. JOB LIST (Dynamic Rows) */}
-      <div id="jobListContainer">
-        {activePosts.length > 0 ? (
-          activePosts.map((post) => {
-            // Last Date Clean Format mein nikalo
-            let lastDateVal = post.importantDates?.find(d => d.label.toLowerCase().includes('last date'))?.value || "Check Notice";
-            // Extra text (jaise 5:00 PM) hata do
-            lastDateVal = lastDateVal.replace(/ \(.*\)/, '').trim();
-
-            return (
-              <div class="job-row grid grid-cols-[100px_1fr] border-b border-gray-200 hover:bg-yellow-50 transition group">
-                
-                {/* Date Column (Fixed: Ab poori date dikhegi) */}
-                <div class="p-3 border-r border-gray-200 text-center flex flex-col justify-center text-[11px] md:text-xs font-bold text-red-600 bg-gray-50 group-hover:bg-yellow-50">
-                  <span>{lastDateVal}</span>
-                </div>
-
-                {/* Title Column (Fixed: No Total Posts, No Green Button) */}
-                <div class="p-3 pl-4 flex items-center">
-                  {/* 🚨 FIXED: Removed /job/ from URL */}
-                  <a href={`/${post.slug}`} class="text-[#1a56db] font-bold text-xs md:text-sm hover:underline leading-tight block">
-                    {post.shortTitle || post.title}
-                    
-                    {/* ✅ Admission Tag logic */}
-                    {post.category === 'Admission' && (
-                        <span class="ml-2 text-[10px] font-bold uppercase bg-orange-100 text-orange-700 px-2 py-0.5 rounded border border-orange-200 inline-block align-middle">
-                            Admission
-                        </span>
-                    )}
-                  </a>
-                </div>
-
-              </div>
-            );
-          })
-        ) : (
-          <div class="text-center py-10 text-gray-500 text-sm">
-            No Active Jobs Found currently.
+        {/* 2. MAIN TABLE CONTAINER */}
+        <div class="bg-white border border-gray-300 shadow-sm rounded-t-lg overflow-hidden mb-6">
+          
+          {/* Blue Header Bar */}
+          <div class="bg-[#004B8D] text-white text-center font-bold py-3 text-sm md:text-base uppercase tracking-wide">
+            Active Govt Jobs & Admissions (Live)
           </div>
-        )}
-      </div>
 
-      {/* No Results Message (Hidden by default) */}
-      <div id="noResultsMsg" class="hidden text-center py-8 text-gray-400 text-xs uppercase tracking-widest">
-        No Matching Active Jobs Found.
-      </div>
+          {/* Search Box */}
+          <div class="p-2 border-b border-gray-300 bg-gray-50">
+            <input 
+              type="text" 
+              id="jobSearchInput" 
+              placeholder="Search within active jobs..." 
+              class="w-full p-2 text-sm border border-gray-300 rounded focus:outline-none focus:border-blue-500 shadow-inner"
+            />
+          </div>
+
+          {/* Table Headers */}
+          <div class="grid grid-cols-[90px_1fr] md:grid-cols-[110px_1fr] bg-[#f1f1f1] border-b border-gray-300 text-xs md:text-sm font-bold text-gray-700 uppercase">
+            <div class="p-3 border-r border-gray-300 text-center flex items-center justify-center">Last Date</div>
+            <div class="p-3 pl-4">Post Name / Details</div>
+          </div>
+
+          {/* JOB LIST */}
+          <div id="jobListContainer">
+            {activePosts.length > 0 ? (
+              activePosts.map((post, index) => {
+                let lastDateVal = post.importantDates?.find(d => d.label.toLowerCase().includes('last date'))?.value || "Check Notice";
+                lastDateVal = lastDateVal.replace(/ \(.*\)/, '').trim();
+
+                return (
+                  <>
+                    <div class="job-row grid grid-cols-[90px_1fr] md:grid-cols-[110px_1fr] border-b border-gray-200 hover:bg-yellow-50 transition group">
+                      
+                      {/* Date Column */}
+                      <div class="p-3 border-r border-gray-200 text-center flex flex-col justify-center text-[11px] md:text-xs font-bold text-red-600 bg-gray-50 group-hover:bg-yellow-50">
+                        <span>{lastDateVal}</span>
+                      </div>
+
+                      {/* Title Column */}
+                      <div class="p-3 pl-4 flex items-center">
+                        <a href={`/${post.slug}`} class="text-[#1a56db] font-bold text-xs md:text-sm hover:underline leading-tight block">
+                          {post.shortTitle || post.title}
+                          
+                          {post.category === 'Admission' && (
+                              <span class="ml-2 text-[10px] font-bold uppercase bg-orange-100 text-orange-700 px-2 py-0.5 rounded border border-orange-200 inline-block align-middle">
+                                  Admission
+                              </span>
+                          )}
+                        </a>
+                      </div>
+                    </div>
+
+                    {/* Optional: In-Feed Ad (Every 10th item to avoid clutter) */}
+                    {(index + 1) % 10 === 0 && (
+                       <div class="w-full border-b border-gray-200 bg-gray-50">
+                          <AdSlot type="horizontal" />
+                       </div>
+                    )}
+                  </>
+                );
+              })
+            ) : (
+              <div class="text-center py-10 text-gray-500 text-sm">
+                No Active Jobs Found currently.
+              </div>
+            )}
+          </div>
+
+          {/* No Results Msg */}
+          <div id="noResultsMsg" class="hidden text-center py-8 text-gray-400 text-xs uppercase tracking-widest">
+            No Matching Active Jobs Found.
+          </div>
+
+        </div>
+
+        {/* 💰 AD SLOT 2: BELOW TABLE (Bottom) */}
+        <AdSlot type="horizontal" />
+
+        {/* Footer Info Box */}
+        <div class="bg-white border border-gray-200 p-6 rounded shadow-sm mt-6">
+          <h3 class="text-gray-800 font-bold uppercase text-sm mb-4 border-b border-gray-200 pb-2">
+            Why Track Active Jobs?
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs md:text-sm text-gray-600 leading-relaxed">
+            <p>
+              Missing a deadline can mean waiting for another year. Our <strong>Active Jobs Tracker</strong> filters through hundreds of notifications to show you exactly what is still open for application.
+            </p>
+            <p>
+              We monitor <strong>SSC, UPSC, Railway, Bank, and State Selection Boards</strong> daily to ensure you never miss an opportunity to apply for your dream government career.
+            </p>
+          </div>
+        </div>
+
+      </main>
+
+      {/* --- RIGHT COLUMN: SIDEBAR (For Desktop) --- */}
+      <aside class="hidden lg:block w-[300px] flex-shrink-0">
+        <div class="sticky top-4 space-y-6">
+            
+            {/* WhatsApp Widget */}
+            <a href="https://whatsapp.com/channel/0029Vb7TcG06LwHoTXhZKn2D" target="_blank" class="block bg-white border-l-4 border-[#25D366] p-4 shadow-sm hover:shadow-md transition rounded">
+                <div class="flex items-center gap-3">
+                    <div class="bg-[#25D366] text-white p-2 rounded-full">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-500 font-bold uppercase">Join us on</div>
+                        <div class="text-lg font-bold text-gray-800 leading-none">WhatsApp</div>
+                    </div>
+                </div>
+            </a>
+
+            {/* Telegram Widget */}
+            <a href="https://t.me/toponlineform" target="_blank" class="block bg-white border-l-4 border-[#229ED9] p-4 shadow-sm hover:shadow-md transition rounded">
+                <div class="flex items-center gap-3">
+                    <div class="bg-[#229ED9] text-white p-2 rounded-full">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.694 0Zm5.216 8.784-1.76 8.297c-.13.587-.48.73-.974.454l-2.696-1.986-1.3 1.253c-.144.144-.265.265-.54.265l.192-2.738 4.985-4.506c.217-.193-.047-.3-.337-.107l-6.16 3.878-2.656-.83c-.577-.18-.588-.577.12-.852l10.378-4.004c.48-.173.9.117.748.876Z"/></svg>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-500 font-bold uppercase">Join us on</div>
+                        <div class="text-lg font-bold text-gray-800 leading-none">Telegram</div>
+                    </div>
+                </div>
+            </a>
+
+            {/* 💰 AD SLOT 3: SIDEBAR */}
+            <AdSlot type="square" />
+
+        </div>
+      </aside>
 
     </div>
-
-    {/* --- FOOTER INFO SECTION --- */}
-    <div class="max-w-5xl mx-auto mt-8 bg-white border border-gray-200 p-6 rounded shadow-sm">
-      <h3 class="text-gray-800 font-bold uppercase text-sm mb-4 border-b border-gray-200 pb-2">
-        Why Track Active Jobs?
-      </h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs md:text-sm text-gray-600 leading-relaxed">
-        <p>
-          Missing a deadline can mean waiting for another year. Our <strong>Active Jobs Tracker</strong> filters through hundreds of notifications to show you exactly what is still open for application.
-        </p>
-        <p>
-          We monitor <strong>SSC, UPSC, Railway, Bank, and State Selection Boards</strong> daily to ensure you never miss an opportunity to apply for your dream government career.
-        </p>
-      </div>
-    </div>
-
   </div>
 
   {/* 🔍 CLIENT SIDE SEARCH SCRIPT */}
