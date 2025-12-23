@@ -1,0 +1,243 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+
+const title = "Image Compressor to 20kb, 50kb, 100kb - Reduce Photo Size Online";
+const description = "Compress JPG/PNG images to specific sizes (20kb, 50kb) for SSC, UPSC, and Govt Job Forms. Reduce file size without losing quality.";
+---
+
+<Layout title={title} description={description}>
+  
+  <div class="max-w-6xl mx-auto px-4 py-8">
+      
+      {/* HEADER */}
+      <div class="text-center mb-8">
+          <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Size Reducer</span>
+          <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 mt-3 mb-4">
+              Infinity <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-teal-500">Image Compressor</span>
+          </h1>
+          <p class="text-gray-500 text-lg max-w-2xl mx-auto">
+              Reduce image size to <strong>under 20KB, 50KB, or 100KB</strong> for Online Application Forms.
+          </p>
+      </div>
+
+      {/* 🟢 TOP AD */}
+      <div class="mb-8">
+        <AdSlot type="horizontal" />
+      </div>
+
+      {/* MAIN TOOL AREA */}
+      <div class="bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden p-6 md:p-10">
+          
+          {/* STEP 1: UPLOAD */}
+          <div id="uploadArea" class="text-center transition-all">
+              <div class="border-3 border-dashed border-green-200 bg-green-50 rounded-2xl p-12 hover:bg-green-100 transition cursor-pointer max-w-2xl mx-auto group" onclick="document.getElementById('fileInput').click()">
+                  <div class="text-6xl mb-6 group-hover:scale-110 transition">📉</div>
+                  <h3 class="text-2xl font-bold text-gray-800 mb-2">Select Image to Compress</h3>
+                  <p class="text-gray-500">Supports JPG, PNG, JPEG</p>
+                  <input type="file" id="fileInput" accept="image/*" class="hidden" />
+              </div>
+          </div>
+
+          {/* STEP 2: COMPRESSOR INTERFACE */}
+          <div id="compressArea" class="hidden">
+              
+              <div class="flex flex-col lg:flex-row gap-10 items-start">
+                  
+                  {/* LEFT: IMAGE PREVIEW */}
+                  <div class="w-full lg:w-1/2 bg-gray-50 rounded-xl p-4 border border-gray-200 text-center">
+                      <div class="grid grid-cols-2 gap-4 mb-4 text-sm">
+                          <div class="bg-white p-2 rounded shadow-sm">
+                              <span class="block text-gray-500 text-xs uppercase">Original Size</span>
+                              <strong id="originalSize" class="text-red-600 text-lg">0 KB</strong>
+                          </div>
+                          <div class="bg-white p-2 rounded shadow-sm border border-green-200">
+                              <span class="block text-gray-500 text-xs uppercase">New Size</span>
+                              <strong id="compressedSize" class="text-green-600 text-lg">0 KB</strong>
+                          </div>
+                      </div>
+                      
+                      {/* Image Comparison */}
+                      <div class="relative inline-block shadow-lg rounded-lg overflow-hidden">
+                          <img id="previewImage" class="max-w-full max-h-[400px] object-contain" />
+                          <div class="absolute top-2 left-2 bg-black/50 text-white text-xs px-2 py-1 rounded">Preview</div>
+                      </div>
+                  </div>
+
+                  {/* RIGHT: CONTROLS */}
+                  <div class="w-full lg:w-1/2 flex flex-col gap-6">
+                      
+                      <div class="bg-blue-50 p-5 rounded-xl border border-blue-100">
+                          <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                              <span>🎚️</span> Adjust Compression Level
+                          </h3>
+                          
+                          {/* Slider */}
+                          <div class="mb-6">
+                              <div class="flex justify-between mb-2">
+                                  <label class="text-sm font-bold text-gray-700">Quality</label>
+                                  <span id="qualityValue" class="text-sm font-bold text-blue-600">80%</span>
+                              </div>
+                              <input type="range" id="qualitySlider" min="1" max="100" value="80" class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-blue-600">
+                              <div class="flex justify-between text-xs text-gray-400 mt-1">
+                                  <span>Low Quality (Small Size)</span>
+                                  <span>High Quality (Big Size)</span>
+                              </div>
+                          </div>
+
+                          {/* Quick Presets */}
+                          <div class="grid grid-cols-3 gap-2">
+                              <button onclick="setQuality(90)" class="text-xs bg-white border border-gray-300 hover:border-blue-500 py-2 rounded text-gray-600 hover:text-blue-600 font-medium transition">Light Compress</button>
+                              <button onclick="setQuality(50)" class="text-xs bg-white border border-gray-300 hover:border-blue-500 py-2 rounded text-gray-600 hover:text-blue-600 font-medium transition">Strong Compress</button>
+                              <button onclick="setQuality(20)" class="text-xs bg-white border border-gray-300 hover:border-blue-500 py-2 rounded text-gray-600 hover:text-blue-600 font-medium transition">Extreme (20KB)</button>
+                          </div>
+                      </div>
+
+                      <div class="space-y-3">
+                          <button id="downloadBtn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition text-lg flex justify-center items-center gap-2">
+                              ⬇️ Download Compressed Image
+                          </button>
+                          
+                          <button onclick="location.reload()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-3 px-6 rounded-xl transition text-sm">
+                              Upload Another Image
+                          </button>
+                      </div>
+
+                      <div class="text-xs text-gray-400 text-center">
+                          * Processing happens in your browser. No upload to server.
+                      </div>
+                  </div>
+              </div>
+
+          </div>
+      </div>
+
+      {/* 🟢 BOTTOM AD */}
+      <div class="mt-8 mb-12">
+        <AdSlot type="horizontal" />
+      </div>
+
+      {/* SEO CONTENT */}
+      <div class="prose prose-green max-w-none bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
+          <h2 class="text-2xl font-bold text-gray-800">Compress Image to 20KB, 50KB for Online Forms</h2>
+          <p class="text-gray-600">
+             Most government job applications (SSC, UPSC, IBPS) have strict limits on file size. For example:
+          </p>
+          <ul class="list-disc pl-5 text-gray-700 space-y-1">
+              <li><strong>Photograph:</strong> Must be between 20KB to 50KB.</li>
+              <li><strong>Signature:</strong> Must be between 10KB to 20KB.</li>
+              <li><strong>Documents:</strong> Must be under 100KB or 200KB.</li>
+          </ul>
+          <p class="text-gray-600">
+              The <strong>Infinity Image Compressor</strong> allows you to reduce the file size of your JPG/PNG images without significantly reducing the visual quality. Just upload your photo and drag the slider until the "New Size" matches your requirement.
+          </p>
+      </div>
+
+  </div>
+
+  {/* 🧠 JAVASCRIPT LOGIC */}
+  <script>
+      const fileInput = document.getElementById('fileInput');
+      const uploadArea = document.getElementById('uploadArea');
+      const compressArea = document.getElementById('compressArea');
+      const previewImage = document.getElementById('previewImage');
+      const originalSizeSpan = document.getElementById('originalSize');
+      const compressedSizeSpan = document.getElementById('compressedSize');
+      const qualitySlider = document.getElementById('qualitySlider');
+      const qualityValue = document.getElementById('qualityValue');
+      const downloadBtn = document.getElementById('downloadBtn');
+
+      let originalFile = null;
+      let compressedBlob = null;
+
+      // 1. Handle File Upload
+      fileInput.addEventListener('change', (e) => {
+          if (e.target.files && e.target.files.length > 0) {
+              originalFile = e.target.files[0];
+              
+              // Show UI
+              uploadArea.classList.add('hidden');
+              compressArea.classList.remove('hidden');
+
+              // Display Original Size
+              originalSizeSpan.innerText = formatBytes(originalFile.size);
+
+              // Initialize Compressor
+              compressImage(0.8); // Default 80%
+          }
+      });
+
+      // 2. Compress Logic
+      function compressImage(quality) {
+          const reader = new FileReader();
+          reader.readAsDataURL(originalFile);
+          reader.onload = (event) => {
+              const img = new Image();
+              img.src = event.target.result;
+              
+              img.onload = () => {
+                  const canvas = document.createElement('canvas');
+                  canvas.width = img.width;
+                  canvas.height = img.height;
+                  
+                  const ctx = canvas.getContext('2d');
+                  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                  // Compress to specific quality (0 to 1)
+                  canvas.toBlob((blob) => {
+                      compressedBlob = blob;
+                      
+                      // Update Preview Image
+                      previewImage.src = URL.createObjectURL(blob);
+                      
+                      // Update Size Text
+                      compressedSizeSpan.innerText = formatBytes(blob.size);
+                      
+                      // Color code the size (Visual Feedback)
+                      if(blob.size < 51200) { // < 50KB
+                          compressedSizeSpan.className = 'text-green-600 text-lg';
+                      } else {
+                          compressedSizeSpan.className = 'text-orange-600 text-lg';
+                      }
+
+                  }, 'image/jpeg', quality);
+              };
+          };
+      }
+
+      // 3. Slider Listener
+      qualitySlider.addEventListener('input', (e) => {
+          const val = e.target.value;
+          qualityValue.innerText = val + '%';
+          const qualityDecimal = val / 100;
+          compressImage(qualityDecimal);
+      });
+
+      // 4. Quick Presets Helper
+      // @ts-ignore
+      window.setQuality = (val) => {
+          qualitySlider.value = val;
+          qualityValue.innerText = val + '%';
+          compressImage(val / 100);
+      };
+
+      // 5. Download
+      downloadBtn.addEventListener('click', () => {
+          if(!compressedBlob) return;
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(compressedBlob);
+          link.download = `Compressed-${originalFile.name.split('.')[0]}.jpg`;
+          link.click();
+      });
+
+      // Helper: Format Bytes
+      function formatBytes(bytes, decimals = 2) {
+          if (bytes === 0) return '0 Bytes';
+          const k = 1024;
+          const dm = decimals < 0 ? 0 : decimals;
+          const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+          const i = Math.floor(Math.log(bytes) / Math.log(k));
+          return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+      }
+  </script>
+</Layout>
