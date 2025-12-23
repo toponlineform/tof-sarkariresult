@@ -1,0 +1,283 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+
+// SEO Details
+const title = "Free Resume Builder for Govt & Private Jobs - Make Bio-Data Online";
+const description = "Create a professional Resume / Bio-Data for SSC, Police, and Private Job Interviews. Instant PDF Download. No Login Required.";
+---
+
+<Layout title={title} description={description}>
+  
+  <div class="max-w-7xl mx-auto px-4 py-8">
+      
+      {/* HEADER */}
+      <div class="text-center mb-8 no-print">
+          <span class="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Infinity Pro</span>
+          <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 mt-3 mb-4">
+              Free <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-500">Resume Builder</span>
+          </h1>
+          <p class="text-gray-500 text-lg">
+              Fill the details on the left, and watch your <strong>Professional Resume</strong> created instantly on the right.
+          </p>
+      </div>
+
+      {/* 🟢 TOP AD (Only visible on Screen) */}
+      <div class="mb-6 no-print">
+        <AdSlot type="horizontal" />
+      </div>
+
+      <div class="flex flex-col lg:flex-row gap-8">
+          
+          {/* 📝 LEFT COLUMN: EDITOR FORM */}
+          <div class="w-full lg:w-1/2 no-print h-fit">
+              <div class="bg-white border border-gray-200 rounded-xl shadow-lg p-6 sticky top-4">
+                  
+                  <div class="flex justify-between items-center mb-6 border-b pb-4">
+                      <h3 class="text-xl font-bold text-gray-800">📝 Enter Details</h3>
+                      <button onclick="window.print()" class="bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-bold py-2 px-6 rounded-lg shadow-md transform hover:-translate-y-1 transition flex items-center gap-2">
+                          <span>⬇️</span> Download PDF
+                      </button>
+                  </div>
+
+                  {/* FORM SECTIONS */}
+                  <form id="resumeForm" class="space-y-6">
+                      
+                      {/* Personal Info */}
+                      <div>
+                          <h4 class="text-sm font-bold text-blue-600 uppercase mb-3">Personal Information</h4>
+                          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <input type="text" id="inName" placeholder="Full Name" class="p-3 border rounded focus:ring-2 focus:ring-blue-200 outline-none" />
+                              <input type="text" id="inJob" placeholder="Job Title (e.g. Data Entry Operator)" class="p-3 border rounded focus:ring-2 focus:ring-blue-200 outline-none" />
+                              <input type="text" id="inPhone" placeholder="Phone Number" class="p-3 border rounded focus:ring-2 focus:ring-blue-200 outline-none" />
+                              <input type="email" id="inEmail" placeholder="Email Address" class="p-3 border rounded focus:ring-2 focus:ring-blue-200 outline-none" />
+                              <input type="text" id="inAddress" placeholder="City, State" class="p-3 border rounded focus:ring-2 focus:ring-blue-200 outline-none" />
+                              <input type="text" id="inLink" placeholder="LinkedIn / Portfolio Link" class="p-3 border rounded focus:ring-2 focus:ring-blue-200 outline-none" />
+                          </div>
+                          <textarea id="inSummary" placeholder="Professional Summary (Write 2-3 lines about yourself...)" class="w-full mt-4 p-3 border rounded focus:ring-2 focus:ring-blue-200 outline-none h-24"></textarea>
+                      </div>
+
+                      <hr />
+
+                      {/* Education */}
+                      <div>
+                          <h4 class="text-sm font-bold text-blue-600 uppercase mb-3">Education (Highest First)</h4>
+                          <div class="space-y-3">
+                              <div class="grid grid-cols-2 gap-2">
+                                  <input type="text" id="inEdu1" placeholder="Degree (e.g. B.Sc)" class="p-3 border rounded outline-none" />
+                                  <input type="text" id="inYear1" placeholder="Year (e.g. 2024)" class="p-3 border rounded outline-none" />
+                              </div>
+                              <input type="text" id="inCollege1" placeholder="College / University Name" class="w-full p-3 border rounded outline-none" />
+                              
+                              <div class="grid grid-cols-2 gap-2 mt-2">
+                                  <input type="text" id="inEdu2" placeholder="12th / Diploma" class="p-3 border rounded outline-none" />
+                                  <input type="text" id="inYear2" placeholder="Year" class="p-3 border rounded outline-none" />
+                              </div>
+                              <input type="text" id="inCollege2" placeholder="School / Board Name" class="w-full p-3 border rounded outline-none" />
+                          </div>
+                      </div>
+
+                      <hr />
+
+                      {/* Experience */}
+                      <div>
+                          <h4 class="text-sm font-bold text-blue-600 uppercase mb-3">Experience (Optional)</h4>
+                          <input type="text" id="inExpRole" placeholder="Job Role / Position" class="w-full p-3 border rounded outline-none mb-2" />
+                          <input type="text" id="inExpComp" placeholder="Company Name & Duration" class="w-full p-3 border rounded outline-none mb-2" />
+                          <textarea id="inExpDesc" placeholder="Job Responsibilities (Bullet points)" class="w-full p-3 border rounded outline-none h-20"></textarea>
+                      </div>
+
+                      <hr />
+
+                      {/* Skills */}
+                      <div>
+                          <h4 class="text-sm font-bold text-blue-600 uppercase mb-3">Skills</h4>
+                          <textarea id="inSkills" placeholder="Enter Skills separated by comma (e.g. Typing, MS Office, Java, Hindi, English)" class="w-full p-3 border rounded outline-none h-20"></textarea>
+                      </div>
+
+                  </form>
+              </div>
+          </div>
+
+          {/* 📄 RIGHT COLUMN: LIVE PREVIEW (A4 PAGE) */}
+          <div class="w-full lg:w-1/2 flex justify-center bg-gray-100 p-4 rounded-xl border border-gray-300 shadow-inner overflow-x-auto" id="previewContainer">
+              
+              {/* THE A4 PAPER */}
+              <div id="resumePreview" class="bg-white w-[210mm] min-h-[297mm] p-[10mm] shadow-2xl text-gray-800 text-sm leading-relaxed box-border">
+                  
+                  {/* Header */}
+                  <div class="border-b-2 border-gray-800 pb-4 mb-6">
+                      <h1 id="outName" class="text-4xl font-bold text-gray-900 uppercase tracking-wide">YOUR NAME</h1>
+                      <p id="outJob" class="text-lg text-blue-700 font-medium mt-1">JOB TITLE</p>
+                      
+                      <div class="flex flex-wrap gap-4 mt-3 text-xs text-gray-600 font-medium">
+                          <span id="outPhone">📞 +91 9876543210</span>
+                          <span id="outEmail">✉️ email@example.com</span>
+                          <span id="outAddress">📍 New Delhi, India</span>
+                          <span id="outLink" class="text-blue-600">🌐 linkedin.com/in/name</span>
+                      </div>
+                  </div>
+
+                  {/* Summary */}
+                  <div class="mb-6">
+                      <h3 class="font-bold text-gray-900 uppercase border-b border-gray-300 mb-2 pb-1 text-sm tracking-wider">Professional Summary</h3>
+                      <p id="outSummary" class="text-gray-700 text-justify">
+                          A highly motivated individual with a focus on delivering excellence. Looking for opportunities in government or private sectors to utilize my skills.
+                      </p>
+                  </div>
+
+                  {/* Experience Section (Conditional) */}
+                  <div id="secExperience" class="mb-6">
+                      <h3 class="font-bold text-gray-900 uppercase border-b border-gray-300 mb-2 pb-1 text-sm tracking-wider">Work Experience</h3>
+                      <div>
+                          <div class="flex justify-between items-baseline">
+                              <h4 id="outExpRole" class="font-bold text-gray-800">Job Role</h4>
+                              <span id="outExpComp" class="text-xs font-bold text-gray-500">Company Name | 2022 - Present</span>
+                          </div>
+                          <p id="outExpDesc" class="text-gray-700 mt-1 text-xs whitespace-pre-line">
+                              - Managed daily operations and data entry tasks.
+                              - Coordinate with team members.
+                          </p>
+                      </div>
+                  </div>
+
+                  {/* Education Section */}
+                  <div class="mb-6">
+                      <h3 class="font-bold text-gray-900 uppercase border-b border-gray-300 mb-2 pb-1 text-sm tracking-wider">Education</h3>
+                      
+                      <div class="mb-3">
+                          <div class="flex justify-between">
+                              <h4 id="outEdu1" class="font-bold text-gray-800">Degree Name</h4>
+                              <span id="outYear1" class="text-xs font-bold text-gray-500">2024</span>
+                          </div>
+                          <p id="outCollege1" class="text-gray-600 text-xs">University / College Name</p>
+                      </div>
+
+                      <div>
+                          <div class="flex justify-between">
+                              <h4 id="outEdu2" class="font-bold text-gray-800">12th / Diploma</h4>
+                              <span id="outYear2" class="text-xs font-bold text-gray-500">2021</span>
+                          </div>
+                          <p id="outCollege2" class="text-gray-600 text-xs">School / Board Name</p>
+                      </div>
+                  </div>
+
+                  {/* Skills Section */}
+                  <div class="mb-6">
+                      <h3 class="font-bold text-gray-900 uppercase border-b border-gray-300 mb-2 pb-1 text-sm tracking-wider">Skills</h3>
+                      <div id="outSkills" class="flex flex-wrap gap-2 text-xs">
+                          <span class="bg-gray-100 px-2 py-1 rounded border">Typing</span>
+                          <span class="bg-gray-100 px-2 py-1 rounded border">Computer Basic</span>
+                      </div>
+                  </div>
+
+                  {/* Declaration (Standard for Bio-Data) */}
+                  <div class="mt-8 pt-4 border-t border-dashed border-gray-300 text-xs text-gray-500 italic">
+                      <p>I hereby declare that the information provided above is true to the best of my knowledge.</p>
+                      <div class="mt-8 flex justify-between">
+                          <span>Date: ____________</span>
+                          <span>Signature: ____________</span>
+                      </div>
+                  </div>
+
+              </div>
+          </div>
+      </div>
+  </div>
+
+  {/* 🎨 PRINT STYLES (THE MAGIC) */}
+  <style is:global>
+      @media print {
+          /* Hide everything */
+          body * {
+              visibility: hidden;
+          }
+          /* Hide Ads and Header */
+          .no-print, header, footer, nav, aside {
+              display: none !important;
+          }
+          /* Show only Resume */
+          #previewContainer {
+              background: white;
+              border: none;
+              padding: 0;
+              margin: 0;
+              position: absolute;
+              left: 0;
+              top: 0;
+              width: 100%;
+          }
+          #resumePreview, #resumePreview * {
+              visibility: visible;
+          }
+          #resumePreview {
+              width: 100%;
+              position: absolute;
+              left: 0;
+              top: 0;
+              box-shadow: none;
+              padding: 0;
+              margin: 0;
+              border: none;
+          }
+          /* Adjust Page Margins */
+          @page {
+              margin: 10mm;
+              size: auto;
+          }
+      }
+  </style>
+
+  {/* 🧠 JAVASCRIPT LOGIC (REAL-TIME UPDATES) */}
+  <script>
+      // Helper function to update text
+      const updateText = (inputId, outputId, defaultText = "") => {
+          const input = document.getElementById(inputId);
+          const output = document.getElementById(outputId);
+          if(input && output) {
+              input.addEventListener('input', () => {
+                  output.innerText = input.value || defaultText;
+              });
+          }
+      };
+
+      // Personal
+      updateText('inName', 'outName', 'YOUR NAME');
+      updateText('inJob', 'outJob', 'JOB TITLE');
+      updateText('inPhone', 'outPhone', '+91 9876543210');
+      updateText('inEmail', 'outEmail', 'email@example.com');
+      updateText('inAddress', 'outAddress', 'City, State');
+      updateText('inLink', 'outLink', '');
+      updateText('inSummary', 'outSummary', 'A highly motivated individual with a focus on delivering excellence...');
+
+      // Education
+      updateText('inEdu1', 'outEdu1', 'Degree Name');
+      updateText('inYear1', 'outYear1', 'Year');
+      updateText('inCollege1', 'outCollege1', 'University Name');
+      updateText('inEdu2', 'outEdu2', '12th / Diploma');
+      updateText('inYear2', 'outYear2', 'Year');
+      updateText('inCollege2', 'outCollege2', 'School Name');
+
+      // Experience
+      updateText('inExpRole', 'outExpRole', 'Job Role');
+      updateText('inExpComp', 'outExpComp', 'Company Name | Duration');
+      updateText('inExpDesc', 'outExpDesc', 'Describe your responsibilities...');
+
+      // Skills (Split by comma)
+      const inSkills = document.getElementById('inSkills');
+      const outSkills = document.getElementById('outSkills');
+      
+      inSkills.addEventListener('input', () => {
+          const skills = inSkills.value.split(',');
+          outSkills.innerHTML = '';
+          skills.forEach(skill => {
+              if(skill.trim()) {
+                  const span = document.createElement('span');
+                  span.className = 'bg-gray-100 px-2 py-1 rounded border mr-2 mb-1 inline-block';
+                  span.innerText = skill.trim();
+                  outSkills.appendChild(span);
+              }
+          });
+      });
+  </script>
+</Layout>
