@@ -56,6 +56,13 @@ const description = "Create a professional, ATS-friendly resume in minutes. Live
                       <input type="text" id="inPhone" value="+91 98765 43210" />
                   </div>
               </div>
+              
+              {/* LinkedIn (New Optional Field) */}
+              <div class="form-group">
+                  <label>LinkedIn / Portfolio URL (Optional)</label>
+                  <input type="text" id="inLinkedin" placeholder="linkedin.com/in/rohit" />
+              </div>
+
               <div class="form-group">
                   <label>Address</label>
                   <input type="text" id="inAddress" value="New Delhi, India" />
@@ -93,6 +100,13 @@ const description = "Create a professional, ATS-friendly resume in minutes. Live
                   {/* Skills tags editor */}
               </div>
 
+              {/* Declaration Toggle (New Feature) */}
+              <div class="section-title">Settings</div>
+              <div style="display: flex; align-items: center; gap: 10px; background: #f9f9f9; padding: 10px; border-radius: 6px;">
+                  <input type="checkbox" id="toggleDeclaration" checked style="width: 20px; height: 20px;" />
+                  <label for="toggleDeclaration" style="margin: 0; cursor: pointer;">Show Declaration & Signature</label>
+              </div>
+
               <div class="mt-6 border-t pt-4">
                  <AdSlot type="square" />
               </div>
@@ -110,6 +124,8 @@ const description = "Create a professional, ATS-friendly resume in minutes. Live
                       <div class="res-contact">
                           <span>📧 <span id="outEmail">rohit@example.com</span></span>
                           <span>📱 <span id="outPhone">+91 98765 43210</span></span>
+                          {/* LinkedIn Preview (Hidden by default if empty) */}
+                          <span id="linkedinWrapper" style="display: none;">🔗 <span id="outLinkedin"></span></span>
                           <span>📍 <span id="outAddress">New Delhi, India</span></span>
                       </div>
                   </div>
@@ -137,13 +153,24 @@ const description = "Create a professional, ATS-friendly resume in minutes. Live
                       <div class="res-skills" id="previewSkillsList"></div>
                   </div>
 
+                  {/* Declaration Section (Optional) */}
+                  <div id="previewDeclaration" style="margin-top: 50px; border-top: 1px dashed #ccc; padding-top: 10px;">
+                      <p style="font-size: 12px; font-style: italic; color: #666;">
+                          I hereby declare that the information provided above is true to the best of my knowledge.
+                      </p>
+                      <div style="display: flex; justify-content: space-between; margin-top: 30px; font-size: 14px; font-weight: bold;">
+                          <span>Date: ____________</span>
+                          <span>Signature: ____________</span>
+                      </div>
+                  </div>
+
               </div>
           </div>
 
       </div>
   </div>
 
-  {/* 👇 YOUR CSS (Direct Copy Paste) */}
+  {/* 👇 YOUR CSS (NO CHANGES) */}
   <style is:global>
       /* Print Logic */
       @media print {
@@ -200,7 +227,7 @@ const description = "Create a professional, ATS-friendly resume in minutes. Live
       }
   </style>
 
-  {/* 🧠 REPLICATING REACT LOGIC IN VANILLA JS */}
+  {/* 🧠 LOGIC */}
   <script>
       // State Storage
       let experienceData = [{ id: 1, title: 'Frontend Developer', company: 'Tech Solutions', duration: '2022 - Present', desc: 'Developed responsive websites using React.js.' }];
@@ -238,19 +265,42 @@ const description = "Create a professional, ATS-friendly resume in minutes. Live
       bindText('inAddress', 'outAddress');
       bindText('inSummary', 'outSummary');
 
+      // ✅ LinkedIn Logic (Optional Feature)
+      const inLinkedin = document.getElementById('inLinkedin');
+      const outLinkedin = document.getElementById('outLinkedin');
+      const linkedinWrapper = document.getElementById('linkedinWrapper');
+
+      inLinkedin.addEventListener('input', () => {
+          const val = inLinkedin.value;
+          outLinkedin.innerText = val;
+          if(val.trim() !== "") {
+              linkedinWrapper.style.display = "inline";
+          } else {
+              linkedinWrapper.style.display = "none";
+          }
+      });
+
+      // ✅ Declaration Toggle Logic (New Feature)
+      const toggleDecl = document.getElementById('toggleDeclaration');
+      const previewDecl = document.getElementById('previewDeclaration');
+      
+      toggleDecl.addEventListener('change', (e) => {
+          previewDecl.style.display = e.target.checked ? 'block' : 'none';
+      });
+
 
       // --- EXPERIENCE LOGIC ---
       function renderExperience() {
           const editorList = document.getElementById('experienceList');
           const previewList = document.getElementById('previewExpList');
           const previewSection = document.getElementById('previewExpSection');
+          const color = themeInput.value;
 
           editorList.innerHTML = '';
           previewList.innerHTML = '';
           previewSection.style.display = experienceData.length ? 'block' : 'none';
 
           experienceData.forEach(exp => {
-              // 1. Render Editor Inputs
               const expDiv = document.createElement('div');
               expDiv.style.cssText = "background:#f9f9f9; padding:10px; border-radius:8px; margin-bottom:10px; position:relative;";
               expDiv.innerHTML = `
@@ -262,7 +312,6 @@ const description = "Create a professional, ATS-friendly resume in minutes. Live
               `;
               editorList.appendChild(expDiv);
 
-              // 2. Render Preview Item
               const prevDiv = document.createElement('div');
               prevDiv.className = 'res-item';
               prevDiv.innerHTML = `
@@ -275,6 +324,7 @@ const description = "Create a professional, ATS-friendly resume in minutes. Live
               `;
               previewList.appendChild(prevDiv);
           });
+          updateTheme(themeInput.value); // Re-apply theme
       }
 
       window.addExp = () => {
@@ -289,13 +339,7 @@ const description = "Create a professional, ATS-friendly resume in minutes. Live
           const item = experienceData.find(e => e.id === id);
           if (item) {
               item[field] = value;
-              renderExperience(); // Re-render to update preview
-              // Note: Re-rendering editor while typing causes focus loss. 
-              // Optimization: We should update preview DOM directly, but for simplicity re-render works fast enough here.
-              // To fix focus:
-              // For now, let's just update the specific preview element in a real app, 
-              // but re-rendering is the closest to React logic without Virtual DOM.
-              // To keep focus, we will restore it (Simple Hack)
+              renderExperience(); 
               let activeInput = document.activeElement;
               setTimeout(()=> activeInput.focus(), 0);
           }
