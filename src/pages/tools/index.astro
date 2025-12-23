@@ -1,0 +1,189 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+
+const title = "Infinity Tools - Free Online Tools for Students & Professionals";
+const description = "Access 15+ Free Tools: Resume Builder, Passport Photo Maker, Typing Test, PDF Tools, Age Calculator, and more. 100% Free & Fast.";
+
+// 🛠️ ALL TOOLS LIST
+const allTools = [
+  {
+    title: "Passport Photo Maker",
+    desc: "Create 8 to 32 PP photos on 4x6/A4 sheets.",
+    icon: "📸",
+    link: "/tools/passport-photo-maker",
+    color: "from-indigo-500 to-blue-500",
+    badge: "Most Used 🔥"
+  },
+  {
+    title: "Resume Builder",
+    desc: "Create Bio-Data for Govt & Private Jobs.",
+    icon: "📝",
+    link: "/tools/resume-builder",
+    color: "from-slate-700 to-slate-900",
+    badge: "Pro"
+  },
+  {
+    title: "Typing Test",
+    desc: "Practice for SSC/Banking with TCS Interface.",
+    icon: "⌨️",
+    link: "/tools/typing-test",
+    color: "from-purple-500 to-indigo-500",
+    badge: "Exam Special"
+  },
+  {
+    title: "Image Compressor",
+    desc: "Reduce size to 20KB/50KB for forms.",
+    icon: "📉",
+    link: "/tools/image-compressor",
+    color: "from-green-500 to-teal-500",
+    badge: "Must Have"
+  },
+  {
+    title: "Name & Date on Photo",
+    desc: "Add Name & DOP automatically for SSC.",
+    icon: "📅",
+    link: "/tools/name-date-on-photo",
+    color: "from-blue-500 to-cyan-500",
+    badge: null
+  },
+  {
+    title: "Postcard Photo Maker",
+    desc: "Create 4x6 inch photo for SSC Exams.",
+    icon: "🖼️",
+    link: "/tools/postcard-photo-maker",
+    color: "from-blue-600 to-indigo-600",
+    badge: "New"
+  },
+  {
+    title: "JPG to PDF",
+    desc: "Convert multiple images to single PDF.",
+    icon: "📄",
+    link: "/tools/jpg-to-pdf",
+    color: "from-red-500 to-orange-500",
+    badge: null
+  },
+  {
+    title: "PDF Merger",
+    desc: "Combine multiple PDF files into one.",
+    icon: "📑",
+    link: "/tools/pdf-merger",
+    color: "from-pink-500 to-rose-500",
+    badge: null
+  },
+  {
+    title: "Age Calculator",
+    desc: "Check exact age for eligibility (Y/M/D).",
+    icon: "🧮",
+    link: "/tools/age-calculator",
+    color: "from-yellow-400 to-orange-500",
+    badge: null
+  },
+  {
+    title: "Image to Text (OCR)",
+    desc: "Extract text from images (Hindi/Eng).",
+    icon: "🔍",
+    link: "/tools/image-to-text",
+    color: "from-teal-400 to-emerald-500",
+    badge: "AI Tool"
+  },
+  {
+    title: "Pro Calculator",
+    desc: "Scientific + GST Calculator with Voice.",
+    icon: "🧮",
+    link: "/tools/pro-calculator",
+    color: "from-gray-600 to-gray-800",
+    badge: null
+  },
+  {
+    title: "CGPA to Percentage",
+    desc: "Convert Grades for CBSE/Engineering.",
+    icon: "📊",
+    link: "/tools/cgpa-to-percentage",
+    color: "from-violet-500 to-purple-500",
+    badge: null
+  },
+  {
+    title: "Image Resizer",
+    desc: "Resize width & height (pixels/cm/mm).",
+    icon: "📐",
+    link: "/tools/image-resizer",
+    color: "from-blue-400 to-blue-600",
+    badge: null
+  }
+];
+---
+
+<Layout title={title} description={description}>
+  
+  <div class="max-w-7xl mx-auto px-4 py-10">
+      
+      {/* 🚀 HERO SECTION */}
+      <div class="text-center mb-12">
+          <span class="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Infinity Suite</span>
+          <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 mt-4 mb-6">
+              Free Online <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Web Tools</span>
+          </h1>
+          <p class="text-xl text-gray-500 max-w-2xl mx-auto">
+              A collection of powerful tools for Students, Job Aspirants, and Professionals. No Login Required. 100% Free.
+          </p>
+      </div>
+
+      {/* 🟢 TOP AD */}
+      <div class="mb-10">
+        <AdSlot type="horizontal" />
+      </div>
+
+      {/* 🛠️ TOOLS GRID */}
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          
+          {allTools.map((tool) => (
+              <a href={tool.link} class="group relative bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-xl transition duration-300 transform hover:-translate-y-1 flex flex-col h-full overflow-hidden">
+                  
+                  {/* Background Gradient Effect on Hover */}
+                  <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r transition-all duration-300 group-hover:h-2" class:list={[tool.color]}></div>
+                  
+                  {/* Badge */}
+                  {tool.badge && (
+                      <span class={`absolute top-4 right-4 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide bg-gray-900 text-white shadow-sm`}>
+                          {tool.badge}
+                      </span>
+                  )}
+
+                  {/* Icon */}
+                  <div class={`w-14 h-14 rounded-xl flex items-center justify-center text-3xl mb-4 bg-gradient-to-br shadow-inner text-white`} class:list={[tool.color]}>
+                      {tool.icon}
+                  </div>
+
+                  {/* Content */}
+                  <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition">
+                      {tool.title}
+                  </h3>
+                  <p class="text-sm text-gray-500 leading-relaxed flex-1">
+                      {tool.desc}
+                  </p>
+
+                  {/* Arrow */}
+                  <div class="mt-4 flex items-center text-sm font-bold text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-[-10px] group-hover:translate-x-0">
+                      Open Tool <span>&rarr;</span>
+                  </div>
+              </a>
+          ))}
+
+      </div>
+
+      {/* 🟢 BOTTOM AD */}
+      <div class="mt-12 mb-8">
+        <AdSlot type="horizontal" />
+      </div>
+
+      {/* 📝 SEO TEXT */}
+      <div class="prose max-w-none text-gray-500 text-center mt-10 border-t pt-10">
+          <p>
+              TopOnlineForm Infinity Tools provides free utilities for government job aspirants. 
+              From creating <strong>Passport Photos</strong> and <strong>Resumes</strong> to reducing <strong>Image Size</strong> for online forms, we have everything you need.
+          </p>
+      </div>
+
+  </div>
+</Layout>
