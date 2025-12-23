@@ -33,7 +33,8 @@ else {
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=0.80, maximum-scale=5.0, user-scalable=yes" />
+    {/* <meta name="viewport" content="width=device-width, initial-scale=1.0" />  */}
+    <meta name="viewport" content="width=device-width, initial-scale=0.90, maximum-scale=5.0, user-scalable=yes" />
     
     <title>{seoTitle}</title>
     <meta name="title" content={seoTitle} />
@@ -77,72 +78,96 @@ else {
 
     {/* HEADER */}
     <header class="bg-red-700 text-white shadow-lg sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center">
+        <div class="max-w-7xl mx-auto px-4 py-3">
             
-            {/* Logo */}
-            <a href="/" class="text-2xl md:text-3xl font-extrabold uppercase tracking-tighter hover:text-gray-200 transition mb-2 md:mb-0">
-                TOP ONLINE FORM
-            </a>
-            
-            {/* Navigation Menu */}
-            <nav class="flex flex-wrap justify-center items-center gap-3 md:gap-6 font-semibold text-xs md:text-sm uppercase tracking-wide">
-                <a href="/" class="hover:text-yellow-300 transition">Home</a>
-                <a href="/active-jobs" class="hover:text-yellow-300 transition text-yellow-100 font-bold">Active Jobs</a>
-                <a href="/latest-jobs" class="hover:text-yellow-300 transition">Latest Jobs</a>
-                <a href="/admit-card" class="hover:text-yellow-300 transition">Admit Card</a>
-                <a href="/results" class="hover:text-yellow-300 transition">Results</a>
-                <a href="/answer-key" class="hover:text-yellow-300 transition">Answer Key</a>
+            {/* Top Bar: Logo & Mobile Toggle */}
+            <div class="flex justify-between items-center">
                 
-                {/* 🛠️ TOOLS LINK (Updated Icon) */}
-                <a href="/tools" class="flex items-center gap-1 hover:text-yellow-300 transition text-yellow-100 font-bold">
-                    Tools
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mb-0.5" viewBox="0 0 24 24" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10.5 3.75a6.75 6.75 0 100 13.5 6.75 6.75 0 000-13.5zM2.25 10.5a8.25 8.25 0 1114.59 5.28l4.69 4.69a.75.75 0 11-1.06 1.06l-4.69-4.69A8.25 8.25 0 012.25 10.5zm8.25-3.75a.75.75 0 00.75.75v.01c1.55.03 2.97.97 3.47 2.45a.75.75 0 101.42-.48 5.26 5.26 0 00-4.89-3.48v.01a.75.75 0 00-.75.74z" clip-rule="evenodd" />
-                        <path d="M19.646 2.646a.5.5 0 01.708 0l1 1a.5.5 0 010 .708l-1.5 1.5-1.708-1.708 1.5-1.5zM17.439 5.854l1.708 1.708-8.5 8.5a.5.5 0 01-.166.11l-3 1a.5.5 0 01-.632-.633l1-3a.5.5 0 01.11-.166l8.48-8.52z"/>
-                    </svg>
+                {/* Logo */}
+                <a href="/" class="text-2xl md:text-3xl font-extrabold uppercase tracking-tighter hover:text-gray-200 transition">
+                    TOP ONLINE FORM
                 </a>
 
-                {/* DROPDOWN MENU (More) - Fixed Size */}
-                <div class="relative group">
-                    <button class="flex items-center gap-1 hover:text-yellow-300 transition focus:outline-none font-semibold text-xs md:text-sm uppercase tracking-wide">
-                        More <span>▾</span>
+                {/* Mobile Controls (Search & Hamburger) - Visible only on Mobile */}
+                <div class="flex items-center gap-4 md:hidden">
+                    <button id="mobileSearchToggle" class="hover:text-yellow-300 focus:outline-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
                     </button>
-                    
-                    <div class="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded-md shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right z-50 border border-gray-200 text-left overflow-hidden">
-                        <a href="/state-wise-jobs" class="block px-4 py-3 hover:bg-blue-50 border-b border-gray-100 transition hover:text-blue-700">🌍 State Wise Jobs</a>
-                        <a href="/admission" class="block px-4 py-3 hover:bg-blue-50 border-b border-gray-100 transition hover:text-blue-700">🎓 Admission</a>
-                        <a href="/syllabus" class="block px-4 py-3 hover:bg-blue-50 transition hover:text-blue-700">📖 Syllabus</a>
-                    </div>
+                    <button id="mobileMenuBtn" class="hover:text-yellow-300 focus:outline-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
                 </div>
 
-                {/* 🔍 SEARCH ICON BUTTON */}
-                <button id="searchToggle" class="ml-2 hover:text-yellow-300 transition focus:outline-none" aria-label="Search">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                </button>
-            </nav>
+                {/* Desktop Navigation - Hidden on Mobile */}
+                <nav class="hidden md:flex flex-wrap justify-center items-center gap-6 font-semibold text-sm uppercase tracking-wide">
+                    <a href="/" class="hover:text-yellow-300 transition">Home</a>
+                    <a href="/active-jobs" class="hover:text-yellow-300 transition text-yellow-100 font-bold">Active Jobs</a>
+                    <a href="/latest-jobs" class="hover:text-yellow-300 transition">Latest Jobs</a>
+                    <a href="/admit-card" class="hover:text-yellow-300 transition">Admit Card</a>
+                    <a href="/results" class="hover:text-yellow-300 transition">Results</a>
+                    <a href="/answer-key" class="hover:text-yellow-300 transition">Answer Key</a>
+                    
+                    <a href="/tools" class="flex items-center gap-1 hover:text-yellow-300 transition text-yellow-100 font-bold">
+                        Tools
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mb-0.5" viewBox="0 0 24 24" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10.5 3.75a6.75 6.75 0 100 13.5 6.75 6.75 0 000-13.5zM2.25 10.5a8.25 8.25 0 1114.59 5.28l4.69 4.69a.75.75 0 11-1.06 1.06l-4.69-4.69A8.25 8.25 0 012.25 10.5zm8.25-3.75a.75.75 0 00.75.75v.01c1.55.03 2.97.97 3.47 2.45a.75.75 0 101.42-.48 5.26 5.26 0 00-4.89-3.48v.01a.75.75 0 00-.75.74z" clip-rule="evenodd" />
+                            <path d="M19.646 2.646a.5.5 0 01.708 0l1 1a.5.5 0 010 .708l-1.5 1.5-1.708-1.708 1.5-1.5zM17.439 5.854l1.708 1.708-8.5 8.5a.5.5 0 01-.166.11l-3 1a.5.5 0 01-.632-.633l1-3a.5.5 0 01.11-.166l8.48-8.52z"/>
+                        </svg>
+                    </a>
+
+                    {/* Desktop Dropdown */}
+                    <div class="relative group">
+                        <button class="flex items-center gap-1 hover:text-yellow-300 transition focus:outline-none font-semibold text-sm uppercase tracking-wide">
+                            More <span>▾</span>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded-md shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right z-50 border border-gray-200 text-left overflow-hidden">
+                            <a href="/state-wise-jobs" class="block px-4 py-3 hover:bg-blue-50 border-b border-gray-100 transition hover:text-blue-700">🌍 State Wise Jobs</a>
+                            <a href="/admission" class="block px-4 py-3 hover:bg-blue-50 border-b border-gray-100 transition hover:text-blue-700">🎓 Admission</a>
+                            <a href="/syllabus" class="block px-4 py-3 hover:bg-blue-50 transition hover:text-blue-700">📖 Syllabus</a>
+                        </div>
+                    </div>
+
+                    <button id="desktopSearchToggle" class="hover:text-yellow-300 transition focus:outline-none" aria-label="Search">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </button>
+                </nav>
+            </div>
+
+            {/* Mobile Menu Dropdown (Hidden by default) */}
+            <div id="mobileMenu" class="hidden md:hidden mt-3 border-t border-red-500 pt-3">
+                <nav class="flex flex-col space-y-3 font-semibold text-sm uppercase tracking-wide">
+                    <a href="/" class="hover:text-yellow-300 block">Home</a>
+                    <a href="/active-jobs" class="hover:text-yellow-300 block text-yellow-100 font-bold">Active Jobs</a>
+                    <a href="/latest-jobs" class="hover:text-yellow-300 block">Latest Jobs</a>
+                    <a href="/admit-card" class="hover:text-yellow-300 block">Admit Card</a>
+                    <a href="/results" class="hover:text-yellow-300 block">Results</a>
+                    <a href="/answer-key" class="hover:text-yellow-300 block">Answer Key</a>
+                    <a href="/tools" class="hover:text-yellow-300 block text-yellow-100 font-bold">Tools</a>
+                    <a href="/state-wise-jobs" class="hover:text-yellow-300 block">🌍 State Wise Jobs</a>
+                    <a href="/admission" class="hover:text-yellow-300 block">🎓 Admission</a>
+                    <a href="/syllabus" class="hover:text-yellow-300 block">📖 Syllabus</a>
+                </nav>
+            </div>
+
         </div>
     </header>
 
-    {/* 🔍 SEARCH OVERLAY (Hidden by default) */}
+    {/* 🔍 SEARCH OVERLAY */}
     <div id="searchOverlay" class="fixed inset-0 bg-black/80 z-[60] hidden justify-center items-start pt-10 px-4 backdrop-blur-sm transition-all">
-        {/* Added max-h-[85vh] and overflow-y-auto so results are scrollable */}
         <div class="bg-white w-full max-w-2xl rounded-lg shadow-2xl relative p-6 max-h-[85vh] overflow-y-auto">
-            
-            {/* Close Button */}
             <button id="closeSearch" class="absolute top-2 right-2 text-gray-500 hover:text-red-600 bg-gray-100 rounded-full p-1">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
-
             <h3 class="text-gray-800 font-bold text-lg mb-4 border-b pb-2">Search Top Online Form</h3>
-            
-            {/* ⚡ PAGEFIND SEARCH CONTAINER */}
-            {/* Pagefind will inject the input box and results here automatically */}
             <div id="search" class="min-h-[100px]"></div>
-
         </div>
     </div>
 
@@ -156,7 +181,6 @@ else {
         <div class="max-w-7xl mx-auto px-4 text-center">
             <h2 class="text-xl font-bold mb-2">TopOnlineForm.com</h2>
             <p class="text-gray-400 text-sm mb-4">India's Most Trusted Portal for Government Job Updates.</p>
-            
             <div class="flex justify-center flex-wrap gap-4 text-xs text-gray-500 mb-4">
                 <a href="/about" class="hover:text-white transition-colors">About Us</a>
                 <a href="/contact" class="hover:text-white transition-colors">Contact Us</a>
@@ -165,56 +189,66 @@ else {
                 <a href="/terms-conditions" class="hover:text-white transition-colors font-bold text-gray-400">Terms & Conditions</a>
                 <a href="/sitemap-index.xml" class="hover:text-white transition-colors">Sitemap</a>
             </div>
-            
             <p class="text-xs text-gray-600">Copyright © 2026 TopOnlineForm. All Rights Reserved.</p>
         </div>
     </footer>
 
-    {/* MOBILE STICKY BOTTOM BAR */}
-    <div class="hidden fixed bottom-0 left-0 w-full bg-white border-t border-gray-300 shadow-2xl flex z-50 md:hidden">
+    {/* MOBILE STICKY BOTTOM BAR (COMMENTED OUT AS REQUESTED) */}
+    {/* <div class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-300 shadow-2xl flex z-50 md:hidden">
         <a href="https://t.me/toponlineform" target="_blank" class="flex-1 bg-blue-500 text-white text-center py-3 font-bold flex items-center justify-center gap-2">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 11.944 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.8-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-            Join Telegram
+            Telegram
         </a>
         <a href="https://whatsapp.com/channel/0029Vb7TcG06LwHoTXhZKn2D" target="_blank" class="flex-1 bg-green-600 text-white text-center py-3 font-bold flex items-center justify-center gap-2">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-            Join WhatsApp
+            WhatsApp
         </a>
     </div>
+    */}
 
     <MarketingPopup />
 
-    {/* Search Toggle & Pagefind Init Script */}
+    {/* SCRIPTS */}
     <script is:inline>
-        const searchToggle = document.getElementById('searchToggle');
+        // ELEMENTS
+        const desktopSearchToggle = document.getElementById('desktopSearchToggle');
+        const mobileSearchToggle = document.getElementById('mobileSearchToggle');
         const searchOverlay = document.getElementById('searchOverlay');
         const closeSearch = document.getElementById('closeSearch');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
 
-        // Open Search
-        searchToggle.addEventListener('click', () => {
+        // FUNCTIONS
+        function openSearch() {
             searchOverlay.classList.remove('hidden');
             searchOverlay.classList.add('flex');
-            
-            // Focus on Pagefind input automatically after a small delay
             setTimeout(() => {
                 const input = document.querySelector('.pagefind-ui__search-input');
                 if(input) input.focus();
             }, 200);
-        });
+        }
 
-        // Close Search
-        closeSearch.addEventListener('click', () => {
+        function closeSearchFunc() {
             searchOverlay.classList.add('hidden');
             searchOverlay.classList.remove('flex');
-        });
+        }
 
-        // Close on clicking outside
+        // LISTENERS
+        if(desktopSearchToggle) desktopSearchToggle.addEventListener('click', openSearch);
+        if(mobileSearchToggle) mobileSearchToggle.addEventListener('click', openSearch);
+        if(closeSearch) closeSearch.addEventListener('click', closeSearchFunc);
+
+        // Search Overlay Click Outside
         searchOverlay.addEventListener('click', (e) => {
             if (e.target === searchOverlay) {
-                searchOverlay.classList.add('hidden');
-                searchOverlay.classList.remove('flex');
+                closeSearchFunc();
             }
         });
+
+        // Mobile Menu Toggle
+        if(mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
 
         // Initialize Pagefind
         window.addEventListener('DOMContentLoaded', (event) => {
