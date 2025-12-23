@@ -5,6 +5,14 @@ import AdSlot from '../../components/AdSlot.astro';
 // 🔥 SEO KA JAAL: Dynamic Title & Description
 const title = "Free Image Resizer & Compressor - Resize to 20kb, 50kb, 100kb Online";
 const description = "Best Free Image Resizer for Govt Jobs. Compress JPEG/PNG to 20kb, 50kb, 100kb. Resize photo and signature for SSC, UPSC, IBPS forms with Date Printing feature.";
+
+// 🛠️ Sidebar Tools List Data
+const sidebarTools = [
+  { name: "Image Resizer", icon: "🖼️", link: "/tools/image-resizer", active: true },
+  { name: "Age Calculator", icon: "🧮", link: "/tools/age-calculator", active: false },
+  { name: "Typing Test", icon: "⌨️", link: "#", active: false, badge: "Coming Soon" },
+  { name: "PDF Merger", icon: "📄", link: "#", active: false, badge: "Coming Soon" },
+];
 ---
 
 <Layout title={title} description={description}>
@@ -12,12 +20,13 @@ const description = "Best Free Image Resizer for Govt Jobs. Compress JPEG/PNG to
   {/* External Libraries for Image Processing */}
   <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/browser-image-compression/2.0.2/browser-image-compression.min.js"></script>
 
-  <div class="max-w-6xl mx-auto px-4 py-8">
+  <div class="max-w-7xl mx-auto px-4 py-8">
       
       {/* HEADER SECTION */}
-      <div class="text-center mb-8">
-          <h1 class="text-3xl md:text-5xl font-extrabold text-gray-800 mb-3">
-              Infinity <span class="text-blue-600">Image Resizer</span>
+      <div class="text-center mb-10">
+          <span class="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Premium Tool</span>
+          <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 mt-3 mb-4">
+              Infinity <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Image Resizer</span>
           </h1>
           <p class="text-gray-500 text-lg max-w-2xl mx-auto">
               Reduce image size in KB/MB, Resize dimensions, and Format for 
@@ -25,130 +34,138 @@ const description = "Best Free Image Resizer for Govt Jobs. Compress JPEG/PNG to
           </p>
       </div>
 
-      <div class="flex flex-col lg:flex-row gap-8">
+      <div class="flex flex-col lg:flex-row gap-8 items-start">
           
-          {/* 🎛️ MAIN TOOL AREA */}
-          <main class="flex-1">
-              <div class="bg-white border-2 border-dashed border-blue-300 rounded-2xl p-6 md:p-10 shadow-sm text-center transition-all" id="dropZone">
-                  
-                  {/* STEP 1: UPLOAD */}
-                  <div id="step1" class="py-10">
-                      <div class="w-20 h-20 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl">
-                          📂
-                      </div>
-                      <h3 class="text-xl font-bold text-gray-700 mb-2">Drag & Drop or Select Image</h3>
-                      <p class="text-sm text-gray-400 mb-6">Supports JPG, PNG, WEBP (Max 10MB)</p>
-                      
-                      <input type="file" id="imageInput" accept="image/*" class="hidden" />
-                      <button onclick="document.getElementById('imageInput').click()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transform hover:-translate-y-1 transition">
-                          Select Image
-                      </button>
-                  </div>
-
-                  {/* STEP 2: EDITOR (Hidden initially) */}
-                  <div id="step2" class="hidden text-left">
-                      <div class="flex flex-col md:flex-row gap-6">
-                          
-                          {/* Preview Area */}
-                          <div class="flex-1 flex flex-col items-center">
-                              <div class="bg-gray-100 border border-gray-200 rounded p-1 w-full max-w-[300px]">
-                                  <img id="previewImg" class="w-full h-auto rounded" />
-                              </div>
-                              <p class="text-xs text-gray-500 mt-2">Original: <span id="originalSize" class="font-bold text-gray-800">0 KB</span></p>
-                          </div>
-
-                          {/* Controls Area */}
-                          <div class="flex-1 space-y-6">
-                              
-                              {/* 🎚️ Compression Slider */}
-                              <div>
-                                  <label class="block text-sm font-bold text-gray-700 mb-2">
-                                      Target File Size (KB)
-                                  </label>
-                                  <input type="range" id="sizeSlider" min="10" max="500" value="50" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600" />
-                                  <div class="flex justify-between text-xs text-gray-500 mt-1">
-                                      <span>10 KB</span>
-                                      <span id="targetSizeDisplay" class="font-bold text-blue-600 text-lg">50 KB</span>
-                                      <span>500 KB</span>
-                                  </div>
-                              </div>
-
-                              {/* 📏 Dimensions (Optional) */}
-                              <div class="grid grid-cols-2 gap-4">
-                                  <div>
-                                      <label class="block text-xs font-bold text-gray-500 mb-1">Width (px)</label>
-                                      <input type="number" id="widthInput" class="w-full p-2 border rounded focus:border-blue-500 outline-none" placeholder="Auto" />
-                                  </div>
-                                  <div>
-                                      <label class="block text-xs font-bold text-gray-500 mb-1">Height (px)</label>
-                                      <input type="number" id="heightInput" class="w-full p-2 border rounded focus:border-blue-500 outline-none" placeholder="Auto" />
-                                  </div>
-                              </div>
-
-                              {/* 🔘 Action Buttons */}
-                              <button id="compressBtn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-md flex justify-center items-center gap-2">
-                                  <span id="btnText">Compress & Download</span>
-                                  <span id="loader" class="hidden animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></span>
-                              </button>
-                              
-                              <button id="resetBtn" class="w-full text-gray-500 text-sm hover:text-red-500 underline">
-                                  Upload Different Image
-                              </button>
-                          </div>
-                      </div>
-                  </div>
-
+          {/* 🎛️ MAIN TOOL AREA (Left Side) */}
+          <main class="flex-1 w-full min-w-0">
+              
+              {/* Top Ad (High Revenue) */}
+              <div class="mb-6">
+                <AdSlot type="horizontal" />
               </div>
 
-              {/* 👇 SEO TRAP: Content for Keywords */}
-              <div class="mt-12 prose max-w-none">
-                  <h2 class="text-2xl font-bold text-gray-800">How to Resize Image to 20kb, 50kb for Online Forms?</h2>
-                  <p class="text-gray-600">
-                      Most government job applications like <strong>SSC CGL, CHSL, UPSC, IBPS, and Railways</strong> require specific file sizes for photographs and signatures. 
-                      Typically, the photo size should be between <strong>20kb to 50kb</strong> and the signature between <strong>10kb to 20kb</strong>.
-                  </p>
+              <div class="bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden relative" id="dropZone">
+                  
+                  {/* Decorative Background Blob */}
+                  <div class="absolute top-0 right-0 -mt-10 -mr-10 w-32 h-32 bg-blue-50 rounded-full blur-2xl opacity-50 pointer-events-none"></div>
 
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 not-prose">
-                      <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                          <h3 class="font-bold text-blue-800">⚡ Reduce Image Size in KB</h3>
-                          <p class="text-sm text-gray-600 mt-1">Compress large MB images to exact KB sizes (20kb, 50kb, 100kb) instantly without losing quality.</p>
+                  <div class="p-6 md:p-10 text-center relative z-10">
+                      
+                      {/* STEP 1: UPLOAD */}
+                      <div id="step1" class="py-10 transition-all">
+                          <div class="w-24 h-24 bg-gradient-to-br from-blue-50 to-purple-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 text-5xl shadow-inner border border-blue-100">
+                              📂
+                          </div>
+                          <h3 class="text-2xl font-bold text-gray-800 mb-2">Upload your Image</h3>
+                          <p class="text-sm text-gray-500 mb-8">Drag & Drop or Select JPG, PNG, WEBP (Max 10MB)</p>
+                          
+                          <input type="file" id="imageInput" accept="image/*" class="hidden" />
+                          <button onclick="document.getElementById('imageInput').click()" class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-4 px-10 rounded-xl shadow-lg transform hover:-translate-y-1 transition-all active:scale-95">
+                              Select Image File
+                          </button>
                       </div>
-                      <div class="bg-green-50 p-4 rounded-lg border border-green-100">
-                          <h3 class="font-bold text-green-800">🔒 100% Safe & Secure</h3>
-                          <p class="text-sm text-gray-600 mt-1">All processing happens inside your browser. Your photos are never uploaded to any server.</p>
+
+                      {/* STEP 2: EDITOR (Hidden initially) */}
+                      <div id="step2" class="hidden text-left animate-fade-in">
+                          <div class="flex flex-col md:flex-row gap-8">
+                              
+                              {/* Preview Area */}
+                              <div class="flex-1 flex flex-col items-center justify-center bg-gray-50 rounded-xl p-4 border border-dashed border-gray-300">
+                                  <img id="previewImg" class="max-h-[300px] w-auto h-auto rounded shadow-sm object-contain" />
+                                  <div class="mt-3 bg-white px-3 py-1 rounded-full text-xs font-mono border border-gray-200 shadow-sm text-gray-600">
+                                      Original: <span id="originalSize" class="font-bold text-gray-800">0 KB</span>
+                                  </div>
+                              </div>
+
+                              {/* Controls Area */}
+                              <div class="flex-1 space-y-6">
+                                  
+                                  <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                                      <h4 class="font-bold text-blue-800 mb-4 flex items-center gap-2">
+                                          <span>⚡</span> Compression Level
+                                      </h4>
+                                      
+                                      {/* 🎚️ Compression Slider */}
+                                      <div>
+                                          <label class="block text-sm font-semibold text-gray-700 mb-2 flex justify-between">
+                                              <span>Target File Size</span>
+                                              <span id="targetSizeDisplay" class="font-bold text-blue-600 bg-white px-2 rounded border">50 KB</span>
+                                          </label>
+                                          <input type="range" id="sizeSlider" min="10" max="500" value="50" class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-blue-600" />
+                                          <div class="flex justify-between text-[10px] text-gray-400 mt-1 uppercase font-bold tracking-wider">
+                                              <span>10 KB</span>
+                                              <span>500 KB</span>
+                                          </div>
+                                      </div>
+                                  </div>
+
+                                  {/* 📏 Dimensions (Optional) */}
+                                  <div>
+                                     <h4 class="text-sm font-bold text-gray-700 mb-2">Resize Dimensions (Optional)</h4>
+                                     <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <input type="number" id="widthInput" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-200 outline-none text-sm" placeholder="Width (px)" />
+                                        </div>
+                                        <div>
+                                            <input type="number" id="heightInput" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-200 outline-none text-sm" placeholder="Height (px)" />
+                                        </div>
+                                     </div>
+                                  </div>
+
+                                  {/* 🔘 Action Buttons */}
+                                  <div class="space-y-3 pt-2">
+                                      <button id="compressBtn" class="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-3.5 px-6 rounded-xl shadow-md flex justify-center items-center gap-2 transition-all active:scale-95">
+                                          <span id="btnText">Compress & Download 🚀</span>
+                                          <span id="loader" class="hidden animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></span>
+                                      </button>
+                                      
+                                      <button id="resetBtn" class="w-full py-2 text-gray-500 text-sm font-medium hover:text-red-500 transition flex items-center justify-center gap-1">
+                                          <span>↺</span> Upload Different Image
+                                      </button>
+                                  </div>
+                              </div>
+                          </div>
                       </div>
                   </div>
+              </div>
 
-                  <h3 class="text-xl font-bold text-gray-800 mt-8">Common Size Requirements for 2026 Exams:</h3>
-                  <div class="overflow-x-auto">
-                    <table class="min-w-full text-sm text-left border border-gray-200 mt-2">
-                        <thead class="bg-gray-100 font-bold text-gray-700">
+              {/* 👇 SEO Content (Styled Better) */}
+              <div class="mt-10 prose prose-blue max-w-none bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
+                   
+                  <div class="not-prose mb-6">
+                    <AdSlot type="horizontal" />
+                  </div>
+
+                  <h2 class="text-2xl font-bold text-gray-800">How to Resize Image to 20kb, 50kb?</h2>
+                  <p class="text-gray-600">
+                      Most government job applications like <strong>SSC CGL, CHSL, UPSC, IBPS, and Railways</strong> require specific file sizes. Use our Infinity Tool to adjust them instantly.
+                  </p>
+
+                  <h3 class="text-lg font-bold text-gray-800 mt-6 mb-3">Official Size Requirements (2026 Updated)</h3>
+                  <div class="overflow-x-auto rounded-lg border border-gray-200">
+                    <table class="min-w-full text-sm text-left bg-white">
+                        <thead class="bg-gray-50 font-bold text-gray-700 border-b">
                             <tr>
-                                <th class="p-2 border">Exam Name</th>
-                                <th class="p-2 border">Photo Size</th>
-                                <th class="p-2 border">Signature Size</th>
+                                <th class="p-3">Exam Name</th>
+                                <th class="p-3">Photo Size</th>
+                                <th class="p-3">Signature Size</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="divide-y divide-gray-100">
                             <tr>
-                                <td class="p-2 border">SSC (CGL, CHSL, MTS)</td>
-                                <td class="p-2 border">20kb - 50kb</td>
-                                <td class="p-2 border">10kb - 20kb</td>
+                                <td class="p-3 font-medium">SSC (All Exams)</td>
+                                <td class="p-3 text-blue-600">20kb - 50kb</td>
+                                <td class="p-3 text-green-600">10kb - 20kb</td>
                             </tr>
                             <tr>
-                                <td class="p-2 border">UPSC (IAS, NDA, CDS)</td>
-                                <td class="p-2 border">20kb - 300kb</td>
-                                <td class="p-2 border">20kb - 300kb</td>
+                                <td class="p-3 font-medium">UPSC / IAS</td>
+                                <td class="p-3 text-blue-600">20kb - 300kb</td>
+                                <td class="p-3 text-green-600">20kb - 300kb</td>
                             </tr>
                             <tr>
-                                <td class="p-2 border">IBPS / SBI (Bank PO)</td>
-                                <td class="p-2 border">20kb - 50kb</td>
-                                <td class="p-2 border">10kb - 20kb</td>
-                            </tr>
-                            <tr>
-                                <td class="p-2 border">Railway (RRB NTPC)</td>
-                                <td class="p-2 border">15kb - 40kb</td>
-                                <td class="p-2 border">10kb - 20kb</td>
+                                <td class="p-3 font-medium">IBPS / SBI PO</td>
+                                <td class="p-3 text-blue-600">20kb - 50kb</td>
+                                <td class="p-3 text-green-600">10kb - 20kb</td>
                             </tr>
                         </tbody>
                     </table>
@@ -156,21 +173,53 @@ const description = "Best Free Image Resizer for Govt Jobs. Compress JPEG/PNG to
               </div>
           </main>
 
-          {/* SIDEBAR */}
-          <aside class="w-full lg:w-[300px] flex-shrink-0">
-              <AdSlot type="square" />
-              <div class="mt-6 bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
-                  <h4 class="font-bold text-yellow-800 mb-2">Need More Tools?</h4>
-                  <ul class="space-y-2 text-sm text-gray-700">
-                      <li>👉 <a href="/tools/age-calculator" class="text-blue-600 hover:underline">Age Calculator</a></li>
-                      <li>👉 <a href="#" class="text-blue-600 hover:underline">PDF Merger (Coming Soon)</a></li>
-                  </ul>
+          {/* 🧊 STICKY SIDEBAR */}
+          <aside class="w-full lg:w-[320px] flex-shrink-0">
+              <div class="sticky top-4 space-y-6">
+                  
+                  {/* 1. Tools Navigation Menu */}
+                  <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-4">
+                      <h4 class="font-bold text-gray-800 mb-3 px-2 flex items-center gap-2">
+                          <span>🛠️</span> More Infinity Tools
+                      </h4>
+                      <ul class="space-y-1">
+                          {sidebarTools.map((tool) => (
+                              <li>
+                                  <a href={tool.link} class={`flex items-center justify-between p-2.5 rounded-lg transition-all ${tool.active ? 'bg-blue-50 text-blue-700 font-bold border border-blue-100' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-600'}`}>
+                                      <div class="flex items-center gap-3">
+                                          <span class="text-lg">{tool.icon}</span>
+                                          <span>{tool.name}</span>
+                                      </div>
+                                      {tool.badge && (
+                                          <span class="text-[10px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-bold uppercase tracking-wide">{tool.badge}</span>
+                                      )}
+                                      {tool.active && <span class="text-blue-500">●</span>}
+                                  </a>
+                              </li>
+                          ))}
+                      </ul>
+                  </div>
+
+                  {/* 2. Join Channels Box */}
+                  <div class="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-100 p-4 rounded-xl text-center">
+                    <p class="font-bold text-green-800 mb-3 text-sm">Get Job Updates on WhatsApp</p>
+                    <a href="https://whatsapp.com/channel/0029Vb7TcG06LwHoTXhZKn2D" target="_blank" class="block w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-bold shadow-md transition transform hover:-translate-y-0.5 text-sm">
+                        Join Channel Now
+                    </a>
+                  </div>
+
+                  {/* 3. Sticky Ad Slot */}
+                  <div class="shadow-sm rounded-xl overflow-hidden border border-gray-100">
+                     <AdSlot type="square" />
+                  </div>
+                  
               </div>
           </aside>
+
       </div>
   </div>
 
-  {/* 🧠 JAVASCRIPT MAGIC */}
+  {/* 🧠 JAVASCRIPT LOGIC */}
   <script>
       const imageInput = document.getElementById('imageInput');
       const dropZone = document.getElementById('dropZone');
@@ -190,13 +239,28 @@ const description = "Best Free Image Resizer for Govt Jobs. Compress JPEG/PNG to
       // Handle File Selection
       imageInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
 
+      // Drag and Drop Effects
+      dropZone.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          dropZone.classList.add('border-blue-500', 'bg-blue-50');
+      });
+      dropZone.addEventListener('dragleave', (e) => {
+          e.preventDefault();
+          dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+      });
+      dropZone.addEventListener('drop', (e) => {
+          e.preventDefault();
+          dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+          handleFile(e.dataTransfer.files[0]);
+      });
+
       // Update Slider Text
       sizeSlider.addEventListener('input', (e) => {
           targetSizeDisplay.innerText = e.target.value + " KB";
       });
 
       function handleFile(file) {
-          if (!file) return;
+          if (!file || !file.type.startsWith('image/')) return;
           originalFile = file;
           
           // Show Preview
@@ -221,35 +285,36 @@ const description = "Best Free Image Resizer for Govt Jobs. Compress JPEG/PNG to
           if (!originalFile) return;
 
           // UI Loading State
-          btnText.innerText = "Compressing...";
+          btnText.innerText = "Processing...";
           loader.classList.remove('hidden');
           compressBtn.disabled = true;
+          compressBtn.classList.add('opacity-75');
 
           const targetKB = parseInt(sizeSlider.value);
           const options = {
-              maxSizeMB: targetKB / 1024, // Convert KB to MB
+              maxSizeMB: targetKB / 1024,
               maxWidthOrHeight: 1920,
               useWebWorker: true
           };
 
           try {
-              // @ts-ignore (Library loaded via CDN)
+              // @ts-ignore
               const compressedFile = await imageCompression(originalFile, options);
               
-              // Download Trigger
               const link = document.createElement("a");
               link.href = URL.createObjectURL(compressedFile);
               link.download = `TopOnlineForm-Resized-${Date.now()}.jpg`;
               link.click();
 
-              btnText.innerText = "Downloaded! Compress Again";
+              btnText.innerText = "Downloaded! Do Another";
           } catch (error) {
               console.error(error);
-              alert("Something went wrong! Please try again.");
+              alert("Error processing image. Please try another file.");
               btnText.innerText = "Try Again";
           } finally {
               loader.classList.add('hidden');
               compressBtn.disabled = false;
+              compressBtn.classList.remove('opacity-75');
           }
       });
   </script>
