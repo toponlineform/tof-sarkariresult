@@ -1,0 +1,237 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+
+const title = "Passport Photo Maker - Create 8 PP Photos on 4x6 Sheet Online";
+const description = "Convert any photo into Passport Size (3.5cm x 4.5cm). Create printable 4x6 inch sheet with 8 copies for cheap printing. Free & Secure.";
+---
+
+<Layout title={title} description={description}>
+  
+  {/* Load CropperJS Library */}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" />
+  <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+  <div class="max-w-6xl mx-auto px-4 py-8">
+      
+      {/* HEADER */}
+      <div class="text-center mb-8">
+          <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Save Money Tool</span>
+          <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 mt-3 mb-4">
+              Infinity <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-600">Passport Photo Maker</span>
+          </h1>
+          <p class="text-gray-500 text-lg max-w-2xl mx-auto">
+              Don't pay ₹100 at studios! Make <strong>8 Passport Photos</strong> on a single 4x6 sheet and print it for just ₹10.
+          </p>
+      </div>
+
+      {/* 🟢 TOP AD */}
+      <div class="mb-8">
+        <AdSlot type="horizontal" />
+      </div>
+
+      {/* MAIN TOOL AREA */}
+      <div class="bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden p-6 md:p-10">
+          
+          {/* STEP 1: UPLOAD */}
+          <div id="step1" class="text-center transition-all">
+              <div class="border-3 border-dashed border-indigo-200 bg-indigo-50 rounded-2xl p-12 hover:bg-indigo-100 transition cursor-pointer max-w-2xl mx-auto group" onclick="document.getElementById('fileInput').click()">
+                  <div class="text-6xl mb-6 group-hover:scale-110 transition">📸</div>
+                  <h3 class="text-2xl font-bold text-gray-800 mb-2">Select Your Photo</h3>
+                  <p class="text-gray-500">Upload a selfie or portrait (We will help you crop it)</p>
+                  <input type="file" id="fileInput" accept="image/*" class="hidden" />
+              </div>
+          </div>
+
+          {/* STEP 2: CROPPER (Hidden Initially) */}
+          <div id="step2" class="hidden">
+              <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">Step 1: Crop to Passport Size</h3>
+              
+              <div class="flex flex-col lg:flex-row gap-8">
+                  {/* Cropping Area */}
+                  <div class="flex-1 bg-gray-900 rounded-xl overflow-hidden h-[400px] relative">
+                      <img id="cropImage" class="max-w-full" />
+                  </div>
+
+                  {/* Controls */}
+                  <div class="w-full lg:w-[300px] flex flex-col gap-4 justify-center">
+                      <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 text-sm text-blue-800">
+                          <strong>Instructions:</strong>
+                          <ul class="list-disc pl-4 mt-1 space-y-1">
+                              <li>Adjust the box to fit your face.</li>
+                              <li>Keep shoulders visible.</li>
+                              <li>We locked the Aspect Ratio (3.5 : 4.5).</li>
+                          </ul>
+                      </div>
+                      
+                      <button id="cropBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition transform hover:-translate-y-1">
+                          ✂️ Crop & Generate Sheet
+                      </button>
+                      <button id="resetBtn" class="text-gray-500 underline text-sm">Upload Different Photo</button>
+                  </div>
+              </div>
+          </div>
+
+          {/* STEP 3: PREVIEW & DOWNLOAD (Hidden Initially) */}
+          <div id="step3" class="hidden text-center">
+              <h3 class="text-2xl font-bold text-gray-800 mb-2">Step 2: Download Printable Sheet</h3>
+              <p class="text-gray-500 mb-6">Here is your 4x6 inch sheet with 8 copies. Download and print on Photo Paper.</p>
+              
+              <div class="flex flex-col items-center gap-6">
+                  {/* Canvas Container with Shadow */}
+                  <div class="border-8 border-white shadow-2xl bg-white inline-block">
+                      <canvas id="photoCanvas" class="max-w-full h-auto max-h-[500px]"></canvas>
+                  </div>
+
+                  <div class="flex flex-col sm:flex-row gap-4 w-full max-w-md">
+                      <button id="downloadBtn" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg text-lg flex justify-center items-center gap-2 transition">
+                          ⬇️ Download HD JPG
+                      </button>
+                      <button onclick="location.reload()" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-4 px-6 rounded-xl shadow-sm transition">
+                          ↻ Create New
+                      </button>
+                  </div>
+              </div>
+          </div>
+
+      </div>
+
+      {/* 🟢 BOTTOM AD */}
+      <div class="mt-8 mb-12">
+        <AdSlot type="horizontal" />
+      </div>
+
+      {/* SEO CONTENT */}
+      <div class="prose prose-indigo max-w-none bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
+          <h2 class="text-2xl font-bold text-gray-800">How to make Passport Size Photo at home?</h2>
+          <p class="text-gray-600">
+              Usually, photo studios charge <strong>₹100 to ₹150</strong> for 8 passport size photos. But with Infinity Passport Maker, you can do it for almost free.
+          </p>
+          
+          <h3 class="font-bold text-gray-800 mt-4">The "₹10 Trick" for Students:</h3>
+          <ol class="list-decimal pl-5 space-y-2 text-gray-700">
+              <li>Upload your photo and crop it using our tool.</li>
+              <li>Download the <strong>4x6 inch printable sheet</strong> (It has 8 photos).</li>
+              <li>Go to any Color Xerox shop or Photo Studio.</li>
+              <li>Ask them to print this on a <strong>"4x6 Postcard Size Photo Paper"</strong>.</li>
+              <li>They will charge only <strong>₹10 or ₹20</strong> for printing.</li>
+              <li>Cut the photos using scissors. You just saved ₹100! 🎉</li>
+          </ol>
+
+          <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-400 mt-6">
+              <h4 class="font-bold text-yellow-800">Standard Sizes Used:</h4>
+              <ul class="text-sm text-yellow-700 mt-1">
+                  <li><strong>Photo Size:</strong> 3.5cm x 4.5cm (Indian Standard)</li>
+                  <li><strong>Sheet Size:</strong> 4 inches x 6 inches (Standard Album Size)</li>
+                  <li><strong>Resolution:</strong> 300 DPI (High Quality Print)</li>
+              </ul>
+          </div>
+      </div>
+
+  </div>
+
+  {/* 🧠 JAVASCRIPT LOGIC */}
+  <script>
+      const fileInput = document.getElementById('fileInput');
+      const step1 = document.getElementById('step1');
+      const step2 = document.getElementById('step2');
+      const step3 = document.getElementById('step3');
+      const cropImage = document.getElementById('cropImage');
+      const cropBtn = document.getElementById('cropBtn');
+      const resetBtn = document.getElementById('resetBtn');
+      const photoCanvas = document.getElementById('photoCanvas');
+      const downloadBtn = document.getElementById('downloadBtn');
+
+      let cropper = null;
+
+      // 1. Handle File Upload
+      fileInput.addEventListener('change', (e) => {
+          if (e.target.files && e.target.files.length > 0) {
+              const file = e.target.files[0];
+              const url = URL.createObjectURL(file);
+              
+              cropImage.src = url;
+              step1.classList.add('hidden');
+              step2.classList.remove('hidden');
+
+              // Initialize Cropper
+              if(cropper) cropper.destroy();
+              // @ts-ignore
+              cropper = new Cropper(cropImage, {
+                  aspectRatio: 3.5 / 4.5, // Standard Passport Ratio
+                  viewMode: 1,
+                  autoCropArea: 0.8,
+                  dragMode: 'move',
+                  guides: true,
+                  center: true,
+                  background: false,
+              });
+          }
+      });
+
+      // 2. Crop & Generate Grid
+      cropBtn.addEventListener('click', () => {
+          if(!cropper) return;
+
+          // Get Cropped Image
+          const croppedCanvas = cropper.getCroppedCanvas({
+              width: 413, // 3.5cm at 300dpi
+              height: 531, // 4.5cm at 300dpi
+              imageSmoothingEnabled: true,
+              imageSmoothingQuality: 'high',
+          });
+
+          // Setup Final 4x6 Canvas
+          // 4x6 inches at 300dpi = 1200x1800 pixels
+          photoCanvas.width = 1200;
+          photoCanvas.height = 1800;
+          const ctx = photoCanvas.getContext('2d');
+
+          // Fill White Background
+          ctx.fillStyle = "#ffffff";
+          ctx.fillRect(0, 0, 1200, 1800);
+
+          // Grid Logic (2 Columns x 4 Rows = 8 Photos)
+          // Adjust Margins to center them
+          const startX = 150; // Left margin
+          const startY = 120; // Top margin
+          const gapX = 50;
+          const gapY = 60;
+          const pWidth = 413;
+          const pHeight = 531;
+
+          // Draw 8 photos
+          for (let row = 0; row < 4; row++) {
+              for (let col = 0; col < 2; col++) {
+                  const x = startX + (col * (pWidth + gapX));
+                  const y = startY + (row * (pHeight + gapY));
+                  
+                  // Draw Photo
+                  ctx.drawImage(croppedCanvas, x, y, pWidth, pHeight);
+                  
+                  // Draw Border around photo (Light Grey guide for cutting)
+                  ctx.strokeStyle = "#cccccc";
+                  ctx.lineWidth = 2;
+                  ctx.strokeRect(x, y, pWidth, pHeight);
+              }
+          }
+
+          // Show Result
+          step2.classList.add('hidden');
+          step3.classList.remove('hidden');
+      });
+
+      // 3. Download Logic
+      downloadBtn.addEventListener('click', () => {
+          const link = document.createElement('a');
+          link.download = `Infinity-Passport-Sheet-${Date.now()}.jpg`;
+          link.href = photoCanvas.toDataURL('image/jpeg', 1.0); // High Quality JPG
+          link.click();
+      });
+
+      // Reset
+      resetBtn.addEventListener('click', () => {
+          location.reload();
+      });
+  </script>
+</Layout>
