@@ -1,0 +1,211 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+
+const title = "Image to Text Converter - Free Online OCR (Hindi & English)";
+const description = "Extract text from images instantly using AI. Convert Scanned Documents, Notes, and Screenshots into editable text. Supports Hindi & English.";
+---
+
+<Layout title={title} description={description}>
+  
+  {/* Load Tesseract.js (OCR Engine) */}
+  <script is:inline src="https://unpkg.com/tesseract.js@v4.0.3/dist/tesseract.min.js"></script>
+
+  <div class="max-w-6xl mx-auto px-4 py-8">
+      
+      {/* HEADER */}
+      <div class="text-center mb-8">
+          <span class="bg-teal-100 text-teal-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">OCR Technology</span>
+          <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 mt-3 mb-4">
+              Image to <span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-600">Text Converter</span>
+          </h1>
+          <p class="text-gray-500 text-lg max-w-2xl mx-auto">
+              Extract text from <strong>Images, Screenshots, or Scanned PDFs</strong>. Copy or Download the text instantly.
+          </p>
+      </div>
+
+      {/* 🟢 TOP AD */}
+      <div class="mb-8">
+        <AdSlot type="horizontal" />
+      </div>
+
+      {/* MAIN TOOL AREA */}
+      <div class="bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden p-6 md:p-10">
+          
+          <div class="flex flex-col lg:flex-row gap-10 items-stretch">
+              
+              {/* LEFT: IMAGE UPLOAD & PREVIEW */}
+              <div class="w-full lg:w-1/2 flex flex-col gap-6">
+                  
+                  {/* Upload Box */}
+                  <div id="uploadBox" class="border-3 border-dashed border-teal-200 bg-teal-50 rounded-2xl h-64 flex flex-col items-center justify-center cursor-pointer hover:bg-teal-100 transition group relative overflow-hidden" onclick="document.getElementById('fileInput').click()">
+                      <div id="uploadText" class="text-center p-6">
+                          <div class="text-5xl mb-3 group-hover:scale-110 transition">🖼️</div>
+                          <p class="font-bold text-gray-700">Click to Upload Image</p>
+                          <p class="text-xs text-gray-500 mt-1">JPG, PNG, BMP supported</p>
+                      </div>
+                      <img id="previewImg" class="absolute inset-0 w-full h-full object-contain bg-gray-900 hidden opacity-50" />
+                      <div id="previewOverlay" class="absolute inset-0 flex items-center justify-center hidden pointer-events-none">
+                          <span class="bg-black/70 text-white px-3 py-1 rounded-full text-xs">Tap to change</span>
+                      </div>
+                      <input type="file" id="fileInput" accept="image/*" class="hidden" />
+                  </div>
+
+                  {/* Settings */}
+                  <div class="bg-gray-50 p-5 rounded-xl border border-gray-200">
+                      <label class="block text-sm font-bold text-gray-700 mb-2">Select Language</label>
+                      <select id="langSelect" class="w-full p-3 border rounded-lg bg-white focus:ring-2 focus:ring-teal-500 outline-none">
+                          <option value="eng">English</option>
+                          <option value="hin">Hindi (हिंदी)</option>
+                          <option value="eng+hin">English + Hindi Mix</option>
+                      </select>
+                      
+                      <button id="convertBtn" class="w-full mt-4 bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition transform hover:-translate-y-1 text-lg flex justify-center items-center gap-2 opacity-50 cursor-not-allowed" disabled>
+                          <span>⚡</span> Extract Text
+                      </button>
+                  </div>
+
+              </div>
+
+              {/* RIGHT: TEXT OUTPUT */}
+              <div class="w-full lg:w-1/2 flex flex-col relative">
+                  <div class="flex justify-between items-center mb-2">
+                      <h3 class="font-bold text-gray-700">Extracted Text</h3>
+                      <div class="flex gap-2">
+                          <button onclick="copyText()" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded font-bold text-teal-700 transition">Copy</button>
+                          <button onclick="downloadText()" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded font-bold text-blue-700 transition">Download</button>
+                      </div>
+                  </div>
+                  
+                  <div class="relative flex-1">
+                      <textarea id="outputText" class="w-full h-full min-h-[300px] p-4 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none resize-none font-mono text-sm leading-relaxed" placeholder="Text will appear here..."></textarea>
+                      
+                      {/* Loading Overlay */}
+                      <div id="loadingOverlay" class="absolute inset-0 bg-white/90 rounded-xl flex flex-col items-center justify-center hidden z-10 backdrop-blur-sm">
+                          <div class="w-12 h-12 border-4 border-teal-200 border-t-teal-600 rounded-full animate-spin mb-3"></div>
+                          <p class="font-bold text-teal-800 animate-pulse">Scanning Image...</p>
+                          <p id="progressText" class="text-xs text-gray-500 mt-1">Initializing AI...</p>
+                      </div>
+                  </div>
+              </div>
+
+          </div>
+      </div>
+
+      {/* 🟢 BOTTOM AD */}
+      <div class="mt-8 mb-12">
+        <AdSlot type="horizontal" />
+      </div>
+
+      {/* SEO CONTENT */}
+      <div class="prose prose-teal max-w-none bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
+          <h2 class="text-2xl font-bold text-gray-800">Free Online OCR (Optical Character Recognition)</h2>
+          <p class="text-gray-600">
+             Stop typing manually from images! Use our <strong>Infinity Image to Text Converter</strong> to instantly turn any picture into editable text.
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6 not-prose">
+              <div class="bg-blue-50 p-4 rounded-lg">
+                  <h4 class="font-bold text-blue-900">📚 For Students</h4>
+                  <p class="text-sm text-blue-800">Take photos of book pages or blackboard notes and convert them to text for your assignments.</p>
+              </div>
+              <div class="bg-green-50 p-4 rounded-lg">
+                  <h4 class="font-bold text-green-900">💼 For Professionals</h4>
+                  <p class="text-sm text-green-800">Digitize printed documents, business cards, or invoices quickly.</p>
+              </div>
+          </div>
+          <p class="text-gray-600">
+              We use advanced AI (Tesseract.js) to recognize characters. It supports both <strong>English and Hindi</strong> languages, making it perfect for Indian users.
+          </p>
+      </div>
+
+  </div>
+
+  {/* 🧠 JAVASCRIPT LOGIC */}
+  <script>
+      const fileInput = document.getElementById('fileInput');
+      const uploadBox = document.getElementById('uploadBox');
+      const uploadText = document.getElementById('uploadText');
+      const previewImg = document.getElementById('previewImg');
+      const previewOverlay = document.getElementById('previewOverlay');
+      const convertBtn = document.getElementById('convertBtn');
+      const langSelect = document.getElementById('langSelect');
+      const outputText = document.getElementById('outputText');
+      const loadingOverlay = document.getElementById('loadingOverlay');
+      const progressText = document.getElementById('progressText');
+
+      let selectedFile = null;
+
+      // 1. Handle File Selection
+      fileInput.addEventListener('change', (e) => {
+          if (e.target.files && e.target.files.length > 0) {
+              selectedFile = e.target.files[0];
+              const url = URL.createObjectURL(selectedFile);
+              
+              // Show Preview
+              previewImg.src = url;
+              previewImg.classList.remove('hidden');
+              uploadText.classList.add('hidden');
+              previewOverlay.classList.remove('hidden');
+              
+              // Enable Button
+              convertBtn.disabled = false;
+              convertBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+          }
+      });
+
+      // 2. OCR Logic
+      convertBtn.addEventListener('click', async () => {
+          if (!selectedFile) return;
+
+          loadingOverlay.classList.remove('hidden');
+          const lang = langSelect.value;
+          
+          try {
+              // @ts-ignore (Tesseract is loaded via CDN)
+              const worker = await Tesseract.createWorker({
+                  logger: m => {
+                      if(m.status === 'recognizing text') {
+                          progressText.innerText = `Scanning... ${(m.progress * 100).toFixed(0)}%`;
+                      } else {
+                          progressText.innerText = m.status;
+                      }
+                  }
+              });
+
+              await worker.loadLanguage(lang);
+              await worker.initialize(lang);
+              
+              const { data: { text } } = await worker.recognize(selectedFile);
+              
+              outputText.value = text;
+              await worker.terminate();
+
+          } catch (error) {
+              console.error(error);
+              alert("Error processing image. Please try a clearer image.");
+          } finally {
+              loadingOverlay.classList.add('hidden');
+          }
+      });
+
+      // 3. Copy Text
+      window.copyText = () => {
+          outputText.select();
+          document.execCommand('copy');
+          alert("Text copied to clipboard!");
+      };
+
+      // 4. Download Text
+      window.downloadText = () => {
+          const text = outputText.value;
+          if(!text) return;
+          
+          const blob = new Blob([text], { type: "text/plain" });
+          const link = document.createElement("a");
+          link.href = URL.createObjectURL(blob);
+          link.download = `Extracted-Text-${Date.now()}.txt`;
+          link.click();
+      };
+
+  </script>
+</Layout>
