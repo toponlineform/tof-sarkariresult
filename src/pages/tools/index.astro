@@ -2,8 +2,8 @@
 import Layout from '../../layouts/Layout.astro';
 import AdSlot from '../../components/AdSlot.astro';
 
-// ✅ NEW: Import Master Data from local file (_tools.js)
-import { toolsList } from './_tools.js';
+// ✅ FIXED: Import path ab sahi file name (tools.js) point kar raha hai
+import { toolsList } from './tools.js';
 
 const title = "Infinity Tools - Free Online Tools for Students & Professionals";
 const description = "Access 15+ Free Tools: Resume Builder, Passport Photo Maker, Typing Test, PDF Tools, Age Calculator, and more. 100% Free & Fast.";
@@ -29,7 +29,7 @@ const description = "Access 15+ Free Tools: Resume Builder, Passport Photo Maker
         <AdSlot type="horizontal" />
       </div>
 
-      {/* 🛠️ TOOLS GRID (Data coming from _tools.js) */}
+      {/* 🛠️ TOOLS GRID (Data coming from tools.js) */}
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           
           {toolsList.map((tool) => (
