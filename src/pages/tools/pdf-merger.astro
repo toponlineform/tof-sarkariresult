@@ -1,0 +1,234 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+
+const title = "Merge PDF Online Free - Combine Multiple PDFs into One";
+const description = "Best Free PDF Merger for Government Job Aspirants. Combine multiple marksheets and documents into a single PDF file securely in your browser.";
+
+// 🛠️ Sidebar Tools List
+const sidebarTools = [
+  { name: "Image Resizer", icon: "🖼️", link: "/tools/image-resizer", active: false },
+  { name: "Age Calculator", icon: "🧮", link: "/tools/age-calculator", active: false },
+  { name: "JPG to PDF", icon: "📄", link: "/tools/jpg-to-pdf", active: false },
+  { name: "Typing Test", icon: "⌨️", link: "/tools/typing-test", active: false },
+  { name: "Resume Builder", icon: "📝", link: "/tools/resume-builder", active: false },
+  { name: "PDF Merger", icon: "📑", link: "/tools/pdf-merger", active: true }, // ✅ Active
+];
+---
+
+<Layout title={title} description={description}>
+  
+  {/* Load PDF-Lib Library */}
+  <script is:inline src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+
+  <div class="max-w-7xl mx-auto px-4 py-8">
+      
+      {/* HEADER */}
+      <div class="text-center mb-8">
+          <span class="bg-red-100 text-red-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Secure & Fast</span>
+          <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 mt-3 mb-4">
+              Infinity <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-pink-600">PDF Merger</span>
+          </h1>
+          <p class="text-gray-500 text-lg max-w-2xl mx-auto">
+              Combine your Marksheets, ID Proofs, and Certificates into a 
+              <span class="font-bold text-gray-700">Single PDF File</span> for UPSC & SSC Forms.
+          </p>
+      </div>
+
+      <div class="flex flex-col lg:flex-row gap-8 items-start">
+          
+          {/* 📑 MAIN TOOL AREA */}
+          <main class="flex-1 w-full min-w-0">
+              
+              <div class="mb-6">
+                <AdSlot type="horizontal" />
+              </div>
+
+              <div class="bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden relative p-6 md:p-10">
+                  
+                  {/* STEP 1: UPLOAD */}
+                  <div id="uploadArea" class="text-center transition-all">
+                      <div class="border-2 border-dashed border-red-200 bg-red-50 rounded-xl p-10 hover:bg-red-100 transition cursor-pointer group" onclick="document.getElementById('fileInput').click()">
+                          <div class="text-6xl mb-4 group-hover:scale-110 transition">📑</div>
+                          <h3 class="text-2xl font-bold text-gray-800 mb-2">Select PDF Files</h3>
+                          <p class="text-sm text-gray-500">Select multiple PDF files to merge them into one.</p>
+                          <p class="text-xs text-red-400 mt-4 font-bold uppercase tracking-wide">100% Client Side • No Upload Limit</p>
+                      </div>
+                      <input type="file" id="fileInput" multiple accept=".pdf" class="hidden" />
+                  </div>
+
+                  {/* STEP 2: FILE LIST (Hidden initially) */}
+                  <div id="fileListArea" class="hidden mt-8">
+                      <div class="flex justify-between items-center mb-4">
+                          <h4 class="font-bold text-gray-700">Selected PDFs (<span id="count">0</span>)</h4>
+                          <button id="clearBtn" class="text-xs text-red-600 font-bold hover:underline">Clear All</button>
+                      </div>
+
+                      {/* List Container */}
+                      <div id="pdfList" class="space-y-3 mb-8">
+                          {/* Items injected via JS */}
+                      </div>
+
+                      {/* MERGE BUTTON */}
+                      <button id="mergeBtn" class="w-full bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg transform hover:-translate-y-0.5 transition-all text-lg flex justify-center items-center gap-2">
+                          <span>🚀</span> Merge PDF Now
+                      </button>
+                  </div>
+              </div>
+
+              {/* SEO CONTENT */}
+              <div class="mt-10 prose prose-red max-w-none bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
+                  <h2 class="text-2xl font-bold text-gray-800">Why Merge PDFs?</h2>
+                  <p class="text-gray-600">
+                      For exams like <strong>UPSC Civil Services, State PCS, and Banking</strong>, you are often required to upload a single document containing all your educational certificates. Scanning them separately creates multiple files.
+                  </p>
+                  <p class="text-gray-600">
+                      Use <strong>Infinity PDF Merger</strong> to join:
+                  </p>
+                  <ul class="list-disc pl-5 text-gray-700">
+                      <li>10th & 12th Marksheets</li>
+                      <li>Degree Certificate & Consolidated Marksheet</li>
+                      <li>ID Proof (Aadhar Front & Back)</li>
+                  </ul>
+                  <p class="mt-4 italic text-sm text-gray-500">Note: The order of pages in the final PDF will be the same as the order you select them.</p>
+              </div>
+          </main>
+
+          {/* 🧊 STICKY SIDEBAR */}
+          <aside class="w-full lg:w-[320px] flex-shrink-0">
+              <div class="sticky top-4 space-y-6">
+                  
+                  {/* Tools Menu */}
+                  <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-4">
+                      <h4 class="font-bold text-gray-800 mb-3 px-2 flex items-center gap-2">
+                          <span>🛠️</span> More Infinity Tools
+                      </h4>
+                      <ul class="space-y-1">
+                          {sidebarTools.map((tool) => (
+                              <li>
+                                  <a href={tool.link} class={`flex items-center justify-between p-2.5 rounded-lg transition-all ${tool.active ? 'bg-red-50 text-red-700 font-bold border border-red-100' : 'text-gray-600 hover:bg-gray-50 hover:text-red-600'}`}>
+                                      <div class="flex items-center gap-3">
+                                          <span class="text-lg">{tool.icon}</span>
+                                          <span>{tool.name}</span>
+                                      </div>
+                                      {tool.active && <span class="text-red-500">●</span>}
+                                  </a>
+                              </li>
+                          ))}
+                      </ul>
+                  </div>
+
+                  <div class="shadow-sm rounded-xl overflow-hidden border border-gray-100">
+                     <AdSlot type="square" />
+                  </div>
+              </div>
+          </aside>
+      </div>
+  </div>
+
+  {/* 🧠 JAVASCRIPT LOGIC */}
+  <script>
+      const fileInput = document.getElementById('fileInput');
+      const uploadArea = document.getElementById('uploadArea');
+      const fileListArea = document.getElementById('fileListArea');
+      const pdfList = document.getElementById('pdfList');
+      const countSpan = document.getElementById('count');
+      const clearBtn = document.getElementById('clearBtn');
+      const mergeBtn = document.getElementById('mergeBtn');
+
+      let selectedFiles = [];
+
+      fileInput.addEventListener('change', (e) => {
+          if (e.target.files && e.target.files.length > 0) {
+              const newFiles = Array.from(e.target.files).filter(f => f.type === 'application/pdf');
+              if(newFiles.length === 0) {
+                  alert("Please select only PDF files!");
+                  return;
+              }
+              selectedFiles = [...selectedFiles, ...newFiles];
+              updateUI();
+          }
+      });
+
+      function updateUI() {
+          if (selectedFiles.length > 0) {
+              uploadArea.classList.add('hidden');
+              fileListArea.classList.remove('hidden');
+          } else {
+              uploadArea.classList.remove('hidden');
+              fileListArea.classList.add('hidden');
+          }
+
+          countSpan.innerText = selectedFiles.length;
+          pdfList.innerHTML = '';
+
+          selectedFiles.forEach((file, index) => {
+              const div = document.createElement('div');
+              div.className = 'flex items-center justify-between bg-gray-50 p-3 rounded-lg border border-gray-200';
+              div.innerHTML = `
+                  <div class="flex items-center gap-3 overflow-hidden">
+                      <span class="text-red-500 text-xl">📄</span>
+                      <div class="min-w-0">
+                          <p class="text-sm font-bold text-gray-700 truncate">${file.name}</p>
+                          <p class="text-xs text-gray-500">${(file.size / 1024).toFixed(0)} KB</p>
+                      </div>
+                  </div>
+                  <button onclick="window.removeFile(${index})" class="text-gray-400 hover:text-red-500 font-bold px-2">✕</button>
+              `;
+              pdfList.appendChild(div);
+          });
+      }
+
+      window.removeFile = (index) => {
+          selectedFiles.splice(index, 1);
+          updateUI();
+      };
+
+      clearBtn.addEventListener('click', () => {
+          selectedFiles = [];
+          fileInput.value = '';
+          updateUI();
+      });
+
+      mergeBtn.addEventListener('click', async () => {
+          if (selectedFiles.length < 2) {
+              alert("Please select at least 2 PDF files to merge.");
+              return;
+          }
+
+          mergeBtn.innerText = "Processing...";
+          mergeBtn.disabled = true;
+
+          try {
+              // @ts-ignore
+              const { PDFDocument } = PDFLib;
+              const mergedPdf = await PDFDocument.create();
+
+              for (const file of selectedFiles) {
+                  const arrayBuffer = await file.arrayBuffer();
+                  const pdf = await PDFDocument.load(arrayBuffer);
+                  const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+                  copiedPages.forEach((page) => mergedPdf.addPage(page));
+              }
+
+              const pdfBytes = await mergedPdf.save();
+              const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+              const link = document.createElement('a');
+              link.href = URL.createObjectURL(blob);
+              link.download = `TopOnlineForm-Merged-${Date.now()}.pdf`;
+              link.click();
+
+              mergeBtn.innerText = "Merged Successfully! 🎉";
+          } catch (error) {
+              console.error(error);
+              alert("Error merging PDFs. One of the files might be corrupted or password protected.");
+              mergeBtn.innerText = "Try Again";
+          } finally {
+              setTimeout(() => {
+                  mergeBtn.innerText = "🚀 Merge PDF Now";
+                  mergeBtn.disabled = false;
+              }, 3000);
+          }
+      });
+  </script>
+</Layout>
