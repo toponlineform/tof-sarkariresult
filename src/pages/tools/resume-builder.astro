@@ -3,180 +3,236 @@ import Layout from '../../layouts/Layout.astro';
 import AdSlot from '../../components/AdSlot.astro';
 
 // SEO Details
-const title = "Free Resume Builder for Govt & Private Jobs - Make Bio-Data Online";
-const description = "Create a professional Resume / Bio-Data for SSC, Police, and Private Job Interviews. Instant PDF Download. No Login Required.";
+const title = "Free Resume Builder - Professional Bio-Data Maker (A4 PDF)";
+const description = "Create a professional Resume / Bio-Data for SSC, Police, and Private Job Interviews. Matches standard A4 Print Format. 100% Free.";
 ---
 
 <Layout title={title} description={description}>
   
-  <div class="max-w-7xl mx-auto px-4 py-8">
+  <div class="max-w-[1400px] mx-auto px-4 py-8">
       
-      {/* HEADER */}
+      {/* HEADER (No Print) */}
       <div class="text-center mb-8 no-print">
-          <span class="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Infinity Pro</span>
+          <span class="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Updated Version</span>
           <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 mt-3 mb-4">
-              Free <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-500">Resume Builder</span>
+              Infinity <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-cyan-600">Resume Builder</span>
           </h1>
           <p class="text-gray-500 text-lg">
-              Fill the details on the left, and watch your <strong>Professional Resume</strong> created instantly on the right.
+              Based on standard A4 Format. Fill details & Download PDF.
           </p>
       </div>
 
-      {/* 🟢 TOP AD (Only visible on Screen) */}
-      <div class="mb-6 no-print">
+      {/* TOP AD */}
+      <div class="mb-6 no-print max-w-4xl mx-auto">
         <AdSlot type="horizontal" />
       </div>
 
-      <div class="flex flex-col lg:flex-row gap-8">
+      <div class="flex flex-col xl:flex-row gap-8 items-start">
           
-          {/* 📝 LEFT COLUMN: EDITOR FORM */}
-          <div class="w-full lg:w-1/2 no-print h-fit">
-              <div class="bg-white border border-gray-200 rounded-xl shadow-lg p-6 sticky top-4">
+          {/* 📝 LEFT COLUMN: EDITOR (Sticky) */}
+          <div class="w-full xl:w-[450px] flex-shrink-0 no-print">
+              <div class="bg-white border border-gray-200 rounded-xl shadow-lg p-6 sticky top-4 h-[calc(100vh-40px)] overflow-y-auto custom-scrollbar">
                   
-                  <div class="flex justify-between items-center mb-6 border-b pb-4">
-                      <h3 class="text-xl font-bold text-gray-800">📝 Enter Details</h3>
-                      <button onclick="window.print()" class="bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-bold py-2 px-6 rounded-lg shadow-md transform hover:-translate-y-1 transition flex items-center gap-2">
-                          <span>⬇️</span> Download PDF
+                  <div class="flex justify-between items-center mb-6 pb-4 border-b">
+                      <h3 class="text-xl font-bold text-gray-800">🛠️ Editor</h3>
+                      <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md flex items-center gap-2 text-sm transition">
+                          <span>🖨️</span> Print / PDF
                       </button>
                   </div>
 
-                  {/* FORM SECTIONS */}
+                  {/* SETTINGS */}
+                  <div class="bg-gray-50 p-4 rounded-lg mb-6 border border-gray-200">
+                      <h4 class="text-xs font-bold text-gray-500 uppercase mb-3">Theme Settings</h4>
+                      <div class="flex gap-4 items-center">
+                          <label class="text-sm font-semibold">Color:</label>
+                          <div class="flex gap-2">
+                              <button class="w-6 h-6 rounded-full bg-black border-2 border-transparent focus:border-gray-400" onclick="changeColor('black')"></button>
+                              <button class="w-6 h-6 rounded-full bg-blue-700 border-2 border-transparent focus:border-gray-400" onclick="changeColor('blue')"></button>
+                              <button class="w-6 h-6 rounded-full bg-green-700 border-2 border-transparent focus:border-gray-400" onclick="changeColor('green')"></button>
+                          </div>
+                      </div>
+                      <div class="mt-3 flex items-center gap-2">
+                          <input type="checkbox" id="showPhoto" class="rounded" checked>
+                          <label for="showPhoto" class="text-sm">Show Photo Frame</label>
+                      </div>
+                  </div>
+
+                  {/* FORM INPUTS */}
                   <form id="resumeForm" class="space-y-6">
                       
                       {/* Personal Info */}
                       <div>
-                          <h4 class="text-sm font-bold text-blue-600 uppercase mb-3">Personal Information</h4>
-                          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <input type="text" id="inName" placeholder="Full Name" class="p-3 border rounded focus:ring-2 focus:ring-blue-200 outline-none" />
-                              <input type="text" id="inJob" placeholder="Job Title (e.g. Data Entry Operator)" class="p-3 border rounded focus:ring-2 focus:ring-blue-200 outline-none" />
-                              <input type="text" id="inPhone" placeholder="Phone Number" class="p-3 border rounded focus:ring-2 focus:ring-blue-200 outline-none" />
-                              <input type="email" id="inEmail" placeholder="Email Address" class="p-3 border rounded focus:ring-2 focus:ring-blue-200 outline-none" />
-                              <input type="text" id="inAddress" placeholder="City, State" class="p-3 border rounded focus:ring-2 focus:ring-blue-200 outline-none" />
-                              <input type="text" id="inLink" placeholder="LinkedIn / Portfolio Link" class="p-3 border rounded focus:ring-2 focus:ring-blue-200 outline-none" />
+                          <div class="flex items-center gap-2 mb-3 text-blue-600">
+                              <span>👤</span> <h4 class="font-bold uppercase text-sm">Personal Info</h4>
                           </div>
-                          <textarea id="inSummary" placeholder="Professional Summary (Write 2-3 lines about yourself...)" class="w-full mt-4 p-3 border rounded focus:ring-2 focus:ring-blue-200 outline-none h-24"></textarea>
+                          <div class="space-y-3">
+                              <input type="text" id="inName" placeholder="Full Name" class="w-full p-3 border rounded text-sm focus:border-blue-500 outline-none" />
+                              <input type="text" id="inJob" placeholder="Job Title (e.g. Accountant)" class="w-full p-3 border rounded text-sm focus:border-blue-500 outline-none" />
+                              
+                              <div class="grid grid-cols-2 gap-3">
+                                  <input type="text" id="inPhone" placeholder="Phone" class="p-3 border rounded text-sm outline-none" />
+                                  <input type="email" id="inEmail" placeholder="Email" class="p-3 border rounded text-sm outline-none" />
+                              </div>
+                              <input type="text" id="inAddress" placeholder="Full Address" class="w-full p-3 border rounded text-sm outline-none" />
+                              <textarea id="inSummary" placeholder="Profile Summary (2-3 lines)" class="w-full p-3 border rounded text-sm outline-none h-20"></textarea>
+                          </div>
                       </div>
 
-                      <hr />
+                      <hr class="border-dashed" />
 
                       {/* Education */}
                       <div>
-                          <h4 class="text-sm font-bold text-blue-600 uppercase mb-3">Education (Highest First)</h4>
-                          <div class="space-y-3">
+                          <div class="flex items-center gap-2 mb-3 text-blue-600">
+                              <span>🎓</span> <h4 class="font-bold uppercase text-sm">Education</h4>
+                          </div>
+                          
+                          {/* Edu 1 */}
+                          <div class="bg-gray-50 p-3 rounded mb-3 border">
+                              <input type="text" id="inEdu1" placeholder="Degree (e.g. B.Tech)" class="w-full mb-2 p-2 border rounded text-sm" />
                               <div class="grid grid-cols-2 gap-2">
-                                  <input type="text" id="inEdu1" placeholder="Degree (e.g. B.Sc)" class="p-3 border rounded outline-none" />
-                                  <input type="text" id="inYear1" placeholder="Year (e.g. 2024)" class="p-3 border rounded outline-none" />
+                                  <input type="text" id="inCollege1" placeholder="College / University" class="p-2 border rounded text-sm" />
+                                  <input type="text" id="inYear1" placeholder="Year (e.g. 2024)" class="p-2 border rounded text-sm" />
                               </div>
-                              <input type="text" id="inCollege1" placeholder="College / University Name" class="w-full p-3 border rounded outline-none" />
-                              
-                              <div class="grid grid-cols-2 gap-2 mt-2">
-                                  <input type="text" id="inEdu2" placeholder="12th / Diploma" class="p-3 border rounded outline-none" />
-                                  <input type="text" id="inYear2" placeholder="Year" class="p-3 border rounded outline-none" />
+                          </div>
+
+                          {/* Edu 2 */}
+                          <div class="bg-gray-50 p-3 rounded border">
+                              <input type="text" id="inEdu2" placeholder="12th / Diploma" class="w-full mb-2 p-2 border rounded text-sm" />
+                              <div class="grid grid-cols-2 gap-2">
+                                  <input type="text" id="inCollege2" placeholder="School / Board" class="p-2 border rounded text-sm" />
+                                  <input type="text" id="inYear2" placeholder="Year (e.g. 2020)" class="p-2 border rounded text-sm" />
                               </div>
-                              <input type="text" id="inCollege2" placeholder="School / Board Name" class="w-full p-3 border rounded outline-none" />
                           </div>
                       </div>
 
-                      <hr />
+                      <hr class="border-dashed" />
 
                       {/* Experience */}
                       <div>
-                          <h4 class="text-sm font-bold text-blue-600 uppercase mb-3">Experience (Optional)</h4>
-                          <input type="text" id="inExpRole" placeholder="Job Role / Position" class="w-full p-3 border rounded outline-none mb-2" />
-                          <input type="text" id="inExpComp" placeholder="Company Name & Duration" class="w-full p-3 border rounded outline-none mb-2" />
-                          <textarea id="inExpDesc" placeholder="Job Responsibilities (Bullet points)" class="w-full p-3 border rounded outline-none h-20"></textarea>
+                          <div class="flex items-center gap-2 mb-3 text-blue-600">
+                              <span>💼</span> <h4 class="font-bold uppercase text-sm">Experience</h4>
+                          </div>
+                          <input type="text" id="inExpRole" placeholder="Job Position" class="w-full mb-2 p-3 border rounded text-sm outline-none" />
+                          <input type="text" id="inExpComp" placeholder="Company | Years" class="w-full mb-2 p-3 border rounded text-sm outline-none" />
+                          <textarea id="inExpDesc" placeholder="Responsibilities (Use Enter for new points)" class="w-full p-3 border rounded text-sm outline-none h-24"></textarea>
                       </div>
 
-                      <hr />
+                      <hr class="border-dashed" />
 
                       {/* Skills */}
                       <div>
-                          <h4 class="text-sm font-bold text-blue-600 uppercase mb-3">Skills</h4>
-                          <textarea id="inSkills" placeholder="Enter Skills separated by comma (e.g. Typing, MS Office, Java, Hindi, English)" class="w-full p-3 border rounded outline-none h-20"></textarea>
+                          <div class="flex items-center gap-2 mb-3 text-blue-600">
+                              <span>⚡</span> <h4 class="font-bold uppercase text-sm">Skills</h4>
+                          </div>
+                          <textarea id="inSkills" placeholder="Enter skills separated by comma (e.g. Java, Excel, Typing)" class="w-full p-3 border rounded text-sm outline-none h-20 bg-yellow-50"></textarea>
+                          <p class="text-xs text-gray-500 mt-1">* Separate skills with commas</p>
                       </div>
 
                   </form>
+
+                  {/* BOTTOM AD */}
+                  <div class="mt-8 pt-4 border-t">
+                      <p class="text-[10px] text-gray-400 text-center mb-1">Sponsored</p>
+                      <AdSlot type="square" />
+                  </div>
+
               </div>
           </div>
 
-          {/* 📄 RIGHT COLUMN: LIVE PREVIEW (A4 PAGE) */}
-          <div class="w-full lg:w-1/2 flex justify-center bg-gray-100 p-4 rounded-xl border border-gray-300 shadow-inner overflow-x-auto" id="previewContainer">
+          {/* 📄 RIGHT COLUMN: PREVIEW (The A4 Paper) */}
+          <div class="flex-1 w-full bg-gray-200 p-4 md:p-8 rounded-xl flex justify-center items-start min-h-screen overflow-x-auto shadow-inner" id="previewArea">
               
-              {/* THE A4 PAPER */}
-              <div id="resumePreview" class="bg-white w-[210mm] min-h-[297mm] p-[10mm] shadow-2xl text-gray-800 text-sm leading-relaxed box-border">
+              {/* A4 PAGE STRUCTURE */}
+              <div id="resumePreview" class="bg-white w-[210mm] min-h-[297mm] p-[15mm] md:p-[20mm] shadow-2xl text-gray-800 box-border relative">
                   
-                  {/* Header */}
-                  <div class="border-b-2 border-gray-800 pb-4 mb-6">
-                      <h1 id="outName" class="text-4xl font-bold text-gray-900 uppercase tracking-wide">YOUR NAME</h1>
-                      <p id="outJob" class="text-lg text-blue-700 font-medium mt-1">JOB TITLE</p>
+                  {/* HEADER SECTION */}
+                  <div class="border-b-[3px] border-black pb-6 mb-6 flex justify-between items-start theme-border">
+                      <div class="flex-1">
+                          <h1 id="outName" class="text-4xl font-extrabold uppercase tracking-wide leading-tight theme-text">YOUR NAME</h1>
+                          <p id="outJob" class="text-lg text-gray-600 font-medium mt-1 tracking-wider">JOB TITLE / POSITION</p>
+                          
+                          <div class="flex flex-wrap gap-x-6 gap-y-2 mt-4 text-sm text-gray-600 font-medium">
+                              <span class="flex items-center gap-1">📞 <span id="outPhone">+91 9876543210</span></span>
+                              <span class="flex items-center gap-1">✉️ <span id="outEmail">email@example.com</span></span>
+                              <span class="flex items-center gap-1">📍 <span id="outAddress">New Delhi, India</span></span>
+                          </div>
+                      </div>
                       
-                      <div class="flex flex-wrap gap-4 mt-3 text-xs text-gray-600 font-medium">
-                          <span id="outPhone">📞 +91 9876543210</span>
-                          <span id="outEmail">✉️ email@example.com</span>
-                          <span id="outAddress">📍 New Delhi, India</span>
-                          <span id="outLink" class="text-blue-600">🌐 linkedin.com/in/name</span>
+                      {/* Photo Area */}
+                      <div id="photoFrame" class="w-[35mm] h-[45mm] border border-gray-300 bg-gray-50 flex items-center justify-center text-xs text-gray-400 text-center overflow-hidden">
+                          Paste Photo Here
                       </div>
                   </div>
 
-                  {/* Summary */}
+                  {/* SUMMARY */}
                   <div class="mb-6">
-                      <h3 class="font-bold text-gray-900 uppercase border-b border-gray-300 mb-2 pb-1 text-sm tracking-wider">Professional Summary</h3>
-                      <p id="outSummary" class="text-gray-700 text-justify">
-                          A highly motivated individual with a focus on delivering excellence. Looking for opportunities in government or private sectors to utilize my skills.
+                      <h3 class="text-sm font-bold uppercase tracking-widest border-b border-gray-300 mb-3 pb-1 theme-text">Profile Summary</h3>
+                      <p id="outSummary" class="text-sm leading-relaxed text-justify text-gray-700">
+                          Highly motivated professional with strong dedication to work. Seeking a challenging position in a reputable organization to expand my learnings, knowledge, and skills.
                       </p>
                   </div>
 
-                  {/* Experience Section (Conditional) */}
-                  <div id="secExperience" class="mb-6">
-                      <h3 class="font-bold text-gray-900 uppercase border-b border-gray-300 mb-2 pb-1 text-sm tracking-wider">Work Experience</h3>
-                      <div>
-                          <div class="flex justify-between items-baseline">
-                              <h4 id="outExpRole" class="font-bold text-gray-800">Job Role</h4>
-                              <span id="outExpComp" class="text-xs font-bold text-gray-500">Company Name | 2022 - Present</span>
-                          </div>
-                          <p id="outExpDesc" class="text-gray-700 mt-1 text-xs whitespace-pre-line">
-                              - Managed daily operations and data entry tasks.
-                              - Coordinate with team members.
-                          </p>
-                      </div>
-                  </div>
-
-                  {/* Education Section */}
+                  {/* EXPERIENCE */}
                   <div class="mb-6">
-                      <h3 class="font-bold text-gray-900 uppercase border-b border-gray-300 mb-2 pb-1 text-sm tracking-wider">Education</h3>
+                      <h3 class="text-sm font-bold uppercase tracking-widest border-b border-gray-300 mb-4 pb-1 theme-text">Work Experience</h3>
                       
-                      <div class="mb-3">
-                          <div class="flex justify-between">
-                              <h4 id="outEdu1" class="font-bold text-gray-800">Degree Name</h4>
-                              <span id="outYear1" class="text-xs font-bold text-gray-500">2024</span>
+                      <div class="mb-4">
+                          <div class="flex justify-between items-baseline mb-1">
+                              <h4 id="outExpRole" class="text-base font-bold text-gray-800">Job Position</h4>
+                              <span id="outExpComp" class="text-sm font-bold text-gray-500">Company Name | 2022 - Present</span>
                           </div>
-                          <p id="outCollege1" class="text-gray-600 text-xs">University / College Name</p>
-                      </div>
-
-                      <div>
-                          <div class="flex justify-between">
-                              <h4 id="outEdu2" class="font-bold text-gray-800">12th / Diploma</h4>
-                              <span id="outYear2" class="text-xs font-bold text-gray-500">2021</span>
-                          </div>
-                          <p id="outCollege2" class="text-gray-600 text-xs">School / Board Name</p>
+                          <ul id="outExpDesc" class="list-disc pl-5 text-sm text-gray-700 leading-relaxed space-y-1">
+                              <li>Handled daily operations and managed team workflow.</li>
+                              <li>Responsible for data entry and maintaining records.</li>
+                          </ul>
                       </div>
                   </div>
 
-                  {/* Skills Section */}
+                  {/* EDUCATION */}
                   <div class="mb-6">
-                      <h3 class="font-bold text-gray-900 uppercase border-b border-gray-300 mb-2 pb-1 text-sm tracking-wider">Skills</h3>
-                      <div id="outSkills" class="flex flex-wrap gap-2 text-xs">
-                          <span class="bg-gray-100 px-2 py-1 rounded border">Typing</span>
-                          <span class="bg-gray-100 px-2 py-1 rounded border">Computer Basic</span>
+                      <h3 class="text-sm font-bold uppercase tracking-widest border-b border-gray-300 mb-4 pb-1 theme-text">Education</h3>
+                      
+                      <div class="grid grid-cols-[1fr_auto] gap-4 mb-3">
+                          <div>
+                              <h4 id="outEdu1" class="font-bold text-gray-800 text-sm">Degree Name</h4>
+                              <p id="outCollege1" class="text-xs text-gray-600">University / College Name</p>
+                          </div>
+                          <span id="outYear1" class="text-sm font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded h-fit">2024</span>
+                      </div>
+
+                      <div class="grid grid-cols-[1fr_auto] gap-4">
+                          <div>
+                              <h4 id="outEdu2" class="font-bold text-gray-800 text-sm">12th / Diploma</h4>
+                              <p id="outCollege2" class="text-xs text-gray-600">School / Board Name</p>
+                          </div>
+                          <span id="outYear2" class="text-sm font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded h-fit">2020</span>
                       </div>
                   </div>
 
-                  {/* Declaration (Standard for Bio-Data) */}
-                  <div class="mt-8 pt-4 border-t border-dashed border-gray-300 text-xs text-gray-500 italic">
-                      <p>I hereby declare that the information provided above is true to the best of my knowledge.</p>
-                      <div class="mt-8 flex justify-between">
-                          <span>Date: ____________</span>
-                          <span>Signature: ____________</span>
+                  {/* SKILLS (Chip Style from Old Code) */}
+                  <div class="mb-8">
+                      <h3 class="text-sm font-bold uppercase tracking-widest border-b border-gray-300 mb-4 pb-1 theme-text">Key Skills</h3>
+                      <div id="outSkills" class="flex flex-wrap gap-2">
+                          <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded text-xs font-bold border border-gray-200">Typing</span>
+                          <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded text-xs font-bold border border-gray-200">MS Office</span>
+                          <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded text-xs font-bold border border-gray-200">Internet Surfing</span>
+                      </div>
+                  </div>
+
+                  {/* DECLARATION */}
+                  <div class="mt-auto pt-8 border-t border-dashed border-gray-300">
+                      <p class="text-xs text-gray-500 italic mb-12">
+                          I hereby declare that the details furnished above are true and correct to the best of my knowledge and belief.
+                      </p>
+                      <div class="flex justify-between text-sm font-bold text-gray-800">
+                          <div>
+                              <p>Date: ________________</p>
+                              <p class="mt-2">Place: ________________</p>
+                          </div>
+                          <div class="text-center">
+                              <p>_______________________</p>
+                              <p class="text-xs text-gray-500 font-normal mt-1">(Signature)</p>
+                          </div>
                       </div>
                   </div>
 
@@ -185,52 +241,64 @@ const description = "Create a professional Resume / Bio-Data for SSC, Police, an
       </div>
   </div>
 
-  {/* 🎨 PRINT STYLES (THE MAGIC) */}
+  {/* 🎨 PRINT & CUSTOM STYLES */}
   <style is:global>
+      /* Custom Scrollbar for Editor */
+      .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+          background: #f1f1f1; 
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #c1c1c1; 
+          border-radius: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #a8a8a8; 
+      }
+
       @media print {
-          /* Hide everything */
+          @page {
+              margin: 0;
+              size: A4;
+          }
           body * {
               visibility: hidden;
           }
-          /* Hide Ads and Header */
-          .no-print, header, footer, nav, aside {
+          /* Hide Ads, Header, Editor */
+          .no-print, header, footer, nav, aside, .ad-slot {
               display: none !important;
           }
-          /* Show only Resume */
-          #previewContainer {
-              background: white;
-              border: none;
-              padding: 0;
-              margin: 0;
+          
+          /* Show Resume */
+          #previewArea {
+              background: white !important;
+              padding: 0 !important;
+              margin: 0 !important;
+              display: block !important;
               position: absolute;
               left: 0;
               top: 0;
               width: 100%;
-          }
-          #resumePreview, #resumePreview * {
-              visibility: visible;
+              height: 100%;
           }
           #resumePreview {
-              width: 100%;
-              position: absolute;
-              left: 0;
-              top: 0;
-              box-shadow: none;
-              padding: 0;
-              margin: 0;
-              border: none;
+              visibility: visible !important;
+              box-shadow: none !important;
+              width: 100% !important;
+              height: 100% !important;
+              padding: 20mm !important; /* Fixed Print Padding */
           }
-          /* Adjust Page Margins */
-          @page {
-              margin: 10mm;
-              size: auto;
+          #resumePreview * {
+              visibility: visible !important;
           }
       }
   </style>
 
-  {/* 🧠 JAVASCRIPT LOGIC (REAL-TIME UPDATES) */}
+  {/* 🧠 LOGIC */}
   <script>
-      // Helper function to update text
+      // 1. Live Text Update Logic
       const updateText = (inputId, outputId, defaultText = "") => {
           const input = document.getElementById(inputId);
           const output = document.getElementById(outputId);
@@ -241,29 +309,40 @@ const description = "Create a professional Resume / Bio-Data for SSC, Police, an
           }
       };
 
-      // Personal
+      // Connect Fields
       updateText('inName', 'outName', 'YOUR NAME');
       updateText('inJob', 'outJob', 'JOB TITLE');
       updateText('inPhone', 'outPhone', '+91 9876543210');
       updateText('inEmail', 'outEmail', 'email@example.com');
-      updateText('inAddress', 'outAddress', 'City, State');
-      updateText('inLink', 'outLink', '');
-      updateText('inSummary', 'outSummary', 'A highly motivated individual with a focus on delivering excellence...');
-
-      // Education
+      updateText('inAddress', 'outAddress', 'New Delhi, India');
+      updateText('inSummary', 'outSummary', 'Write a short summary about yourself here...');
+      
       updateText('inEdu1', 'outEdu1', 'Degree Name');
-      updateText('inYear1', 'outYear1', 'Year');
       updateText('inCollege1', 'outCollege1', 'University Name');
+      updateText('inYear1', 'outYear1', '2024');
       updateText('inEdu2', 'outEdu2', '12th / Diploma');
-      updateText('inYear2', 'outYear2', 'Year');
       updateText('inCollege2', 'outCollege2', 'School Name');
+      updateText('inYear2', 'outYear2', '2020');
 
-      // Experience
-      updateText('inExpRole', 'outExpRole', 'Job Role');
-      updateText('inExpComp', 'outExpComp', 'Company Name | Duration');
-      updateText('inExpDesc', 'outExpDesc', 'Describe your responsibilities...');
+      updateText('inExpRole', 'outExpRole', 'Job Position');
+      updateText('inExpComp', 'outExpComp', 'Company Name | Years');
 
-      // Skills (Split by comma)
+      // 2. Experience List Logic (Bullet Points)
+      const inExpDesc = document.getElementById('inExpDesc');
+      const outExpDesc = document.getElementById('outExpDesc');
+      
+      inExpDesc.addEventListener('input', () => {
+          const text = inExpDesc.value;
+          if(!text) {
+              outExpDesc.innerHTML = '<li>Responsible for daily tasks.</li>';
+              return;
+          }
+          // Convert new lines to list items
+          const lines = text.split('\n');
+          outExpDesc.innerHTML = lines.map(line => line.trim() ? `<li>${line}</li>` : '').join('');
+      });
+
+      // 3. Skills Logic (Comma Separated -> Chips)
       const inSkills = document.getElementById('inSkills');
       const outSkills = document.getElementById('outSkills');
       
@@ -273,11 +352,55 @@ const description = "Create a professional Resume / Bio-Data for SSC, Police, an
           skills.forEach(skill => {
               if(skill.trim()) {
                   const span = document.createElement('span');
-                  span.className = 'bg-gray-100 px-2 py-1 rounded border mr-2 mb-1 inline-block';
+                  // Recreating your OLD CSS style using Tailwind
+                  span.className = 'bg-gray-100 text-gray-700 px-3 py-1 rounded text-xs font-bold border border-gray-200';
                   span.innerText = skill.trim();
                   outSkills.appendChild(span);
               }
           });
+      });
+
+      // 4. Color Theme Logic
+      window.changeColor = (color) => {
+          const name = document.getElementById('outName');
+          const borders = document.querySelectorAll('.theme-border');
+          const texts = document.querySelectorAll('.theme-text');
+          
+          let colorClass = 'text-black';
+          let borderClass = 'border-black';
+
+          if(color === 'blue') {
+              colorClass = 'text-blue-700';
+              borderClass = 'border-blue-700';
+          } else if (color === 'green') {
+              colorClass = 'text-green-700';
+              borderClass = 'border-green-700';
+          }
+
+          // Reset and Add new classes
+          name.className = `text-4xl font-extrabold uppercase tracking-wide leading-tight ${colorClass}`;
+          
+          borders.forEach(el => {
+              el.classList.remove('border-black', 'border-blue-700', 'border-green-700');
+              el.classList.add(borderClass);
+          });
+          
+          texts.forEach(el => {
+              el.classList.remove('text-black', 'text-gray-900', 'text-blue-700', 'text-green-700');
+              el.classList.add(colorClass);
+          });
+      };
+
+      // 5. Photo Toggle Logic
+      const showPhoto = document.getElementById('showPhoto');
+      const photoFrame = document.getElementById('photoFrame');
+      
+      showPhoto.addEventListener('change', (e) => {
+          if(e.target.checked) {
+              photoFrame.style.display = 'flex';
+          } else {
+              photoFrame.style.display = 'none';
+          }
       });
   </script>
 </Layout>
