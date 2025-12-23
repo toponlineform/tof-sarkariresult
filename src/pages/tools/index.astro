@@ -2,7 +2,8 @@
 import Layout from '../../layouts/Layout.astro';
 import AdSlot from '../../components/AdSlot.astro';
 
-// ✅ FIXED: Import path ab sahi file name (tools.js) point kar raha hai
+// ✅ FIXED: Import Master Data from local file (tools.js)
+// Path is just './tools.js' since we are in src/pages/tools/
 import { toolsList } from './tools.js';
 
 const title = "Infinity Tools - Free Online Tools for Students & Professionals";
