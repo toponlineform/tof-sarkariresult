@@ -2,16 +2,16 @@
 import Layout from '../../layouts/Layout.astro';
 import AdSlot from '../../components/AdSlot.astro';
 
-// SEO Details
-const title = "Age Calculator for Govt Jobs 2026 - Check Eligibility Online";
-const description = "Calculate your exact age in Years, Months, and Days for SSC, UPSC, Banking, Railway and Police exams. Best Age Calculator for Government Jobs 2026.";
+const title = "Age Calculator Online - Check Exact Age for Govt Exams (SSC/UPSC)";
+const description = "Calculate your exact age in Years, Months, and Days. Best for checking eligibility for SSC, UPSC, Banking, and Railway exams. 100% Accurate.";
 
-// 🛠️ Sidebar Tools List (Consistent Navigation)
+// Sidebar Links
 const sidebarTools = [
   { name: "Image Resizer", icon: "🖼️", link: "/tools/image-resizer", active: false },
   { name: "Age Calculator", icon: "🧮", link: "/tools/age-calculator", active: true }, // ✅ Active
-  { name: "Typing Test", icon: "⌨️", link: "#", active: false, badge: "Coming Soon" },
-  { name: "PDF Merger", icon: "📄", link: "#", active: false, badge: "Coming Soon" },
+  { name: "Passport Photo", icon: "📸", link: "/tools/passport-photo-maker", active: false },
+  { name: "Image Compressor", icon: "📉", link: "/tools/image-compressor", active: false },
+  { name: "JPG to PDF", icon: "📄", link: "/tools/jpg-to-pdf", active: false },
 ];
 ---
 
@@ -20,127 +20,115 @@ const sidebarTools = [
   <div class="max-w-7xl mx-auto px-4 py-8">
       
       {/* HEADER */}
-      <div class="text-center mb-10">
-          <span class="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Premium Tool</span>
+      <div class="text-center mb-8">
+          <span class="bg-yellow-100 text-yellow-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Exam Eligibility</span>
           <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 mt-3 mb-4">
-              Infinity <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Age Calculator</span>
+              Infinity <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-orange-600">Age Calculator</span>
           </h1>
           <p class="text-gray-500 text-lg max-w-2xl mx-auto">
-              Check your exact eligibility for 
-              <span class="font-bold text-gray-700"> SSC, UPSC, Banking & Police</span> exams in seconds.
+              Find out exactly how old you are in Years, Months, and Days. Perfect for checking <strong>"Age As On"</strong> criteria for exams.
           </p>
       </div>
 
       <div class="flex flex-col lg:flex-row gap-8 items-start">
           
-          {/* 🧮 CALCULATOR MAIN AREA */}
+          {/* 🧮 MAIN CALCULATOR AREA */}
           <main class="flex-1 w-full min-w-0">
               
-              {/* Top Ad */}
               <div class="mb-6">
-                 <AdSlot type="horizontal" />
+                <AdSlot type="horizontal" />
               </div>
 
-              <div class="bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden relative p-6 md:p-10">
+              <div class="bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden p-6 md:p-8">
                   
-                  {/* Decorative Blob */}
-                  <div class="absolute top-0 right-0 -mt-10 -mr-10 w-32 h-32 bg-purple-50 rounded-full blur-2xl opacity-50 pointer-events-none"></div>
-
-                  {/* INPUTS GRID */}
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 relative z-10">
+                  {/* INPUT FORM */}
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                       
-                      {/* 1. Date of Birth */}
-                      <div>
-                          <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide flex items-center gap-2">
-                              <span>🎂</span> Your Date of Birth
-                          </label>
-                          <input 
-                              type="date" 
-                              id="dob" 
-                              class="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-lg shadow-sm"
-                          />
+                      {/* Date of Birth */}
+                      <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                          <label class="block text-sm font-bold text-gray-700 mb-2">📅 Date of Birth</label>
+                          <input type="date" id="dobInput" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 outline-none text-lg font-mono">
                       </div>
 
-                      {/* 2. Age As On */}
-                      <div>
-                          <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide flex items-center gap-2">
-                              <span>📅</span> Age as on Date
-                          </label>
-                          <input 
-                              type="date" 
-                              id="targetDate" 
-                              class="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-lg shadow-sm"
-                          />
-                          <p class="text-[11px] text-gray-400 mt-1 italic text-right">Default: Today's Date</p>
+                      {/* Age As On */}
+                      <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                          <label class="block text-sm font-bold text-gray-700 mb-2">📍 Age as on (Date)</label>
+                          <input type="date" id="todayInput" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 outline-none text-lg font-mono">
+                          <p class="text-xs text-gray-500 mt-2">*Default is Today's Date</p>
                       </div>
+
                   </div>
 
-                  {/* ACTION BUTTONS */}
-                  <div class="flex flex-col sm:flex-row gap-4 mb-8">
-                      <button id="calcBtn" class="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg transform hover:-translate-y-0.5 transition-all text-lg">
-                          Calculate My Age 🚀
-                      </button>
-                      <button id="resetBtn" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-4 px-8 rounded-xl transition shadow-sm border border-gray-200">
-                          Reset
-                      </button>
-                  </div>
+                  <button id="calcBtn" class="w-full bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg transform hover:-translate-y-1 transition text-xl flex justify-center items-center gap-2">
+                      Calculate Age 🚀
+                  </button>
 
-                  {/* RESULT BOX (Hidden initially) */}
-                  <div id="resultBox" class="hidden bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl p-8 text-center animate-fade-in relative overflow-hidden">
-                      <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-400 to-purple-500"></div>
+                  {/* RESULT AREA (Hidden Initially) */}
+                  <div id="resultArea" class="hidden mt-8 animate-fade-in">
                       
-                      <h3 class="text-gray-500 font-bold uppercase text-xs tracking-[0.2em] mb-4">You are currently</h3>
-                      
-                      <div class="flex justify-center items-center gap-2 md:gap-8 text-gray-800">
-                          
-                          {/* Years */}
-                          <div class="text-center bg-white p-4 rounded-xl shadow-sm min-w-[80px] md:min-w-[100px]">
-                              <span id="resYears" class="block text-4xl md:text-5xl font-extrabold text-blue-700">00</span>
-                              <span class="text-[10px] md:text-xs uppercase font-bold text-gray-400 mt-1 block">Years</span>
+                      {/* Main Age Card */}
+                      <div class="bg-gradient-to-br from-gray-900 to-gray-800 text-white rounded-2xl p-6 md:p-8 text-center shadow-2xl relative overflow-hidden">
+                          <div class="relative z-10">
+                              <p class="text-gray-400 uppercase tracking-widest text-sm font-bold mb-2">Your Exact Age</p>
+                              <div class="flex justify-center items-baseline gap-2 md:gap-4 flex-wrap">
+                                  <div class="text-center">
+                                      <span id="resYears" class="text-4xl md:text-6xl font-extrabold text-yellow-400">0</span>
+                                      <span class="block text-xs md:text-sm text-gray-400 uppercase">Years</span>
+                                  </div>
+                                  <div class="text-4xl md:text-6xl text-gray-600 font-light">/</div>
+                                  <div class="text-center">
+                                      <span id="resMonths" class="text-4xl md:text-6xl font-extrabold text-yellow-400">0</span>
+                                      <span class="block text-xs md:text-sm text-gray-400 uppercase">Months</span>
+                                  </div>
+                                  <div class="text-4xl md:text-6xl text-gray-600 font-light">/</div>
+                                  <div class="text-center">
+                                      <span id="resDays" class="text-4xl md:text-6xl font-extrabold text-yellow-400">0</span>
+                                      <span class="block text-xs md:text-sm text-gray-400 uppercase">Days</span>
+                                  </div>
+                              </div>
                           </div>
-                          
-                          {/* Separator */}
-                          <div class="hidden md:block text-2xl text-gray-300 font-light pb-4">:</div>
-                          
-                          {/* Months */}
-                          <div class="text-center bg-white p-4 rounded-xl shadow-sm min-w-[80px] md:min-w-[100px]">
-                              <span id="resMonths" class="block text-4xl md:text-5xl font-extrabold text-purple-700">00</span>
-                              <span class="text-[10px] md:text-xs uppercase font-bold text-gray-400 mt-1 block">Months</span>
+                          {/* Background Decoration */}
+                          <div class="absolute top-0 right-0 -mt-10 -mr-10 w-32 h-32 bg-yellow-500 rounded-full blur-3xl opacity-20"></div>
+                      </div>
+
+                      {/* Extra Stats Grid */}
+                      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                          <div class="bg-blue-50 p-4 rounded-xl border border-blue-100 text-center">
+                              <div class="text-2xl">🎂</div>
+                              <p class="text-xs text-gray-500 font-bold uppercase mt-1">Next Birthday</p>
+                              <p id="nextBdayDay" class="text-blue-700 font-bold">Monday</p>
+                              <p id="nextBdayMonth" class="text-xs text-gray-400">in 5 months</p>
                           </div>
-                          
-                          {/* Separator */}
-                          <div class="hidden md:block text-2xl text-gray-300 font-light pb-4">:</div>
-                          
-                          {/* Days */}
-                          <div class="text-center bg-white p-4 rounded-xl shadow-sm min-w-[80px] md:min-w-[100px]">
-                              <span id="resDays" class="block text-4xl md:text-5xl font-extrabold text-green-600">00</span>
-                              <span class="text-[10px] md:text-xs uppercase font-bold text-gray-400 mt-1 block">Days</span>
+                          <div class="bg-green-50 p-4 rounded-xl border border-green-100 text-center">
+                              <div class="text-2xl">🗓️</div>
+                              <p class="text-xs text-gray-500 font-bold uppercase mt-1">Total Months</p>
+                              <p id="totalMonths" class="text-green-700 font-bold">300</p>
+                          </div>
+                          <div class="bg-purple-50 p-4 rounded-xl border border-purple-100 text-center">
+                              <div class="text-2xl">🌤️</div>
+                              <p class="text-xs text-gray-500 font-bold uppercase mt-1">Total Days</p>
+                              <p id="totalDays" class="text-purple-700 font-bold">9,125</p>
+                          </div>
+                          <div class="bg-pink-50 p-4 rounded-xl border border-pink-100 text-center">
+                              <div class="text-2xl">⏰</div>
+                              <p class="text-xs text-gray-500 font-bold uppercase mt-1">Total Hours</p>
+                              <p id="totalHours" class="text-pink-700 font-bold">219,000</p>
                           </div>
                       </div>
 
-                      <div class="mt-6 pt-4 border-t border-blue-100">
-                           <p class="text-sm text-gray-600">
-                               Next Birthday in: <span id="nextBday" class="font-bold text-indigo-600">Calculating...</span>
-                           </p>
-                      </div>
                   </div>
 
               </div>
 
               {/* SEO CONTENT */}
-              <div class="mt-10 prose prose-blue max-w-none bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
-                  <h2 class="text-2xl font-bold text-gray-800">Why Use This Age Calculator?</h2>
-                  <p class="text-gray-600">In almost every government job notification like <strong>SSC CGL, UPSC, IBPS PO, RRB NTPC, or Police Constable</strong>, there is a specific age limit criteria. Candidates often get confused calculating their exact age manually.</p>
-                  
-                  <h3 class="font-bold text-gray-800 mt-4">How to check eligibility?</h3>
-                  <ul class="list-disc pl-5 space-y-2 text-gray-700">
-                      <li><strong>Step 1:</strong> Select your Date of Birth from your 10th Certificate.</li>
-                      <li><strong>Step 2:</strong> Enter the "Age as on" date mentioned in the official notification (e.g., 01/01/2026).</li>
-                      <li><strong>Step 3:</strong> Click "Calculate Age" to get your result in Years, Months, and Days.</li>
-                  </ul>
-                  
-                  <p class="mt-6 italic bg-yellow-50 p-4 rounded border-l-4 border-yellow-400 text-sm text-yellow-800">
-                      <strong>Note:</strong> Always verify the age relaxation rules (OBC: +3 Years, SC/ST: +5 Years) from the official notification PDF.
+              <div class="mt-10 prose prose-yellow max-w-none bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
+                  <h2 class="text-2xl font-bold text-gray-800">Why calculate exact age?</h2>
+                  <p class="text-gray-600">
+                      For government exams like <strong>SSC CGL, CHSL, UPSC, and IBPS PO</strong>, there is a specific age limit (e.g., 18 to 27 years). The official notification often says: 
+                      <em>"Candidate's age as on 01 August 2025"</em>.
+                  </p>
+                  <p class="text-gray-600">
+                      Calculating this manually can be tricky because of leap years and varying days in months. Our <strong>Infinity Age Calculator</strong> does the math for you in a split second with 100% accuracy.
                   </p>
               </div>
           </main>
@@ -149,7 +137,7 @@ const sidebarTools = [
           <aside class="w-full lg:w-[320px] flex-shrink-0">
               <div class="sticky top-4 space-y-6">
                   
-                  {/* 1. Tools Navigation Menu */}
+                  {/* Tools Menu */}
                   <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-4">
                       <h4 class="font-bold text-gray-800 mb-3 px-2 flex items-center gap-2">
                           <span>🛠️</span> More Infinity Tools
@@ -157,30 +145,18 @@ const sidebarTools = [
                       <ul class="space-y-1">
                           {sidebarTools.map((tool) => (
                               <li>
-                                  <a href={tool.link} class={`flex items-center justify-between p-2.5 rounded-lg transition-all ${tool.active ? 'bg-blue-50 text-blue-700 font-bold border border-blue-100' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-600'}`}>
+                                  <a href={tool.link} class={`flex items-center justify-between p-2.5 rounded-lg transition-all ${tool.active ? 'bg-yellow-50 text-yellow-700 font-bold border border-yellow-100' : 'text-gray-600 hover:bg-gray-50 hover:text-yellow-600'}`}>
                                       <div class="flex items-center gap-3">
                                           <span class="text-lg">{tool.icon}</span>
                                           <span>{tool.name}</span>
                                       </div>
-                                      {tool.badge && (
-                                          <span class="text-[10px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-bold uppercase tracking-wide">{tool.badge}</span>
-                                      )}
-                                      {tool.active && <span class="text-blue-500">●</span>}
+                                      {tool.active && <span class="text-yellow-500">●</span>}
                                   </a>
                               </li>
                           ))}
                       </ul>
                   </div>
 
-                  {/* 2. Join Channels */}
-                  <div class="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 p-4 rounded-xl text-center">
-                    <p class="font-bold text-blue-800 mb-3 text-sm">Join Telegram for Alerts</p>
-                    <a href="https://t.me/toponlineform" target="_blank" class="block w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-bold shadow-md transition transform hover:-translate-y-0.5 text-sm">
-                        Join Channel Now
-                    </a>
-                  </div>
-
-                  {/* 3. Sticky Ad */}
                   <div class="shadow-sm rounded-xl overflow-hidden border border-gray-100">
                      <AdSlot type="square" />
                   </div>
@@ -189,38 +165,42 @@ const sidebarTools = [
       </div>
   </div>
 
-  {/* JAVASCRIPT LOGIC */}
+  {/* 🧠 JAVASCRIPT LOGIC */}
   <script>
-      const dobInput = document.getElementById('dob');
-      const targetInput = document.getElementById('targetDate');
+      const dobInput = document.getElementById('dobInput');
+      const todayInput = document.getElementById('todayInput');
       const calcBtn = document.getElementById('calcBtn');
-      const resetBtn = document.getElementById('resetBtn');
-      const resultBox = document.getElementById('resultBox');
-      const nextBdaySpan = document.getElementById('nextBday');
+      const resultArea = document.getElementById('resultArea');
       
-      // Set Default Target Date to Today
-      targetInput.valueAsDate = new Date();
+      // Set Today's Date as Default
+      const today = new Date();
+      todayInput.valueAsDate = today;
 
       calcBtn.addEventListener('click', () => {
-          if (!dobInput.value) {
-              alert("Please select your Date of Birth!");
+          const dobVal = dobInput.value;
+          const targetVal = todayInput.value;
+
+          if (!dobVal) {
+              alert("Please select your Date of Birth");
               return;
           }
 
-          const dob = new Date(dobInput.value);
-          const target = new Date(targetInput.value);
+          const dob = new Date(dobVal);
+          const target = new Date(targetVal);
 
           if (dob > target) {
-              alert("Date of Birth cannot be in the future relative to the Cut-off date!");
+              alert("Date of Birth cannot be in the future!");
               return;
           }
 
+          // Calculation Logic
           let years = target.getFullYear() - dob.getFullYear();
           let months = target.getMonth() - dob.getMonth();
           let days = target.getDate() - dob.getDate();
 
           if (days < 0) {
               months--;
+              // Get days in previous month
               const prevMonthDate = new Date(target.getFullYear(), target.getMonth(), 0);
               days += prevMonthDate.getDate();
           }
@@ -230,33 +210,37 @@ const sidebarTools = [
               months += 12;
           }
 
-          // Next Birthday Calculation
-          const currentYear = new Date().getFullYear();
-          let nextBirthday = new Date(currentYear, dob.getMonth(), dob.getDate());
-          if (new Date() > nextBirthday) {
-              nextBirthday.setFullYear(currentYear + 1);
-          }
-          const diffTime = Math.abs(nextBirthday - new Date());
-          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-
-          // Update UI
+          // Update Main Result
           document.getElementById('resYears').innerText = years;
           document.getElementById('resMonths').innerText = months;
           document.getElementById('resDays').innerText = days;
-          nextBdaySpan.innerText = diffDays + " Days";
-          
-          resultBox.classList.remove('hidden');
-          
-          // Scroll to result on mobile
-          if(window.innerWidth < 768) {
-              resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }
-      });
 
-      resetBtn.addEventListener('click', () => {
-          dobInput.value = '';
-          targetInput.valueAsDate = new Date();
-          resultBox.classList.add('hidden');
+          // Extra Stats
+          const diffTime = Math.abs(target - dob);
+          const totalDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+          const totalHours = totalDays * 24;
+          
+          document.getElementById('totalMonths').innerText = (years * 12) + months;
+          document.getElementById('totalDays').innerText = totalDays.toLocaleString();
+          document.getElementById('totalHours').innerText = totalHours.toLocaleString();
+
+          // Next Birthday Logic
+          const currentYear = target.getFullYear();
+          let nextBday = new Date(dob);
+          nextBday.setFullYear(currentYear);
+          
+          if (nextBday < target) {
+              nextBday.setFullYear(currentYear + 1);
+          }
+          
+          const daysToBday = Math.ceil((nextBday - target) / (1000 * 60 * 60 * 24));
+          const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+          
+          document.getElementById('nextBdayDay').innerText = daysOfWeek[nextBday.getDay()];
+          document.getElementById('nextBdayMonth').innerText = daysToBday === 0 ? "Today! 🎂" : `in ${daysToBday} days`;
+
+          // Show Result
+          resultArea.classList.remove('hidden');
       });
   </script>
 </Layout>
