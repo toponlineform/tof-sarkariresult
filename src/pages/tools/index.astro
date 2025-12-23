@@ -2,116 +2,11 @@
 import Layout from '../../layouts/Layout.astro';
 import AdSlot from '../../components/AdSlot.astro';
 
+// ✅ NEW: Import Master Data from local file (_tools.js)
+import { toolsList } from './_tools.js';
+
 const title = "Infinity Tools - Free Online Tools for Students & Professionals";
 const description = "Access 15+ Free Tools: Resume Builder, Passport Photo Maker, Typing Test, PDF Tools, Age Calculator, and more. 100% Free & Fast.";
-
-// 🛠️ ALL TOOLS LIST
-const allTools = [
-  {
-    title: "Passport Photo Maker",
-    desc: "Create 8 to 32 PP photos on 4x6/A4 sheets.",
-    icon: "📸",
-    link: "/tools/passport-photo-maker",
-    color: "from-indigo-500 to-blue-500",
-    badge: "Most Used 🔥"
-  },
-  {
-    title: "Resume Builder",
-    desc: "Create Bio-Data for Govt & Private Jobs.",
-    icon: "📝",
-    link: "/tools/resume-builder",
-    color: "from-slate-700 to-slate-900",
-    badge: "Pro"
-  },
-  {
-    title: "Typing Test",
-    desc: "Practice for SSC/Banking with TCS Interface.",
-    icon: "⌨️",
-    link: "/tools/typing-test",
-    color: "from-purple-500 to-indigo-500",
-    badge: "Exam Special"
-  },
-  {
-    title: "Image Compressor",
-    desc: "Reduce size to 20KB/50KB for forms.",
-    icon: "📉",
-    link: "/tools/image-compressor",
-    color: "from-green-500 to-teal-500",
-    badge: "Must Have"
-  },
-  {
-    title: "Name & Date on Photo",
-    desc: "Add Name & DOP automatically for SSC.",
-    icon: "📅",
-    link: "/tools/name-date-on-photo",
-    color: "from-blue-500 to-cyan-500",
-    badge: null
-  },
-  {
-    title: "Postcard Photo Maker",
-    desc: "Create 4x6 inch photo for SSC Exams.",
-    icon: "🖼️",
-    link: "/tools/postcard-photo-maker",
-    color: "from-blue-600 to-indigo-600",
-    badge: "New"
-  },
-  {
-    title: "JPG to PDF",
-    desc: "Convert multiple images to single PDF.",
-    icon: "📄",
-    link: "/tools/jpg-to-pdf",
-    color: "from-red-500 to-orange-500",
-    badge: null
-  },
-  {
-    title: "PDF Merger",
-    desc: "Combine multiple PDF files into one.",
-    icon: "📑",
-    link: "/tools/pdf-merger",
-    color: "from-pink-500 to-rose-500",
-    badge: null
-  },
-  {
-    title: "Age Calculator",
-    desc: "Check exact age for eligibility (Y/M/D).",
-    icon: "🧮",
-    link: "/tools/age-calculator",
-    color: "from-yellow-400 to-orange-500",
-    badge: null
-  },
-  {
-    title: "Image to Text (OCR)",
-    desc: "Extract text from images (Hindi/Eng).",
-    icon: "🔍",
-    link: "/tools/image-to-text",
-    color: "from-teal-400 to-emerald-500",
-    badge: "AI Tool"
-  },
-  {
-    title: "Pro Calculator",
-    desc: "Scientific + GST Calculator with Voice.",
-    icon: "🧮",
-    link: "/tools/pro-calculator",
-    color: "from-gray-600 to-gray-800",
-    badge: null
-  },
-  {
-    title: "CGPA to Percentage",
-    desc: "Convert Grades for CBSE/Engineering.",
-    icon: "📊",
-    link: "/tools/cgpa-to-percentage",
-    color: "from-violet-500 to-purple-500",
-    badge: null
-  },
-  {
-    title: "Image Resizer",
-    desc: "Resize width & height (pixels/cm/mm).",
-    icon: "📐",
-    link: "/tools/image-resizer",
-    color: "from-blue-400 to-blue-600",
-    badge: null
-  }
-];
 ---
 
 <Layout title={title} description={description}>
@@ -134,10 +29,10 @@ const allTools = [
         <AdSlot type="horizontal" />
       </div>
 
-      {/* 🛠️ TOOLS GRID */}
+      {/* 🛠️ TOOLS GRID (Data coming from _tools.js) */}
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           
-          {allTools.map((tool) => (
+          {toolsList.map((tool) => (
               <a href={tool.link} class="group relative bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-xl transition duration-300 transform hover:-translate-y-1 flex flex-col h-full overflow-hidden">
                   
                   {/* Background Gradient Effect on Hover */}
