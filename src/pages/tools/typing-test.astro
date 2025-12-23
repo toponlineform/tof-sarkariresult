@@ -1,0 +1,330 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+
+// SEO Details
+const title = "Free Online Typing Test for SSC CGL, CHSL & Banking - Check WPM Speed";
+const description = "Practice English Typing for Govt Exams with Real TCS Interface. Check your Words Per Minute (WPM) and Accuracy online. 100% Free.";
+
+// 🛠️ Sidebar Tools List
+const sidebarTools = [
+  { name: "Image Resizer", icon: "🖼️", link: "/tools/image-resizer", active: false },
+  { name: "Age Calculator", icon: "🧮", link: "/tools/age-calculator", active: false },
+  { name: "JPG to PDF", icon: "📄", link: "/tools/jpg-to-pdf", active: false },
+  { name: "Typing Test", icon: "⌨️", link: "/tools/typing-test", active: true }, // ✅ Active
+];
+---
+
+<Layout title={title} description={description}>
+  
+  <div class="max-w-7xl mx-auto px-4 py-8">
+      
+      {/* HEADER */}
+      <div class="text-center mb-8">
+          <span class="bg-purple-100 text-purple-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Exam Simulator</span>
+          <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 mt-3 mb-4">
+              Infinity <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600">Typing Master</span>
+          </h1>
+          <p class="text-gray-500 text-lg max-w-2xl mx-auto">
+              Practice typing with <span class="font-bold text-gray-700">Real Exam Interface (TCS Pattern)</span>. Boost your speed for SSC & Banking.
+          </p>
+      </div>
+
+      <div class="flex flex-col lg:flex-row gap-8 items-start">
+          
+          {/* ⌨️ MAIN TYPING AREA */}
+          <main class="flex-1 w-full min-w-0">
+              
+              <div class="mb-6">
+                <AdSlot type="horizontal" />
+              </div>
+
+              {/* EXAM INTERFACE BOX */}
+              <div class="bg-white border border-gray-300 rounded-lg shadow-lg overflow-hidden relative">
+                  
+                  {/* Exam Header (Blue Bar like TCS) */}
+                  <div class="bg-[#1e40af] text-white p-3 flex justify-between items-center text-sm">
+                      <div class="font-bold">System Name: C001</div>
+                      <div class="flex items-center gap-4">
+                          <span id="timer" class="font-mono text-xl font-bold bg-black px-3 py-1 rounded text-yellow-400 border border-white">02:00</span>
+                          <button id="startBtn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded font-bold transition">Start Test</button>
+                      </div>
+                  </div>
+
+                  {/* Settings Bar */}
+                  <div class="bg-gray-100 p-2 border-b border-gray-300 flex flex-wrap gap-4 text-xs md:text-sm">
+                      <label class="flex items-center gap-2 cursor-pointer">
+                          <input type="checkbox" id="disableBackspace" class="rounded text-purple-600 focus:ring-purple-500">
+                          <span class="font-bold text-gray-700">Disable Backspace (SSC Mode)</span>
+                      </label>
+                      <select id="timeSelect" class="border rounded p-1 text-gray-700">
+                          <option value="1">1 Minute (Quick)</option>
+                          <option value="2" selected>2 Minutes (Standard)</option>
+                          <option value="5">5 Minutes (Exam)</option>
+                      </select>
+                  </div>
+
+                  {/* Typing Area */}
+                  <div class="p-4 md:p-6 bg-[#f0f9ff]">
+                      
+                      {/* Text to Type (Read Only) */}
+                      <div id="quoteDisplay" class="bg-white border border-gray-300 p-4 rounded-lg mb-4 text-lg font-mono leading-relaxed h-32 overflow-hidden text-gray-500 select-none relative">
+                          Click Start to load text...
+                          <div class="absolute inset-0 bg-gradient-to-b from-transparent to-white/10 pointer-events-none"></div>
+                      </div>
+
+                      {/* User Input */}
+                      <textarea 
+                          id="quoteInput" 
+                          class="w-full h-32 p-4 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-500 font-mono text-lg leading-relaxed shadow-inner bg-white disabled:bg-gray-100 disabled:cursor-not-allowed"
+                          placeholder="Click 'Start Test' and type here..."
+                          disabled
+                          spellcheck="false"
+                          autocomplete="off"
+                      ></textarea>
+                  </div>
+
+                  {/* Live Stats Footer */}
+                  <div class="bg-gray-800 text-white p-4 flex justify-around text-center">
+                      <div>
+                          <div class="text-xs text-gray-400 uppercase tracking-widest">Speed</div>
+                          <div class="text-2xl font-bold text-yellow-400"><span id="wpm">0</span> WPM</div>
+                      </div>
+                      <div>
+                          <div class="text-xs text-gray-400 uppercase tracking-widest">Accuracy</div>
+                          <div class="text-2xl font-bold text-green-400"><span id="accuracy">100</span>%</div>
+                      </div>
+                      <div class="hidden md:block">
+                          <div class="text-xs text-gray-400 uppercase tracking-widest">Errors</div>
+                          <div class="text-2xl font-bold text-red-400"><span id="errors">0</span></div>
+                      </div>
+                  </div>
+              </div>
+
+              {/* RESULT POPUP (Hidden) */}
+              <div id="resultModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+                  <div class="bg-white rounded-2xl p-8 max-w-md w-full text-center shadow-2xl transform scale-100 border-4 border-purple-100">
+                      <div class="text-6xl mb-4">🏆</div>
+                      <h2 class="text-3xl font-extrabold text-gray-800 mb-2">Test Completed!</h2>
+                      <p class="text-gray-500 mb-6">Here is your performance report</p>
+                      
+                      <div class="grid grid-cols-2 gap-4 mb-8">
+                          <div class="bg-blue-50 p-4 rounded-xl">
+                              <div class="text-3xl font-bold text-blue-600" id="finalWpm">0</div>
+                              <div class="text-xs uppercase font-bold text-gray-500">Net Speed (WPM)</div>
+                          </div>
+                          <div class="bg-green-50 p-4 rounded-xl">
+                              <div class="text-3xl font-bold text-green-600" id="finalAcc">0%</div>
+                              <div class="text-xs uppercase font-bold text-gray-500">Accuracy</div>
+                          </div>
+                      </div>
+
+                      <button onclick="location.reload()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-xl shadow-lg transition">
+                          Take Another Test
+                      </button>
+                  </div>
+              </div>
+
+              {/* SEO Content */}
+              <div class="mt-10 prose prose-purple max-w-none bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
+                  <h2 class="text-2xl font-bold text-gray-800">SSC & Banking Typing Test Practice</h2>
+                  <p class="text-gray-600">
+                      Improve your typing speed for <strong>SSC CGL, CHSL, MTS, RRB NTPC, and Banking Exams</strong>. 
+                      Our tool simulates the actual exam environment provided by TCS iON.
+                  </p>
+                  <h3 class="font-bold text-gray-800">How is Speed Calculated?</h3>
+                  <ul class="list-disc pl-5 space-y-1 text-gray-700">
+                      <li><strong>5 Keystrokes = 1 Word:</strong> As per SSC rules, every 5 characters (including space) count as 1 word.</li>
+                      <li><strong>Gross Speed:</strong> Total Words Typed / Time Taken.</li>
+                      <li><strong>Net Speed:</strong> Gross Speed - (Errors / Time).</li>
+                  </ul>
+              </div>
+          </main>
+
+          {/* 🧊 STICKY SIDEBAR */}
+          <aside class="w-full lg:w-[320px] flex-shrink-0">
+              <div class="sticky top-4 space-y-6">
+                  
+                  {/* Tools Menu */}
+                  <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-4">
+                      <h4 class="font-bold text-gray-800 mb-3 px-2 flex items-center gap-2">
+                          <span>🛠️</span> More Infinity Tools
+                      </h4>
+                      <ul class="space-y-1">
+                          {sidebarTools.map((tool) => (
+                              <li>
+                                  <a href={tool.link} class={`flex items-center justify-between p-2.5 rounded-lg transition-all ${tool.active ? 'bg-purple-50 text-purple-700 font-bold border border-purple-100' : 'text-gray-600 hover:bg-gray-50 hover:text-purple-600'}`}>
+                                      <div class="flex items-center gap-3">
+                                          <span class="text-lg">{tool.icon}</span>
+                                          <span>{tool.name}</span>
+                                      </div>
+                                      {tool.badge && (
+                                          <span class="text-[10px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-bold uppercase tracking-wide">{tool.badge}</span>
+                                      )}
+                                      {tool.active && <span class="text-purple-500">●</span>}
+                                  </a>
+                              </li>
+                          ))}
+                      </ul>
+                  </div>
+
+                  <div class="shadow-sm rounded-xl overflow-hidden border border-gray-100">
+                     <AdSlot type="square" />
+                  </div>
+              </div>
+          </aside>
+      </div>
+  </div>
+
+  {/* 🧠 TYPING ENGINE LOGIC */}
+  <script>
+      const RANDOM_QUOTES = [
+          "India is a land of diversity and culture. The history of India dates back to thousands of years. It is known for its rich heritage and traditions.",
+          "Government jobs provide stability and security in life. Many students aspire to crack exams like SSC and UPSC to serve the nation with pride and honor.",
+          "Technology has changed the way we live and work. The internet has made information accessible to everyone around the globe instantly.",
+          "Climate change is a pressing issue that needs immediate attention. We must plant more trees and reduce pollution to save our planet Earth.",
+          "Education is the most powerful weapon which you can use to change the world. Learning never stops and knowledge is the key to success."
+      ];
+
+      const quoteDisplay = document.getElementById('quoteDisplay');
+      const quoteInput = document.getElementById('quoteInput');
+      const timerElement = document.getElementById('timer');
+      const startBtn = document.getElementById('startBtn');
+      const wpmElement = document.getElementById('wpm');
+      const accuracyElement = document.getElementById('accuracy');
+      const errorsElement = document.getElementById('errors');
+      const resultModal = document.getElementById('resultModal');
+      const finalWpm = document.getElementById('finalWpm');
+      const finalAcc = document.getElementById('finalAcc');
+      const disableBackspace = document.getElementById('disableBackspace');
+      const timeSelect = document.getElementById('timeSelect');
+
+      let timeLeft = 60;
+      let timeElapsed = 0;
+      let timer = null;
+      let errors = 0;
+      let isPlaying = false;
+      let currentQuote = "";
+      let totalTypedChars = 0;
+
+      // Initialize
+      startBtn.addEventListener('click', startGame);
+
+      function startGame() {
+          if(isPlaying) return;
+          
+          // Reset Stats
+          const selectedTime = parseInt(timeSelect.value);
+          timeLeft = selectedTime * 60;
+          timeElapsed = 0;
+          errors = 0;
+          totalTypedChars = 0;
+          isPlaying = true;
+          
+          // UI Updates
+          quoteInput.disabled = false;
+          quoteInput.value = "";
+          quoteInput.focus();
+          startBtn.innerText = "Running...";
+          startBtn.classList.add('opacity-50', 'cursor-not-allowed');
+          resultModal.classList.add('hidden');
+
+          // Load Text
+          currentQuote = RANDOM_QUOTES[Math.floor(Math.random() * RANDOM_QUOTES.length)];
+          // Repeat quote if needed for longer duration
+          if(selectedTime > 2) currentQuote += " " + currentQuote + " " + currentQuote;
+          
+          quoteDisplay.innerHTML = '';
+          currentQuote.split('').forEach(char => {
+              const charSpan = document.createElement('span');
+              charSpan.innerText = char;
+              quoteDisplay.appendChild(charSpan);
+          });
+
+          // Start Timer
+          timer = setInterval(updateTimer, 1000);
+      }
+
+      function updateTimer() {
+          if (timeLeft > 0) {
+              timeLeft--;
+              timeElapsed++;
+              
+              // Format Timer
+              let minutes = Math.floor(timeLeft / 60);
+              let seconds = timeLeft % 60;
+              timerElement.innerText = `${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+              
+              updateStats();
+          } else {
+              finishGame();
+          }
+      }
+
+      function updateStats() {
+          const typedText = quoteInput.value;
+          const wpm = Math.round((typedText.length / 5) / (timeElapsed / 60));
+          wpmElement.innerText = wpm < 0 || !isFinite(wpm) ? 0 : wpm;
+          
+          const accuracy = totalTypedChars > 0 ? Math.round(((totalTypedChars - errors) / totalTypedChars) * 100) : 100;
+          accuracyElement.innerText = accuracy;
+          errorsElement.innerText = errors;
+      }
+
+      function finishGame() {
+          clearInterval(timer);
+          isPlaying = false;
+          quoteInput.disabled = true;
+          startBtn.innerText = "Start Test";
+          startBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+          
+          // Show Result
+          finalWpm.innerText = wpmElement.innerText;
+          finalAcc.innerText = accuracyElement.innerText;
+          resultModal.classList.remove('hidden');
+      }
+
+      // Handle Typing
+      quoteInput.addEventListener('input', () => {
+          if(!isPlaying) return;
+
+          const arrayQuote = quoteDisplay.querySelectorAll('span');
+          const arrayValue = quoteInput.value.split('');
+          totalTypedChars++;
+
+          let correct = true;
+          let currentErrors = 0;
+
+          arrayQuote.forEach((characterSpan, index) => {
+              const character = arrayValue[index];
+              if (character == null) {
+                  characterSpan.classList.remove('text-green-600', 'bg-green-100', 'text-red-600', 'bg-red-100');
+                  correct = false;
+              } else if (character === characterSpan.innerText) {
+                  characterSpan.classList.add('text-green-600', 'bg-green-100');
+                  characterSpan.classList.remove('text-red-600', 'bg-red-100');
+              } else {
+                  characterSpan.classList.remove('text-green-600', 'bg-green-100');
+                  characterSpan.classList.add('text-red-600', 'bg-red-100');
+                  currentErrors++;
+                  correct = false;
+              }
+          });
+          
+          // Only increment global error count if new error is made (simplified logic)
+          errors = currentErrors;
+
+          // Scroll text if needed
+          if(arrayValue.length > 50) {
+              quoteDisplay.scrollTop = quoteDisplay.scrollHeight;
+          }
+      });
+
+      // Handle Backspace Disable
+      quoteInput.addEventListener('keydown', (e) => {
+          if (disableBackspace.checked && e.key === 'Backspace') {
+              e.preventDefault();
+          }
+      });
+  </script>
+</Layout>
