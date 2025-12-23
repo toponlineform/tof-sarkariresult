@@ -2,385 +2,415 @@
 import Layout from '../../layouts/Layout.astro';
 import AdSlot from '../../components/AdSlot.astro';
 
-const title = "Simple Resume Builder - Free Bio-Data Maker for Govt Jobs";
-const description = "Create a clean, professional Resume/Bio-Data for interviews. A4 format, Print-friendly, No watermark.";
+const title = "Pro Resume Builder - Free Bio-Data Maker for Govt Jobs";
+const description = "Create a professional, ATS-friendly resume in minutes. Live preview and PDF download. 100% Free.";
 ---
 
 <Layout title={title} description={description}>
-  
-  <div class="max-w-7xl mx-auto px-4 py-8">
+
+  <div style="background: #f0f2f5; min-height: 100vh; padding-bottom: 50px;">
       
-    {/* Page Header (Website UI) */}
-    <div class="text-center mb-8 no-print">
-        <h1 class="text-3xl font-bold text-gray-800">Simple Resume Builder</h1>
-        <p class="text-gray-500">Fill details and Click Print/Download</p>
-    </div>
+      {/* Header Bar */}
+      <div class="no-print" style="background: #333; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100;">
+          <h2 style="margin: 0; font-size: 20px;">📄 Pro Resume Builder</h2>
+          <div style="display: flex; gap: 15px; align-items: center;">
+              
+              {/* Theme Color Picker */}
+              <div style="display: flex; align-items: center; gap: 5px;">
+                  <span>🎨</span>
+                  <input type="color" id="themeColorInput" value="#2c3e50" style="border: none; width: 30px; height: 30px; cursor: pointer; background: transparent;" title="Change Theme Color" />
+              </div>
 
-    {/* Top Ad */}
-    <div class="mb-6 no-print">
-      <AdSlot type="horizontal" />
-    </div>
+              <button onclick="window.print()" style="background: #27ae60; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; font-weight: bold; display: flex; align-items: center; gap: 8px;">
+                  🖨️ Download PDF
+              </button>
+          </div>
+      </div>
 
-    {/* RESUME BUILDER CONTAINER (User's CSS Logic) */}
-    <div class="resume-container">
-        
-        {/* 1. EDITOR SECTION (Left) */}
-        <div class="editor-section no-print">
-            <div class="section-title">
-                <span>Enter Details</span>
-                <button onclick="window.print()" style="background:#2563eb; color:white; border:none; padding:5px 15px; border-radius:4px; cursor:pointer; font-size:14px;">
-                    🖨️ Download PDF
-                </button>
-            </div>
+      <div class="max-w-[1200px] mx-auto mt-4 no-print">
+        <AdSlot type="horizontal" />
+      </div>
 
-            <form id="resumeForm">
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" id="inName" placeholder="Your Name" />
-                </div>
-                <div class="form-group">
-                    <label>Job Title</label>
-                    <input type="text" id="inJob" placeholder="e.g. Data Entry Operator" />
-                </div>
-                
-                <div class="form-group">
-                    <label>Contact Info</label>
-                    <input type="text" id="inPhone" placeholder="Phone Number" style="margin-bottom:5px;" />
-                    <input type="text" id="inEmail" placeholder="Email Address" style="margin-bottom:5px;" />
-                    <input type="text" id="inAddress" placeholder="City, State" />
-                </div>
+      <div class="resume-container">
+          
+          {/* --- LEFT: EDITOR SECTION --- */}
+          <div class="editor-section no-print">
+              
+              {/* Personal Info */}
+              <div class="section-title">Personal Information</div>
+              <div class="form-group">
+                  <label>Full Name</label>
+                  <input type="text" id="inName" value="Rohit Sharma" />
+              </div>
+              <div class="form-group">
+                  <label>Job Title</label>
+                  <input type="text" id="inRole" value="Software Developer" />
+              </div>
+              <div style="display: flex; gap: 10px;">
+                  <div class="form-group" style="flex: 1;">
+                      <label>Email</label>
+                      <input type="text" id="inEmail" value="rohit@example.com" />
+                  </div>
+                  <div class="form-group" style="flex: 1;">
+                      <label>Phone</label>
+                      <input type="text" id="inPhone" value="+91 98765 43210" />
+                  </div>
+              </div>
+              <div class="form-group">
+                  <label>Address</label>
+                  <input type="text" id="inAddress" value="New Delhi, India" />
+              </div>
+              <div class="form-group">
+                  <label>Professional Summary</label>
+                  <textarea rows="4" id="inSummary">Passionate developer with 3+ years of experience in building scalable web applications. Dedicated to writing clean, efficient code.</textarea>
+              </div>
 
-                <div class="form-group">
-                    <label>Professional Summary</label>
-                    <textarea id="inSummary" rows="4" placeholder="Write 2-3 lines about yourself..."></textarea>
-                </div>
+              {/* Experience */}
+              <div class="section-title">
+                  Experience 
+                  <button id="addExpBtn" style="background: transparent; border: none; color: #007bff; cursor: pointer; font-weight: bold; font-size: 20px;">+</button>
+              </div>
+              <div id="experienceList">
+                  {/* Dynamic Experience Items will be injected here */}
+              </div>
 
-                <div class="section-title">Experience</div>
-                <div class="form-group">
-                    <label>Recent Job</label>
-                    <input type="text" id="inExpRole" placeholder="Job Role / Position" style="margin-bottom:5px;" />
-                    <input type="text" id="inExpComp" placeholder="Company Name | Duration" style="margin-bottom:5px;" />
-                    <textarea id="inExpDesc" rows="3" placeholder="Job Responsibilities..."></textarea>
-                </div>
+              {/* Education */}
+              <div class="section-title">
+                  Education
+                  <button id="addEduBtn" style="background: transparent; border: none; color: #007bff; cursor: pointer; font-weight: bold; font-size: 20px;">+</button>
+              </div>
+              <div id="educationList">
+                  {/* Dynamic Education Items will be injected here */}
+              </div>
 
-                <div class="section-title">Education</div>
-                <div class="form-group">
-                    <label>Highest Qualification</label>
-                    <input type="text" id="inEdu1" placeholder="Degree Name" style="margin-bottom:5px;" />
-                    <input type="text" id="inCollege1" placeholder="University / College" style="margin-bottom:5px;" />
-                    <input type="text" id="inYear1" placeholder="Year" />
-                </div>
-                <div class="form-group">
-                    <label>12th / Diploma</label>
-                    <input type="text" id="inEdu2" placeholder="Course Name" style="margin-bottom:5px;" />
-                    <input type="text" id="inCollege2" placeholder="School / Board" style="margin-bottom:5px;" />
-                    <input type="text" id="inYear2" placeholder="Year" />
-                </div>
+              {/* Skills */}
+              <div class="section-title">Skills</div>
+              <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                  <input type="text" id="newSkillInput" placeholder="Add a skill (e.g. Java)" />
+                  <button id="addSkillBtn" style="background: #2c3e50; color: white; border: none; padding: 0 15px; border-radius: 5px; cursor: pointer;">Add</button>
+              </div>
+              <div id="skillsListEditor" style="display: flex; flex-wrap: wrap; gap: 8px;">
+                  {/* Skills tags editor */}
+              </div>
 
-                <div class="section-title">Skills</div>
-                <div class="form-group">
-                    <label>Skills (Comma Separated)</label>
-                    <textarea id="inSkills" rows="3" placeholder="Typing, Excel, Hindi, English..."></textarea>
-                </div>
-            </form>
+              <div class="mt-6 border-t pt-4">
+                 <AdSlot type="square" />
+              </div>
 
-            {/* Bottom Ad inside Editor */}
-            <div style="margin-top: 20px; padding-top: 10px; border-top: 1px solid #eee;">
-                <AdSlot type="square" />
-            </div>
-        </div>
+          </div>
 
-        {/* 2. PREVIEW SECTION (Right) */}
-        <div class="preview-section resume-preview-area">
-            
-            {/* THE A4 PAPER */}
-            <div class="resume-paper" id="resumeToPrint">
-                
-                {/* Header */}
-                <div class="res-header">
-                    <h1 class="res-name" id="outName">YOUR NAME</h1>
-                    <p style="font-size: 18px; color: #555;" id="outJob">Job Title</p>
-                    
-                    <div class="res-contact">
-                        <span id="outPhone">📞 +91 9876543210</span>
-                        <span id="outEmail">✉️ email@example.com</span>
-                        <span id="outAddress">📍 New Delhi, India</span>
-                    </div>
-                </div>
+          {/* --- RIGHT: PREVIEW SECTION (A4 PAPER) --- */}
+          <div class="preview-section">
+              <div class="resume-paper resume-preview-area" id="resume-to-print">
+                  
+                  {/* Header */}
+                  <div class="res-header dynamic-border">
+                      <h1 class="res-name dynamic-text" id="outName">Rohit Sharma</h1>
+                      <p style="font-size: 18px; margin: 5px 0; font-weight: 500;" id="outRole">Software Developer</p>
+                      <div class="res-contact">
+                          <span>📧 <span id="outEmail">rohit@example.com</span></span>
+                          <span>📱 <span id="outPhone">+91 98765 43210</span></span>
+                          <span>📍 <span id="outAddress">New Delhi, India</span></span>
+                      </div>
+                  </div>
 
-                {/* Summary */}
-                <div style="margin-bottom: 20px;">
-                    <div class="res-section-head">Profile Summary</div>
-                    <p id="outSummary" style="font-size: 14px; text-align: justify;">
-                        A focused professional looking for opportunities to use my skills for the growth of the organization.
-                    </p>
-                </div>
+                  {/* Summary */}
+                  <div style="margin-bottom: 20px;" id="summarySection">
+                      <p id="outSummary">Passionate developer with 3+ years of experience in building scalable web applications. Dedicated to writing clean, efficient code.</p>
+                  </div>
 
-                {/* Experience */}
-                <div style="margin-bottom: 20px;">
-                    <div class="res-section-head">Work Experience</div>
-                    
-                    <div class="res-item">
-                        <div class="res-item-title" id="outExpRole">Job Position</div>
-                        <div class="res-item-subtitle">
-                            <span id="outExpComp">Company Name | Years</span>
-                        </div>
-                        <p id="outExpDesc" class="res-list">
-                            - Managed daily tasks and operations.
-                        </p>
-                    </div>
-                </div>
+                  {/* Experience */}
+                  <div id="previewExpSection" style="display: none;">
+                      <div class="res-section-head dynamic-text dynamic-border">Experience</div>
+                      <div id="previewExpList"></div>
+                  </div>
 
-                {/* Education */}
-                <div style="margin-bottom: 20px;">
-                    <div class="res-section-head">Education</div>
-                    
-                    <div class="res-item">
-                        <div class="res-item-title" id="outEdu1">Degree Name</div>
-                        <div class="res-item-subtitle">
-                            <span id="outCollege1">University Name</span>
-                            <span id="outYear1">2024</span>
-                        </div>
-                    </div>
+                  {/* Education */}
+                  <div id="previewEduSection" style="display: none;">
+                      <div class="res-section-head dynamic-text dynamic-border">Education</div>
+                      <div id="previewEduList"></div>
+                  </div>
 
-                    <div class="res-item">
-                        <div class="res-item-title" id="outEdu2">12th Class</div>
-                        <div class="res-item-subtitle">
-                            <span id="outCollege2">School Board</span>
-                            <span id="outYear2">2020</span>
-                        </div>
-                    </div>
-                </div>
+                  {/* Skills */}
+                  <div id="previewSkillSection" style="display: none;">
+                      <div class="res-section-head dynamic-text dynamic-border">Skills</div>
+                      <div class="res-skills" id="previewSkillsList"></div>
+                  </div>
 
-                {/* Skills */}
-                <div>
-                    <div class="res-section-head">Key Skills</div>
-                    <div class="res-skills" id="outSkills">
-                        <span class="res-skill-tag">Typing</span>
-                        <span class="res-skill-tag">Computer</span>
-                    </div>
-                </div>
+              </div>
+          </div>
 
-                {/* Declaration (Standard Indian Bio-Data Format) */}
-                <div style="margin-top: 50px; border-top: 1px dashed #ccc; padding-top: 10px;">
-                    <p style="font-size: 12px; font-style: italic; color: #666;">
-                        I hereby declare that the information provided above is true to the best of my knowledge.
-                    </p>
-                    <div style="display: flex; justify-content: space-between; margin-top: 30px; font-size: 14px; font-weight: bold;">
-                        <span>Date: ____________</span>
-                        <span>Signature: ____________</span>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
+      </div>
   </div>
 
-  {/* 👇 YOUR EXACT CSS (NO CHANGES) */}
+  {/* 👇 YOUR CSS (Direct Copy Paste) */}
   <style is:global>
-    /* Print Logic - Isse PDF ekdum perfect A4 size aayega */
-    @media print {
-      body * {
-        visibility: hidden;
+      /* Print Logic */
+      @media print {
+        body * { visibility: hidden; }
+        .resume-preview-area, .resume-preview-area * { visibility: visible; }
+        .resume-preview-area {
+          position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0;
+          box-shadow: none !important; border: none !important;
+        }
+        .no-print { display: none !important; }
       }
-      .resume-preview-area, .resume-preview-area * {
-        visibility: visible;
+
+      /* Screen Logic */
+      .resume-container {
+        display: flex; flex-wrap: wrap; gap: 20px; max-width: 1200px; margin: 0 auto; padding: 20px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       }
-      .resume-preview-area {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        box-shadow: none !important;
-        border: none !important;
+      .editor-section {
+        flex: 1; min-width: 350px; background: white; padding: 20px; border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05); height: fit-content;
       }
-      .no-print {
-        display: none !important;
+      .preview-section {
+        flex: 1.5; min-width: 350px; display: flex; justify-content: center;
       }
-    }
-
-    /* Screen Logic */
-    .resume-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    .editor-section {
-      flex: 1;
-      min-width: 350px;
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-      height: fit-content;
-    }
-
-    .preview-section {
-      flex: 1.5;
-      min-width: 350px;
-      display: flex;
-      justify-content: center;
-    }
-
-    /* A4 Paper Look */
-    .resume-paper {
-      width: 210mm;
-      min-height: 297mm;
-      background: white;
-      padding: 40px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
-      color: #333;
-      line-height: 1.5;
-    }
-
-    /* Form Styles */
-    .form-group {
-      margin-bottom: 15px;
-    }
-    .form-group label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 5px;
-      font-size: 14px;
-    }
-    .form-group input, .form-group textarea {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-size: 14px;
-    }
-    .section-title {
-      font-size: 18px;
-      font-weight: bold;
-      margin-top: 20px;
-      margin-bottom: 15px;
-      border-bottom: 2px solid #eee;
-      padding-bottom: 5px;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    /* Resume Template Design */
-    .res-header {
-      border-bottom: 2px solid;
-      padding-bottom: 15px;
-      margin-bottom: 20px;
-    }
-    .res-name {
-      font-size: 32px;
-      font-weight: 800;
-      text-transform: uppercase;
-      margin: 0;
-    }
-    .res-contact {
-      font-size: 14px;
-      margin-top: 5px;
-      display: flex;
-      gap: 15px;
-      flex-wrap: wrap;
-    }
-    .res-section-head {
-      font-size: 16px;
-      font-weight: bold;
-      text-transform: uppercase;
-      border-bottom: 1px solid #ccc;
-      margin-top: 20px;
-      margin-bottom: 10px;
-      padding-bottom: 2px;
-      letter-spacing: 1px;
-    }
-    .res-item {
-      margin-bottom: 12px;
-    }
-    .res-item-title {
-      font-weight: bold;
-      font-size: 16px;
-    }
-    .res-item-subtitle {
-      font-style: italic;
-      font-size: 14px;
-      color: #555;
-      display: flex;
-      justify-content: space-between;
-    }
-    .res-list {
-      padding-left: 20px;
-      margin-top: 5px;
-      font-size: 14px;
-    }
-    .res-skills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .res-skill-tag {
-      background: #f0f0f0;
-      padding: 4px 10px;
-      border-radius: 4px;
-      font-size: 13px;
-      font-weight: 500;
-    }
+      .resume-paper {
+        width: 210mm; min-height: 297mm; background: white; padding: 40px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1); color: #333; line-height: 1.5;
+      }
+      .form-group { margin-bottom: 15px; }
+      .form-group label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 14px; }
+      .form-group input, .form-group textarea {
+        width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;
+      }
+      .section-title {
+        font-size: 18px; font-weight: bold; margin-top: 20px; margin-bottom: 15px;
+        border-bottom: 2px solid #eee; padding-bottom: 5px; display: flex; justify-content: space-between;
+      }
+      .res-header { border-bottom: 2px solid; padding-bottom: 15px; margin-bottom: 20px; }
+      .res-name { font-size: 32px; font-weight: 800; text-transform: uppercase; margin: 0; }
+      .res-contact { font-size: 14px; margin-top: 5px; display: flex; gap: 15px; flex-wrap: wrap; }
+      .res-section-head {
+        font-size: 16px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #ccc;
+        margin-top: 20px; margin-bottom: 10px; padding-bottom: 2px; letter-spacing: 1px;
+      }
+      .res-item { margin-bottom: 12px; }
+      .res-item-title { font-weight: bold; font-size: 16px; }
+      .res-item-subtitle {
+        font-style: italic; font-size: 14px; color: #555; display: flex; justify-content: space-between;
+      }
+      .res-list { padding-left: 0; margin-top: 5px; font-size: 14px; white-space: pre-wrap; }
+      .res-skills { display: flex; flex-wrap: wrap; gap: 10px; }
+      .res-skill-tag {
+        background: transparent; padding: 4px 10px; border-radius: 4px; font-size: 13px; font-weight: 500; border: 1px solid;
+      }
   </style>
 
-  {/* JAVASCRIPT LOGIC */}
+  {/* 🧠 REPLICATING REACT LOGIC IN VANILLA JS */}
   <script>
-      // Helper function to update text
-      function linkInput(inputId, outputId, defaultText) {
-          const input = document.getElementById(inputId);
-          const output = document.getElementById(outputId);
-          if (input && output) {
-              input.addEventListener('input', () => {
-                  output.innerText = input.value || defaultText;
-              });
-          }
+      // State Storage
+      let experienceData = [{ id: 1, title: 'Frontend Developer', company: 'Tech Solutions', duration: '2022 - Present', desc: 'Developed responsive websites using React.js.' }];
+      let educationData = [{ id: 1, degree: 'B.Tech in CS', college: 'Delhi University', year: '2018 - 2022', grade: '8.5 CGPA' }];
+      let skillsData = ['React.js', 'JavaScript', 'CSS'];
+
+      // Theme Color Logic
+      const themeInput = document.getElementById('themeColorInput');
+      const addSkillBtn = document.getElementById('addSkillBtn');
+
+      function updateTheme(color) {
+          document.querySelectorAll('.dynamic-text').forEach(el => el.style.color = color);
+          document.querySelectorAll('.dynamic-border').forEach(el => el.style.borderColor = color);
+          document.querySelectorAll('.res-skill-tag').forEach(el => {
+              el.style.color = color;
+              el.style.borderColor = color;
+          });
+          // Update Add Skill Button
+          addSkillBtn.style.background = color;
       }
 
-      // Link Fields
-      linkInput('inName', 'outName', 'YOUR NAME');
-      linkInput('inJob', 'outJob', 'Job Title');
-      linkInput('inPhone', 'outPhone', '+91 9876543210');
-      linkInput('inEmail', 'outEmail', 'email@example.com');
-      linkInput('inAddress', 'outAddress', 'New Delhi, India');
-      linkInput('inSummary', 'outSummary', 'Write summary...');
-      
-      linkInput('inExpRole', 'outExpRole', 'Job Position');
-      linkInput('inExpComp', 'outExpComp', 'Company Name | Years');
-      linkInput('inExpDesc', 'outExpDesc', '- Job responsibilities...');
+      themeInput.addEventListener('input', (e) => updateTheme(e.target.value));
+      updateTheme('#2c3e50'); // Init
 
-      linkInput('inEdu1', 'outEdu1', 'Degree Name');
-      linkInput('inCollege1', 'outCollege1', 'University Name');
-      linkInput('inYear1', 'outYear1', 'Year');
-      
-      linkInput('inEdu2', 'outEdu2', '12th Class');
-      linkInput('inCollege2', 'outCollege2', 'School Name');
-      linkInput('inYear2', 'outYear2', 'Year');
-
-      // Skills Logic (Comma Separated -> Tags)
-      const inSkills = document.getElementById('inSkills');
-      const outSkills = document.getElementById('outSkills');
-
-      inSkills.addEventListener('input', () => {
-          const skillsArray = inSkills.value.split(',');
-          outSkills.innerHTML = '';
-          skillsArray.forEach(skill => {
-              if(skill.trim() !== "") {
-                  const span = document.createElement('span');
-                  span.className = 'res-skill-tag'; // Using your exact CSS class
-                  span.innerText = skill.trim();
-                  outSkills.appendChild(span);
-              }
+      // Basic Info Sync
+      const bindText = (inId, outId) => {
+          document.getElementById(inId).addEventListener('input', (e) => {
+              document.getElementById(outId).innerText = e.target.value;
           });
-      });
-  </script>
+      };
+      bindText('inName', 'outName');
+      bindText('inRole', 'outRole');
+      bindText('inEmail', 'outEmail');
+      bindText('inPhone', 'outPhone');
+      bindText('inAddress', 'outAddress');
+      bindText('inSummary', 'outSummary');
 
+
+      // --- EXPERIENCE LOGIC ---
+      function renderExperience() {
+          const editorList = document.getElementById('experienceList');
+          const previewList = document.getElementById('previewExpList');
+          const previewSection = document.getElementById('previewExpSection');
+
+          editorList.innerHTML = '';
+          previewList.innerHTML = '';
+          previewSection.style.display = experienceData.length ? 'block' : 'none';
+
+          experienceData.forEach(exp => {
+              // 1. Render Editor Inputs
+              const expDiv = document.createElement('div');
+              expDiv.style.cssText = "background:#f9f9f9; padding:10px; border-radius:8px; margin-bottom:10px; position:relative;";
+              expDiv.innerHTML = `
+                  <button onclick="window.removeExp(${exp.id})" style="position:absolute; top:5px; right:5px; background:transparent; border:none; color:red; cursor:pointer;">🗑️</button>
+                  <div class="form-group"><input placeholder="Job Title" value="${exp.title}" oninput="window.updateExp(${exp.id}, 'title', this.value)"></div>
+                  <div class="form-group"><input placeholder="Company Name" value="${exp.company}" oninput="window.updateExp(${exp.id}, 'company', this.value)"></div>
+                  <div class="form-group"><input placeholder="Duration" value="${exp.duration}" oninput="window.updateExp(${exp.id}, 'duration', this.value)"></div>
+                  <div class="form-group"><textarea placeholder="Description" rows="2" oninput="window.updateExp(${exp.id}, 'desc', this.value)">${exp.desc}</textarea></div>
+              `;
+              editorList.appendChild(expDiv);
+
+              // 2. Render Preview Item
+              const prevDiv = document.createElement('div');
+              prevDiv.className = 'res-item';
+              prevDiv.innerHTML = `
+                  <div class="res-item-title">${exp.title}</div>
+                  <div class="res-item-subtitle">
+                      <span>${exp.company}</span>
+                      <span>${exp.duration}</span>
+                  </div>
+                  <div class="res-list">${exp.desc}</div>
+              `;
+              previewList.appendChild(prevDiv);
+          });
+      }
+
+      window.addExp = () => {
+          experienceData.push({ id: Date.now(), title: '', company: '', duration: '', desc: '' });
+          renderExperience();
+      };
+      window.removeExp = (id) => {
+          experienceData = experienceData.filter(e => e.id !== id);
+          renderExperience();
+      };
+      window.updateExp = (id, field, value) => {
+          const item = experienceData.find(e => e.id === id);
+          if (item) {
+              item[field] = value;
+              renderExperience(); // Re-render to update preview
+              // Note: Re-rendering editor while typing causes focus loss. 
+              // Optimization: We should update preview DOM directly, but for simplicity re-render works fast enough here.
+              // To fix focus:
+              // For now, let's just update the specific preview element in a real app, 
+              // but re-rendering is the closest to React logic without Virtual DOM.
+              // To keep focus, we will restore it (Simple Hack)
+              let activeInput = document.activeElement;
+              setTimeout(()=> activeInput.focus(), 0);
+          }
+      };
+      document.getElementById('addExpBtn').addEventListener('click', window.addExp);
+
+
+      // --- EDUCATION LOGIC ---
+      function renderEducation() {
+          const editorList = document.getElementById('educationList');
+          const previewList = document.getElementById('previewEduList');
+          const previewSection = document.getElementById('previewEduSection');
+
+          editorList.innerHTML = '';
+          previewList.innerHTML = '';
+          previewSection.style.display = educationData.length ? 'block' : 'none';
+
+          educationData.forEach(edu => {
+              const eduDiv = document.createElement('div');
+              eduDiv.style.cssText = "background:#f9f9f9; padding:10px; border-radius:8px; margin-bottom:10px; position:relative;";
+              eduDiv.innerHTML = `
+                  <button onclick="window.removeEdu(${edu.id})" style="position:absolute; top:5px; right:5px; background:transparent; border:none; color:red; cursor:pointer;">🗑️</button>
+                  <div class="form-group"><input placeholder="Degree" value="${edu.degree}" oninput="window.updateEdu(${edu.id}, 'degree', this.value)"></div>
+                  <div class="form-group"><input placeholder="College" value="${edu.college}" oninput="window.updateEdu(${edu.id}, 'college', this.value)"></div>
+                  <div style="display:flex; gap:10px">
+                      <input placeholder="Year" value="${edu.year}" style="flex:1" oninput="window.updateEdu(${edu.id}, 'year', this.value)">
+                      <input placeholder="Grade" value="${edu.grade}" style="flex:1" oninput="window.updateEdu(${edu.id}, 'grade', this.value)">
+                  </div>
+              `;
+              editorList.appendChild(eduDiv);
+
+              const prevDiv = document.createElement('div');
+              prevDiv.className = 'res-item';
+              prevDiv.innerHTML = `
+                  <div class="res-item-title">${edu.degree}</div>
+                  <div class="res-item-subtitle">
+                      <span>${edu.college}</span>
+                      <span>${edu.year}</span>
+                  </div>
+                  ${edu.grade ? `<div style="font-size:13px; margin-top:2px">Grade: ${edu.grade}</div>` : ''}
+              `;
+              previewList.appendChild(prevDiv);
+          });
+      }
+
+      window.addEdu = () => {
+          educationData.push({ id: Date.now(), degree: '', college: '', year: '', grade: '' });
+          renderEducation();
+      };
+      window.removeEdu = (id) => {
+          educationData = educationData.filter(e => e.id !== id);
+          renderEducation();
+      };
+      window.updateEdu = (id, field, value) => {
+          const item = educationData.find(e => e.id === id);
+          if (item) {
+              item[field] = value;
+              renderEducation();
+              let activeInput = document.activeElement;
+              setTimeout(()=> activeInput.focus(), 0);
+          }
+      };
+      document.getElementById('addEduBtn').addEventListener('click', window.addEdu);
+
+
+      // --- SKILLS LOGIC ---
+      function renderSkills() {
+          const editorList = document.getElementById('skillsListEditor');
+          const previewList = document.getElementById('previewSkillsList');
+          const previewSection = document.getElementById('previewSkillSection');
+          const color = themeInput.value;
+
+          editorList.innerHTML = '';
+          previewList.innerHTML = '';
+          previewSection.style.display = skillsData.length ? 'block' : 'none';
+
+          skillsData.forEach(skill => {
+              // Editor Tag
+              const tag = document.createElement('span');
+              tag.style.cssText = "background:#e0e0e0; padding:5px 10px; border-radius:15px; fontSize:13px; display:flex; align-items:center; gap:5px";
+              tag.innerHTML = `${skill} <span style="cursor:pointer; color:red; font-weight:bold" onclick="window.removeSkill('${skill}')">×</span>`;
+              editorList.appendChild(tag);
+
+              // Preview Tag
+              const prevTag = document.createElement('span');
+              prevTag.className = 'res-skill-tag';
+              prevTag.style.border = `1px solid ${color}`;
+              prevTag.style.color = color;
+              prevTag.innerText = skill;
+              previewList.appendChild(prevTag);
+          });
+      }
+
+      window.addSkill = () => {
+          const input = document.getElementById('newSkillInput');
+          const val = input.value.trim();
+          if (val && !skillsData.includes(val)) {
+              skillsData.push(val);
+              input.value = '';
+              renderSkills();
+          }
+      };
+      window.removeSkill = (skill) => {
+          skillsData = skillsData.filter(s => s !== skill);
+          renderSkills();
+      };
+      document.getElementById('addSkillBtn').addEventListener('click', window.addSkill);
+      document.getElementById('newSkillInput').addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') window.addSkill();
+      });
+
+      // Initial Render
+      renderExperience();
+      renderEducation();
+      renderSkills();
+
+  </script>
 </Layout>
