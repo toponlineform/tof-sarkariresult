@@ -1,0 +1,218 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+
+const title = "CGPA to Percentage Calculator - CBSE, Mumbai, Engineering & KTU";
+const description = "Convert CGPA to Percentage instantly. Supports CBSE (9.5), Mumbai University, SPPU, KTU, VTU, and Anna University formulas. 100% Accurate.";
+---
+
+<Layout title={title} description={description}>
+  
+  <div class="max-w-4xl mx-auto px-4 py-10">
+      
+      {/* HEADER */}
+      <div class="text-center mb-10">
+          <span class="bg-purple-100 text-purple-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Grade Converter</span>
+          <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 mt-3 mb-4">
+              CGPA to <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600">Percentage</span>
+          </h1>
+          <p class="text-gray-500 text-lg">
+              Convert your 10-point Grades into Percentage for SSC, UPSC, and Placement Forms.
+          </p>
+      </div>
+
+      {/* 🟢 TOP AD */}
+      <div class="mb-8">
+        <AdSlot type="horizontal" />
+      </div>
+
+      {/* MAIN CALCULATOR CARD */}
+      <div class="bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden">
+          
+          {/* TABS (CGPA->% OR %->CGPA) */}
+          <div class="flex border-b border-gray-200 bg-gray-50">
+              <button id="tabToPercent" class="flex-1 py-4 text-sm font-bold text-purple-700 bg-white border-b-2 border-purple-600 focus:outline-none transition">
+                  CGPA to Percentage
+              </button>
+              <button id="tabToCgpa" class="flex-1 py-4 text-sm font-bold text-gray-500 hover:text-purple-600 focus:outline-none transition">
+                  Percentage to CGPA
+              </button>
+          </div>
+
+          <div class="p-6 md:p-10 flex flex-col md:flex-row gap-10 items-center">
+              
+              {/* LEFT: INPUTS */}
+              <div class="w-full md:w-1/2 space-y-6">
+                  
+                  {/* Formula Selector */}
+                  <div>
+                      <label class="block text-sm font-bold text-gray-700 mb-2">Select Formula / University</label>
+                      <select id="formulaSelect" class="w-full p-3 border rounded-lg bg-white font-medium focus:ring-2 focus:ring-purple-500 outline-none">
+                          <option value="9.5">CBSE / Standard (x 9.5)</option>
+                          <option value="10">Simple Scale (x 10)</option>
+                          <option value="eng">Engineering (VTU/Anna) [ (CGPA-0.75) x 10 ]</option>
+                          <option value="mumbai">Mumbai University (7.1 x CGPA + 11)</option>
+                          <option value="ktu">KTU Kerala [ (CGPA-0.5) x 10 ]</option>
+                      </select>
+                  </div>
+
+                  {/* Input Field (Dynamic) */}
+                  <div>
+                      <label class="block text-sm font-bold text-gray-700 mb-2" id="inputLabel">Enter CGPA</label>
+                      <input type="number" id="inputVal" placeholder="e.g. 8.4" step="0.01" min="0" max="100" class="w-full p-4 text-2xl font-mono border border-gray-300 rounded-xl focus:ring-4 focus:ring-purple-100 outline-none text-purple-700 font-bold">
+                  </div>
+
+                  <button id="calcBtn" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition transform hover:-translate-y-1 text-lg">
+                      Convert Now ⚡
+                  </button>
+
+              </div>
+
+              {/* RIGHT: RESULT DISPLAY */}
+              <div class="w-full md:w-1/2 flex justify-center">
+                  <div class="relative w-64 h-64 flex items-center justify-center bg-gray-50 rounded-full border-8 border-gray-100 shadow-inner">
+                      
+                      {/* Animated Circle SVGs would go here, simplified for now */}
+                      <div class="text-center z-10">
+                          <span class="block text-gray-400 text-sm font-bold uppercase tracking-widest mb-1" id="resultLabel">Percentage</span>
+                          <h2 id="resultVal" class="text-6xl font-extrabold text-gray-800">0%</h2>
+                          <p id="gradeVal" class="text-green-600 font-bold mt-2 text-sm">-</p>
+                      </div>
+
+                  </div>
+              </div>
+
+          </div>
+
+          {/* Quick Table for SEO */}
+          <div class="bg-purple-50 p-6 border-t border-purple-100">
+              <h4 class="font-bold text-purple-900 mb-4 text-center">Quick Reference Table (CBSE 9.5 Scale)</h4>
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-sm">
+                  <div class="bg-white p-2 rounded shadow-sm"><span class="font-bold text-gray-600">10 CGPA</span> = 95%</div>
+                  <div class="bg-white p-2 rounded shadow-sm"><span class="font-bold text-gray-600">9 CGPA</span> = 85.5%</div>
+                  <div class="bg-white p-2 rounded shadow-sm"><span class="font-bold text-gray-600">8 CGPA</span> = 76%</div>
+                  <div class="bg-white p-2 rounded shadow-sm"><span class="font-bold text-gray-600">7 CGPA</span> = 66.5%</div>
+              </div>
+          </div>
+
+      </div>
+
+      {/* 🟢 BOTTOM AD */}
+      <div class="mt-8 mb-12">
+        <AdSlot type="horizontal" />
+      </div>
+
+      {/* SEO CONTENT */}
+      <div class="prose prose-purple max-w-none bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
+          <h2 class="text-2xl font-bold text-gray-800">How to convert CGPA to Percentage?</h2>
+          <p class="text-gray-600">
+             Different educational boards and universities use different formulas to convert Grades (CGPA) into Percentage. The most common formula used by <strong>CBSE and SSC</strong> is multiplying the CGPA by 9.5.
+          </p>
+          
+          <h3 class="font-bold text-gray-800 mt-4">Common Formulas Used:</h3>
+          <ul class="list-disc pl-5 text-gray-700 space-y-2">
+              <li><strong>CBSE / Standard:</strong> <code>Percentage = CGPA × 9.5</code></li>
+              <li><strong>Mumbai University (Rev 2016):</strong> <code>Percentage = (7.1 × CGPA) + 11</code></li>
+              <li><strong>Visvesvaraya Technological University (VTU):</strong> <code>Percentage = (CGPA - 0.75) × 10</code></li>
+              <li><strong>KTU (Kerala):</strong> <code>Percentage = (CGPA - 0.5) × 10</code> (For CGPA &lt; 9)</li>
+          </ul>
+      </div>
+
+  </div>
+
+  {/* 🧠 JAVASCRIPT LOGIC */}
+  <script>
+      const tabToPercent = document.getElementById('tabToPercent');
+      const tabToCgpa = document.getElementById('tabToCgpa');
+      const formulaSelect = document.getElementById('formulaSelect');
+      const inputLabel = document.getElementById('inputLabel');
+      const inputVal = document.getElementById('inputVal');
+      const calcBtn = document.getElementById('calcBtn');
+      const resultVal = document.getElementById('resultVal');
+      const resultLabel = document.getElementById('resultLabel');
+      const gradeVal = document.getElementById('gradeVal');
+
+      let mode = 'toPercent'; // 'toPercent' or 'toCgpa'
+
+      // 1. Tab Switching Logic
+      function setMode(newMode) {
+          mode = newMode;
+          inputVal.value = '';
+          resultVal.innerText = mode === 'toPercent' ? '0%' : '0';
+          gradeVal.innerText = '-';
+
+          if (mode === 'toPercent') {
+              // UI Style
+              tabToPercent.className = "flex-1 py-4 text-sm font-bold text-purple-700 bg-white border-b-2 border-purple-600 focus:outline-none transition";
+              tabToCgpa.className = "flex-1 py-4 text-sm font-bold text-gray-500 hover:text-purple-600 focus:outline-none transition";
+              
+              inputLabel.innerText = "Enter CGPA";
+              resultLabel.innerText = "Percentage";
+              formulaSelect.disabled = false;
+              formulaSelect.parentElement.classList.remove('opacity-50');
+              inputVal.placeholder = "e.g. 8.4";
+          } else {
+              // UI Style
+              tabToCgpa.className = "flex-1 py-4 text-sm font-bold text-purple-700 bg-white border-b-2 border-purple-600 focus:outline-none transition";
+              tabToPercent.className = "flex-1 py-4 text-sm font-bold text-gray-500 hover:text-purple-600 focus:outline-none transition";
+              
+              inputLabel.innerText = "Enter Percentage (%)";
+              resultLabel.innerText = "CGPA";
+              formulaSelect.disabled = true; // Reverse only works for standard 9.5 usually
+              formulaSelect.parentElement.classList.add('opacity-50');
+              inputVal.placeholder = "e.g. 78.5";
+          }
+      }
+
+      tabToPercent.addEventListener('click', () => setMode('toPercent'));
+      tabToCgpa.addEventListener('click', () => setMode('toCgpa'));
+
+      // 2. Calculation Logic
+      function calculate() {
+          let val = parseFloat(inputVal.value);
+          if (isNaN(val)) return;
+
+          let res = 0;
+          let grade = "";
+
+          if (mode === 'toPercent') {
+              // CGPA -> %
+              const formula = formulaSelect.value;
+              
+              if (formula === '9.5') res = val * 9.5;
+              else if (formula === '10') res = val * 10;
+              else if (formula === 'eng') res = (val - 0.75) * 10;
+              else if (formula === 'mumbai') {
+                   if(val >= 7) res = (7.1 * val) + 11;
+                   else res = (7.25 * val) + 11; // Old formula variation
+              }
+              else if (formula === 'ktu') res = (val - 0.5) * 10; // Simple approximation
+
+              if (res > 100) res = 100; // Cap at 100
+              resultVal.innerText = res.toFixed(2) + '%';
+              
+          } else {
+              // % -> CGPA (Standard Reverse 9.5)
+              res = val / 9.5;
+              if (res > 10) res = 10;
+              resultVal.innerText = res.toFixed(2);
+          }
+
+          // Grading Text
+          if(mode === 'toPercent') {
+             if(res >= 90) grade = "Outstanding! 🌟";
+             else if(res >= 80) grade = "Excellent Work! 👏";
+             else if(res >= 60) grade = "First Class 👍";
+             else grade = "Keep working hard!";
+          }
+          gradeVal.innerText = grade;
+      }
+
+      calcBtn.addEventListener('click', calculate);
+      
+      // Auto Calc on Input
+      inputVal.addEventListener('input', calculate);
+      formulaSelect.addEventListener('change', calculate);
+
+  </script>
+</Layout>
