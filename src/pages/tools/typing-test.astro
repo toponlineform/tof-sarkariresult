@@ -3,8 +3,8 @@ import Layout from '../../layouts/Layout.astro';
 import AdSlot from '../../components/AdSlot.astro';
 
 // SEO Details
-const title = "Free Online Typing Test for SSC CGL, CHSL & Banking - Check WPM Speed";
-const description = "Practice English Typing for Govt Exams with Real TCS Interface. Check your Words Per Minute (WPM) and Accuracy online. 100% Free.";
+const title = "Free Online Typing Test for SSC CGL, CHSL & Banking - TCS Interface";
+const description = "Practice English Typing for Govt Exams with Real TCS Interface. Choose from 10+ Exam Passages. Check WPM and Accuracy online.";
 
 // 🛠️ Sidebar Tools List
 const sidebarTools = [
@@ -43,41 +43,58 @@ const sidebarTools = [
               <div class="bg-white border border-gray-300 rounded-lg shadow-lg overflow-hidden relative">
                   
                   {/* Exam Header (Blue Bar like TCS) */}
-                  <div class="bg-[#1e40af] text-white p-3 flex justify-between items-center text-sm">
-                      <div class="font-bold">System Name: C001</div>
+                  <div class="bg-[#1e40af] text-white p-3 flex justify-between items-center text-sm shadow-md">
+                      <div class="font-bold flex items-center gap-2">
+                          <span>🖥️</span> System: C001
+                      </div>
                       <div class="flex items-center gap-4">
-                          <span id="timer" class="font-mono text-xl font-bold bg-black px-3 py-1 rounded text-yellow-400 border border-white">02:00</span>
-                          <button id="startBtn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded font-bold transition">Start Test</button>
+                          <span id="timer" class="font-mono text-xl font-bold bg-black px-3 py-1 rounded text-yellow-400 border border-white shadow-inner">02:00</span>
+                          <button id="startBtn" class="bg-green-500 hover:bg-green-600 text-white px-6 py-1.5 rounded font-bold transition shadow-lg border-b-4 border-green-700 active:border-b-0 active:translate-y-1">Start Test</button>
                       </div>
                   </div>
 
-                  {/* Settings Bar */}
-                  <div class="bg-gray-100 p-2 border-b border-gray-300 flex flex-wrap gap-4 text-xs md:text-sm">
-                      <label class="flex items-center gap-2 cursor-pointer">
-                          <input type="checkbox" id="disableBackspace" class="rounded text-purple-600 focus:ring-purple-500">
-                          <span class="font-bold text-gray-700">Disable Backspace (SSC Mode)</span>
-                      </label>
-                      <select id="timeSelect" class="border rounded p-1 text-gray-700">
-                          <option value="1">1 Minute (Quick)</option>
-                          <option value="2" selected>2 Minutes (Standard)</option>
-                          <option value="5">5 Minutes (Exam)</option>
-                      </select>
+                  {/* Settings Bar (Grid Layout for better mobile view) */}
+                  <div class="bg-gray-100 p-3 border-b border-gray-300 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm items-center">
+                      
+                      {/* Passage Selector */}
+                      <div class="flex flex-col">
+                          <label class="text-xs font-bold text-gray-500 mb-1">Select Passage</label>
+                          <select id="passageSelect" class="border border-gray-300 rounded p-1.5 text-gray-800 font-medium focus:ring-2 focus:ring-purple-500 outline-none">
+                              {/* Options injected via JS */}
+                          </select>
+                      </div>
+
+                      {/* Time Selector */}
+                      <div class="flex flex-col">
+                          <label class="text-xs font-bold text-gray-500 mb-1">Duration</label>
+                          <select id="timeSelect" class="border border-gray-300 rounded p-1.5 text-gray-800 font-medium focus:ring-2 focus:ring-purple-500 outline-none">
+                              <option value="1">1 Minute (Warmup)</option>
+                              <option value="2" selected>2 Minutes (Standard)</option>
+                              <option value="5">5 Minutes (Full Exam)</option>
+                              <option value="10">10 Minutes (Endurance)</option>
+                          </select>
+                      </div>
+
+                      {/* Backspace Toggle */}
+                      <div class="flex items-center gap-2 bg-white p-2 rounded border border-gray-200">
+                          <input type="checkbox" id="disableBackspace" class="w-4 h-4 text-purple-600 focus:ring-purple-500 rounded cursor-pointer">
+                          <label for="disableBackspace" class="font-bold text-gray-700 cursor-pointer text-xs md:text-sm select-none">Disable Backspace (SSC Mode)</label>
+                      </div>
                   </div>
 
                   {/* Typing Area */}
                   <div class="p-4 md:p-6 bg-[#f0f9ff]">
                       
-                      {/* Text to Type (Read Only) */}
-                      <div id="quoteDisplay" class="bg-white border border-gray-300 p-4 rounded-lg mb-4 text-lg font-mono leading-relaxed h-32 overflow-hidden text-gray-500 select-none relative">
-                          Click Start to load text...
-                          <div class="absolute inset-0 bg-gradient-to-b from-transparent to-white/10 pointer-events-none"></div>
+                      {/* Text to Type (Read Only - Auto Scrolling) */}
+                      <div id="quoteDisplay" class="bg-white border-2 border-gray-300 p-4 rounded-lg mb-4 text-lg font-mono leading-relaxed h-40 overflow-hidden text-gray-500 select-none relative shadow-inner">
+                          {/* Text Injected Here */}
                       </div>
 
                       {/* User Input */}
                       <textarea 
                           id="quoteInput" 
-                          class="w-full h-32 p-4 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-500 font-mono text-lg leading-relaxed shadow-inner bg-white disabled:bg-gray-100 disabled:cursor-not-allowed"
-                          placeholder="Click 'Start Test' and type here..."
+                          class="w-full h-40 p-4 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-500 focus:ring-4 focus:ring-purple-100 font-mono text-lg leading-relaxed shadow-sm bg-white disabled:bg-gray-100 disabled:cursor-not-allowed resize-none"
+                          placeholder="Click 'Start Test' and start typing here..."
                           disabled
                           spellcheck="false"
                           autocomplete="off"
@@ -85,43 +102,49 @@ const sidebarTools = [
                   </div>
 
                   {/* Live Stats Footer */}
-                  <div class="bg-gray-800 text-white p-4 flex justify-around text-center">
+                  <div class="bg-gray-800 text-white p-4 flex justify-around text-center border-t-4 border-purple-500">
                       <div>
-                          <div class="text-xs text-gray-400 uppercase tracking-widest">Speed</div>
-                          <div class="text-2xl font-bold text-yellow-400"><span id="wpm">0</span> WPM</div>
+                          <div class="text-[10px] md:text-xs text-gray-400 uppercase tracking-widest font-bold">Net Speed</div>
+                          <div class="text-2xl md:text-3xl font-extrabold text-yellow-400 font-mono"><span id="wpm">0</span> WPM</div>
                       </div>
                       <div>
-                          <div class="text-xs text-gray-400 uppercase tracking-widest">Accuracy</div>
-                          <div class="text-2xl font-bold text-green-400"><span id="accuracy">100</span>%</div>
+                          <div class="text-[10px] md:text-xs text-gray-400 uppercase tracking-widest font-bold">Accuracy</div>
+                          <div class="text-2xl md:text-3xl font-extrabold text-green-400 font-mono"><span id="accuracy">100</span>%</div>
                       </div>
-                      <div class="hidden md:block">
-                          <div class="text-xs text-gray-400 uppercase tracking-widest">Errors</div>
-                          <div class="text-2xl font-bold text-red-400"><span id="errors">0</span></div>
+                      <div>
+                          <div class="text-[10px] md:text-xs text-gray-400 uppercase tracking-widest font-bold">Errors</div>
+                          <div class="text-2xl md:text-3xl font-extrabold text-red-400 font-mono"><span id="errors">0</span></div>
                       </div>
                   </div>
               </div>
 
               {/* RESULT POPUP (Hidden) */}
-              <div id="resultModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-                  <div class="bg-white rounded-2xl p-8 max-w-md w-full text-center shadow-2xl transform scale-100 border-4 border-purple-100">
-                      <div class="text-6xl mb-4">🏆</div>
-                      <h2 class="text-3xl font-extrabold text-gray-800 mb-2">Test Completed!</h2>
-                      <p class="text-gray-500 mb-6">Here is your performance report</p>
+              <div id="resultModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-md">
+                  <div class="bg-white rounded-2xl p-8 max-w-md w-full text-center shadow-2xl transform scale-100 border-4 border-purple-600 relative animate-fade-in">
+                      
+                      <div class="text-6xl mb-4 animate-bounce">🏆</div>
+                      <h2 class="text-3xl font-extrabold text-gray-800 mb-2">Time Up!</h2>
+                      <p class="text-gray-500 mb-8">Great job! Here is your performance report.</p>
                       
                       <div class="grid grid-cols-2 gap-4 mb-8">
-                          <div class="bg-blue-50 p-4 rounded-xl">
-                              <div class="text-3xl font-bold text-blue-600" id="finalWpm">0</div>
-                              <div class="text-xs uppercase font-bold text-gray-500">Net Speed (WPM)</div>
+                          <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                              <div class="text-4xl font-extrabold text-blue-600" id="finalWpm">0</div>
+                              <div class="text-xs uppercase font-bold text-gray-500 mt-1">Net Speed (WPM)</div>
                           </div>
-                          <div class="bg-green-50 p-4 rounded-xl">
-                              <div class="text-3xl font-bold text-green-600" id="finalAcc">0%</div>
-                              <div class="text-xs uppercase font-bold text-gray-500">Accuracy</div>
+                          <div class="bg-green-50 p-4 rounded-xl border border-green-100">
+                              <div class="text-4xl font-extrabold text-green-600" id="finalAcc">0%</div>
+                              <div class="text-xs uppercase font-bold text-gray-500 mt-1">Accuracy</div>
                           </div>
                       </div>
 
-                      <button onclick="location.reload()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-xl shadow-lg transition">
-                          Take Another Test
-                      </button>
+                      <div class="flex gap-4">
+                        <button onclick="location.reload()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 rounded-xl transition">
+                           Exit
+                        </button>
+                        <button id="retryBtn" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-xl shadow-lg transition transform hover:-translate-y-1">
+                            Try Again ⟳
+                        </button>
+                      </div>
                   </div>
               </div>
 
@@ -178,18 +201,55 @@ const sidebarTools = [
 
   {/* 🧠 TYPING ENGINE LOGIC */}
   <script>
-      const RANDOM_QUOTES = [
-          "India is a land of diversity and culture. The history of India dates back to thousands of years. It is known for its rich heritage and traditions.",
-          "Government jobs provide stability and security in life. Many students aspire to crack exams like SSC and UPSC to serve the nation with pride and honor.",
-          "Technology has changed the way we live and work. The internet has made information accessible to everyone around the globe instantly.",
-          "Climate change is a pressing issue that needs immediate attention. We must plant more trees and reduce pollution to save our planet Earth.",
-          "Education is the most powerful weapon which you can use to change the world. Learning never stops and knowledge is the key to success."
+      // 10 LONG PASSAGES FOR SSC PRACTICE (Approx 300-400 words each)
+      const TEST_DATA = [
+          {
+              title: "Passage 1: Digital India",
+              text: "Digital India is a campaign launched by the Government of India to ensure the Government's services are made available to citizens electronically by improved online infrastructure and by increasing Internet connectivity or making the country digitally empowered in the field of technology. The initiative includes plans to connect rural areas with high-speed internet networks. Digital India consists of three core components: the development of secure and stable digital infrastructure, delivering government services digitally, and universal digital literacy. The program aims to reduce paperwork and improve efficiency in public services. With the rise of smartphones and cheap data, millions of Indians are now coming online for the first time. This digital revolution is transforming sectors like education, healthcare, and banking, making services accessible to the remotest corners of the country."
+          },
+          {
+              title: "Passage 2: Environmental Protection",
+              text: "Environmental protection is the practice of protecting the natural environment by individuals, organizations and governments. Its objectives are to conserve natural resources and the existing natural environment and, where possible, to repair damage and reverse trends. Due to the pressures of overconsumption, population growth and technology, the biophysical environment is being degraded, sometimes permanently. This has been recognized, and governments have begun placing restraints on activities that cause environmental degradation. Waste management, recycling, and the use of renewable energy sources like solar and wind power are critical steps towards a sustainable future. We must reduce our carbon footprint to combat climate change, which poses a severe threat to biodiversity and human survival."
+          },
+          {
+              title: "Passage 3: History of Indian Railways",
+              text: "The history of Indian Railways dates back to 1853, when the first train ran between Bombay and Thane. Since then, it has grown to become one of the largest railway networks in the world. Indian Railways plays a crucial role in the country's economy by transporting millions of passengers and tons of freight daily. It is often referred to as the lifeline of the nation. Over the years, the railways have undergone significant modernization, including the introduction of electric locomotives, high-speed trains like Vande Bharat, and improved safety measures. The network connects diverse cultures and regions, facilitating trade and tourism. Despite challenges like congestion and maintenance, Indian Railways continues to be a symbol of national integration and engineering marvel."
+          },
+          {
+              title: "Passage 4: Artificial Intelligence",
+              text: "Artificial Intelligence (AI) refers to the simulation of human intelligence in machines that are programmed to think like humans and mimic their actions. The term may also be applied to any machine that exhibits traits associated with a human mind such as learning and problem-solving. The ideal characteristic of artificial intelligence is its ability to rationalize and take actions that have the best chance of achieving a specific goal. AI is being used in various fields such as healthcare, finance, robotics, and gaming. While AI offers immense benefits like automation and precision, it also raises ethical concerns regarding privacy and job displacement. As technology advances, it is essential to develop regulations that ensure the responsible use of AI for the betterment of humanity."
+          },
+          {
+              title: "Passage 5: Importance of Education",
+              text: "Education is a fundamental human right and a powerful tool for sustainable development. It empowers individuals with knowledge, skills, and values necessary to lead a productive life. Education fosters critical thinking, creativity, and innovation, which are essential for economic growth and social progress. It helps in eradicating poverty, reducing inequality, and promoting peace and stability. In India, the Right to Education Act guarantees free and compulsory education to all children between the ages of 6 and 14. However, challenges like lack of infrastructure, teacher shortage, and quality of education remain. Investing in education is investing in the future, as it equips the youth to face global challenges and contribute to nation-building."
+          },
+          {
+              title: "Passage 6: Impact of Social Media",
+              text: "Social media has revolutionized the way we communicate and share information. Platforms like Facebook, Twitter, and Instagram allow people to connect with friends and family, share opinions, and access news instantly across the globe. It has democratized information and given a voice to the voiceless. However, social media also has a dark side. Issues like cyberbullying, fake news, and addiction are growing concerns. The algorithmic nature of these platforms can create echo chambers, polarizing public opinion. It is crucial for users to practice digital hygiene and verify information before sharing. Despite its drawbacks, social media remains a potent tool for social change, marketing, and networking in the modern world."
+          },
+          {
+              title: "Passage 7: Health and Yoga",
+              text: "Yoga is an ancient physical, mental and spiritual practice that originated in India. The word 'yoga' derives from Sanskrit and means to join or to unite, symbolizing the union of body and consciousness. Today it is practiced in various forms around the world and continues to grow in popularity. Recognizing its universal appeal, the United Nations proclaimed 21 June as the International Day of Yoga. Yoga is not just about exercise; it is a way to discover the sense of oneness with yourself, the world and the nature. Regular practice of yoga improves flexibility, builds muscle strength, perfects posture, protects your spine, and increases blood flow. In a fast-paced world filled with stress, yoga provides a sanctuary of peace and well-being."
+          },
+          {
+              title: "Passage 8: Indian Space Research (ISRO)",
+              text: "The Indian Space Research Organisation (ISRO) is the space agency of the Government of India. Established in 1969, ISRO has achieved numerous milestones in space technology. Its primary objective is to use space technology for national development while pursuing space science research and planetary exploration. ISRO is known for its cost-effective missions. The success of Chandrayaan missions to the Moon and the Mars Orbiter Mission (Mangalyaan) has placed India among the elite group of space-faring nations. ISRO also launches satellites for communication, weather forecasting, and navigation, benefiting sectors like agriculture and disaster management. The upcoming Gaganyaan mission aims to send Indian astronauts into space, marking a new chapter in India's space history."
+          },
+          {
+              title: "Passage 9: Democracy in India",
+              text: "India is the largest democracy in the world. Democracy implies a system of government by the whole population or all the eligible members of a state, typically through elected representatives. The Constitution of India, adopted in 1950, lays the foundation for a democratic republic, ensuring justice, liberty, equality, and fraternity. Regular elections, an independent judiciary, and a free press are the pillars of Indian democracy. It allows citizens to participate in the decision-making process and hold the government accountable. While democracy in India faces challenges like corruption and communalism, the vibrant participation of its diverse population in the electoral process demonstrates the strength and resilience of its democratic institutions."
+          },
+          {
+              title: "Passage 10: Sports and Discipline",
+              text: "Sports play a vital role in the holistic development of an individual. Apart from physical fitness, sports inculcate values like discipline, teamwork, patience, and perseverance. Participating in sports teaches one how to handle both victory and defeat with grace. It builds character and leadership skills. In recent years, India has seen a surge in sporting culture with the success of leagues like the IPL and the improved performance of athletes in the Olympics and Commonwealth Games. The government's initiatives like 'Khelo India' aim to identify and nurture talent at the grassroots level. Encouraging sports in schools and colleges is essential to build a healthy and active nation."
+          }
       ];
 
       const quoteDisplay = document.getElementById('quoteDisplay');
       const quoteInput = document.getElementById('quoteInput');
       const timerElement = document.getElementById('timer');
       const startBtn = document.getElementById('startBtn');
+      const retryBtn = document.getElementById('retryBtn');
       const wpmElement = document.getElementById('wpm');
       const accuracyElement = document.getElementById('accuracy');
       const errorsElement = document.getElementById('errors');
@@ -198,6 +258,7 @@ const sidebarTools = [
       const finalAcc = document.getElementById('finalAcc');
       const disableBackspace = document.getElementById('disableBackspace');
       const timeSelect = document.getElementById('timeSelect');
+      const passageSelect = document.getElementById('passageSelect');
 
       let timeLeft = 60;
       let timeElapsed = 0;
@@ -207,7 +268,44 @@ const sidebarTools = [
       let currentQuote = "";
       let totalTypedChars = 0;
 
-      // Initialize
+      // Populate Passage Select
+      TEST_DATA.forEach((data, index) => {
+          const option = document.createElement('option');
+          option.value = index;
+          option.text = data.title;
+          passageSelect.appendChild(option);
+      });
+
+      // Load Initial Text (Without starting)
+      loadPassageText();
+
+      passageSelect.addEventListener('change', loadPassageText);
+      retryBtn.addEventListener('click', () => {
+          resultModal.classList.add('hidden');
+          startGame();
+      });
+
+      function loadPassageText() {
+          const index = passageSelect.value;
+          currentQuote = TEST_DATA[index].text;
+          
+          // Make text longer if needed (Repeat logic)
+          // For 5 mins, we need at least 2000 chars. 
+          // If passage is < 1000 chars, repeat it 3 times.
+          if(currentQuote.length < 1000) {
+             currentQuote = currentQuote + " " + currentQuote + " " + currentQuote; 
+          }
+
+          quoteDisplay.innerHTML = '';
+          currentQuote.split('').forEach(char => {
+              const charSpan = document.createElement('span');
+              charSpan.innerText = char;
+              quoteDisplay.appendChild(charSpan);
+          });
+          quoteDisplay.scrollTop = 0; // Reset scroll
+      }
+
+      // Initialize Game
       startBtn.addEventListener('click', startGame);
 
       function startGame() {
@@ -222,6 +320,7 @@ const sidebarTools = [
           isPlaying = true;
           
           // UI Updates
+          loadPassageText(); // Reload fresh text
           quoteInput.disabled = false;
           quoteInput.value = "";
           quoteInput.focus();
@@ -229,17 +328,9 @@ const sidebarTools = [
           startBtn.classList.add('opacity-50', 'cursor-not-allowed');
           resultModal.classList.add('hidden');
 
-          // Load Text
-          currentQuote = RANDOM_QUOTES[Math.floor(Math.random() * RANDOM_QUOTES.length)];
-          // Repeat quote if needed for longer duration
-          if(selectedTime > 2) currentQuote += " " + currentQuote + " " + currentQuote;
-          
-          quoteDisplay.innerHTML = '';
-          currentQuote.split('').forEach(char => {
-              const charSpan = document.createElement('span');
-              charSpan.innerText = char;
-              quoteDisplay.appendChild(charSpan);
-          });
+          // Disable selectors during test
+          passageSelect.disabled = true;
+          timeSelect.disabled = true;
 
           // Start Timer
           timer = setInterval(updateTimer, 1000);
@@ -263,8 +354,9 @@ const sidebarTools = [
 
       function updateStats() {
           const typedText = quoteInput.value;
+          // Standard WPM = (All Typed Characters / 5) / Time in Minutes
           const wpm = Math.round((typedText.length / 5) / (timeElapsed / 60));
-          wpmElement.innerText = wpm < 0 || !isFinite(wpm) ? 0 : wpm;
+          wpmElement.innerText = (!wpm || wpm < 0 || !isFinite(wpm)) ? 0 : wpm;
           
           const accuracy = totalTypedChars > 0 ? Math.round(((totalTypedChars - errors) / totalTypedChars) * 100) : 100;
           accuracyElement.innerText = accuracy;
@@ -278,28 +370,31 @@ const sidebarTools = [
           startBtn.innerText = "Start Test";
           startBtn.classList.remove('opacity-50', 'cursor-not-allowed');
           
+          // Enable selectors
+          passageSelect.disabled = false;
+          timeSelect.disabled = false;
+
           // Show Result
           finalWpm.innerText = wpmElement.innerText;
           finalAcc.innerText = accuracyElement.innerText;
           resultModal.classList.remove('hidden');
       }
 
-      // Handle Typing
+      // Handle Typing & Scrolling
       quoteInput.addEventListener('input', () => {
           if(!isPlaying) return;
 
           const arrayQuote = quoteDisplay.querySelectorAll('span');
           const arrayValue = quoteInput.value.split('');
-          totalTypedChars++;
+          totalTypedChars = arrayValue.length; // Better char counting
 
-          let correct = true;
           let currentErrors = 0;
 
+          // Highlight Logic
           arrayQuote.forEach((characterSpan, index) => {
               const character = arrayValue[index];
               if (character == null) {
-                  characterSpan.classList.remove('text-green-600', 'bg-green-100', 'text-red-600', 'bg-red-100');
-                  correct = false;
+                  characterSpan.classList.remove('text-green-600', 'bg-green-100', 'text-red-600', 'bg-red-100', 'border-b-2', 'border-blue-500'); // Remove active cursor too
               } else if (character === characterSpan.innerText) {
                   characterSpan.classList.add('text-green-600', 'bg-green-100');
                   characterSpan.classList.remove('text-red-600', 'bg-red-100');
@@ -307,16 +402,29 @@ const sidebarTools = [
                   characterSpan.classList.remove('text-green-600', 'bg-green-100');
                   characterSpan.classList.add('text-red-600', 'bg-red-100');
                   currentErrors++;
-                  correct = false;
               }
           });
           
-          // Only increment global error count if new error is made (simplified logic)
           errors = currentErrors;
 
-          // Scroll text if needed
-          if(arrayValue.length > 50) {
-              quoteDisplay.scrollTop = quoteDisplay.scrollHeight;
+          // 🧠 SMART SCROLLING LOGIC (Fix for disappearing line)
+          // Find the active character span (where the user is currently typing)
+          const currentIndex = arrayValue.length;
+          if(currentIndex < arrayQuote.length) {
+              const activeSpan = arrayQuote[currentIndex];
+              
+              // Calculate offsets
+              const spanTop = activeSpan.offsetTop;
+              const containerHeight = quoteDisplay.clientHeight;
+              const scrollTop = quoteDisplay.scrollTop;
+
+              // If the active cursor goes below the middle of the box, scroll down
+              if (spanTop > scrollTop + (containerHeight / 2)) {
+                  quoteDisplay.scrollTo({
+                      top: spanTop - (containerHeight / 3), // Keep current line in top 1/3rd
+                      behavior: 'smooth'
+                  });
+              }
           }
       });
 
