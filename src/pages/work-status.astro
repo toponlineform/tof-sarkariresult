@@ -1,0 +1,118 @@
+---
+// File: src/pages/work-status.astro
+import Layout from '../layouts/Layout.astro';
+import { allPosts } from '../data/index'; 
+
+// 🛠️ HELPER: Date string se Month-Year nikalne ke liye
+const getMonthYear = (dateStr) => {
+  if (!dateStr) return 'Unknown Date';
+  const parts = dateStr.trim().split('/'); // Format: DD/MM/YYYY
+  if (parts.length !== 3) return 'Invalid Date';
+  const dateObj = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+  return dateObj.toLocaleString('en-US', { month: 'long', year: 'numeric' });
+};
+
+// 📊 MAIN LOGIC: Data ko Month ke hisaab se Group karna
+const monthlyData = {};
+
+allPosts.forEach(post => {
+  if (!post.author) return; 
+  
+  const monthKey = getMonthYear(post.postDate || post.date || post.updatedDate);
+
+  if (!monthlyData[monthKey]) {
+    monthlyData[monthKey] = {};
+  }
+
+  if (!monthlyData[monthKey][post.author]) {
+    monthlyData[monthKey][post.author] = 0;
+  }
+  monthlyData[monthKey][post.author]++;
+});
+
+// Sort logic (Latest Month First)
+const sortedMonths = Object.keys(monthlyData).sort((a, b) => {
+  return new Date(b) - new Date(a);
+});
+---
+
+<Layout title="Team Work Status">
+  <div class="p-4 md:p-10 max-w-3xl mx-auto bg-gray-50 min-h-screen">
+    
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-extrabold text-gray-800">
+        🚀 Team Performance Board
+      </h1>
+      <p class="text-gray-500 text-sm mt-2">
+        Apna monthly work count check karein.
+      </p>
+    </div>
+
+    {/* Har Mahine ka Card */}
+    {sortedMonths.map(month => {
+      
+      // Is mahine ke data ko sort karo (Jiske zyada post wo top par)
+      const authorsInMonth = Object.entries(monthlyData[month])
+        .sort(([, countA], [, countB]) => countB - countA); // Descending Sort
+
+      return (
+        <div class="bg-white shadow-sm border border-gray-200 rounded-xl mb-8 overflow-hidden">
+          
+          {/* Header */}
+          <div class="bg-blue-600 text-white p-4 flex justify-between items-center">
+            <h2 class="text-lg font-bold uppercase tracking-wider">
+              📅 {month}
+            </h2>
+            <span class="text-xs bg-blue-800 text-blue-100 px-2 py-1 rounded">
+              Total Posts: {authorsInMonth.reduce((sum, [, c]) => sum + c, 0)}
+            </span>
+          </div>
+
+          {/* Table */}
+          <table class="w-full text-left">
+            <thead class="bg-gray-100 text-gray-500 text-xs uppercase border-b">
+              <tr>
+                <th class="p-3 w-16 text-center">Rank</th>
+                <th class="p-3">Team Member</th>
+                <th class="p-3 text-right">Posts Completed</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              {authorsInMonth.map(([authorName, count], index) => {
+                // Top 3 ke liye medals logic
+                let rankIcon = `#${index + 1}`;
+                let rowClass = "hover:bg-gray-50";
+                
+                if (index === 0) { rankIcon = "🥇"; rowClass = "bg-yellow-50"; }
+                if (index === 1) { rankIcon = "🥈"; }
+                if (index === 2) { rankIcon = "🥉"; }
+
+                return (
+                  <tr class={`transition ${rowClass}`}>
+                    <td class="p-3 text-center font-bold text-gray-500 text-lg">
+                      {rankIcon}
+                    </td>
+                    <td class="p-3 font-bold text-gray-700 capitalize">
+                      {authorName}
+                      {index === 0 && <span class="ml-2 text-[10px] bg-green-100 text-green-700 px-1 py-0.5 rounded border border-green-200">TOP PERFORMER</span>}
+                    </td>
+                    <td class="p-3 text-right font-bold text-blue-600 text-lg pr-6">
+                      {count}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      );
+    })}
+
+    {sortedMonths.length === 0 && (
+      <div class="text-center text-gray-400 py-10 border-2 border-dashed border-gray-300 rounded-lg">
+        Abhi tak koi data nahi hai. Kaam shuru karo guys! 👨‍💻
+      </div>
+    )}
+
+  </div>
+</Layout>
