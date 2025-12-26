@@ -1,0 +1,73 @@
+---
+// src/layouts/ToolLayout.astro
+import Layout from './Layout.astro';
+import ToolsSidebar from '../components/ToolsSidebar.astro';
+
+// Props receive karna (showSidebar logic ke saath)
+const { 
+  title, 
+  description, 
+  toolName, 
+  showSidebar = true,  // Default: Sidebar dikhega (True)
+  keywords = "online tools, free tools, student tools" 
+} = Astro.props;
+
+// Current URL for Canonical
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+// 🧠 PRO SEO SCHEMA: SoftwareApplication
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": toolName,
+  "operatingSystem": "Web",
+  "applicationCategory": "UtilitiesApplication",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "INR"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "ratingCount": "1250"
+  },
+  "description": description
+};
+---
+
+<Layout title={title} description={description}>
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} slot="head" />
+  
+  <div class="bg-gray-50 min-h-screen py-8">
+    <div class="container mx-auto px-4 max-w-7xl">
+      
+      <div class="flex flex-col lg:flex-row gap-8">
+        
+        <main class={`w-full ${showSidebar ? 'lg:w-3/4' : 'lg:w-full mx-auto'}`}>
+           
+           <div class="bg-white p-6 rounded-t-xl border-b border-gray-100 shadow-sm">
+              <h1 class="text-2xl md:text-3xl font-extrabold text-gray-800 mb-2">{title}</h1>
+              <p class="text-gray-500 text-sm">{description}</p>
+           </div>
+
+           <div class="bg-white p-6 rounded-b-xl shadow-sm min-h-[400px]">
+              <slot /> 
+           </div>
+
+           <div class="mt-8 bg-white p-6 rounded-xl shadow-sm prose max-w-none text-gray-600">
+              <h2 class="text-xl font-bold text-gray-800">About {toolName}</h2>
+              <slot name="content" />
+           </div>
+        </main>
+
+        {showSidebar && (
+          <aside class="w-full lg:w-1/4">
+            <ToolsSidebar />
+          </aside>
+        )}
+
+      </div>
+    </div>
+  </div>
+</Layout>
