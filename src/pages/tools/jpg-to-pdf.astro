@@ -1,281 +1,291 @@
 ---
-import Layout from '../../layouts/Layout.astro';
+import ToolLayout from '../../layouts/ToolLayout.astro';
 import AdSlot from '../../components/AdSlot.astro';
 
-// SEO Details (High Volume Keywords)
-const title = "JPG to PDF Converter - Convert Image to PDF Online (Free & Secure)";
-const description = "Best Free JPG to PDF Converter for Government Jobs. Convert multiple photos (JPG/PNG) into a single PDF file instantly. No Upload needed.";
-
-// 🛠️ Sidebar Tools List (Link Updated)
-const sidebarTools = [
-  { name: "Image Resizer", icon: "🖼️", link: "/tools/image-resizer", active: false },
-  { name: "Age Calculator", icon: "🧮", link: "/tools/age-calculator", active: false },
-  { name: "JPG to PDF", icon: "📄", link: "/tools/jpg-to-pdf", active: true }, // ✅ Link & Active Updated
-  { name: "Typing Test", icon: "⌨️", link: "#", active: false, badge: "Coming Soon" },
-];
+const title = "JPG to PDF Converter - Merge Photos to PDF for Govt Jobs (Free)";
+const description = "Convert JPG/PNG images to PDF online. Best for merging Aadhar Card (Front/Back), Marksheets, and Application Documents into a single PDF file.";
 ---
 
-<Layout title={title} description={description}>
-  
+<ToolLayout 
+  title={title} 
+  description={description}
+  toolName="JPG to PDF Converter"
+>
+
+  {/* ⚡ FAQ SCHEMA (Targeting Document Uploads) */}
+  <script type="application/ld+json" slot="head">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How to merge Aadhar Card front and back to PDF?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Select both Front and Back photos of your Aadhar Card in our JPG to PDF tool. Arrange them in order, select A4 size, and click Convert. You will get a single PDF file."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is this converter safe for personal documents?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, Infinity JPG to PDF works 100% in your browser. Your documents are NOT uploaded to any server, ensuring complete privacy for your marksheets and ID proofs."
+        }
+      }]
+    }
+  </script>
+
   {/* Load jsPDF Library */}
   <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-  <div class="max-w-7xl mx-auto px-4 py-8">
-      
-      {/* HEADER */}
-      <div class="text-center mb-10">
-          <span class="bg-red-100 text-red-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Fastest Converter</span>
-          <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 mt-3 mb-4">
-              Infinity <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-orange-600">JPG to PDF</span>
-          </h1>
-          <p class="text-gray-500 text-lg max-w-2xl mx-auto">
-              Combine your photos (JPG, PNG) into a high-quality 
-              <span class="font-bold text-gray-700"> Single PDF Document</span> in seconds.
-          </p>
+  {/* 🟢 TOP AD */}
+  <div class="mb-6">
+    <AdSlot type="horizontal" />
+  </div>
+
+  <div class="space-y-8">
+
+      {/* STEP 1: UPLOAD */}
+      <div id="uploadArea" class="py-12 text-center bg-red-50 border-4 border-dashed border-red-200 rounded-3xl cursor-pointer hover:bg-red-100 transition relative group" onclick="document.getElementById('fileInput').click()">
+          <div class="relative z-10">
+            <div class="text-7xl mb-4 group-hover:scale-110 transition duration-200 drop-shadow-sm">📄</div>
+            <h3 class="text-3xl font-extrabold text-gray-800 mb-2">Select Images to Convert</h3>
+            <p class="text-gray-500 mb-8 font-medium text-lg">Merge JPG, PNG into One PDF</p>
+            
+            <span class="bg-gradient-to-r from-red-600 to-orange-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition flex items-center justify-center gap-2 w-max mx-auto">
+                <span>📸</span> Pick Photos
+            </span>
+            <p class="mt-4 text-xs text-red-400 font-bold uppercase tracking-wider">No Upload • 100% Secure</p>
+          </div>
+          <input type="file" id="fileInput" multiple accept="image/*" class="hidden" />
       </div>
 
-      <div class="flex flex-col lg:flex-row gap-8 items-start">
+      {/* STEP 2: PREVIEW & SETTINGS (Hidden initially) */}
+      <div id="previewArea" class="hidden animate-fade-in">
           
-          {/* 📄 MAIN TOOL AREA */}
-          <main class="flex-1 w-full min-w-0">
-              
-              <div class="mb-6">
-                <AdSlot type="horizontal" />
-              </div>
+          <div class="flex justify-between items-center mb-4 px-2">
+              <h4 class="font-bold text-gray-800 text-lg">Selected Documents (<span id="count" class="text-red-600">0</span>)</h4>
+              <button id="clearBtn" class="text-sm text-red-600 font-bold hover:bg-red-50 px-3 py-1 rounded transition">
+                  🗑️ Clear All
+              </button>
+          </div>
 
-              <div class="bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden relative p-6 md:p-10">
-                  
-                  {/* Decorative Blob */}
-                  <div class="absolute top-0 right-0 -mt-10 -mr-10 w-32 h-32 bg-red-50 rounded-full blur-2xl opacity-50 pointer-events-none"></div>
+          {/* Image Grid */}
+          <div id="imageGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+              {/* Images injected via JS */}
+          </div>
 
-                  {/* STEP 1: UPLOAD */}
-                  <div id="uploadArea" class="text-center transition-all">
-                      <div class="border-2 border-dashed border-red-200 bg-red-50 rounded-xl p-8 hover:bg-red-100 transition cursor-pointer" onclick="document.getElementById('fileInput').click()">
-                          <div class="text-5xl mb-4">📸</div>
-                          <h3 class="text-xl font-bold text-gray-800 mb-2">Select Images (JPG/PNG)</h3>
-                          <p class="text-sm text-gray-500">Select multiple marksheet or id proof photos</p>
-                          <p class="text-xs text-red-400 mt-2 font-bold uppercase tracking-wide">100% Client Side • No Upload</p>
-                      </div>
-                      <input type="file" id="fileInput" multiple accept="image/*" class="hidden" />
+          {/* Settings Box */}
+          <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-lg space-y-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                      <label class="block text-sm font-bold text-gray-700 mb-2">Paper Size</label>
+                      <select class="w-full p-3 border-2 border-gray-100 rounded-xl bg-gray-50 font-bold text-gray-700 focus:outline-none focus:border-red-500">
+                          <option>A4 (Standard for Govt Forms)</option>
+                          <option>Letter (US)</option>
+                          <option>Fit to Image</option>
+                      </select>
                   </div>
-
-                  {/* STEP 2: PREVIEW LIST (Hidden initially) */}
-                  <div id="previewArea" class="hidden mt-8">
-                      <div class="flex justify-between items-center mb-4">
-                          <h4 class="font-bold text-gray-700">Selected Images (<span id="count">0</span>)</h4>
-                          <button id="clearBtn" class="text-xs text-red-600 font-bold hover:underline">Clear All</button>
-                      </div>
-
-                      {/* Image Grid */}
-                      <div id="imageGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                          {/* Images will be injected here via JS */}
-                      </div>
-
-                      {/* SETTINGS */}
-                      <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 mb-6">
-                          <h4 class="text-sm font-bold text-gray-700 mb-3">PDF Configuration</h4>
-                          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <div>
-                                  <label class="text-xs text-gray-500 font-bold">Paper Size</label>
-                                  <select class="w-full p-2 border rounded mt-1 text-sm bg-white focus:outline-none focus:border-red-500">
-                                      <option>A4 (Standard)</option>
-                                  </select>
-                              </div>
-                              <div>
-                                  <label class="text-xs text-gray-500 font-bold">File Size / Quality</label>
-                                  <select id="qualitySelect" class="w-full p-2 border rounded mt-1 text-sm bg-white focus:outline-none focus:border-red-500">
-                                      <option value="0.5">Medium (Best for Uploads)</option>
-                                      <option value="0.8">High Quality</option>
-                                      <option value="0.3">Small Size (Low Quality)</option>
-                                  </select>
-                              </div>
-                          </div>
-                      </div>
-
-                      {/* GENERATE BUTTON */}
-                      <button id="generateBtn" class="w-full bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg transform hover:-translate-y-0.5 transition-all text-lg flex justify-center items-center gap-2">
-                          <span>⚙️</span> Convert to PDF
-                      </button>
+                  <div>
+                      <label class="block text-sm font-bold text-gray-700 mb-2">Image Quality</label>
+                      <select id="qualitySelect" class="w-full p-3 border-2 border-gray-100 rounded-xl bg-gray-50 font-bold text-gray-700 focus:outline-none focus:border-red-500">
+                          <option value="0.5">Medium (Best for Uploads)</option>
+                          <option value="0.8">High Quality (Print)</option>
+                          <option value="0.3">Low (Small File Size)</option>
+                      </select>
                   </div>
               </div>
 
-              {/* SEO CONTENT */}
-              <div class="mt-10 prose prose-red max-w-none bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
-                  <h2 class="text-2xl font-bold text-gray-800">Free JPG to PDF Converter for Online Forms</h2>
-                  <p class="text-gray-600">
-                      Need to submit your documents in a single PDF file? Our <strong>JPG to PDF</strong> tool allows you to merge multiple images (like 10th Marksheet, 12th Marksheet, and Caste Certificate) into one organized PDF file.
-                  </p>
-                  
-                  <h3 class="font-bold text-gray-800">How to use JPG to PDF Tool?</h3>
-                  <ol class="list-decimal pl-5 space-y-2 text-gray-700">
-                      <li>Tap on <strong>Select Images</strong> button.</li>
-                      <li>Choose all your document photos from the gallery.</li>
-                      <li>Select <strong>"Medium"</strong> quality (Recommended for Govt Forms).</li>
-                      <li>Click <strong>Convert to PDF</strong> and download your file.</li>
-                  </ol>
-              </div>
-          </main>
-
-          {/* 🧊 STICKY SIDEBAR */}
-          <aside class="w-full lg:w-[320px] flex-shrink-0">
-              <div class="sticky top-4 space-y-6">
-                  
-                  {/* Tools Menu */}
-                  <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-4">
-                      <h4 class="font-bold text-gray-800 mb-3 px-2 flex items-center gap-2">
-                          <span>🛠️</span> More Infinity Tools
-                      </h4>
-                      <ul class="space-y-1">
-                          {sidebarTools.map((tool) => (
-                              <li>
-                                  <a href={tool.link} class={`flex items-center justify-between p-2.5 rounded-lg transition-all ${tool.active ? 'bg-red-50 text-red-700 font-bold border border-red-100' : 'text-gray-600 hover:bg-gray-50 hover:text-red-600'}`}>
-                                      <div class="flex items-center gap-3">
-                                          <span class="text-lg">{tool.icon}</span>
-                                          <span>{tool.name}</span>
-                                      </div>
-                                      {tool.badge && (
-                                          <span class="text-[10px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-bold uppercase tracking-wide">{tool.badge}</span>
-                                      )}
-                                      {tool.active && <span class="text-red-500">●</span>}
-                                  </a>
-                              </li>
-                          ))}
-                      </ul>
-                  </div>
-
-                  {/* Ad Slot */}
-                  <div class="shadow-sm rounded-xl overflow-hidden border border-gray-100">
-                     <AdSlot type="square" />
-                  </div>
-              </div>
-          </aside>
+              <button id="generateBtn" class="w-full bg-gradient-to-r from-red-600 to-orange-600 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition text-xl flex justify-center items-center gap-3">
+                  <span>⚙️</span> Create PDF Now
+              </button>
+          </div>
       </div>
   </div>
 
-  {/* 🧠 JAVASCRIPT LOGIC */}
-  <script>
-      const fileInput = document.getElementById('fileInput');
-      const uploadArea = document.getElementById('uploadArea');
-      const previewArea = document.getElementById('previewArea');
-      const imageGrid = document.getElementById('imageGrid');
-      const countSpan = document.getElementById('count');
-      const clearBtn = document.getElementById('clearBtn');
-      const generateBtn = document.getElementById('generateBtn');
-      const qualitySelect = document.getElementById('qualitySelect');
+  {/* SEO CONTENT */}
+  <div slot="content">
+      <p class="lead text-lg text-gray-700 mb-6">
+          When applying for <strong>SSC, UPSC, or Banking Exams</strong>, you are often asked to upload multiple documents (like Marksheets and Certificates) as a single PDF file. The <strong>Infinity JPG to PDF Converter</strong> makes this easy and secure.
+      </p>
 
-      let selectedFiles = [];
+      {/* 🌟 SEO CHECKLIST TABLE */}
+      <h3 class="text-xl font-bold text-gray-800 mb-4">Documents You Can Merge into PDF</h3>
+      <div class="overflow-hidden rounded-xl border border-gray-200 mb-8 shadow-sm">
+        <table class="min-w-full text-sm text-left bg-white">
+            <thead class="bg-red-50 text-red-800 font-bold border-b">
+                <tr>
+                    <th class="p-4">Document Name</th>
+                    <th class="p-4">Why convert to PDF?</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                <tr>
+                    <td class="p-4 font-bold">Aadhar / Voter ID</td>
+                    <td class="p-4">Merge Front & Back side into one page for proof of address.</td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold">Marksheets (10th/12th)</td>
+                    <td class="p-4">Combine multiple marksheets into a single education proof file.</td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold">Caste Certificate</td>
+                    <td class="p-4">Required in PDF format for state level exams.</td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold">Handwritten Notes</td>
+                    <td class="p-4">Scan notes photos and convert to PDF for sharing.</td>
+                </tr>
+            </tbody>
+        </table>
+      </div>
 
-      // Handle File Selection
-      fileInput.addEventListener('change', (e) => {
-          if (e.target.files && e.target.files.length > 0) {
-              handleFiles(Array.from(e.target.files));
-          }
-      });
+      <h3>Why use this tool?</h3>
+      <ul class="list-disc pl-5 space-y-2 text-gray-700">
+          <li><strong>Zero Uploads:</strong> Your private documents never leave your phone/laptop. Conversion happens inside the browser.</li>
+          <li><strong>No Watermark:</strong> Clean professional PDFs for official use.</li>
+          <li><strong>Unlimited Pages:</strong> Add as many photos as you want.</li>
+      </ul>
+  </div>
 
-      function handleFiles(files) {
-          selectedFiles = [...selectedFiles, ...files];
-          updateUI();
+</ToolLayout>
+
+{/* 🧠 LOGIC */}
+<script>
+  // @ts-nocheck
+  const fileInput = document.getElementById('fileInput');
+  const uploadArea = document.getElementById('uploadArea');
+  const previewArea = document.getElementById('previewArea');
+  const imageGrid = document.getElementById('imageGrid');
+  const countSpan = document.getElementById('count');
+  const clearBtn = document.getElementById('clearBtn');
+  const generateBtn = document.getElementById('generateBtn');
+  const qualitySelect = document.getElementById('qualitySelect');
+
+  let selectedFiles = [];
+
+  // Handle File Selection
+  fileInput?.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files.length > 0) {
+          handleFiles(Array.from(e.target.files));
+      }
+  });
+
+  function handleFiles(files) {
+      selectedFiles = [...selectedFiles, ...files];
+      updateUI();
+  }
+
+  function updateUI() {
+      if (selectedFiles.length > 0) {
+          uploadArea.classList.add('hidden');
+          previewArea.classList.remove('hidden');
+      } else {
+          uploadArea.classList.remove('hidden');
+          previewArea.classList.add('hidden');
       }
 
-      function updateUI() {
-          if (selectedFiles.length > 0) {
-              uploadArea.classList.add('hidden');
-              previewArea.classList.remove('hidden');
-          } else {
-              uploadArea.classList.remove('hidden');
-              previewArea.classList.add('hidden');
-          }
+      countSpan.innerText = selectedFiles.length;
+      imageGrid.innerHTML = '';
 
-          countSpan.innerText = selectedFiles.length;
-          imageGrid.innerHTML = '';
-
-          selectedFiles.forEach((file, index) => {
-              const div = document.createElement('div');
-              div.className = 'relative group aspect-[3/4] bg-gray-100 rounded-lg overflow-hidden border border-gray-200 shadow-sm';
-              
-              const img = document.createElement('img');
-              img.src = URL.createObjectURL(file);
-              img.className = 'w-full h-full object-cover';
-              
-              const removeBtn = document.createElement('button');
-              removeBtn.innerHTML = '×';
-              removeBtn.className = 'absolute top-1 right-1 bg-white text-red-600 w-6 h-6 rounded-full flex items-center justify-center font-bold shadow-md hover:bg-red-50';
-              removeBtn.onclick = () => removeFile(index);
-
-              const numBadge = document.createElement('span');
-              numBadge.innerText = index + 1;
-              numBadge.className = 'absolute bottom-1 left-1 bg-black/60 text-white text-[10px] px-2 py-0.5 rounded backdrop-blur-sm';
-
-              div.appendChild(img);
-              div.appendChild(removeBtn);
-              div.appendChild(numBadge);
-              imageGrid.appendChild(div);
-          });
-      }
-
-      function removeFile(index) {
-          selectedFiles.splice(index, 1);
-          updateUI();
-      }
-
-      clearBtn.addEventListener('click', () => {
-          selectedFiles = [];
-          updateUI();
-          fileInput.value = '';
-      });
-
-      // 🔥 PDF GENERATION LOGIC
-      generateBtn.addEventListener('click', async () => {
-          if (selectedFiles.length === 0) return;
-
-          generateBtn.innerText = "Processing...";
-          generateBtn.disabled = true;
-          generateBtn.classList.add('opacity-75');
-
-          // @ts-ignore
-          const { jsPDF } = window.jspdf;
-          const doc = new jsPDF();
-          const pageWidth = doc.internal.pageSize.getWidth();
-          const pageHeight = doc.internal.pageSize.getHeight();
-          const margin = 10;
-          const imgWidth = pageWidth - (margin * 2);
-          const quality = parseFloat(qualitySelect.value);
-
-          for (let i = 0; i < selectedFiles.length; i++) {
-              if (i > 0) doc.addPage();
-
-              const file = selectedFiles[i];
-              const imgData = await readFileAsDataURL(file);
-              
-              const imgProps = doc.getImageProperties(imgData);
-              const imgRatio = imgProps.width / imgProps.height;
-              let finalHeight = imgWidth / imgRatio;
-
-              if (finalHeight > (pageHeight - margin * 2)) {
-                   finalHeight = pageHeight - (margin * 2);
-              }
-
-              doc.addImage(imgData, 'JPEG', margin, margin, imgWidth, finalHeight, undefined, 'FAST');
-              
-              doc.setFontSize(10);
-              doc.setTextColor(150);
-              doc.text(`Page ${i+1}`, pageWidth / 2, pageHeight - 5, { align: 'center' });
-          }
-
-          doc.save(`TopOnlineForm-JPGtoPDF-${Date.now()}.pdf`);
+      selectedFiles.forEach((file, index) => {
+          const div = document.createElement('div');
+          div.className = 'relative group aspect-[3/4] bg-gray-100 rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition';
           
-          generateBtn.innerText = "Generated! Convert Again";
+          const img = document.createElement('img');
+          img.src = URL.createObjectURL(file);
+          img.className = 'w-full h-full object-cover';
+          
+          const removeBtn = document.createElement('button');
+          removeBtn.innerHTML = '×';
+          removeBtn.className = 'absolute top-2 right-2 bg-white text-red-600 w-7 h-7 rounded-full flex items-center justify-center font-bold shadow-md hover:bg-red-50 transition z-10';
+          removeBtn.onclick = () => removeFile(index);
+
+          const numBadge = document.createElement('span');
+          numBadge.innerText = index + 1;
+          numBadge.className = 'absolute bottom-2 left-2 bg-black/70 text-white text-xs font-bold px-2 py-1 rounded backdrop-blur-sm';
+
+          div.appendChild(img);
+          div.appendChild(removeBtn);
+          div.appendChild(numBadge);
+          imageGrid.appendChild(div);
+      });
+  }
+
+  function removeFile(index) {
+      selectedFiles.splice(index, 1);
+      updateUI();
+  }
+
+  clearBtn?.addEventListener('click', () => {
+      selectedFiles = [];
+      updateUI();
+      fileInput.value = '';
+  });
+
+  // PDF Generation
+  generateBtn?.addEventListener('click', async () => {
+      if (selectedFiles.length === 0) return;
+
+      const originalText = generateBtn.innerHTML;
+      generateBtn.innerHTML = "Processing...";
+      generateBtn.disabled = true;
+      generateBtn.classList.add('opacity-75');
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const margin = 10;
+      const imgWidth = pageWidth - (margin * 2);
+      const quality = parseFloat(qualitySelect.value);
+
+      for (let i = 0; i < selectedFiles.length; i++) {
+          if (i > 0) doc.addPage();
+
+          const file = selectedFiles[i];
+          const imgData = await readFileAsDataURL(file);
+          
+          const imgProps = doc.getImageProperties(imgData);
+          const imgRatio = imgProps.width / imgProps.height;
+          let finalHeight = imgWidth / imgRatio;
+
+          // Check if image is taller than page (scaling)
+          if (finalHeight > (pageHeight - margin * 2)) {
+                // If fitting to page, we might need to adjust logic, 
+                // but standard flow keeps width constant. 
+                // For long screenshots, it might cut off, but for docs it's usually fine.
+                // Let's cap height to page constraints to avoid blank pages.
+                if (finalHeight > pageHeight - margin*2) {
+                    finalHeight = pageHeight - margin*2; 
+                    // Width will shrink to maintain aspect ratio, but let's keep it simple for MVP
+                }
+          }
+
+          doc.addImage(imgData, 'JPEG', margin, margin, imgWidth, finalHeight, undefined, 'FAST');
+          
+          // Page Number
+          doc.setFontSize(10);
+          doc.setTextColor(150);
+          doc.text(`Page ${i+1}`, pageWidth / 2, pageHeight - 5, { align: 'center' });
+      }
+
+      doc.save(`TopOnlineForm-Docs-${Date.now()}.pdf`);
+      
+      generateBtn.innerHTML = "Success! Downloaded 🎉";
+      setTimeout(() => {
+          generateBtn.innerHTML = originalText;
           generateBtn.disabled = false;
           generateBtn.classList.remove('opacity-75');
-      });
+      }, 3000);
+  });
 
-      function readFileAsDataURL(file) {
-          return new Promise((resolve, reject) => {
-              const reader = new FileReader();
-              reader.onload = (e) => resolve(e.target.result);
-              reader.onerror = reject;
-              reader.readAsDataURL(file);
-          });
-      }
-  </script>
-</Layout>
+  function readFileAsDataURL(file) {
+      return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = (e) => resolve(e.target.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+      });
+  }
+</script>
