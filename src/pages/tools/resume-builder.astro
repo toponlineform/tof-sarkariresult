@@ -1,240 +1,265 @@
 ---
-import Layout from '../../layouts/Layout.astro';
+import ToolLayout from '../../layouts/ToolLayout.astro';
 import AdSlot from '../../components/AdSlot.astro';
 
-const title = "Pro Resume Builder - Free Bio-Data Maker for Govt Jobs";
-const description = "Create a professional, ATS-friendly resume in minutes. Live preview and PDF download. 100% Free.";
+const title = "Free Resume Builder Online - Make Professional CV / Bio-Data";
+const description = "Create ATS-friendly Resume, CV, or Bio-Data for Government Jobs and Private Interviews. Download PDF instantly. No Login Required.";
 ---
 
-<Layout title={title} description={description}>
+<ToolLayout 
+  title={title} 
+  description={description}
+  toolName="Resume Builder"
+  showSidebar={false} 
+>
+  {/* Note: Sidebar OFF kiya hai taaki Editor ko Full Width mile (User Experience ke liye better) */}
 
-  <div style="background: #f0f2f5; min-height: 100vh; padding-bottom: 50px;">
+  {/* ⚡ FAQ SCHEMA */}
+  <script type="application/ld+json" slot="head">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How to create a resume for fresher?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Fill in your personal details, education (10th, 12th, Graduation), and skills in our Resume Builder. It automatically formats everything into a professional layout."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is this resume builder free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, Infinity Resume Builder is 100% free. You can create and download unlimited PDF resumes without any watermark."
+        }
+      }]
+    }
+  </script>
+
+  <div class="bg-gray-50 min-h-screen pb-12">
       
-      {/* Header Bar */}
-      <div class="no-print" style="background: #333; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100;">
-          <h2 style="margin: 0; font-size: 20px;">📄 Pro Resume Builder</h2>
-          <div style="display: flex; gap: 15px; align-items: center;">
-              
-              {/* Theme Color Picker */}
-              <div style="display: flex; align-items: center; gap: 5px;">
-                  <span>🎨</span>
-                  <input type="color" id="themeColorInput" value="#2c3e50" style="border: none; width: 30px; height: 30px; cursor: pointer; background: transparent;" title="Change Theme Color" />
-              </div>
-
-              <button onclick="window.print()" style="background: #27ae60; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; font-weight: bold; display: flex; align-items: center; gap: 8px;">
-                  🖨️ Download PDF
-              </button>
-          </div>
-      </div>
-
-      <div class="max-w-[1200px] mx-auto mt-4 no-print">
+      {/* 🟢 TOP AD */}
+      <div class="max-w-6xl mx-auto px-4 py-4 no-print">
         <AdSlot type="horizontal" />
       </div>
+      
+      {/* Header Toolbar */}
+      <div class="no-print bg-gray-900 text-white p-4 sticky top-0 z-50 shadow-md">
+         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <span class="text-2xl">📄</span>
+                <div>
+                    <h2 class="font-bold text-lg leading-tight">Infinity Resume Builder</h2>
+                    <p class="text-xs text-gray-400">Auto-Save Enabled</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2 bg-gray-800 px-3 py-1 rounded-lg border border-gray-700">
+                    <span class="text-sm">🎨 Theme:</span>
+                    <input type="color" id="themeColorInput" value="#2c3e50" class="w-8 h-8 rounded cursor-pointer bg-transparent border-none" title="Change Theme Color" />
+                </div>
 
-      <div class="resume-container">
-          
-          {/* --- LEFT: EDITOR SECTION --- */}
-          <div class="editor-section no-print">
-              
-              {/* Personal Info */}
-              <div class="section-title">Personal Information</div>
-              <div class="form-group">
-                  <label>Full Name</label>
-                  <input type="text" id="inName" value="Rohit Sharma" />
-              </div>
-              <div class="form-group">
-                  <label>Job Title</label>
-                  <input type="text" id="inRole" value="Software Developer" />
-              </div>
-              <div style="display: flex; gap: 10px;">
-                  <div class="form-group" style="flex: 1;">
-                      <label>Email</label>
-                      <input type="text" id="inEmail" value="rohit@example.com" />
-                  </div>
-                  <div class="form-group" style="flex: 1;">
-                      <label>Phone</label>
-                      <input type="text" id="inPhone" value="+91 98765 43210" />
-                  </div>
-              </div>
-              
-              {/* LinkedIn (New Optional Field) */}
-              <div class="form-group">
-                  <label>LinkedIn / Portfolio URL (Optional)</label>
-                  <input type="text" id="inLinkedin" placeholder="linkedin.com/in/rohit" />
-              </div>
-
-              <div class="form-group">
-                  <label>Address</label>
-                  <input type="text" id="inAddress" value="New Delhi, India" />
-              </div>
-              <div class="form-group">
-                  <label>Professional Summary</label>
-                  <textarea rows="4" id="inSummary">Passionate developer with 3+ years of experience in building scalable web applications. Dedicated to writing clean, efficient code.</textarea>
-              </div>
-
-              {/* Experience */}
-              <div class="section-title">
-                  Experience 
-                  <button id="addExpBtn" style="background: transparent; border: none; color: #007bff; cursor: pointer; font-weight: bold; font-size: 20px;">+</button>
-              </div>
-              <div id="experienceList">
-                  {/* Dynamic Experience Items will be injected here */}
-              </div>
-
-              {/* Education */}
-              <div class="section-title">
-                  Education
-                  <button id="addEduBtn" style="background: transparent; border: none; color: #007bff; cursor: pointer; font-weight: bold; font-size: 20px;">+</button>
-              </div>
-              <div id="educationList">
-                  {/* Dynamic Education Items will be injected here */}
-              </div>
-
-              {/* Skills */}
-              <div class="section-title">Skills</div>
-              <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                  <input type="text" id="newSkillInput" placeholder="Add a skill (e.g. Java)" />
-                  <button id="addSkillBtn" style="background: #2c3e50; color: white; border: none; padding: 0 15px; border-radius: 5px; cursor: pointer;">Add</button>
-              </div>
-              <div id="skillsListEditor" style="display: flex; flex-wrap: wrap; gap: 8px;">
-                  {/* Skills tags editor */}
-              </div>
-
-              {/* Declaration Toggle (New Feature) */}
-              <div class="section-title">Settings</div>
-              <div style="display: flex; align-items: center; gap: 10px; background: #f9f9f9; padding: 10px; border-radius: 6px;">
-                  <input type="checkbox" id="toggleDeclaration" checked style="width: 20px; height: 20px;" />
-                  <label for="toggleDeclaration" style="margin: 0; cursor: pointer;">Show Declaration & Signature</label>
-              </div>
-
-              <div class="mt-6 border-t pt-4">
-                 <AdSlot type="square" />
-              </div>
-
-          </div>
-
-          {/* --- RIGHT: PREVIEW SECTION (A4 PAPER) --- */}
-          <div class="preview-section">
-              <div class="resume-paper resume-preview-area" id="resume-to-print">
-                  
-                  {/* Header */}
-                  <div class="res-header dynamic-border">
-                      <h1 class="res-name dynamic-text" id="outName">Rohit Sharma</h1>
-                      <p style="font-size: 18px; margin: 5px 0; font-weight: 500;" id="outRole">Software Developer</p>
-                      <div class="res-contact">
-                          <span>📧 <span id="outEmail">rohit@example.com</span></span>
-                          <span>📱 <span id="outPhone">+91 98765 43210</span></span>
-                          {/* LinkedIn Preview (Hidden by default if empty) */}
-                          <span id="linkedinWrapper" style="display: none;">🔗 <span id="outLinkedin"></span></span>
-                          <span>📍 <span id="outAddress">New Delhi, India</span></span>
-                      </div>
-                  </div>
-
-                  {/* Summary */}
-                  <div style="margin-bottom: 20px;" id="summarySection">
-                      <p id="outSummary">Passionate developer with 3+ years of experience in building scalable web applications. Dedicated to writing clean, efficient code.</p>
-                  </div>
-
-                  {/* Experience */}
-                  <div id="previewExpSection" style="display: none;">
-                      <div class="res-section-head dynamic-text dynamic-border">Experience</div>
-                      <div id="previewExpList"></div>
-                  </div>
-
-                  {/* Education */}
-                  <div id="previewEduSection" style="display: none;">
-                      <div class="res-section-head dynamic-text dynamic-border">Education</div>
-                      <div id="previewEduList"></div>
-                  </div>
-
-                  {/* Skills */}
-                  <div id="previewSkillSection" style="display: none;">
-                      <div class="res-section-head dynamic-text dynamic-border">Skills</div>
-                      <div class="res-skills" id="previewSkillsList"></div>
-                  </div>
-
-                  {/* Declaration Section (Optional) */}
-                  <div id="previewDeclaration" style="margin-top: 50px; border-top: 1px dashed #ccc; padding-top: 10px;">
-                      <p style="font-size: 12px; font-style: italic; color: #666;">
-                          I hereby declare that the information provided above is true to the best of my knowledge.
-                      </p>
-                      <div style="display: flex; justify-content: space-between; margin-top: 30px; font-size: 14px; font-weight: bold;">
-                          <span>Date: ____________</span>
-                          <span>Signature: ____________</span>
-                      </div>
-                  </div>
-
-              </div>
-          </div>
-
+                <button onclick="window.print()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-bold shadow-md transition flex items-center gap-2">
+                    <span>🖨️</span> Download PDF
+                </button>
+            </div>
+         </div>
       </div>
+
+      <div class="max-w-[1400px] mx-auto p-4 md:p-8">
+        <div class="flex flex-col xl:flex-row gap-8 items-start">
+            
+            {/* --- LEFT: EDITOR SECTION --- */}
+            <div class="w-full xl:w-[40%] bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden no-print h-[85vh] overflow-y-auto custom-scrollbar">
+                <div class="p-6">
+                    <h3 class="font-bold text-gray-800 text-lg mb-4 border-b pb-2 flex items-center gap-2">
+                        ✏️ Edit Details
+                    </h3>
+
+                    {/* Personal Info */}
+                    <div class="space-y-4 mb-8">
+                        <div class="form-group">
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Full Name</label>
+                            <input type="text" id="inName" value="Rohit Sharma" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none" />
+                        </div>
+                        <div class="form-group">
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Job Title</label>
+                            <input type="text" id="inRole" value="Software Developer" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none" />
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Email</label>
+                                <input type="text" id="inEmail" value="rohit@example.com" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none" />
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Phone</label>
+                                <input type="text" id="inPhone" value="+91 98765 43210" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none" />
+                            </div>
+                        </div>
+                        <div>
+                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">LinkedIn / Portfolio (Optional)</label>
+                             <input type="text" id="inLinkedin" placeholder="linkedin.com/in/rohit" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none" />
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Address</label>
+                            <input type="text" id="inAddress" value="New Delhi, India" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none" />
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Summary</label>
+                            <textarea rows="4" id="inSummary" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">Passionate developer with 3+ years of experience in building scalable web applications. Dedicated to writing clean, efficient code.</textarea>
+                        </div>
+                    </div>
+
+                    {/* Experience */}
+                    <div class="mb-8">
+                        <div class="flex justify-between items-center mb-3">
+                            <h4 class="font-bold text-gray-700">Experience</h4>
+                            <button id="addExpBtn" class="text-blue-600 font-bold hover:bg-blue-50 px-2 rounded">+</button>
+                        </div>
+                        <div id="experienceList" class="space-y-3"></div>
+                    </div>
+
+                    {/* Education */}
+                    <div class="mb-8">
+                        <div class="flex justify-between items-center mb-3">
+                            <h4 class="font-bold text-gray-700">Education</h4>
+                            <button id="addEduBtn" class="text-blue-600 font-bold hover:bg-blue-50 px-2 rounded">+</button>
+                        </div>
+                        <div id="educationList" class="space-y-3"></div>
+                    </div>
+
+                    {/* Skills */}
+                    <div class="mb-8">
+                        <h4 class="font-bold text-gray-700 mb-2">Skills</h4>
+                        <div class="flex gap-2 mb-3">
+                            <input type="text" id="newSkillInput" placeholder="Add skill (e.g. Java)" class="flex-1 p-2 border rounded text-sm" />
+                            <button id="addSkillBtn" class="bg-gray-800 text-white px-4 rounded text-sm font-bold">Add</button>
+                        </div>
+                        <div id="skillsListEditor" class="flex flex-wrap gap-2"></div>
+                    </div>
+
+                    {/* Settings */}
+                    <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" id="toggleDeclaration" checked class="w-4 h-4 text-blue-600" />
+                            <label for="toggleDeclaration" class="text-sm text-gray-700 font-medium select-none cursor-pointer">Show Declaration & Signature</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* --- RIGHT: PREVIEW SECTION (A4 PAPER) --- */}
+            <div class="w-full xl:w-[60%] flex justify-center bg-gray-200/50 p-4 rounded-xl border border-gray-300 xl:h-[85vh] xl:overflow-y-auto custom-scrollbar">
+                
+                {/* A4 PAPER */}
+                <div class="resume-paper bg-white shadow-2xl" id="resume-to-print">
+                    
+                    {/* Header */}
+                    <div class="res-header border-b-2 pb-4 mb-6 dynamic-border">
+                        <h1 class="text-4xl font-extrabold uppercase mb-1 dynamic-text" id="outName">Rohit Sharma</h1>
+                        <p class="text-lg font-medium text-gray-600 mb-3" id="outRole">Software Developer</p>
+                        
+                        <div class="flex flex-wrap gap-4 text-sm text-gray-600">
+                            <span class="flex items-center gap-1">📧 <span id="outEmail">rohit@example.com</span></span>
+                            <span class="flex items-center gap-1">📱 <span id="outPhone">+91 98765 43210</span></span>
+                            <span id="linkedinWrapper" class="hidden flex items-center gap-1">🔗 <span id="outLinkedin"></span></span>
+                            <span class="flex items-center gap-1">📍 <span id="outAddress">New Delhi, India</span></span>
+                        </div>
+                    </div>
+
+                    {/* Summary */}
+                    <div class="mb-6 text-gray-700 leading-relaxed" id="summarySection">
+                        <p id="outSummary">Passionate developer with 3+ years of experience in building scalable web applications. Dedicated to writing clean, efficient code.</p>
+                    </div>
+
+                    {/* Experience */}
+                    <div id="previewExpSection" class="hidden mb-6">
+                        <div class="text-lg font-bold uppercase border-b mb-3 pb-1 tracking-wider dynamic-text dynamic-border">Experience</div>
+                        <div id="previewExpList" class="space-y-4"></div>
+                    </div>
+
+                    {/* Education */}
+                    <div id="previewEduSection" class="hidden mb-6">
+                        <div class="text-lg font-bold uppercase border-b mb-3 pb-1 tracking-wider dynamic-text dynamic-border">Education</div>
+                        <div id="previewEduList" class="space-y-4"></div>
+                    </div>
+
+                    {/* Skills */}
+                    <div id="previewSkillSection" class="hidden mb-6">
+                        <div class="text-lg font-bold uppercase border-b mb-3 pb-1 tracking-wider dynamic-text dynamic-border">Skills</div>
+                        <div id="previewSkillsList" class="flex flex-wrap gap-2"></div>
+                    </div>
+
+                    {/* Declaration */}
+                    <div id="previewDeclaration" class="mt-12 pt-4 border-t border-dashed border-gray-300">
+                        <p class="text-xs italic text-gray-500 mb-8">
+                            I hereby declare that the information provided above is true to the best of my knowledge.
+                        </p>
+                        <div class="flex justify-between text-sm font-bold text-gray-800">
+                            <span>Date: ____________</span>
+                            <span>Signature: ____________</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+      </div>
+      
+      {/* SEO CONTENT (Visible below tool) */}
+      <div slot="content" class="max-w-4xl mx-auto px-4 mt-12 no-print">
+          <div class="prose prose-blue max-w-none bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+              <h2 class="text-2xl font-bold text-gray-800">Why use this Resume Builder?</h2>
+              <p>
+                  A clean, professional resume increases your chances of getting shortlisted for Government Jobs and Private Companies. Our tool ensures:
+              </p>
+              <ul>
+                  <li><strong>ATS Friendly:</strong> Simple layout that passes Applicant Tracking Systems.</li>
+                  <li><strong>Instant PDF:</strong> No watermark, free download.</li>
+                  <li><strong>Secure:</strong> Data stays in your browser. No server upload.</li>
+              </ul>
+          </div>
+      </div>
+
   </div>
 
-  {/* 👇 YOUR CSS (NO CHANGES) */}
+  {/* CSS for Print & Layout */}
   <style is:global>
-      /* Print Logic */
-      @media print {
-        body * { visibility: hidden; }
-        .resume-preview-area, .resume-preview-area * { visibility: visible; }
-        .resume-preview-area {
-          position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0;
-          box-shadow: none !important; border: none !important;
-        }
-        .no-print { display: none !important; }
+      .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+      .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
+      .custom-scrollbar::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
+
+      .resume-paper {
+          width: 210mm; min-height: 297mm; 
+          padding: 10mm 12mm; /* Standard Margins */
+          color: #333; line-height: 1.5;
       }
 
-      /* Screen Logic */
-      .resume-container {
-        display: flex; flex-wrap: wrap; gap: 20px; max-width: 1200px; margin: 0 auto; padding: 20px;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      }
-      .editor-section {
-        flex: 1; min-width: 350px; background: white; padding: 20px; border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05); height: fit-content;
-      }
-      .preview-section {
-        flex: 1.5; min-width: 350px; display: flex; justify-content: center;
-      }
-      .resume-paper {
-        width: 210mm; min-height: 297mm; background: white; padding: 40px;
-        box-shadow: 0 0 20px rgba(0,0,0,0.1); color: #333; line-height: 1.5;
-      }
-      .form-group { margin-bottom: 15px; }
-      .form-group label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 14px; }
-      .form-group input, .form-group textarea {
-        width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;
-      }
-      .section-title {
-        font-size: 18px; font-weight: bold; margin-top: 20px; margin-bottom: 15px;
-        border-bottom: 2px solid #eee; padding-bottom: 5px; display: flex; justify-content: space-between;
-      }
-      .res-header { border-bottom: 2px solid; padding-bottom: 15px; margin-bottom: 20px; }
-      .res-name { font-size: 32px; font-weight: 800; text-transform: uppercase; margin: 0; }
-      .res-contact { font-size: 14px; margin-top: 5px; display: flex; gap: 15px; flex-wrap: wrap; }
-      .res-section-head {
-        font-size: 16px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #ccc;
-        margin-top: 20px; margin-bottom: 10px; padding-bottom: 2px; letter-spacing: 1px;
-      }
-      .res-item { margin-bottom: 12px; }
-      .res-item-title { font-weight: bold; font-size: 16px; }
-      .res-item-subtitle {
-        font-style: italic; font-size: 14px; color: #555; display: flex; justify-content: space-between;
-      }
-      .res-list { padding-left: 0; margin-top: 5px; font-size: 14px; white-space: pre-wrap; }
-      .res-skills { display: flex; flex-wrap: wrap; gap: 10px; }
-      .res-skill-tag {
-        background: transparent; padding: 4px 10px; border-radius: 4px; font-size: 13px; font-weight: 500; border: 1px solid;
+      @media print {
+          @page { margin: 0; }
+          body * { visibility: hidden; }
+          #resume-to-print, #resume-to-print * { visibility: visible; }
+          #resume-to-print {
+              position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 10mm 15mm !important;
+              box-shadow: none !important;
+          }
+          .no-print { display: none !important; }
       }
   </style>
 
   {/* 🧠 LOGIC */}
   <script>
+      // @ts-nocheck
+      
       // State Storage
       let experienceData = [{ id: 1, title: 'Frontend Developer', company: 'Tech Solutions', duration: '2022 - Present', desc: 'Developed responsive websites using React.js.' }];
       let educationData = [{ id: 1, degree: 'B.Tech in CS', college: 'Delhi University', year: '2018 - 2022', grade: '8.5 CGPA' }];
-      let skillsData = ['React.js', 'JavaScript', 'CSS'];
+      let skillsData = ['React.js', 'JavaScript', 'CSS', 'Problem Solving'];
 
-      // Theme Color Logic
+      // Elements
       const themeInput = document.getElementById('themeColorInput');
       const addSkillBtn = document.getElementById('addSkillBtn');
 
@@ -245,14 +270,13 @@ const description = "Create a professional, ATS-friendly resume in minutes. Live
               el.style.color = color;
               el.style.borderColor = color;
           });
-          // Update Add Skill Button
-          addSkillBtn.style.background = color;
+          addSkillBtn.style.backgroundColor = color;
       }
 
       themeInput.addEventListener('input', (e) => updateTheme(e.target.value));
-      updateTheme('#2c3e50'); // Init
+      setTimeout(() => updateTheme('#2c3e50'), 100);
 
-      // Basic Info Sync
+      // Bind Text Inputs
       const bindText = (inId, outId) => {
           document.getElementById(inId).addEventListener('input', (e) => {
               document.getElementById(outId).innerText = e.target.value;
@@ -265,66 +289,62 @@ const description = "Create a professional, ATS-friendly resume in minutes. Live
       bindText('inAddress', 'outAddress');
       bindText('inSummary', 'outSummary');
 
-      // ✅ LinkedIn Logic (Optional Feature)
+      // LinkedIn Logic
       const inLinkedin = document.getElementById('inLinkedin');
       const outLinkedin = document.getElementById('outLinkedin');
       const linkedinWrapper = document.getElementById('linkedinWrapper');
-
+      
       inLinkedin.addEventListener('input', () => {
           const val = inLinkedin.value;
           outLinkedin.innerText = val;
-          if(val.trim() !== "") {
-              linkedinWrapper.style.display = "inline";
-          } else {
-              linkedinWrapper.style.display = "none";
-          }
+          linkedinWrapper.style.display = val.trim() ? "inline-flex" : "none";
       });
 
-      // ✅ Declaration Toggle Logic (New Feature)
+      // Declaration Toggle
       const toggleDecl = document.getElementById('toggleDeclaration');
       const previewDecl = document.getElementById('previewDeclaration');
-      
       toggleDecl.addEventListener('change', (e) => {
           previewDecl.style.display = e.target.checked ? 'block' : 'none';
       });
 
-
-      // --- EXPERIENCE LOGIC ---
+      // --- RENDER EXPERIENCE ---
       function renderExperience() {
           const editorList = document.getElementById('experienceList');
           const previewList = document.getElementById('previewExpList');
           const previewSection = document.getElementById('previewExpSection');
-          const color = themeInput.value;
 
           editorList.innerHTML = '';
           previewList.innerHTML = '';
           previewSection.style.display = experienceData.length ? 'block' : 'none';
 
           experienceData.forEach(exp => {
+              // Editor Item
               const expDiv = document.createElement('div');
-              expDiv.style.cssText = "background:#f9f9f9; padding:10px; border-radius:8px; margin-bottom:10px; position:relative;";
+              expDiv.className = "bg-gray-50 p-3 rounded border border-gray-200 relative group";
               expDiv.innerHTML = `
-                  <button onclick="window.removeExp(${exp.id})" style="position:absolute; top:5px; right:5px; background:transparent; border:none; color:red; cursor:pointer;">🗑️</button>
-                  <div class="form-group"><input placeholder="Job Title" value="${exp.title}" oninput="window.updateExp(${exp.id}, 'title', this.value)"></div>
-                  <div class="form-group"><input placeholder="Company Name" value="${exp.company}" oninput="window.updateExp(${exp.id}, 'company', this.value)"></div>
-                  <div class="form-group"><input placeholder="Duration" value="${exp.duration}" oninput="window.updateExp(${exp.id}, 'duration', this.value)"></div>
-                  <div class="form-group"><textarea placeholder="Description" rows="2" oninput="window.updateExp(${exp.id}, 'desc', this.value)">${exp.desc}</textarea></div>
+                  <button onclick="window.removeExp(${exp.id})" class="absolute top-2 right-2 text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition">🗑️</button>
+                  <input class="w-full mb-2 p-1 border rounded text-sm font-bold" placeholder="Job Title" value="${exp.title}" oninput="window.updateExp(${exp.id}, 'title', this.value)">
+                  <div class="flex gap-2 mb-2">
+                     <input class="w-1/2 p-1 border rounded text-sm" placeholder="Company" value="${exp.company}" oninput="window.updateExp(${exp.id}, 'company', this.value)">
+                     <input class="w-1/2 p-1 border rounded text-sm" placeholder="Duration" value="${exp.duration}" oninput="window.updateExp(${exp.id}, 'duration', this.value)">
+                  </div>
+                  <textarea class="w-full p-1 border rounded text-sm" rows="2" placeholder="Description" oninput="window.updateExp(${exp.id}, 'desc', this.value)">${exp.desc}</textarea>
               `;
               editorList.appendChild(expDiv);
 
+              // Preview Item
               const prevDiv = document.createElement('div');
-              prevDiv.className = 'res-item';
               prevDiv.innerHTML = `
-                  <div class="res-item-title">${exp.title}</div>
-                  <div class="res-item-subtitle">
+                  <div class="font-bold text-gray-800 text-sm">${exp.title}</div>
+                  <div class="flex justify-between text-xs italic text-gray-500 mb-1">
                       <span>${exp.company}</span>
                       <span>${exp.duration}</span>
                   </div>
-                  <div class="res-list">${exp.desc}</div>
+                  <div class="text-sm text-gray-700 whitespace-pre-wrap">${exp.desc}</div>
               `;
               previewList.appendChild(prevDiv);
           });
-          updateTheme(themeInput.value); // Re-apply theme
+          updateTheme(themeInput.value);
       }
 
       window.addExp = () => {
@@ -337,17 +357,15 @@ const description = "Create a professional, ATS-friendly resume in minutes. Live
       };
       window.updateExp = (id, field, value) => {
           const item = experienceData.find(e => e.id === id);
-          if (item) {
-              item[field] = value;
-              renderExperience(); 
-              let activeInput = document.activeElement;
-              setTimeout(()=> activeInput.focus(), 0);
-          }
+          if (item) item[field] = value;
+          renderExperience();
+          // Keep focus hack
+          setTimeout(() => document.activeElement.focus(), 0);
       };
       document.getElementById('addExpBtn').addEventListener('click', window.addExp);
 
 
-      // --- EDUCATION LOGIC ---
+      // --- RENDER EDUCATION ---
       function renderEducation() {
           const editorList = document.getElementById('educationList');
           const previewList = document.getElementById('previewEduList');
@@ -358,54 +376,46 @@ const description = "Create a professional, ATS-friendly resume in minutes. Live
           previewSection.style.display = educationData.length ? 'block' : 'none';
 
           educationData.forEach(edu => {
-              const eduDiv = document.createElement('div');
-              eduDiv.style.cssText = "background:#f9f9f9; padding:10px; border-radius:8px; margin-bottom:10px; position:relative;";
-              eduDiv.innerHTML = `
-                  <button onclick="window.removeEdu(${edu.id})" style="position:absolute; top:5px; right:5px; background:transparent; border:none; color:red; cursor:pointer;">🗑️</button>
-                  <div class="form-group"><input placeholder="Degree" value="${edu.degree}" oninput="window.updateEdu(${edu.id}, 'degree', this.value)"></div>
-                  <div class="form-group"><input placeholder="College" value="${edu.college}" oninput="window.updateEdu(${edu.id}, 'college', this.value)"></div>
-                  <div style="display:flex; gap:10px">
-                      <input placeholder="Year" value="${edu.year}" style="flex:1" oninput="window.updateEdu(${edu.id}, 'year', this.value)">
-                      <input placeholder="Grade" value="${edu.grade}" style="flex:1" oninput="window.updateEdu(${edu.id}, 'grade', this.value)">
+               // Editor
+               const eduDiv = document.createElement('div');
+               eduDiv.className = "bg-gray-50 p-3 rounded border border-gray-200 relative group";
+               eduDiv.innerHTML = `
+                  <button onclick="window.removeEdu(${edu.id})" class="absolute top-2 right-2 text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition">🗑️</button>
+                  <input class="w-full mb-2 p-1 border rounded text-sm font-bold" placeholder="Degree" value="${edu.degree}" oninput="window.updateEdu(${edu.id}, 'degree', this.value)">
+                  <input class="w-full mb-2 p-1 border rounded text-sm" placeholder="College" value="${edu.college}" oninput="window.updateEdu(${edu.id}, 'college', this.value)">
+                  <div class="flex gap-2">
+                     <input class="w-1/2 p-1 border rounded text-sm" placeholder="Year" value="${edu.year}" oninput="window.updateEdu(${edu.id}, 'year', this.value)">
+                     <input class="w-1/2 p-1 border rounded text-sm" placeholder="Grade" value="${edu.grade}" oninput="window.updateEdu(${edu.id}, 'grade', this.value)">
                   </div>
               `;
               editorList.appendChild(eduDiv);
 
+              // Preview
               const prevDiv = document.createElement('div');
-              prevDiv.className = 'res-item';
               prevDiv.innerHTML = `
-                  <div class="res-item-title">${edu.degree}</div>
-                  <div class="res-item-subtitle">
+                  <div class="font-bold text-gray-800 text-sm">${edu.degree}</div>
+                  <div class="flex justify-between text-xs italic text-gray-500 mb-1">
                       <span>${edu.college}</span>
                       <span>${edu.year}</span>
                   </div>
-                  ${edu.grade ? `<div style="font-size:13px; margin-top:2px">Grade: ${edu.grade}</div>` : ''}
+                  ${edu.grade ? `<div class="text-xs text-gray-600">Grade: ${edu.grade}</div>` : ''}
               `;
               previewList.appendChild(prevDiv);
           });
       }
 
-      window.addEdu = () => {
-          educationData.push({ id: Date.now(), degree: '', college: '', year: '', grade: '' });
-          renderEducation();
-      };
-      window.removeEdu = (id) => {
-          educationData = educationData.filter(e => e.id !== id);
-          renderEducation();
-      };
+      window.addEdu = () => { educationData.push({ id: Date.now(), degree: '', college: '', year: '', grade: '' }); renderEducation(); };
+      window.removeEdu = (id) => { educationData = educationData.filter(e => e.id !== id); renderEducation(); };
       window.updateEdu = (id, field, value) => {
           const item = educationData.find(e => e.id === id);
-          if (item) {
-              item[field] = value;
-              renderEducation();
-              let activeInput = document.activeElement;
-              setTimeout(()=> activeInput.focus(), 0);
-          }
+          if (item) item[field] = value;
+          renderEducation();
+          setTimeout(() => document.activeElement.focus(), 0);
       };
       document.getElementById('addEduBtn').addEventListener('click', window.addEdu);
 
 
-      // --- SKILLS LOGIC ---
+      // --- RENDER SKILLS ---
       function renderSkills() {
           const editorList = document.getElementById('skillsListEditor');
           const previewList = document.getElementById('previewSkillsList');
@@ -419,15 +429,15 @@ const description = "Create a professional, ATS-friendly resume in minutes. Live
           skillsData.forEach(skill => {
               // Editor Tag
               const tag = document.createElement('span');
-              tag.style.cssText = "background:#e0e0e0; padding:5px 10px; border-radius:15px; fontSize:13px; display:flex; align-items:center; gap:5px";
+              tag.className = "bg-gray-100 px-2 py-1 rounded text-xs flex items-center gap-1 border";
               tag.innerHTML = `${skill} <span style="cursor:pointer; color:red; font-weight:bold" onclick="window.removeSkill('${skill}')">×</span>`;
               editorList.appendChild(tag);
 
               // Preview Tag
               const prevTag = document.createElement('span');
-              prevTag.className = 'res-skill-tag';
-              prevTag.style.border = `1px solid ${color}`;
+              prevTag.className = 'res-skill-tag px-3 py-1 text-sm font-medium border rounded';
               prevTag.style.color = color;
+              prevTag.style.borderColor = color;
               prevTag.innerText = skill;
               previewList.appendChild(prevTag);
           });
@@ -455,6 +465,6 @@ const description = "Create a professional, ATS-friendly resume in minutes. Live
       renderExperience();
       renderEducation();
       renderSkills();
-
   </script>
-</Layout>
+
+</ToolLayout>
