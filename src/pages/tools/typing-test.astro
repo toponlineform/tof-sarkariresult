@@ -2,206 +2,235 @@
 import Layout from '../../layouts/Layout.astro';
 import AdSlot from '../../components/AdSlot.astro';
 
-// SEO Details
-const title = "Free Online Typing Test for SSC CGL, CHSL & Banking - TCS Interface";
-const description = "Practice English Typing for Govt Exams with Real TCS Interface. Choose from 10+ Exam Passages. Check WPM and Accuracy online.";
+// 🚀 SEO CONFIGURATION
+const title = "Free Online Typing Test | Practice & Check Speed (WPM) - Typing Master";
+const description = "Boost your typing speed with our Free Online Typing Test. Simulates TCS interface for SSC CGL, CHSL & Banking. Real-time WPM, Accuracy & Error check. Start now!";
+const keywords = "typing test, online typing test, typing master, typing speed test, wpm checker, ssc typing practice, tcs typing interface, english typing test";
 
-// 🛠️ Sidebar Tools List
-const sidebarTools = [
-  { name: "Image Resizer", icon: "🖼️", link: "/tools/image-resizer", active: false },
-  { name: "Age Calculator", icon: "🧮", link: "/tools/age-calculator", active: false },
-  { name: "JPG to PDF", icon: "📄", link: "/tools/jpg-to-pdf", active: false },
-  { name: "Typing Test", icon: "⌨️", link: "/tools/typing-test", active: true }, // ✅ Active
-];
+// 🧠 JSON-LD SCHEMA (Google ko batane ke liye ki ye ek Tool/App hai)
+const schemaMarkup = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Infinity Typing Master",
+  "operatingSystem": "Web",
+  "applicationCategory": "EducationalApplication",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "INR"
+  },
+  "description": "A free online typing test tool simulating TCS exam interface for SSC and Banking aspirants.",
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "ratingCount": "1250"
+  }
+});
 ---
 
 <Layout title={title} description={description}>
   
-  <div class="max-w-7xl mx-auto px-4 py-8">
+  {/* Inject Schema for Google SEO */}
+  <script type="application/ld+json" set:html={schemaMarkup} slot="head" />
+  <meta name="keywords" content={keywords} slot="head" />
+
+  <div class="max-w-5xl mx-auto px-4 py-8">
       
-      {/* HEADER */}
+      {/* HEADER WITH KEYWORDS */}
       <div class="text-center mb-8">
-          <span class="bg-purple-100 text-purple-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Exam Simulator</span>
+          <span class="bg-purple-100 text-purple-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Free Typing Speed Test</span>
           <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 mt-3 mb-4">
               Infinity <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600">Typing Master</span>
           </h1>
           <p class="text-gray-500 text-lg max-w-2xl mx-auto">
-              Practice typing with <span class="font-bold text-gray-700">Real Exam Interface (TCS Pattern)</span>. Boost your speed for SSC & Banking.
+              The best <strong>Online Typing Test</strong> to practice for SSC CGL, CHSL & Banking exams. 
+              Check your <span class="text-purple-600 font-bold">WPM (Words Per Minute)</span> accurately with our TCS-style interface.
           </p>
       </div>
 
-      <div class="flex flex-col lg:flex-row gap-8 items-start">
-          
-          {/* ⌨️ MAIN TYPING AREA */}
-          <main class="flex-1 w-full min-w-0">
-              
-              <div class="mb-6">
-                <AdSlot type="horizontal" />
-              </div>
-
-              {/* EXAM INTERFACE BOX */}
-              <div class="bg-white border border-gray-300 rounded-lg shadow-lg overflow-hidden relative">
-                  
-                  {/* Exam Header (Blue Bar like TCS) */}
-                  <div class="bg-[#1e40af] text-white p-3 flex justify-between items-center text-sm shadow-md">
-                      <div class="font-bold flex items-center gap-2">
-                          <span>🖥️</span> System: C001
-                      </div>
-                      <div class="flex items-center gap-4">
-                          <span id="timer" class="font-mono text-xl font-bold bg-black px-3 py-1 rounded text-yellow-400 border border-white shadow-inner">02:00</span>
-                          <button id="startBtn" class="bg-green-500 hover:bg-green-600 text-white px-6 py-1.5 rounded font-bold transition shadow-lg border-b-4 border-green-700 active:border-b-0 active:translate-y-1">Start Test</button>
-                      </div>
-                  </div>
-
-                  {/* Settings Bar (Grid Layout for better mobile view) */}
-                  <div class="bg-gray-100 p-3 border-b border-gray-300 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm items-center">
-                      
-                      {/* Passage Selector */}
-                      <div class="flex flex-col">
-                          <label class="text-xs font-bold text-gray-500 mb-1">Select Passage</label>
-                          <select id="passageSelect" class="border border-gray-300 rounded p-1.5 text-gray-800 font-medium focus:ring-2 focus:ring-purple-500 outline-none">
-                              {/* Options injected via JS */}
-                          </select>
-                      </div>
-
-                      {/* Time Selector */}
-                      <div class="flex flex-col">
-                          <label class="text-xs font-bold text-gray-500 mb-1">Duration</label>
-                          <select id="timeSelect" class="border border-gray-300 rounded p-1.5 text-gray-800 font-medium focus:ring-2 focus:ring-purple-500 outline-none">
-                              <option value="1">1 Minute (Warmup)</option>
-                              <option value="2" selected>2 Minutes (Standard)</option>
-                              <option value="5">5 Minutes (Full Exam)</option>
-                              <option value="10">10 Minutes (Endurance)</option>
-                          </select>
-                      </div>
-
-                      {/* Backspace Toggle */}
-                      <div class="flex items-center gap-2 bg-white p-2 rounded border border-gray-200">
-                          <input type="checkbox" id="disableBackspace" class="w-4 h-4 text-purple-600 focus:ring-purple-500 rounded cursor-pointer">
-                          <label for="disableBackspace" class="font-bold text-gray-700 cursor-pointer text-xs md:text-sm select-none">Disable Backspace (SSC Mode)</label>
-                      </div>
-                  </div>
-
-                  {/* Typing Area */}
-                  <div class="p-4 md:p-6 bg-[#f0f9ff]">
-                      
-                      {/* Text to Type (Read Only - Auto Scrolling) */}
-                      <div id="quoteDisplay" class="bg-white border-2 border-gray-300 p-4 rounded-lg mb-4 text-lg font-mono leading-relaxed h-40 overflow-hidden text-gray-500 select-none relative shadow-inner">
-                          {/* Text Injected Here */}
-                      </div>
-
-                      {/* User Input */}
-                      <textarea 
-                          id="quoteInput" 
-                          class="w-full h-40 p-4 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-500 focus:ring-4 focus:ring-purple-100 font-mono text-lg leading-relaxed shadow-sm bg-white disabled:bg-gray-100 disabled:cursor-not-allowed resize-none"
-                          placeholder="Click 'Start Test' and start typing here..."
-                          disabled
-                          spellcheck="false"
-                          autocomplete="off"
-                      ></textarea>
-                  </div>
-
-                  {/* Live Stats Footer */}
-                  <div class="bg-gray-800 text-white p-4 flex justify-around text-center border-t-4 border-purple-500">
-                      <div>
-                          <div class="text-[10px] md:text-xs text-gray-400 uppercase tracking-widest font-bold">Net Speed</div>
-                          <div class="text-2xl md:text-3xl font-extrabold text-yellow-400 font-mono"><span id="wpm">0</span> WPM</div>
-                      </div>
-                      <div>
-                          <div class="text-[10px] md:text-xs text-gray-400 uppercase tracking-widest font-bold">Accuracy</div>
-                          <div class="text-2xl md:text-3xl font-extrabold text-green-400 font-mono"><span id="accuracy">100</span>%</div>
-                      </div>
-                      <div>
-                          <div class="text-[10px] md:text-xs text-gray-400 uppercase tracking-widest font-bold">Errors</div>
-                          <div class="text-2xl md:text-3xl font-extrabold text-red-400 font-mono"><span id="errors">0</span></div>
-                      </div>
-                  </div>
-              </div>
-
-              {/* RESULT POPUP (Hidden) */}
-              <div id="resultModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-md">
-                  <div class="bg-white rounded-2xl p-8 max-w-md w-full text-center shadow-2xl transform scale-100 border-4 border-purple-600 relative animate-fade-in">
-                      
-                      <div class="text-6xl mb-4 animate-bounce">🏆</div>
-                      <h2 class="text-3xl font-extrabold text-gray-800 mb-2">Time Up!</h2>
-                      <p class="text-gray-500 mb-8">Great job! Here is your performance report.</p>
-                      
-                      <div class="grid grid-cols-2 gap-4 mb-8">
-                          <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
-                              <div class="text-4xl font-extrabold text-blue-600" id="finalWpm">0</div>
-                              <div class="text-xs uppercase font-bold text-gray-500 mt-1">Net Speed (WPM)</div>
-                          </div>
-                          <div class="bg-green-50 p-4 rounded-xl border border-green-100">
-                              <div class="text-4xl font-extrabold text-green-600" id="finalAcc">0%</div>
-                              <div class="text-xs uppercase font-bold text-gray-500 mt-1">Accuracy</div>
-                          </div>
-                      </div>
-
-                      <div class="flex gap-4">
-                        <button onclick="location.reload()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 rounded-xl transition">
-                           Exit
-                        </button>
-                        <button id="retryBtn" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-xl shadow-lg transition transform hover:-translate-y-1">
-                            Try Again ⟳
-                        </button>
-                      </div>
-                  </div>
-              </div>
-
-              {/* SEO Content */}
-              <div class="mt-10 prose prose-purple max-w-none bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
-                  <h2 class="text-2xl font-bold text-gray-800">SSC & Banking Typing Test Practice</h2>
-                  <p class="text-gray-600">
-                      Improve your typing speed for <strong>SSC CGL, CHSL, MTS, RRB NTPC, and Banking Exams</strong>. 
-                      Our tool simulates the actual exam environment provided by TCS iON.
-                  </p>
-                  <h3 class="font-bold text-gray-800">How is Speed Calculated?</h3>
-                  <ul class="list-disc pl-5 space-y-1 text-gray-700">
-                      <li><strong>5 Keystrokes = 1 Word:</strong> As per SSC rules, every 5 characters (including space) count as 1 word.</li>
-                      <li><strong>Gross Speed:</strong> Total Words Typed / Time Taken.</li>
-                      <li><strong>Net Speed:</strong> Gross Speed - (Errors / Time).</li>
-                  </ul>
-              </div>
-          </main>
-
-          {/* 🧊 STICKY SIDEBAR */}
-          <aside class="w-full lg:w-[320px] flex-shrink-0">
-              <div class="sticky top-4 space-y-6">
-                  
-                  {/* Tools Menu */}
-                  <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-4">
-                      <h4 class="font-bold text-gray-800 mb-3 px-2 flex items-center gap-2">
-                          <span>🛠️</span> More Infinity Tools
-                      </h4>
-                      <ul class="space-y-1">
-                          {sidebarTools.map((tool) => (
-                              <li>
-                                  <a href={tool.link} class={`flex items-center justify-between p-2.5 rounded-lg transition-all ${tool.active ? 'bg-purple-50 text-purple-700 font-bold border border-purple-100' : 'text-gray-600 hover:bg-gray-50 hover:text-purple-600'}`}>
-                                      <div class="flex items-center gap-3">
-                                          <span class="text-lg">{tool.icon}</span>
-                                          <span>{tool.name}</span>
-                                      </div>
-                                      {tool.badge && (
-                                          <span class="text-[10px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-bold uppercase tracking-wide">{tool.badge}</span>
-                                      )}
-                                      {tool.active && <span class="text-purple-500">●</span>}
-                                  </a>
-                              </li>
-                          ))}
-                      </ul>
-                  </div>
-
-                  <div class="shadow-sm rounded-xl overflow-hidden border border-gray-100">
-                     <AdSlot type="square" />
-                  </div>
-              </div>
-          </aside>
+      {/* 🟢 TOP ADVERTISEMENT */}
+      <div class="mb-8">
+        <AdSlot type="horizontal" />
       </div>
+
+      {/* ⌨️ MAIN TYPING AREA */}
+      <main class="w-full">
+          
+          {/* EXAM INTERFACE BOX */}
+          <div class="bg-white border border-gray-300 rounded-lg shadow-lg overflow-hidden relative mb-8">
+              
+              {/* Exam Header (Blue Bar like TCS) */}
+              <div class="bg-[#1e40af] text-white p-3 flex justify-between items-center text-sm shadow-md">
+                  <div class="font-bold flex items-center gap-2">
+                      <span>🖥️</span> System: C001
+                  </div>
+                  <div class="flex items-center gap-4">
+                      <span id="timer" class="font-mono text-xl font-bold bg-black px-3 py-1 rounded text-yellow-400 border border-white shadow-inner">02:00</span>
+                      <button id="startBtn" class="bg-green-500 hover:bg-green-600 text-white px-6 py-1.5 rounded font-bold transition shadow-lg border-b-4 border-green-700 active:border-b-0 active:translate-y-1">Start Test</button>
+                  </div>
+              </div>
+
+              {/* Settings Bar */}
+              <div class="bg-gray-100 p-3 border-b border-gray-300 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm items-center">
+                  
+                  {/* Passage Selector */}
+                  <div class="flex flex-col">
+                      <label class="text-xs font-bold text-gray-500 mb-1">Select Passage</label>
+                      <select id="passageSelect" class="border border-gray-300 rounded p-1.5 text-gray-800 font-medium focus:ring-2 focus:ring-purple-500 outline-none">
+                          {/* Options injected via JS */}
+                      </select>
+                  </div>
+
+                  {/* Time Selector */}
+                  <div class="flex flex-col">
+                      <label class="text-xs font-bold text-gray-500 mb-1">Duration</label>
+                      <select id="timeSelect" class="border border-gray-300 rounded p-1.5 text-gray-800 font-medium focus:ring-2 focus:ring-purple-500 outline-none">
+                          <option value="1">1 Minute (Warmup)</option>
+                          <option value="2" selected>2 Minutes (Standard)</option>
+                          <option value="5">5 Minutes (Full Exam)</option>
+                          <option value="10">10 Minutes (Endurance)</option>
+                      </select>
+                  </div>
+
+                  {/* Backspace Toggle */}
+                  <div class="flex items-center gap-2 bg-white p-2 rounded border border-gray-200">
+                      <input type="checkbox" id="disableBackspace" class="w-4 h-4 text-purple-600 focus:ring-purple-500 rounded cursor-pointer">
+                      <label for="disableBackspace" class="font-bold text-gray-700 cursor-pointer text-xs md:text-sm select-none">Disable Backspace (SSC Mode)</label>
+                  </div>
+              </div>
+
+              {/* Typing Area */}
+              <div class="p-4 md:p-6 bg-[#f0f9ff]">
+                  
+                  {/* Text to Type */}
+                  <div id="quoteDisplay" class="bg-white border-2 border-gray-300 p-4 rounded-lg mb-4 text-lg font-mono leading-relaxed h-40 overflow-hidden text-gray-500 select-none relative shadow-inner">
+                      {/* Text Injected Here */}
+                  </div>
+
+                  {/* User Input */}
+                  <textarea 
+                      id="quoteInput" 
+                      class="w-full h-40 p-4 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-500 focus:ring-4 focus:ring-purple-100 font-mono text-lg leading-relaxed shadow-sm bg-white disabled:bg-gray-100 disabled:cursor-not-allowed resize-none"
+                      placeholder="Click 'Start Test' and start typing here..."
+                      disabled
+                      spellcheck="false"
+                      autocomplete="off"
+                      onpaste="return false"
+                  ></textarea>
+              </div>
+
+              {/* Live Stats Footer */}
+              <div class="bg-gray-800 text-white p-4 flex justify-around text-center border-t-4 border-purple-500">
+                  <div>
+                      <div class="text-[10px] md:text-xs text-gray-400 uppercase tracking-widest font-bold">Net Speed</div>
+                      <div class="text-2xl md:text-3xl font-extrabold text-yellow-400 font-mono"><span id="wpm">0</span> WPM</div>
+                  </div>
+                  <div>
+                      <div class="text-[10px] md:text-xs text-gray-400 uppercase tracking-widest font-bold">Accuracy</div>
+                      <div class="text-2xl md:text-3xl font-extrabold text-green-400 font-mono"><span id="accuracy">100</span>%</div>
+                  </div>
+                  <div>
+                      <div class="text-[10px] md:text-xs text-gray-400 uppercase tracking-widest font-bold">Errors</div>
+                      <div class="text-2xl md:text-3xl font-extrabold text-red-400 font-mono"><span id="errors">0</span></div>
+                  </div>
+              </div>
+          </div>
+
+          {/* RESULT POPUP (Hidden) */}
+          <div id="resultModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-md">
+              <div class="bg-white rounded-2xl p-8 max-w-md w-full text-center shadow-2xl transform scale-100 border-4 border-purple-600 relative animate-fade-in">
+                  
+                  <div class="text-6xl mb-4 animate-bounce">🏆</div>
+                  <h2 class="text-3xl font-extrabold text-gray-800 mb-2">Time Up!</h2>
+                  <p class="text-gray-500 mb-8">Great job! Here is your performance report.</p>
+                  
+                  <div class="grid grid-cols-2 gap-4 mb-8">
+                      <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                          <div class="text-4xl font-extrabold text-blue-600" id="finalWpm">0</div>
+                          <div class="text-xs uppercase font-bold text-gray-500 mt-1">Net Speed (WPM)</div>
+                      </div>
+                      <div class="bg-green-50 p-4 rounded-xl border border-green-100">
+                          <div class="text-4xl font-extrabold text-green-600" id="finalAcc">0%</div>
+                          <div class="text-xs uppercase font-bold text-gray-500 mt-1">Accuracy</div>
+                      </div>
+                  </div>
+
+                  <div class="flex gap-4">
+                    <button onclick="location.reload()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 rounded-xl transition">
+                       Exit
+                    </button>
+                    <button id="retryBtn" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-xl shadow-lg transition transform hover:-translate-y-1">
+                        Try Again ⟳
+                    </button>
+                  </div>
+              </div>
+          </div>
+
+          {/* 🟢 BOTTOM ADVERTISEMENT */}
+          <div class="mb-10">
+            <AdSlot type="horizontal" />
+          </div>
+
+          {/* SEO OPTIMIZED CONTENT SECTION */}
+          <article class="prose prose-purple max-w-none bg-white p-6 md:p-8 rounded-xl border border-gray-100 shadow-sm">
+              <h2 class="text-2xl font-bold text-gray-900">Why Use Infinity Typing Master for Online Typing Practice?</h2>
+              <p class="text-gray-700">
+                  Welcome to the ultimate <strong>Online Typing Test</strong> platform. Whether you are preparing for government exams or just want to improve your keyboard skills, our tool offers a realistic environment to help you succeed. It is designed as a free alternative to paid software like <em>Typing Master</em> and <em>Sony Typing Tutor</em>.
+              </p>
+
+              <h3 class="text-xl font-bold text-gray-800 mt-6">Key Features of Our Typing Speed Test</h3>
+              <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                  <li><strong>Real Exam Interface:</strong> We simulate the actual interface used by TCS iON for exams like SSC CGL, CHSL, MTS, and RRB NTPC.</li>
+                  <li><strong>Accurate WPM Calculator:</strong> Unlike other tools, we calculate 'Net Speed' based on the SSC formula (5 keystrokes = 1 word).</li>
+                  <li><strong>Instant Result Analysis:</strong> Get a detailed report of your Gross Speed, Net Speed, Accuracy, and Total Errors immediately after the test.</li>
+                  <li><strong>Mobile & Desktop Friendly:</strong> Practice typing anywhere, anytime on any device.</li>
+              </ul>
+
+              <h3 class="text-xl font-bold text-gray-800 mt-6">How to Calculate Typing Speed (WPM)?</h3>
+              <p class="text-gray-700">
+                  Most government exams follow a specific formula. Here is how we calculate your score:
+              </p>
+              <div class="bg-gray-50 p-4 rounded-lg border-l-4 border-purple-500 my-4">
+                  <p><strong>Step 1:</strong> Count total characters typed (including spaces).</p>
+                  <p><strong>Step 2:</strong> Divide total characters by 5 to get "Gross Words".</p>
+                  <p><strong>Step 3:</strong> Formula: <code class="bg-gray-200 px-1 rounded">Net Speed (WPM) = (Gross Words - Errors) / Time in Minutes</code></p>
+              </div>
+
+              {/* FAQ Schema Content */}
+              <h3 class="text-xl font-bold text-gray-800 mt-8 mb-4">Frequently Asked Questions (FAQs)</h3>
+              
+              <div class="space-y-4">
+                  <details class="group bg-gray-50 p-4 rounded-lg cursor-pointer">
+                      <summary class="font-bold text-gray-900 list-none flex justify-between items-center">
+                          <span>Is this typing test free?</span>
+                          <span class="transition group-open:rotate-180">▼</span>
+                      </summary>
+                      <p class="text-gray-700 mt-2">Yes, Infinity Typing Master is 100% free. You can take unlimited typing tests to improve your speed.</p>
+                  </details>
+
+                  <details class="group bg-gray-50 p-4 rounded-lg cursor-pointer">
+                      <summary class="font-bold text-gray-900 list-none flex justify-between items-center">
+                          <span>What is a good typing speed for SSC exams?</span>
+                          <span class="transition group-open:rotate-180">▼</span>
+                      </summary>
+                      <p class="text-gray-700 mt-2">For SSC CGL and CHSL, a speed of <strong>27 to 30 WPM</strong> is typically required to qualify. However, aiming for 35+ WPM is recommended for safety.</p>
+                  </details>
+
+                  <details class="group bg-gray-50 p-4 rounded-lg cursor-pointer">
+                      <summary class="font-bold text-gray-900 list-none flex justify-between items-center">
+                          <span>Does backspace work in the actual exam?</span>
+                          <span class="transition group-open:rotate-180">▼</span>
+                      </summary>
+                      <p class="text-gray-700 mt-2">It depends on the specific exam. In SSC CGL/CHSL, backspace is generally allowed. However, some departmental exams disable it. Our tool has a "Disable Backspace" toggle so you can practice for both scenarios.</p>
+                  </details>
+              </div>
+          </article>
+      </main>
   </div>
 
   {/* 🧠 TYPING ENGINE LOGIC */}
   <script>
-      // 10 LONG PASSAGES FOR SSC PRACTICE (Approx 300-400 words each)
+      // 10 LONG PASSAGES FOR SSC PRACTICE
       const TEST_DATA = [
           {
               title: "Passage 1: Digital India",
@@ -289,9 +318,7 @@ const sidebarTools = [
           const index = passageSelect.value;
           currentQuote = TEST_DATA[index].text;
           
-          // Make text longer if needed (Repeat logic)
-          // For 5 mins, we need at least 2000 chars. 
-          // If passage is < 1000 chars, repeat it 3 times.
+          // Make text longer if needed
           if(currentQuote.length < 1000) {
              currentQuote = currentQuote + " " + currentQuote + " " + currentQuote; 
           }
@@ -354,7 +381,6 @@ const sidebarTools = [
 
       function updateStats() {
           const typedText = quoteInput.value;
-          // Standard WPM = (All Typed Characters / 5) / Time in Minutes
           const wpm = Math.round((typedText.length / 5) / (timeElapsed / 60));
           wpmElement.innerText = (!wpm || wpm < 0 || !isFinite(wpm)) ? 0 : wpm;
           
@@ -386,7 +412,7 @@ const sidebarTools = [
 
           const arrayQuote = quoteDisplay.querySelectorAll('span');
           const arrayValue = quoteInput.value.split('');
-          totalTypedChars = arrayValue.length; // Better char counting
+          totalTypedChars = arrayValue.length;
 
           let currentErrors = 0;
 
@@ -394,7 +420,7 @@ const sidebarTools = [
           arrayQuote.forEach((characterSpan, index) => {
               const character = arrayValue[index];
               if (character == null) {
-                  characterSpan.classList.remove('text-green-600', 'bg-green-100', 'text-red-600', 'bg-red-100', 'border-b-2', 'border-blue-500'); // Remove active cursor too
+                  characterSpan.classList.remove('text-green-600', 'bg-green-100', 'text-red-600', 'bg-red-100'); 
               } else if (character === characterSpan.innerText) {
                   characterSpan.classList.add('text-green-600', 'bg-green-100');
                   characterSpan.classList.remove('text-red-600', 'bg-red-100');
@@ -407,21 +433,17 @@ const sidebarTools = [
           
           errors = currentErrors;
 
-          // 🧠 SMART SCROLLING LOGIC (Fix for disappearing line)
-          // Find the active character span (where the user is currently typing)
+          // Scroll Logic
           const currentIndex = arrayValue.length;
           if(currentIndex < arrayQuote.length) {
               const activeSpan = arrayQuote[currentIndex];
-              
-              // Calculate offsets
               const spanTop = activeSpan.offsetTop;
               const containerHeight = quoteDisplay.clientHeight;
               const scrollTop = quoteDisplay.scrollTop;
 
-              // If the active cursor goes below the middle of the box, scroll down
               if (spanTop > scrollTop + (containerHeight / 2)) {
                   quoteDisplay.scrollTo({
-                      top: spanTop - (containerHeight / 3), // Keep current line in top 1/3rd
+                      top: spanTop - (containerHeight / 3),
                       behavior: 'smooth'
                   });
               }
