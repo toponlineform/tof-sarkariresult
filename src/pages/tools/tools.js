@@ -1,3 +1,5 @@
+// src/pages/tools/tools.js
+
 export const toolsList = [
   {
     title: "Passport Photo Maker",
@@ -8,20 +10,12 @@ export const toolsList = [
     badge: "Most Used 🔥"
   },
   {
-    title: "Resume Builder",
-    desc: "Create Bio-Data for Govt & Private Jobs.",
-    icon: "📝",
-    link: "/tools/resume-builder",
-    color: "from-slate-700 to-slate-900",
-    badge: "Pro"
-  },
-  {
-    title: "Typing Test",
-    desc: "Practice for SSC/Banking with TCS Interface.",
-    icon: "⌨️",
-    link: "/tools/typing-test",
-    color: "from-purple-500 to-indigo-500",
-    badge: "Exam Special"
+    title: "Image Resizer",
+    desc: "Resize dimensions (CM, MM, Inch) to Pixels.",
+    icon: "📐",
+    link: "/tools/image-resizer",
+    color: "from-blue-600 to-cyan-600",
+    badge: "New"
   },
   {
     title: "Image Compressor",
@@ -37,15 +31,47 @@ export const toolsList = [
     icon: "📅",
     link: "/tools/name-date-on-photo",
     color: "from-blue-500 to-cyan-500",
-    badge: null
+    badge: "SSC Special"
   },
   {
     title: "Postcard Photo Maker",
-    desc: "Create 4x6 inch photo for SSC Exams.",
+    desc: "Create 4x6 inch photo for SSC/NTA Exams.",
     icon: "🖼️",
     link: "/tools/postcard-photo-maker",
-    color: "from-blue-600 to-indigo-600",
-    badge: "New"
+    color: "from-blue-700 to-indigo-700",
+    badge: null
+  },
+  {
+    title: "Resume Builder",
+    desc: "Create Bio-Data for Govt & Private Jobs.",
+    icon: "📝",
+    link: "/tools/resume-builder",
+    color: "from-slate-700 to-slate-900",
+    badge: "Pro"
+  },
+  {
+    title: "Typing Test",
+    desc: "Practice for SSC/Banking with TCS Interface.",
+    icon: "⌨️",
+    link: "/tools/typing-test",
+    color: "from-purple-500 to-indigo-500",
+    badge: "Exam Mode"
+  },
+  {
+    title: "Age Calculator",
+    desc: "Check exact age for eligibility (Y/M/D).",
+    icon: "🧮",
+    link: "/tools/age-calculator",
+    color: "from-yellow-400 to-orange-500",
+    badge: null
+  },
+  {
+    title: "CGPA to Percentage",
+    desc: "Convert Grades for CBSE/Engineering.",
+    icon: "📊",
+    link: "/tools/cgpa-to-percentage",
+    color: "from-violet-500 to-purple-500",
+    badge: null
   },
   {
     title: "JPG to PDF",
@@ -63,14 +89,8 @@ export const toolsList = [
     color: "from-pink-500 to-rose-500",
     badge: null
   },
-  {
-    title: "Age Calculator",
-    desc: "Check exact age for eligibility (Y/M/D).",
-    icon: "🧮",
-    link: "/tools/age-calculator",
-    color: "from-yellow-400 to-orange-500",
-    badge: null
-  },
+  // Future Tools (Commented out to prevent 404 Errors)
+  /*
   {
     title: "Image to Text (OCR)",
     desc: "Extract text from images (Hindi/Eng).",
@@ -86,21 +106,6 @@ export const toolsList = [
     link: "/tools/pro-calculator",
     color: "from-gray-600 to-gray-800",
     badge: null
-  },
-  {
-    title: "CGPA to Percentage",
-    desc: "Convert Grades for CBSE/Engineering.",
-    icon: "📊",
-    link: "/tools/cgpa-to-percentage",
-    color: "from-violet-500 to-purple-500",
-    badge: null
-  },
-  {
-    title: "Image Resizer",
-    desc: "Resize width & height (pixels/cm/mm).",
-    icon: "📐",
-    link: "/tools/image-resizer",
-    color: "from-blue-400 to-blue-600",
-    badge: null
   }
+  */
 ];
