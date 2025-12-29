@@ -1,35 +1,37 @@
 ---
+// src/pages/tools/jpg-to-pdf.astro
 import ToolLayout from '../../layouts/ToolLayout.astro';
 import AdSlot from '../../components/AdSlot.astro';
 
-const title = "JPG to PDF Converter - Merge Photos to PDF for Govt Jobs (Free)";
-const description = "Convert JPG/PNG images to PDF online. Best for merging Aadhar Card (Front/Back), Marksheets, and Application Documents into a single PDF file.";
+// 🌍 GLOBAL METADATA
+const title = "JPG to PDF Converter - Merge Images to PDF Online (Free & Secure)";
+const description = "Convert JPG, PNG, and HEIC images to PDF for free. Merge multiple photos into a single PDF file. Supports A4, US Letter, and Auto-Fit sizes. 100% Private & Offline.";
 ---
 
 <ToolLayout 
   title={title} 
   description={description}
-  toolName="JPG to PDF Converter"
+  toolName="JPG to PDF"
 >
 
-  {/* ⚡ FAQ SCHEMA (Targeting Document Uploads) */}
+  {/* ⚡ GLOBAL FAQ SCHEMA */}
   <script type="application/ld+json" slot="head">
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": [{
         "@type": "Question",
-        "name": "How to merge Aadhar Card front and back to PDF?",
+        "name": "How do I convert photos to PDF on my phone?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Select both Front and Back photos of your Aadhar Card in our JPG to PDF tool. Arrange them in order, select A4 size, and click Convert. You will get a single PDF file."
+          "text": "Simply tap 'Select Images', choose your photos from the gallery, arrange them in order, and click 'Create PDF'. It works perfectly on iPhone and Android browsers."
         }
       }, {
         "@type": "Question",
-        "name": "Is this converter safe for personal documents?",
+        "name": "Is my data safe?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes, Infinity JPG to PDF works 100% in your browser. Your documents are NOT uploaded to any server, ensuring complete privacy for your marksheets and ID proofs."
+          "text": "Yes. Unlike other tools, we perform the conversion locally in your browser using JavaScript. Your files are never uploaded to any server, ensuring 100% privacy."
         }
       }]
     }
@@ -37,25 +39,31 @@ const description = "Convert JPG/PNG images to PDF online. Best for merging Aadh
 
   {/* Load jsPDF Library */}
   <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  {/* Load SortableJS for Drag & Drop Reordering */}
+  <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
 
-  {/* 🟢 TOP AD */}
-  <div class="mb-6">
+  {/* 1. TOP AD SLOT */}
+  <div class="mb-8">
     <AdSlot type="horizontal" />
   </div>
 
   <div class="space-y-8">
 
       {/* STEP 1: UPLOAD */}
-      <div id="uploadArea" class="py-12 text-center bg-red-50 border-4 border-dashed border-red-200 rounded-3xl cursor-pointer hover:bg-red-100 transition relative group" onclick="document.getElementById('fileInput').click()">
+      <div id="uploadArea" class="py-16 text-center bg-gradient-to-br from-red-50 to-orange-50 border-4 border-dashed border-red-200 rounded-3xl cursor-pointer hover:border-red-400 hover:shadow-lg transition relative group" onclick="document.getElementById('fileInput').click()">
           <div class="relative z-10">
             <div class="text-7xl mb-4 group-hover:scale-110 transition duration-200 drop-shadow-sm">📄</div>
-            <h3 class="text-3xl font-extrabold text-gray-800 mb-2">Select Images to Convert</h3>
-            <p class="text-gray-500 mb-8 font-medium text-lg">Merge JPG, PNG into One PDF</p>
+            <h3 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-2">Convert Images to PDF</h3>
+            <p class="text-gray-500 mb-8 font-medium text-lg">JPG • PNG • HEIC • BMP</p>
             
-            <span class="bg-gradient-to-r from-red-600 to-orange-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition flex items-center justify-center gap-2 w-max mx-auto">
-                <span>📸</span> Pick Photos
+            <span class="bg-red-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-red-700 transition flex items-center justify-center gap-2 w-max mx-auto transform group-hover:-translate-y-1">
+                <span>📸</span> Select Photos
             </span>
-            <p class="mt-4 text-xs text-red-400 font-bold uppercase tracking-wider">No Upload • 100% Secure</p>
+            
+            <div class="mt-6 flex justify-center gap-4 text-xs font-bold text-red-400 uppercase tracking-widest opacity-80">
+                <span class="flex items-center gap-1">🔒 100% Private</span>
+                <span class="flex items-center gap-1">⚡ Instant</span>
+            </div>
           </div>
           <input type="file" id="fileInput" multiple accept="image/*" class="hidden" />
       </div>
@@ -63,94 +71,122 @@ const description = "Convert JPG/PNG images to PDF online. Best for merging Aadh
       {/* STEP 2: PREVIEW & SETTINGS (Hidden initially) */}
       <div id="previewArea" class="hidden animate-fade-in">
           
-          <div class="flex justify-between items-center mb-4 px-2">
-              <h4 class="font-bold text-gray-800 text-lg">Selected Documents (<span id="count" class="text-red-600">0</span>)</h4>
-              <button id="clearBtn" class="text-sm text-red-600 font-bold hover:bg-red-50 px-3 py-1 rounded transition">
-                  🗑️ Clear All
-              </button>
+          <div class="flex flex-col md:flex-row justify-between items-center mb-6 px-2 gap-4">
+              <div>
+                 <h4 class="font-bold text-gray-800 text-xl">Organize Pages (<span id="count" class="text-red-600">0</span>)</h4>
+                 <p class="text-xs text-gray-500">Drag and drop to reorder pages</p>
+              </div>
+              <div class="flex gap-3">
+                 <button onclick="document.getElementById('fileInput').click()" class="text-sm font-bold bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-2 rounded-lg transition border border-gray-200">
+                    + Add More
+                 </button>
+                 <button id="clearBtn" class="text-sm font-bold text-red-600 hover:bg-red-50 px-4 py-2 rounded-lg transition border border-transparent hover:border-red-100">
+                    🗑️ Clear All
+                 </button>
+              </div>
           </div>
 
-          {/* Image Grid */}
-          <div id="imageGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          {/* Image Grid (Sortable) */}
+          <div id="imageGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8">
               {/* Images injected via JS */}
           </div>
 
           {/* Settings Box */}
-          <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-lg space-y-6">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-white p-6 md:p-8 rounded-2xl border border-gray-200 shadow-xl space-y-8">
+              
+              <div class="border-b border-gray-100 pb-4 mb-4">
+                  <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                      <span>⚙️</span> PDF Settings
+                  </h3>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div>
-                      <label class="block text-sm font-bold text-gray-700 mb-2">Paper Size</label>
-                      <select class="w-full p-3 border-2 border-gray-100 rounded-xl bg-gray-50 font-bold text-gray-700 focus:outline-none focus:border-red-500">
-                          <option>A4 (Standard for Govt Forms)</option>
-                          <option>Letter (US)</option>
-                          <option>Fit to Image</option>
+                      <label class="block text-xs font-bold text-gray-500 mb-2 uppercase">Page Size</label>
+                      <select id="pageSize" class="w-full p-3 border-2 border-gray-100 rounded-xl bg-gray-50 font-bold text-gray-700 focus:outline-none focus:border-red-500 cursor-pointer">
+                          <option value="a4">A4 (Standard)</option>
+                          <option value="letter">US Letter (8.5 x 11)</option>
+                          <option value="legal">Legal</option>
+                          <option value="fit">Fit to Image</option>
                       </select>
                   </div>
                   <div>
-                      <label class="block text-sm font-bold text-gray-700 mb-2">Image Quality</label>
-                      <select id="qualitySelect" class="w-full p-3 border-2 border-gray-100 rounded-xl bg-gray-50 font-bold text-gray-700 focus:outline-none focus:border-red-500">
-                          <option value="0.5">Medium (Best for Uploads)</option>
-                          <option value="0.8">High Quality (Print)</option>
-                          <option value="0.3">Low (Small File Size)</option>
+                      <label class="block text-xs font-bold text-gray-500 mb-2 uppercase">Orientation</label>
+                      <select id="orientation" class="w-full p-3 border-2 border-gray-100 rounded-xl bg-gray-50 font-bold text-gray-700 focus:outline-none focus:border-red-500 cursor-pointer">
+                          <option value="p">Portrait (Vertical)</option>
+                          <option value="l">Landscape (Horizontal)</option>
+                      </select>
+                  </div>
+                  <div>
+                      <label class="block text-xs font-bold text-gray-500 mb-2 uppercase">Margin</label>
+                      <select id="marginSize" class="w-full p-3 border-2 border-gray-100 rounded-xl bg-gray-50 font-bold text-gray-700 focus:outline-none focus:border-red-500 cursor-pointer">
+                          <option value="10">Small (Standard)</option>
+                          <option value="0">None (Full Page)</option>
+                          <option value="20">Large</option>
                       </select>
                   </div>
               </div>
 
-              <button id="generateBtn" class="w-full bg-gradient-to-r from-red-600 to-orange-600 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition text-xl flex justify-center items-center gap-3">
-                  <span>⚙️</span> Create PDF Now
+              <button id="generateBtn" class="w-full bg-gray-900 hover:bg-black text-white font-bold py-5 rounded-xl shadow-lg hover:shadow-2xl hover:-translate-y-1 transition text-xl flex justify-center items-center gap-3">
+                  <span>Download PDF</span>
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
               </button>
           </div>
       </div>
   </div>
 
-  {/* SEO CONTENT */}
-  <div slot="content">
-      <p class="lead text-lg text-gray-700 mb-6">
-          When applying for <strong>SSC, UPSC, or Banking Exams</strong>, you are often asked to upload multiple documents (like Marksheets and Certificates) as a single PDF file. The <strong>Infinity JPG to PDF Converter</strong> makes this easy and secure.
-      </p>
+  {/* 2. MIDDLE AD SLOT */}
+  <div class="mb-8 mt-8">
+     <AdSlot type="horizontal" />
+  </div>
 
-      {/* 🌟 SEO CHECKLIST TABLE */}
-      <h3 class="text-xl font-bold text-gray-800 mb-4">Documents You Can Merge into PDF</h3>
-      <div class="overflow-hidden rounded-xl border border-gray-200 mb-8 shadow-sm">
+  {/* SEO CONTENT (Global + Use Cases) */}
+  <div slot="content">
+      
+      {/* SECTION 1: GLOBAL APPEAL */}
+      <div class="grid md:grid-cols-2 gap-8 mb-8">
+          <div>
+            <h3 class="text-xl font-bold text-gray-800 mb-3">Why convert JPG to PDF?</h3>
+            <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                Sharing multiple images individually is messy. A PDF file keeps your photos organized in a single document, ensures the layout stays consistent on any device, and reduces the total file size for easy sharing via email or WhatsApp.
+            </p>
+          </div>
+          <div class="bg-red-50 p-5 rounded-xl border border-red-100">
+             <h4 class="font-bold text-red-900 mb-3 flex items-center gap-2">🚀 Best Features</h4>
+             <ul class="space-y-2 text-sm text-red-800">
+                <li class="flex items-center gap-2">✅ <strong>Drag & Drop:</strong> Easily reorder pages before converting.</li>
+                <li class="flex items-center gap-2">✅ <strong>No Limits:</strong> Convert unlimited photos for free.</li>
+                <li class="flex items-center gap-2">✅ <strong>Universal Sizes:</strong> Supports A4, Letter & Legal paper formats.</li>
+             </ul>
+          </div>
+      </div>
+
+      {/* SECTION 2: INDIAN & GOVT EXAMS */}
+      <h3 class="text-lg font-bold text-gray-800 mb-3">Perfect for Government Applications</h3>
+      
+      
+
+      <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm mb-6">
         <table class="min-w-full text-sm text-left bg-white">
-            <thead class="bg-red-50 text-red-800 font-bold border-b">
+            <thead class="bg-gray-100 text-gray-800 font-bold">
                 <tr>
-                    <th class="p-4">Document Name</th>
-                    <th class="p-4">Why convert to PDF?</th>
+                    <th class="p-3 border-b">Document Type</th>
+                    <th class="p-3 border-b">Usage</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
-                <tr>
-                    <td class="p-4 font-bold">Aadhar / Voter ID</td>
-                    <td class="p-4">Merge Front & Back side into one page for proof of address.</td>
-                </tr>
-                <tr>
-                    <td class="p-4 font-bold">Marksheets (10th/12th)</td>
-                    <td class="p-4">Combine multiple marksheets into a single education proof file.</td>
-                </tr>
-                <tr>
-                    <td class="p-4 font-bold">Caste Certificate</td>
-                    <td class="p-4">Required in PDF format for state level exams.</td>
-                </tr>
-                <tr>
-                    <td class="p-4 font-bold">Handwritten Notes</td>
-                    <td class="p-4">Scan notes photos and convert to PDF for sharing.</td>
-                </tr>
+                <tr><td class="p-3 font-medium">Aadhar Card (Front + Back)</td><td class="p-3">Merge both sides into one page for address proof.</td></tr>
+                <tr><td class="p-3 font-medium">Marksheets</td><td class="p-3">Combine 10th, 12th & Degree marksheets into a single file.</td></tr>
+                <tr><td class="p-3 font-medium">Bank Statements</td><td class="p-3">Convert screenshots of passbook/statements to PDF.</td></tr>
             </tbody>
         </table>
       </div>
 
-      <h3>Why use this tool?</h3>
-      <ul class="list-disc pl-5 space-y-2 text-gray-700">
-          <li><strong>Zero Uploads:</strong> Your private documents never leave your phone/laptop. Conversion happens inside the browser.</li>
-          <li><strong>No Watermark:</strong> Clean professional PDFs for official use.</li>
-          <li><strong>Unlimited Pages:</strong> Add as many photos as you want.</li>
-      </ul>
   </div>
 
 </ToolLayout>
 
-{/* 🧠 LOGIC */}
+{/* 🧠 LOGIC (Sortable + jsPDF) */}
 <script>
   // @ts-nocheck
   const fileInput = document.getElementById('fileInput');
@@ -160,11 +196,27 @@ const description = "Convert JPG/PNG images to PDF online. Best for merging Aadh
   const countSpan = document.getElementById('count');
   const clearBtn = document.getElementById('clearBtn');
   const generateBtn = document.getElementById('generateBtn');
-  const qualitySelect = document.getElementById('qualitySelect');
+  const pageSizeSelect = document.getElementById('pageSize');
+  const orientationSelect = document.getElementById('orientation');
+  const marginSelect = document.getElementById('marginSize');
 
-  let selectedFiles = [];
+  let selectedFiles = []; // Array of { id, file, url }
 
-  // Handle File Selection
+  // 1. Initialize SortableJS
+  new Sortable(imageGrid, {
+      animation: 150,
+      ghostClass: 'bg-red-50',
+      onEnd: function (evt) {
+          // Reorder array based on DOM
+          const oldIndex = evt.oldIndex;
+          const newIndex = evt.newIndex;
+          const movedItem = selectedFiles.splice(oldIndex, 1)[0];
+          selectedFiles.splice(newIndex, 0, movedItem);
+          updatePageNumbers();
+      }
+  });
+
+  // 2. Handle File Selection
   fileInput?.addEventListener('change', (e) => {
       if (e.target.files && e.target.files.length > 0) {
           handleFiles(Array.from(e.target.files));
@@ -172,9 +224,38 @@ const description = "Convert JPG/PNG images to PDF online. Best for merging Aadh
   });
 
   function handleFiles(files) {
-      selectedFiles = [...selectedFiles, ...files];
+      files.forEach(file => {
+          // Unique ID for tracking
+          const id = Math.random().toString(36).substr(2, 9);
+          const url = URL.createObjectURL(file);
+          
+          selectedFiles.push({ id, file, url });
+          
+          // Create DOM Element
+          const div = document.createElement('div');
+          div.className = 'relative group aspect-[3/4] bg-gray-100 rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition cursor-move';
+          div.setAttribute('data-id', id);
+          
+          div.innerHTML = `
+             <img src="${url}" class="w-full h-full object-cover" />
+             <button onclick="removeFile('${id}')" class="absolute top-2 right-2 bg-white text-red-600 w-7 h-7 rounded-full flex items-center justify-center font-bold shadow-md hover:bg-red-50 transition z-10 opacity-0 group-hover:opacity-100">×</button>
+             <span class="page-num absolute bottom-2 left-2 bg-black/70 text-white text-xs font-bold px-2 py-1 rounded backdrop-blur-sm"></span>
+          `;
+          imageGrid.appendChild(div);
+      });
+      
       updateUI();
   }
+
+  // 3. Global Remove Function
+  window.removeFile = (id) => {
+      const index = selectedFiles.findIndex(item => item.id === id);
+      if (index > -1) {
+          selectedFiles.splice(index, 1);
+          document.querySelector(`[data-id="${id}"]`).remove();
+          updateUI();
+      }
+  };
 
   function updateUI() {
       if (selectedFiles.length > 0) {
@@ -184,99 +265,93 @@ const description = "Convert JPG/PNG images to PDF online. Best for merging Aadh
           uploadArea.classList.remove('hidden');
           previewArea.classList.add('hidden');
       }
-
       countSpan.innerText = selectedFiles.length;
-      imageGrid.innerHTML = '';
-
-      selectedFiles.forEach((file, index) => {
-          const div = document.createElement('div');
-          div.className = 'relative group aspect-[3/4] bg-gray-100 rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition';
-          
-          const img = document.createElement('img');
-          img.src = URL.createObjectURL(file);
-          img.className = 'w-full h-full object-cover';
-          
-          const removeBtn = document.createElement('button');
-          removeBtn.innerHTML = '×';
-          removeBtn.className = 'absolute top-2 right-2 bg-white text-red-600 w-7 h-7 rounded-full flex items-center justify-center font-bold shadow-md hover:bg-red-50 transition z-10';
-          removeBtn.onclick = () => removeFile(index);
-
-          const numBadge = document.createElement('span');
-          numBadge.innerText = index + 1;
-          numBadge.className = 'absolute bottom-2 left-2 bg-black/70 text-white text-xs font-bold px-2 py-1 rounded backdrop-blur-sm';
-
-          div.appendChild(img);
-          div.appendChild(removeBtn);
-          div.appendChild(numBadge);
-          imageGrid.appendChild(div);
-      });
+      updatePageNumbers();
   }
 
-  function removeFile(index) {
-      selectedFiles.splice(index, 1);
-      updateUI();
+  function updatePageNumbers() {
+      const badges = document.querySelectorAll('.page-num');
+      badges.forEach((badge, index) => {
+          badge.innerText = `Page ${index + 1}`;
+      });
   }
 
   clearBtn?.addEventListener('click', () => {
       selectedFiles = [];
+      imageGrid.innerHTML = '';
       updateUI();
       fileInput.value = '';
   });
 
-  // PDF Generation
+  // 4. PDF Generation Logic
   generateBtn?.addEventListener('click', async () => {
       if (selectedFiles.length === 0) return;
 
       const originalText = generateBtn.innerHTML;
       generateBtn.innerHTML = "Processing...";
       generateBtn.disabled = true;
-      generateBtn.classList.add('opacity-75');
 
       const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
+      
+      const format = pageSizeSelect.value === 'fit' ? 'a4' : pageSizeSelect.value;
+      const orientation = orientationSelect.value;
+      const margin = parseInt(marginSelect.value);
+
+      const doc = new jsPDF({
+          orientation: orientation,
+          unit: 'mm',
+          format: format
+      });
+
       const pageWidth = doc.internal.pageSize.getWidth();
       const pageHeight = doc.internal.pageSize.getHeight();
-      const margin = 10;
-      const imgWidth = pageWidth - (margin * 2);
-      const quality = parseFloat(qualitySelect.value);
+      const contentWidth = pageWidth - (margin * 2);
+      const contentHeight = pageHeight - (margin * 2);
 
       for (let i = 0; i < selectedFiles.length; i++) {
           if (i > 0) doc.addPage();
 
-          const file = selectedFiles[i];
+          const file = selectedFiles[i].file;
           const imgData = await readFileAsDataURL(file);
           
           const imgProps = doc.getImageProperties(imgData);
           const imgRatio = imgProps.width / imgProps.height;
-          let finalHeight = imgWidth / imgRatio;
+          
+          let w, h;
 
-          // Check if image is taller than page (scaling)
-          if (finalHeight > (pageHeight - margin * 2)) {
-                // If fitting to page, we might need to adjust logic, 
-                // but standard flow keeps width constant. 
-                // For long screenshots, it might cut off, but for docs it's usually fine.
-                // Let's cap height to page constraints to avoid blank pages.
-                if (finalHeight > pageHeight - margin*2) {
-                    finalHeight = pageHeight - margin*2; 
-                    // Width will shrink to maintain aspect ratio, but let's keep it simple for MVP
-                }
+          if (pageSizeSelect.value === 'fit') {
+               // Fit logic: same as A4 but minimal margins
+               w = contentWidth;
+               h = w / imgRatio;
+               if(h > contentHeight) {
+                   h = contentHeight;
+                   w = h * imgRatio;
+               }
+          } else {
+               // Standard fit to width logic
+               w = contentWidth;
+               h = w / imgRatio;
+               
+               // If image is too tall for one page, shrink it to fit
+               if (h > contentHeight) {
+                   h = contentHeight;
+                   w = h * imgRatio;
+               }
           }
 
-          doc.addImage(imgData, 'JPEG', margin, margin, imgWidth, finalHeight, undefined, 'FAST');
-          
-          // Page Number
-          doc.setFontSize(10);
-          doc.setTextColor(150);
-          doc.text(`Page ${i+1}`, pageWidth / 2, pageHeight - 5, { align: 'center' });
+          // Center Image
+          const x = margin + (contentWidth - w) / 2;
+          const y = margin + (contentHeight - h) / 2;
+
+          doc.addImage(imgData, 'JPEG', x, y, w, h);
       }
 
-      doc.save(`TopOnlineForm-Docs-${Date.now()}.pdf`);
+      doc.save(`TopOnlineForm-PDF-${Date.now()}.pdf`);
       
-      generateBtn.innerHTML = "Success! Downloaded 🎉";
+      generateBtn.innerHTML = "Downloaded! 🎉";
       setTimeout(() => {
           generateBtn.innerHTML = originalText;
           generateBtn.disabled = false;
-          generateBtn.classList.remove('opacity-75');
       }, 3000);
   });
 
