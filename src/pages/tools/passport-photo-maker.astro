@@ -1,9 +1,11 @@
 ---
+// src/pages/tools/passport-photo-maker.astro
 import ToolLayout from '../../layouts/ToolLayout.astro';
 import AdSlot from '../../components/AdSlot.astro';
 
-const title = "Passport Photo Maker - Create Printable Sheet (A4, 4x6, 5x7)";
-const description = "Free Passport Photo Maker. Create 8, 15, or 36 passport size photos on 4x6, 5x7, or A4 paper. Download HD printable sheet for free.";
+// 🌍 GLOBAL SEO (Targeting DIY Printing)
+const title = "Free Passport Photo Maker - Create 4x6, 5x7 & A4 Printable Sheet";
+const description = "Make your own passport photos for free. Create printable sheets with 8, 15, or 36 passport size photos. Supports 4x6 inch and A4 paper sizes for cheap printing.";
 ---
 
 <ToolLayout 
@@ -19,17 +21,17 @@ const description = "Free Passport Photo Maker. Create 8, 15, or 36 passport siz
       "@type": "FAQPage",
       "mainEntity": [{
         "@type": "Question",
-        "name": "How to make passport size photo for printing?",
+        "name": "How to print passport photos on 4x6 paper?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Upload your photo, crop it to the correct aspect ratio using our tool, select the paper size (like 4x6 inch), and download the printable sheet."
+          "text": "Upload your photo, crop it to the correct aspect ratio using our tool, select '4x6 Inch' paper size, and download the sheet. You can then print it at any local photo lab for cheap."
         }
       }, {
         "@type": "Question",
-        "name": "How many passport photos fit on 4x6 paper?",
+        "name": "What is the standard passport photo size?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "A standard 4x6 inch photo paper can fit exactly 8 passport size photos (3.5cm x 4.5cm)."
+          "text": "The standard size is 3.5cm x 4.5cm (35mm x 45mm). Our tool automatically sets this dimension for perfect compliance with Indian and International standards."
         }
       }]
     }
@@ -39,23 +41,24 @@ const description = "Free Passport Photo Maker. Create 8, 15, or 36 passport siz
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" />
   <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
-  {/* 🟢 TOP AD */}
-  <div class="mb-6">
+  {/* 1. TOP AD SLOT */}
+  <div class="mb-8">
     <AdSlot type="horizontal" />
   </div>
 
   <div class="space-y-8">
       
       {/* STEP 1: UPLOAD */}
-      <div id="step1" class="py-12 text-center bg-indigo-50 border-4 border-dashed border-indigo-200 rounded-3xl cursor-pointer hover:bg-indigo-100 transition relative group" onclick="document.getElementById('fileInput').click()">
+      <div id="step1" class="py-16 text-center bg-gradient-to-br from-indigo-50 to-blue-50 border-4 border-dashed border-indigo-200 rounded-3xl cursor-pointer hover:border-indigo-400 hover:shadow-xl transition relative group" onclick="document.getElementById('fileInput').click()">
           <div class="relative z-10">
-            <div class="text-7xl mb-4 group-hover:scale-110 transition duration-200 drop-shadow-sm">📸</div>
-            <h3 class="text-3xl font-extrabold text-gray-800 mb-2">Create Passport Photos</h3>
-            <p class="text-gray-500 mb-8 font-medium text-lg">Make Printable Sheet (A4 / 4x6)</p>
+            <div class="text-7xl mb-6 group-hover:scale-110 transition duration-200 drop-shadow-sm">📸</div>
+            <h3 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-2">Create Passport Photos</h3>
+            <p class="text-gray-500 mb-8 font-medium text-lg">Save Money • Print at Home/Lab</p>
             
-            <span class="bg-indigo-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-indigo-700 transition flex items-center justify-center gap-2 w-max mx-auto">
-                <span>📂</span> Upload Selfie/Photo
+            <span class="bg-indigo-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-indigo-700 transition flex items-center justify-center gap-2 w-max mx-auto transform group-hover:-translate-y-1">
+                <span>📂</span> Upload Your Photo
             </span>
+            <p class="mt-4 text-xs text-indigo-400 font-bold uppercase tracking-wider">No Signup • 100% Free</p>
           </div>
           <input type="file" id="fileInput" accept="image/*" class="hidden" />
       </div>
@@ -65,10 +68,12 @@ const description = "Free Passport Photo Maker. Create 8, 15, or 36 passport siz
           <div class="flex flex-col xl:flex-row gap-8">
               
               {/* Left: Cropper */}
-              <div class="w-full xl:w-2/3 bg-gray-900 rounded-xl overflow-hidden shadow-2xl relative h-[500px]">
+              <div class="w-full xl:w-2/3 bg-gray-900 rounded-xl overflow-hidden shadow-2xl relative h-[500px] border border-gray-700">
                   <img id="cropImage" class="max-w-full" />
-                  <div class="absolute bottom-4 left-0 right-0 text-center pointer-events-none">
-                      <span class="bg-black/50 text-white px-3 py-1 rounded-full text-xs backdrop-blur-md">Adjust selection to match face</span>
+                  <div class="absolute bottom-4 left-0 right-0 text-center pointer-events-none z-10">
+                      <span class="bg-black/70 text-white px-4 py-2 rounded-full text-sm backdrop-blur-md shadow-lg border border-white/20">
+                         💡 Drag corners to crop face
+                      </span>
                   </div>
               </div>
 
@@ -76,31 +81,40 @@ const description = "Free Passport Photo Maker. Create 8, 15, or 36 passport siz
               <div class="w-full xl:w-1/3 space-y-6">
                   
                   {/* Paper Select */}
-                  <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-                      <label class="block text-sm font-bold text-gray-700 mb-2">1. Choose Paper Size</label>
-                      <select id="paperSelect" class="w-full p-3 border-2 border-indigo-100 rounded-lg bg-indigo-50 font-bold text-gray-800 focus:outline-none focus:border-indigo-500 transition cursor-pointer">
-                          <option value="4x6">4 x 6 Inch (Standard)</option>
-                          <option value="5x7">5 x 7 Inch (Medium)</option>
-                          <option value="A4">A4 Size (Office Paper)</option>
-                      </select>
-                      <p id="paperInfo" class="text-xs text-indigo-600 mt-2 font-medium">✨ Fits 8 Photos (Cheapest Print)</p>
+                  <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-lg">
+                      <label class="block text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
+                          <span>1️⃣</span> Choose Paper Size
+                      </label>
+                      <div class="relative">
+                        <select id="paperSelect" class="w-full p-4 border-2 border-indigo-100 rounded-xl bg-indigo-50 font-bold text-gray-800 focus:outline-none focus:border-indigo-500 transition cursor-pointer appearance-none">
+                            <option value="4x6">4 x 6 Inch (Standard Lab)</option>
+                            <option value="5x7">5 x 7 Inch (Medium)</option>
+                            <option value="A4">A4 Size (Office Printer)</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-indigo-500">▼</div>
+                      </div>
+                      <p id="paperInfo" class="text-xs text-indigo-600 mt-3 font-medium bg-indigo-50 px-3 py-2 rounded-lg inline-block">
+                          ✨ Fits 8 Photos (Best Value)
+                      </p>
                   </div>
 
                   {/* Quantity Slider */}
-                  <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                  <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-lg">
                       <div class="flex justify-between items-center mb-4">
-                          <label class="block text-sm font-bold text-gray-700">2. Quantity</label>
+                          <label class="block text-sm font-bold text-gray-700 flex items-center gap-2">
+                              <span>2️⃣</span> Quantity
+                          </label>
                           <span class="bg-indigo-600 text-white px-3 py-1 rounded-lg font-bold text-sm" id="qtyDisplay">8 Photos</span>
                       </div>
-                      <input type="range" id="qtyRange" min="1" max="8" value="8" class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-indigo-600">
-                      <div class="flex justify-between text-xs text-gray-400 mt-2">
+                      <input type="range" id="qtyRange" min="1" max="8" value="8" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                      <div class="flex justify-between text-xs text-gray-400 mt-2 font-medium">
                           <span>1 Copy</span>
                           <span id="maxQtyLabel">8 Copies</span>
                       </div>
                   </div>
 
                   {/* Action */}
-                  <button id="generateBtn" class="w-full bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition transform hover:-translate-y-1 flex justify-center items-center gap-2 text-lg">
+                  <button id="generateBtn" class="w-full bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold py-5 px-6 rounded-xl shadow-xl transition transform hover:-translate-y-1 flex justify-center items-center gap-3 text-xl">
                       <span>⚙️</span> Generate Sheet
                   </button>
               </div>
@@ -109,72 +123,55 @@ const description = "Free Passport Photo Maker. Create 8, 15, or 36 passport siz
 
       {/* STEP 3: PREVIEW & DOWNLOAD */}
       <div id="step3" class="hidden animate-fade-in text-center">
-          <h3 class="text-2xl font-bold text-gray-800 mb-6">Your Printable Sheet is Ready! 🎉</h3>
+          <div class="bg-green-50 border border-green-200 text-green-800 px-6 py-4 rounded-xl inline-block mb-8 shadow-sm">
+              <h3 class="text-xl font-bold flex items-center gap-2 justify-center">
+                  <span>🎉</span> Sheet Ready to Print!
+              </h3>
+              <p class="text-sm mt-1">Don't resize when printing. Use "100% Scale".</p>
+          </div>
           
-          <div class="inline-block border-8 border-gray-200 shadow-2xl bg-white rounded-lg overflow-hidden mb-8">
-               <canvas id="photoCanvas" class="max-w-full h-auto max-h-[600px]"></canvas>
+          <div class="inline-block border-[10px] border-white shadow-2xl bg-gray-200 rounded-sm overflow-hidden mb-10">
+               <canvas id="photoCanvas" class="max-w-full h-auto max-h-[500px]"></canvas>
           </div>
 
           <div class="flex flex-col sm:flex-row gap-4 justify-center max-w-lg mx-auto">
-              <button id="downloadBtn" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-xl shadow-lg text-lg flex justify-center items-center gap-2 transition animate-bounce-slow">
-                  ⬇️ Download HD Image
+              <button id="downloadBtn" class="flex-1 bg-gray-900 hover:bg-black text-white font-bold py-4 px-8 rounded-xl shadow-xl text-lg flex justify-center items-center gap-2 transition transform hover:-translate-y-1">
+                  ⬇️ Download HD
               </button>
               <button onclick="location.reload()" class="flex-1 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold py-4 px-8 rounded-xl shadow-sm transition">
-                  ↺ Create Another
+                  ↺ Create New
               </button>
           </div>
-          <p class="text-sm text-gray-500 mt-4">Print this image on selected paper size without scaling (100% scale).</p>
+          
+          {/* 3. BOTTOM AD SLOT */}
+          <div class="mt-12">
+             <AdSlot type="horizontal" />
+          </div>
       </div>
 
   </div>
 
   {/* SEO CONTENT */}
   <div slot="content">
-      <p class="lead text-lg text-gray-700 mb-6">
-          Save money on photography studios! Use the <strong>Infinity Passport Photo Maker</strong> to arrange your photos on standard 4x6 or A4 sheets and print them for a fraction of the cost.
+      <h3 class="text-xl font-bold text-gray-800 mb-3">Why pay for studio photos?</h3>
+      <p class="text-gray-600 mb-6">
+          Studios charge $10-$15 (or ₹100-₹200) for a set of passport photos. With our <strong>Free Passport Photo Maker</strong>, you can create a professional printable sheet at home. Just download the 4x6 inch sheet and print it for cents at any photo lab (Walmart, CVS, Walgreens, or Local Shop).
       </p>
 
-      {/* 🌟 SEO MAGIC TABLE */}
-      <h3 class="text-xl font-bold text-gray-800 mb-4">Paper Sizes & Photo Capacity</h3>
-      <div class="overflow-hidden rounded-xl border border-gray-200 mb-8 shadow-sm">
-        <table class="min-w-full text-sm text-left bg-white">
-            <thead class="bg-indigo-50 text-indigo-800 font-bold border-b">
-                <tr>
-                    <th class="p-4">Paper Size</th>
-                    <th class="p-4">Dimensions (Inch)</th>
-                    <th class="p-4">Max Photos (3.5x4.5cm)</th>
-                    <th class="p-4">Best For</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100">
-                <tr>
-                    <td class="p-4 font-bold">4x6 Inch</td>
-                    <td class="p-4">4" x 6"</td>
-                    <td class="p-4 text-green-600 font-bold">8 Photos</td>
-                    <td class="p-4">Home Printers / Labs</td>
-                </tr>
-                <tr>
-                    <td class="p-4 font-bold">5x7 Inch</td>
-                    <td class="p-4">5" x 7"</td>
-                    <td class="p-4 text-green-600 font-bold">15 Photos</td>
-                    <td class="p-4">Medium Size</td>
-                </tr>
-                <tr>
-                    <td class="p-4 font-bold">A4 Size</td>
-                    <td class="p-4">8.3" x 11.7"</td>
-                    <td class="p-4 text-green-600 font-bold">36 Photos</td>
-                    <td class="p-4">Bulk Printing (Shop)</td>
-                </tr>
-            </tbody>
-        </table>
+      <div class="grid md:grid-cols-3 gap-4 mb-8">
+          <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-100">
+              <h4 class="font-bold text-indigo-900 mb-2">4x6 Inch Paper</h4>
+              <p class="text-sm text-indigo-700">Fits <strong>8 Photos</strong>. Cheapest option for lab printing.</p>
+          </div>
+          <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-100">
+              <h4 class="font-bold text-indigo-900 mb-2">5x7 Inch Paper</h4>
+              <p class="text-sm text-indigo-700">Fits <strong>15 Photos</strong>. Good for bulk requirements.</p>
+          </div>
+          <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-100">
+              <h4 class="font-bold text-indigo-900 mb-2">A4 Size Paper</h4>
+              <p class="text-sm text-indigo-700">Fits <strong>36 Photos</strong>. Best for home printers.</p>
+          </div>
       </div>
-
-      <h3>How to print correctly?</h3>
-      <ul class="list-disc pl-5 space-y-2 text-gray-700">
-          <li>Download the HD Image from our tool.</li>
-          <li>Go to a photo studio or use a high-quality color printer.</li>
-          <li><strong>Important:</strong> When printing, select "Actual Size" or "Scale 100%". Do not select "Fit to Page" otherwise the photo size (3.5cm x 4.5cm) will shrink.</li>
-      </ul>
   </div>
 
 </ToolLayout>
@@ -198,11 +195,11 @@ const description = "Free Passport Photo Maker. Create 8, 15, or 36 passport siz
 
   let cropper = null;
 
-  // Configuration (300 DPI)
+  // Configuration (300 DPI for Print Quality)
   const PAPERS = {
       '4x6': { w: 1200, h: 1800, max: 8, cols: 2, desc: "✨ Fits 8 Photos (Cheapest Print)" },
       '5x7': { w: 1500, h: 2100, max: 15, cols: 3, desc: "✨ Fits 15 Photos (Standard)" },
-      'A4':  { w: 2480, h: 3508, max: 36, cols: 5, desc: "✨ Fits 36 Photos (Bulk)" }
+      'A4':  { w: 2480, h: 3508, max: 36, cols: 6, desc: "✨ Fits 36 Photos (Bulk)" }
   };
 
   // 1. Upload & Init Cropper
@@ -223,6 +220,8 @@ const description = "Free Passport Photo Maker. Create 8, 15, or 36 passport siz
               guides: true,
               center: true,
               background: false,
+              highlight: false,
+              toggleDragModeOnDblclick: false,
           });
       }
   });
@@ -257,9 +256,9 @@ const description = "Free Passport Photo Maker. Create 8, 15, or 36 passport siz
       const qty = parseInt(qtyRange.value);
       const config = PAPERS[type];
 
-      // Get cropped image
+      // Get cropped image (300 DPI: 3.5cm -> 413px, 4.5cm -> 531px)
       const croppedCanvas = cropper.getCroppedCanvas({
-          width: 413, height: 531, // 3.5cm x 4.5cm @ 300 DPI
+          width: 413, height: 531,
           imageSmoothingQuality: 'high'
       });
 
@@ -275,11 +274,15 @@ const description = "Free Passport Photo Maker. Create 8, 15, or 36 passport siz
       // Grid Calculation
       const pWidth = 413;
       const pHeight = 531;
-      const gap = 30; // Gap for cutting
+      const gap = 40; // Gap for cutting (slightly larger for ease)
       const cols = config.cols;
 
-      // Center calculation
+      // Center calculation (Auto-center logic)
+      // Calculate how many rows needed
+      const rows = Math.ceil(qty / cols);
+      
       const totalContentW = (cols * pWidth) + ((cols - 1) * gap);
+      // For A4, we center horizontally. For 4x6, we center both.
       const startX = (config.w - totalContentW) / 2;
       const startY = 100; // Top margin
 
@@ -294,8 +297,8 @@ const description = "Free Passport Photo Maker. Create 8, 15, or 36 passport siz
           ctx.drawImage(croppedCanvas, x, y, pWidth, pHeight);
           
           // Draw Cutting Guide (Light Grey Border)
-          ctx.strokeStyle = "#e5e7eb";
-          ctx.lineWidth = 2;
+          ctx.strokeStyle = "#d1d5db"; // Gray-300
+          ctx.lineWidth = 1;
           ctx.strokeRect(x, y, pWidth, pHeight);
       }
 
