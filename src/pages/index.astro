@@ -1,4 +1,5 @@
 ---
+// src/pages/index.astro
 import Layout from '../layouts/Layout.astro';
 // ✅ Manual Boxes Config
 import { homeBoxes } from '../data/home/index.js';
@@ -12,33 +13,66 @@ import { toolsList } from './tools/tools.js';
 const currentYear = new Date().getFullYear();
 const nextYear = currentYear + 1; 
 
-// --- 🧠 HYBRID LOGIC ENGINE ---
+// --- 🧠 HYBRID LOGIC ENGINE (UPDATED FOR SMART SORTING) ---
 const getBoxLinks = (box) => {
+  // 1. Agar manual links hain (auto: false), toh wahi dikhao
   if (!box.auto) {
     return box.links;
   }
 
+  // 2. Category Filter (Pehle posts chunto)
   const filtered = allPosts.filter(post => post.category === box.categoryName);
   
+  // 3. ⚡ SMART SORTING (Jadoo Yahan Hai)
   filtered.sort((a, b) => {
       const parseDate = (dateStr) => {
-          if (!dateStr) return 0;
+          if (!dateStr) return 0; // Agar date khali hai, toh sabse neeche feko
           const cleanDate = String(dateStr).trim();
           const parts = cleanDate.split('/');
           if (parts.length !== 3) return 0; 
+          // Format: YYYY-MM-DD convert karke timestamp lo
           return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`).getTime();
       };
 
-      const dateA = parseDate(a.updatedDate || a.postDate);
-      const dateB = parseDate(b.updatedDate || b.postDate);
+      let dateA = 0;
+      let dateB = 0;
+
+      // 🔍 Box ID ke hisab se Date Selection
+      // Note: Data file me box IDs yahi honi chahiye ('admit-card', 'results', etc)
+      if (box.id === 'admit-card') {
+          dateA = parseDate(a.admitCardDate); 
+          dateB = parseDate(b.admitCardDate);
+      } 
+      else if (box.id === 'results') {
+          dateA = parseDate(a.resultDate);
+          dateB = parseDate(b.resultDate);
+      }
+      else if (box.id === 'answer-key') {
+          dateA = parseDate(a.answerKeyDate);
+          dateB = parseDate(b.answerKeyDate);
+      }
+      else if (box.id === 'syllabus') {
+          dateA = parseDate(a.syllabusDate);
+          dateB = parseDate(b.syllabusDate);
+      }
+      else {
+          // Default: Latest Jobs ke liye Reopen Date (Priority) ya Post Date
+          dateA = parseDate(a.reopenDate || a.postDate);
+          dateB = parseDate(b.reopenDate || b.postDate);
+      }
       
+      // Compare Dates (Latest First)
       if (dateA !== dateB) return dateB - dateA; 
+      
+      // Agar Date same hai, toh Nayi ID (New Post) upar
       return (Number(b.id) || 0) - (Number(a.id) || 0); 
   });
 
+  // 4. Limit Logic (Top Row me zyada, neeche kam)
   const topRowIds = ['latest-jobs', 'admit-card', 'results'];
   const limit = topRowIds.includes(box.id) ? 30 : 10;
 
+  // 5. Final Data Return
   return filtered.slice(0, limit).map(post => ({
     title: post.shortTitle || post.title, 
     url: `/${post.slug}`, 
@@ -49,15 +83,20 @@ const getBoxLinks = (box) => {
 };
 ---
 
-<Layout title="Home">
+{/* ✅ 1. TITLE TAG STRATEGY (Keywords added for Google) */}
+<Layout title={`Sarkari Result ${currentYear}, Sarkari Naukri, Latest Online Form`}>
     
-    {/* 1. HERO SECTION */}
+    {/* ✅ 2. HERO SECTION STRATEGY (H1 for Google, P for User) */}
     <section class="text-center mb-6 bg-white p-6 rounded-lg shadow-sm border-b-4 border-red-600">
-        <h1 class="text-2xl md:text-4xl font-extrabold text-gray-800 uppercase tracking-tight">
-            Welcome to <span class="text-red-600">TopOnlineForm.com</span>
+        <p class="text-gray-500 font-bold text-sm md:text-base uppercase tracking-widest mb-2">
+            Welcome to India's No.1 Job Portal
+        </p>
+        <h1 class="text-2xl md:text-4xl font-extrabold text-gray-800 uppercase tracking-tight leading-snug">
+            <span class="text-red-600">Sarkari Result</span>, Sarkari Naukri {currentYear} <br class="hidden md:block" />
+            & Latest Online Form
         </h1>
-        <p class="text-gray-600 mt-2 font-medium text-sm md:text-base">
-            Sabhi Sarkari Naukri, Result, aur Admit Card ki jankari sabse tez.
+        <p class="text-gray-600 mt-3 font-medium text-sm md:text-base max-w-2xl mx-auto">
+            Get instant updates on Admit Card, Answer Key, Syllabus, and All Government Jobs Notifications.
         </p>
     </section>
 
@@ -82,7 +121,6 @@ const getBoxLinks = (box) => {
             </button>
 
             {/* Scrollable Container (Modified for Desktop Slider) */}
-            {/* Note: 'scrollbar-hide' class niche style tag me defined hai */}
             <div id="toolsContainer" class="flex gap-3 overflow-x-auto pb-2 snap-x scrollbar-hide scroll-smooth md:overflow-x-hidden md:pb-0">
                 {toolsList.map((tool) => (
                     <a href={tool.link} aria-label={tool.title} class="snap-start shrink-0 flex flex-col items-center justify-center bg-gray-50 hover:bg-blue-50 w-20 h-20 md:w-28 md:h-28 rounded-lg border border-gray-100 hover:border-blue-200 transition group select-none">
