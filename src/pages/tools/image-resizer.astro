@@ -1,10 +1,11 @@
 ---
+// src/pages/tools/image-resizer.astro
 import ToolLayout from '../../layouts/ToolLayout.astro';
 import AdSlot from '../../components/AdSlot.astro';
 
-// 🔥 META TAGS FOR HIGH CTR
-const title = "Image Resizer Online - Resize Photo to 3.5cm x 4.5cm, 20KB (SSC/UPSC)";
-const description = "Free Online Image Resizer for Govt Jobs. Convert Photo to 3.5cm x 4.5cm (350x450 px). Resize and Compress image to 20kb, 50kb for SSC, IBPS, and Railway forms.";
+// 🌍 GLOBAL METADATA (Targeting "Resize in CM/MM/Inch")
+const title = "Free Image Resizer - Resize Photo in Pixels, CM, MM & Inch Online";
+const description = "Resize image dimensions (width & height) online. Convert photo to 3.5x4.5 cm, 2x2 inch, or custom pixels. Compresses to 20KB/50KB. Perfect for Passports, Visas & Social Media.";
 ---
 
 <ToolLayout 
@@ -13,34 +14,31 @@ const description = "Free Online Image Resizer for Govt Jobs. Convert Photo to 3
   toolName="Image Resizer"
 >
 
-  {/* ⚡ FAQ SCHEMA (Rich Results) */}
+  {/* ⚡ GLOBAL SCHEMA */}
   <script type="application/ld+json" slot="head">
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": [{
         "@type": "Question",
-        "name": "How to resize photo to 3.5cm x 4.5cm?",
+        "name": "How to resize image to 3.5 cm x 4.5 cm?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "To get 3.5cm x 4.5cm size, set the Width to 350 px and Height to 450 px in our Infinity Image Resizer. This resolution is perfect for SSC and UPSC forms at 100 DPI."
+          "text": "Select 'Centimeters (cm)' from the Unit dropdown. Enter 3.5 in Width and 4.5 in Height. Our tool automatically converts it to high-quality 300 DPI pixels for printing."
         }
       }, {
         "@type": "Question",
-        "name": "How to reduce image size to 20kb?",
+        "name": "How do I create a 2x2 inch photo for US Visa?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Upload your photo, set the 'Max Size' slider to 20KB, and click Resize. The tool automatically compresses the quality while keeping dimensions intact."
+          "text": "Click the 'US Visa (2x2 inch)' preset button. The tool will resize your photo to 600x600 pixels (standard requirement) instantly."
         }
       }]
     }
   </script>
 
-  {/* External Library */}
-  <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/browser-image-compression/2.0.2/browser-image-compression.min.js"></script>
-
-  {/* 🟢 TOP AD */}
-  <div class="mb-6">
+  {/* 1. TOP AD SLOT */}
+  <div class="mb-8">
     <AdSlot type="horizontal" />
   </div>
 
@@ -48,13 +46,13 @@ const description = "Free Online Image Resizer for Govt Jobs. Convert Photo to 3
   <div class="space-y-8">
       
       {/* STEP 1: UPLOAD */}
-      <div id="step1" class="py-12 text-center bg-gradient-to-b from-blue-50 to-white border-4 border-dashed border-blue-200 rounded-3xl cursor-pointer hover:border-blue-400 hover:shadow-md transition relative group" onclick="document.getElementById('imageInput').click()">
+      <div id="step1" class="py-12 text-center bg-gradient-to-b from-blue-50 to-white border-4 border-dashed border-blue-200 rounded-3xl cursor-pointer hover:border-blue-400 hover:shadow-lg transition relative group" onclick="document.getElementById('imageInput').click()">
           <div class="relative z-10">
             <div class="text-7xl mb-4 group-hover:scale-110 transition duration-200 drop-shadow-sm">📏</div>
-            <h3 class="text-3xl font-extrabold text-gray-800 mb-2">Resize Image Dimensions</h3>
-            <p class="text-gray-500 mb-8 font-medium text-lg">Change Width/Height & File Size (KB)</p>
+            <h3 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-2">Resize Image Dimensions</h3>
+            <p class="text-gray-500 mb-8 font-medium text-lg">CM • MM • Inch • Pixels</p>
             
-            <span class="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg group-hover:bg-blue-700 transition flex items-center justify-center gap-2 w-max mx-auto">
+            <span class="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg group-hover:bg-blue-700 transition flex items-center justify-center gap-2 w-max mx-auto transform group-hover:-translate-y-1">
                 <span>📂</span> Upload Image
             </span>
             <p class="mt-4 text-xs text-gray-400">Supports JPG, PNG, WEBP</p>
@@ -68,12 +66,12 @@ const description = "Free Online Image Resizer for Govt Jobs. Convert Photo to 3
               
               {/* Left: Preview */}
               <div class="w-full lg:w-1/3 bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col items-center justify-center">
-                  <div class="relative w-full h-[300px] bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center border border-gray-100">
+                  <div class="relative w-full h-[300px] bg-[url('https://res.cloudinary.com/dvp2139/image/upload/v1700000000/transparent-bg.png')] rounded-lg overflow-hidden flex items-center justify-center border border-gray-200">
                       <img id="previewImg" class="max-h-full max-w-full object-contain" />
                   </div>
                   <div class="mt-4 w-full grid grid-cols-2 gap-2 text-xs font-mono text-gray-600">
                       <div class="bg-gray-50 p-2 rounded text-center">
-                          <span class="block text-gray-400 uppercase text-[10px]">Original Size</span>
+                          <span class="block text-gray-400 uppercase text-[10px]">Original</span>
                           <strong id="origSize" class="text-blue-600 text-sm">0 KB</strong>
                       </div>
                       <div class="bg-gray-50 p-2 rounded text-center">
@@ -84,46 +82,82 @@ const description = "Free Online Image Resizer for Govt Jobs. Convert Photo to 3
               </div>
 
               {/* Right: Controls */}
-              <div class="w-full lg:w-2/3 bg-white p-6 rounded-xl border border-gray-200 shadow-md space-y-6">
+              <div class="w-full lg:w-2/3 bg-white p-6 md:p-8 rounded-xl border border-gray-200 shadow-lg space-y-6">
                   
-                  <div class="border-b pb-4 mb-2">
+                  {/* 🌍 GLOBAL PRESETS */}
+                  <div>
+                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-wide mb-3">Global Presets (One-Click)</label>
+                    <div class="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
+                        <button onclick="setPreset(600, 600)" class="preset-btn flex-shrink-0 bg-blue-50 border border-blue-200 hover:bg-blue-100 px-4 py-2 rounded-lg text-sm text-blue-800 font-medium transition whitespace-nowrap">
+                            🇺🇸 US Visa (2x2 inch)
+                        </button>
+                        <button onclick="setPreset(413, 531)" class="preset-btn flex-shrink-0 bg-blue-50 border border-blue-200 hover:bg-blue-100 px-4 py-2 rounded-lg text-sm text-blue-800 font-medium transition whitespace-nowrap">
+                            🇪🇺 Schengen (35x45 mm)
+                        </button>
+                        <button onclick="setPreset(1080, 1080)" class="preset-btn flex-shrink-0 bg-pink-50 border border-pink-200 hover:bg-pink-100 px-4 py-2 rounded-lg text-sm text-pink-800 font-medium transition whitespace-nowrap">
+                            📸 Instagram Square
+                        </button>
+                        <button onclick="setPreset(1280, 720)" class="preset-btn flex-shrink-0 bg-red-50 border border-red-200 hover:bg-red-100 px-4 py-2 rounded-lg text-sm text-red-800 font-medium transition whitespace-nowrap">
+                            📺 YouTube Thumb
+                        </button>
+                    </div>
+                  </div>
+
+                  <div class="border-t border-gray-100 pt-4"></div>
+
+                  {/* UNIT SELECTOR */}
+                  <div class="flex justify-between items-center mb-2">
                       <h4 class="text-lg font-bold text-gray-800 flex items-center gap-2">
-                          <span>📐</span> Set New Dimensions <span class="text-xs font-normal text-gray-500 bg-gray-100 px-2 py-1 rounded">Pixels (px)</span>
+                          <span>📐</span> Dimensions
                       </h4>
+                      <select id="unitSelect" class="bg-gray-100 border-none text-sm font-bold text-gray-700 rounded-lg py-1 px-3 cursor-pointer hover:bg-gray-200 focus:ring-0">
+                          <option value="px">Pixels (px)</option>
+                          <option value="cm">Centimeters (cm)</option>
+                          <option value="mm">Millimeters (mm)</option>
+                          <option value="inch">Inches (in)</option>
+                      </select>
                   </div>
 
-                  {/* Dimensions Inputs */}
-                  <div class="grid grid-cols-2 gap-6">
+                  {/* DIMENSION INPUTS */}
+                  <div class="grid grid-cols-2 gap-6 relative">
                       <div>
-                          <label class="block text-sm font-bold text-gray-600 mb-2">Width</label>
-                          <input type="number" id="widthInput" class="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-0 outline-none transition font-mono font-bold text-gray-700" placeholder="e.g. 350">
+                          <label class="block text-xs font-bold text-gray-500 mb-2 uppercase">Width</label>
+                          <input type="number" id="widthInput" class="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-0 outline-none transition font-mono font-bold text-gray-700 text-lg" placeholder="0">
+                      </div>
+                      <div class="flex items-center justify-center pt-6">
+                         <div class="bg-gray-100 p-2 rounded-full text-gray-400 cursor-pointer hover:text-blue-600 transition" id="linkAspectBtn" title="Lock Aspect Ratio">
+                             🔗
+                         </div>
                       </div>
                       <div>
-                          <label class="block text-sm font-bold text-gray-600 mb-2">Height</label>
-                          <input type="number" id="heightInput" class="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-0 outline-none transition font-mono font-bold text-gray-700" placeholder="e.g. 450">
+                          <label class="block text-xs font-bold text-gray-500 mb-2 uppercase">Height</label>
+                          <input type="number" id="heightInput" class="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-0 outline-none transition font-mono font-bold text-gray-700 text-lg" placeholder="0">
                       </div>
                   </div>
+                  
+                  {/* HIDDEN CHECKBOX FOR ASPECT RATIO */}
+                  <div class="flex items-center gap-2 mb-4">
+                      <input type="checkbox" id="aspectRatioCheck" class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500">
+                      <label for="aspectRatioCheck" class="text-sm text-gray-600 font-medium select-none cursor-pointer">Lock Aspect Ratio</label>
+                  </div>
 
-                  {/* Size Slider */}
-                  <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                  {/* FILE SIZE SLIDER */}
+                  <div class="bg-gray-50 p-5 rounded-xl border border-gray-200">
                       <label class="block text-sm font-bold text-gray-800 mb-4 flex justify-between items-center">
-                          <span>Compress to Max Size</span>
-                          <span id="targetKBText" class="text-white bg-blue-600 px-3 py-1 rounded-lg text-sm shadow-sm">50 KB</span>
+                          <span>Max File Size (Compression)</span>
+                          <span id="targetKBText" class="text-white bg-green-600 px-3 py-1 rounded-lg text-sm shadow-sm">50 KB</span>
                       </label>
-                      <input type="range" id="sizeSlider" min="10" max="500" value="50" class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-blue-600">
-                      <div class="flex justify-between text-xs text-gray-400 mt-2 font-medium">
-                          <span>10 KB (Extreme)</span>
-                          <span>500 KB (High Quality)</span>
-                      </div>
+                      <input type="range" id="sizeSlider" min="10" max="1000" value="50" class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-green-600">
+                      <p class="text-[10px] text-gray-400 mt-2 text-center">Lower KB = Smaller File Size but Lower Quality</p>
                   </div>
 
-                  {/* Action Buttons */}
+                  {/* ACTION BUTTONS */}
                   <div class="flex flex-col sm:flex-row gap-3 pt-2">
-                      <button id="processBtn" class="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-4 rounded-xl shadow-lg flex justify-center items-center gap-2 hover:shadow-xl hover:-translate-y-0.5 transition">
-                          <span id="btnText">Resize & Download Image 🚀</span>
+                      <button id="processBtn" class="flex-1 bg-gray-900 hover:bg-black text-white font-bold py-4 rounded-xl shadow-xl flex justify-center items-center gap-2 hover:-translate-y-0.5 transition text-lg">
+                          <span id="btnText">Resize Image</span>
                           <span id="loader" class="hidden animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></span>
                       </button>
-                      <button id="resetBtn" class="sm:w-auto w-full bg-gray-50 border border-gray-200 text-gray-600 font-bold py-4 px-6 rounded-xl hover:bg-gray-100 transition">
+                      <button id="resetBtn" class="sm:w-auto w-full bg-white border border-gray-300 text-gray-700 font-bold py-4 px-6 rounded-xl hover:bg-gray-50 transition">
                           Reset
                       </button>
                   </div>
@@ -134,61 +168,61 @@ const description = "Free Online Image Resizer for Govt Jobs. Convert Photo to 3
 
   </div>
 
-  {/* SEO CONTENT (Added the Magic Table here) */}
-  <div slot="content">
-      <p class="lead text-lg text-gray-700 mb-6">
-          Govt job portals often ask for photo dimensions in centimeters (cm) or millimeters (mm), but online tools require pixels (px). Use the <strong>Infinity Image Resizer</strong> to set exact Width and Height in pixels.
-      </p>
+  {/* 2. MIDDLE AD SLOT */}
+  <div class="mb-8 mt-8">
+     <AdSlot type="horizontal" />
+  </div>
 
-      {/* 🌟 THE MAGIC TABLE FOR SEO SNIPPETS */}
-      <h3 class="text-xl font-bold text-gray-800 mb-4">Common Photo Dimensions for Govt Exams (CM to Pixels)</h3>
-      <div class="overflow-hidden rounded-xl border border-gray-200 mb-8 shadow-sm">
+  {/* SEO CONTENT (Hybrid Strategy) */}
+  <div slot="content">
+      
+      {/* SECTION 1: GLOBAL STANDARDS */}
+      <h3 class="text-xl font-bold text-gray-800 mb-3">Global Photo Standards (Passport & Visa)</h3>
+      <div class="overflow-x-auto rounded-lg border border-gray-200 mb-8 shadow-sm">
         <table class="min-w-full text-sm text-left bg-white">
-            <thead class="bg-gray-50 text-gray-700 font-bold border-b">
+            <thead class="bg-gray-100 text-gray-800 font-bold">
                 <tr>
-                    <th class="p-4">Document Type</th>
-                    <th class="p-4">Size in CM</th>
-                    <th class="p-4">Size in Pixels (Approx)</th>
+                    <th class="p-3 border-b">Country / Purpose</th>
+                    <th class="p-3 border-b">Dimensions (Unit)</th>
+                    <th class="p-3 border-b">Dimensions (Pixels @300 DPI)</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
-                <tr class="hover:bg-blue-50 transition">
-                    <td class="p-4 font-medium">Passport Photo</td>
-                    <td class="p-4">3.5 cm x 4.5 cm</td>
-                    <td class="p-4 text-blue-700 font-bold font-mono">350 x 450 px</td>
-                </tr>
-                <tr class="hover:bg-blue-50 transition">
-                    <td class="p-4 font-medium">Signature</td>
-                    <td class="p-4">4.0 cm x 2.0 cm</td>
-                    <td class="p-4 text-blue-700 font-bold font-mono">400 x 200 px</td>
-                </tr>
-                <tr class="hover:bg-blue-50 transition">
-                    <td class="p-4 font-medium">Thumb Impression</td>
-                    <td class="p-4">3.0 cm x 3.0 cm</td>
-                    <td class="p-4 text-blue-700 font-bold font-mono">300 x 300 px</td>
-                </tr>
-                <tr class="hover:bg-blue-50 transition">
-                    <td class="p-4 font-medium">Postcard Size</td>
-                    <td class="p-4">4.0 cm x 6.0 cm</td>
-                    <td class="p-4 text-blue-700 font-bold font-mono">400 x 600 px</td>
-                </tr>
+                <tr><td class="p-3 font-medium">🇺🇸 USA Visa</td><td class="p-3">2 x 2 inch</td><td class="p-3 font-mono text-blue-600">600 x 600 px</td></tr>
+                <tr><td class="p-3 font-medium">🇪🇺 Schengen / UK</td><td class="p-3">35 x 45 mm</td><td class="p-3 font-mono text-blue-600">413 x 531 px</td></tr>
+                <tr><td class="p-3 font-medium">🇮🇳 India Passport</td><td class="p-3">3.5 x 4.5 cm</td><td class="p-3 font-mono text-blue-600">413 x 531 px</td></tr>
+                <tr><td class="p-3 font-medium">📸 Instagram Post</td><td class="p-3">1080 x 1080 px</td><td class="p-3 font-mono text-blue-600">1080 x 1080 px</td></tr>
             </tbody>
         </table>
       </div>
 
-      <h3>How to use for SSC/UPSC?</h3>
-      <ul class="list-disc pl-5 space-y-2 text-gray-700">
-          <li><strong>Step 1:</strong> Upload your image.</li>
-          <li><strong>Step 2:</strong> Look at the table above. If you need 3.5cm width, enter <strong>350</strong> in the Width box.</li>
-          <li><strong>Step 3:</strong> Enter <strong>450</strong> in the Height box.</li>
-          <li><strong>Step 4:</strong> Adjust the slider to <strong>20KB or 50KB</strong> as per the notification.</li>
-          <li><strong>Step 5:</strong> Click Download.</li>
-      </ul>
+      {/* SECTION 2: INDIAN GOVT EXAMS */}
+      <h3 class="text-xl font-bold text-gray-800 mb-3">Indian Govt Job Requirements (CM to Pixels)</h3>
+      <p class="text-gray-600 mb-4">
+         Many portals like SSC and UPSC ask for dimensions in CM, but digital files require Pixels. Our tool handles this conversion automatically using high-quality <strong>300 DPI</strong> standards.
+      </p>
+      
+      <div class="grid md:grid-cols-2 gap-4">
+          <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+              <h4 class="font-bold text-blue-900 mb-2">SSC CGL / CHSL</h4>
+              <ul class="text-sm text-blue-800 space-y-1">
+                  <li><strong>Photo:</strong> 3.5 cm x 4.5 cm (20-50 KB)</li>
+                  <li><strong>Sign:</strong> 4.0 cm x 2.0 cm (10-20 KB)</li>
+              </ul>
+          </div>
+          <div class="bg-green-50 p-4 rounded-lg border border-green-100">
+              <h4 class="font-bold text-green-900 mb-2">IBPS & SBI Bank</h4>
+              <ul class="text-sm text-green-800 space-y-1">
+                  <li><strong>Photo:</strong> 4.5 cm x 3.5 cm (20-50 KB)</li>
+                  <li><strong>Thumb:</strong> 3 cm x 3 cm (20-50 KB)</li>
+              </ul>
+          </div>
+      </div>
   </div>
 
 </ToolLayout>
 
-{/* 🧠 LOGIC (Robust) */}
+{/* 🧠 LOGIC (Canvas + Unit Conversion) */}
 <script>
   // @ts-nocheck
   const imageInput = document.getElementById('imageInput');
@@ -205,81 +239,173 @@ const description = "Free Online Image Resizer for Govt Jobs. Convert Photo to 3
   const btnText = document.getElementById('btnText');
   const loader = document.getElementById('loader');
   const resetBtn = document.getElementById('resetBtn');
+  const unitSelect = document.getElementById('unitSelect');
+  const aspectRatioCheck = document.getElementById('aspectRatioCheck');
+  const linkAspectBtn = document.getElementById('linkAspectBtn');
 
   let originalFile = null;
+  let originalAspectRatio = 0;
+  const DPI = 300; // Standard Print DPI
 
-  // 1. File Upload
+  // 1. Helpers for Unit Conversion
+  const toPx = (val, unit) => {
+      if(!val) return 0;
+      if(unit === 'px') return Math.round(val);
+      if(unit === 'inch') return Math.round(val * DPI);
+      if(unit === 'cm') return Math.round((val / 2.54) * DPI);
+      if(unit === 'mm') return Math.round((val / 25.4) * DPI);
+      return val;
+  };
+
+  const fromPx = (px, unit) => {
+      if(unit === 'px') return px;
+      if(unit === 'inch') return (px / DPI).toFixed(2);
+      if(unit === 'cm') return ((px * 2.54) / DPI).toFixed(2);
+      if(unit === 'mm') return ((px * 25.4) / DPI).toFixed(2);
+      return px;
+  };
+
+  // 2. File Upload
   imageInput?.addEventListener('change', (e) => {
       if (e.target.files && e.target.files.length > 0) {
           originalFile = e.target.files[0];
-          
           const url = URL.createObjectURL(originalFile);
-          previewImg.src = url;
           
           const img = new Image();
           img.src = url;
           img.onload = () => {
+              previewImg.src = url;
               origDims.innerText = `${img.width} x ${img.height}`;
-              // Smart Defaults: If image is huge, suggest smaller dims
-              widthInput.value = img.width; 
+              origSize.innerText = (originalFile.size / 1024).toFixed(2) + " KB";
+              
+              originalAspectRatio = img.width / img.height;
+              
+              // Set Default Inputs (in PX)
+              widthInput.value = img.width;
               heightInput.value = img.height;
+              
+              step1.classList.add('hidden');
+              step2.classList.remove('hidden');
           };
-
-          origSize.innerText = (originalFile.size / 1024).toFixed(2) + " KB";
-
-          step1.classList.add('hidden');
-          step2.classList.remove('hidden');
       }
   });
 
-  // 2. Slider Update
+  // 3. Aspect Ratio Logic
+  const handleDimensionChange = (source) => {
+      if (!aspectRatioCheck.checked || !originalAspectRatio) return;
+      
+      const unit = unitSelect.value;
+      
+      if (source === 'width') {
+         // Width changed -> Calculate Height
+         const wPx = toPx(parseFloat(widthInput.value), unit);
+         const hPx = wPx / originalAspectRatio;
+         heightInput.value = fromPx(hPx, unit);
+      } else {
+         // Height changed -> Calculate Width
+         const hPx = toPx(parseFloat(heightInput.value), unit);
+         const wPx = hPx * originalAspectRatio;
+         widthInput.value = fromPx(wPx, unit);
+      }
+  };
+
+  widthInput.addEventListener('input', () => handleDimensionChange('width'));
+  heightInput.addEventListener('input', () => handleDimensionChange('height'));
+  
+  // Link Icon Click
+  linkAspectBtn.addEventListener('click', () => {
+      aspectRatioCheck.checked = !aspectRatioCheck.checked;
+      linkAspectBtn.classList.toggle('text-blue-600');
+      if(aspectRatioCheck.checked) handleDimensionChange('width');
+  });
+
+  // 4. Unit Change Logic
+  let previousUnit = 'px';
+  unitSelect.addEventListener('change', () => {
+      const newUnit = unitSelect.value;
+      const w = parseFloat(widthInput.value) || 0;
+      const h = parseFloat(heightInput.value) || 0;
+
+      // Convert existing values to new unit
+      // 1. Convert current to px
+      const wPx = toPx(w, previousUnit);
+      const hPx = toPx(h, previousUnit);
+
+      // 2. Convert px to new unit
+      widthInput.value = fromPx(wPx, newUnit);
+      heightInput.value = fromPx(hPx, newUnit);
+
+      previousUnit = newUnit;
+  });
+
+  // 5. Global Preset Logic (Called via inline onclick)
+  window.setPreset = (wPx, hPx) => {
+      unitSelect.value = 'px';
+      previousUnit = 'px';
+      widthInput.value = wPx;
+      heightInput.value = hPx;
+      aspectRatioCheck.checked = false; // Presets override aspect ratio
+      linkAspectBtn.classList.remove('text-blue-600');
+  };
+
+  // 6. Slider Update
   sizeSlider?.addEventListener('input', (e) => {
       targetKBText.innerText = e.target.value + " KB";
   });
 
-  // 3. Process
-  processBtn?.addEventListener('click', async () => {
+  // 7. Process (Canvas Logic)
+  processBtn?.addEventListener('click', () => {
       if (!originalFile) return;
 
       btnText.innerText = "Processing...";
       loader.classList.remove('hidden');
       processBtn.disabled = true;
-      processBtn.classList.add('opacity-75');
 
-      const targetKB = parseInt(sizeSlider.value);
-      const targetWidth = parseInt(widthInput.value) || undefined;
-      const targetHeight = parseInt(heightInput.value) || undefined;
+      setTimeout(() => {
+          const unit = unitSelect.value;
+          const targetW = toPx(parseFloat(widthInput.value), unit);
+          const targetH = toPx(parseFloat(heightInput.value), unit);
+          const maxKB = parseInt(sizeSlider.value);
 
-      // Note: The library preserves aspect ratio by default. 
-      // To force exact dimensions, we might need a canvas approach in future updates,
-      // but for now, maxWidthOrHeight is the safest bet for quality.
-      const options = {
-          maxSizeMB: targetKB / 1024,
-          maxWidthOrHeight: Math.max(targetWidth || 1920, targetHeight || 1920),
-          useWebWorker: true
-      };
-
-      try {
-          const compressedFile = await imageCompression(originalFile, options);
+          const canvas = document.createElement('canvas');
+          canvas.width = targetW;
+          canvas.height = targetH;
+          const ctx = canvas.getContext('2d');
           
-          const link = document.createElement("a");
-          link.href = URL.createObjectURL(compressedFile);
-          link.download = `Resized-${originalFile.name}`;
-          link.click();
+          const img = new Image();
+          img.src = previewImg.src;
+          img.onload = () => {
+              // White Background Fix
+              ctx.fillStyle = "#FFFFFF";
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
+              ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-          btnText.innerText = "Success! Resize Another";
-      } catch (error) {
-          console.error(error);
-          alert("Could not process image. Try a different file.");
-          btnText.innerText = "Try Again";
-      } finally {
-          loader.classList.add('hidden');
-          processBtn.disabled = false;
-          processBtn.classList.remove('opacity-75');
-      }
+              // Iterative Compression
+              let quality = 0.9;
+              
+              const compress = (q) => {
+                  canvas.toBlob((blob) => {
+                      if (blob.size / 1024 > maxKB && q > 0.1) {
+                          compress(q - 0.1); // Retry with lower quality
+                      } else {
+                          // Download
+                          const link = document.createElement("a");
+                          link.href = URL.createObjectURL(blob);
+                          link.download = `Resized-${originalFile.name.split('.')[0]}.jpg`;
+                          link.click();
+                          
+                          btnText.innerText = "Success! Resize Another";
+                          loader.classList.add('hidden');
+                          processBtn.disabled = false;
+                      }
+                  }, 'image/jpeg', q);
+              };
+              
+              compress(quality);
+          };
+      }, 100); // Tiny timeout to show loader
   });
 
-  // 4. Reset
   resetBtn?.addEventListener('click', () => {
       location.reload();
   });
