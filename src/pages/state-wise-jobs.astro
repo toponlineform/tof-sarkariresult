@@ -4,19 +4,13 @@ import AdSlot from '../components/AdSlot.astro';
 import { allPosts } from '../data/index.js';
 
 // --- 🧠 CATEGORIZED MASTER LISTS ---
+const centralList = ["Central Govt", "Other States"];
 
-// 1. Central & High Priority
-const centralList = [
-  "Central Govt", "Other States"
-];
-
-// 2. Union Territories (UTs) - High Demand like Delhi/Chandigarh
 const utList = [
   "Delhi", "Chandigarh", "Jammu & Kashmir", "Ladakh", 
   "Puducherry", "Andaman & Nicobar", "Lakshadweep", "Dadra & Nagar Haveli"
 ];
 
-// 3. States (Alphabetical Order A-Z)
 const stateList = [
   "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", 
   "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", 
@@ -25,7 +19,6 @@ const stateList = [
   "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal"
 ];
 
-// Combined list for rendering the tables below
 const allLocations = [...centralList, ...utList, ...stateList];
 
 // --- 🧠 SERVER SIDE LOGIC ---
@@ -36,26 +29,31 @@ const getJobsByState = (stateName) => {
   // 1. Filter Logic
   let jobs = allPosts.filter(post => {
     if (post.category !== 'Latest Jobs' && post.category !== 'Admission') return false;
-    let postState = post.state || "Other States";
+    
+    // Normalize State Strings
+    let postState = (post.state || "Other States").toLowerCase();
+    let targetState = stateName.toLowerCase();
     
     // Central Govt Handling
-    if (stateName === "Central Govt" && (postState === "All India" || postState === "Central Govt")) return true;
+    if (targetState === "central govt" && (postState === "all india" || postState === "central govt")) return true;
     
-    // Dadra & Nagar Haveli handling
-    if (stateName.includes("Dadra") && postState.includes("Dadra")) return true;
+    // Dadra Handling (Safe Check)
+    if (targetState.includes("dadra") && postState.includes("dadra")) return true;
 
-    return postState.toLowerCase() === stateName.toLowerCase();
+    return postState === targetState;
   });
 
-  // 2. Active Check
+  // 2. Active Check (Only Future Jobs)
   jobs = jobs.filter(post => {
      const lastDateObj = post.importantDates?.find(d => 
        d.label.toLowerCase().includes('last date') || d.label.toLowerCase().includes('closing date')
      );
      if (!lastDateObj) return true;
+
      const dateStr = lastDateObj.value.replace(/ \(.*\)/, '').trim();
      const parts = dateStr.split(/[/-]/);
      if (parts.length !== 3) return true;
+     
      const jobDate = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
      return jobDate >= today;
   });
@@ -64,10 +62,10 @@ const getJobsByState = (stateName) => {
 };
 
 // Colors for Buttons
-const btnBaseClass = "text-center py-2 px-2 rounded border text-[11px] md:text-xs font-bold uppercase transition transform hover:scale-105 shadow-sm";
+const btnBaseClass = "text-center py-2 px-2 rounded border text-[11px] md:text-xs font-bold uppercase transition transform hover:scale-105 shadow-sm block decoration-0";
 ---
 
-<Layout title="State Wise Govt Jobs 2025 - Sarkari Naukri by State" description="Find latest government jobs in UP, Bihar, Rajasthan, Delhi, Haryana and all over India. State wise vacancy sorted list.">
+<Layout title="State Wise Govt Jobs 2025 - Find Jobs in UP, Bihar, Delhi, Rajasthan" description="Check State Wise Government Jobs 2025. Find active Sarkari Naukri in Uttar Pradesh, Bihar, Haryana, Rajasthan, Delhi and All India Central Govt Vacancies.">
 
   <div class="max-w-7xl mx-auto px-2 md:px-4 py-6 font-sans">
     
@@ -87,7 +85,6 @@ const btnBaseClass = "text-center py-2 px-2 rounded border text-[11px] md:text-x
           </p>
         </div>
 
-        {/* 💰 TOP AD SLOT */}
         <AdSlot type="horizontal" />
 
         {/* 2. STATE NAVIGATION PANEL (Categorized) */}
@@ -95,9 +92,9 @@ const btnBaseClass = "text-center py-2 px-2 rounded border text-[11px] md:text-x
             
             {/* Show All Button */}
             <div class="text-center border-b border-gray-100 pb-4">
-                <button onclick="filterState('all')" class={`${btnBaseClass} bg-gray-900 text-white border-gray-900 hover:bg-gray-700 w-full md:w-1/3`}>
+                <a href="#" onclick="filterState('all'); return false;" class={`${btnBaseClass} bg-gray-900 text-white border-gray-900 hover:bg-gray-700 w-full md:w-1/3 mx-auto flex items-center justify-center`}>
                     Show All India Jobs
-                </button>
+                </a>
             </div>
 
             {/* Section A: Central & UTs */}
@@ -110,10 +107,10 @@ const btnBaseClass = "text-center py-2 px-2 rounded border text-[11px] md:text-x
                     </h3>
                     <div class="grid grid-cols-2 gap-2">
                         {centralList.map(state => (
-                            <button onclick={`filterState('${state.replace(/\s+/g, '-').toLowerCase()}')`} 
-                                class={`${btnBaseClass} bg-red-50 border-red-200 text-red-700 hover:bg-red-600 hover:text-white`}>
+                            <a href={`#${state.replace(/\s+/g, '-').toLowerCase()}`} 
+                               class={`${btnBaseClass} bg-red-50 border-red-200 text-red-700 hover:bg-red-600 hover:text-white`}>
                                 {state}
-                            </button>
+                            </a>
                         ))}
                     </div>
                 </div>
@@ -125,10 +122,10 @@ const btnBaseClass = "text-center py-2 px-2 rounded border text-[11px] md:text-x
                     </h3>
                     <div class="grid grid-cols-2 gap-2">
                         {utList.map(state => (
-                            <button onclick={`filterState('${state.replace(/\s+/g, '-').toLowerCase()}')`} 
-                                class={`${btnBaseClass} bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-600 hover:text-white`}>
+                            <a href={`#${state.replace(/\s+/g, '-').toLowerCase()}`} 
+                               class={`${btnBaseClass} bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-600 hover:text-white`}>
                                 {state}
-                            </button>
+                            </a>
                         ))}
                     </div>
                 </div>
@@ -141,10 +138,10 @@ const btnBaseClass = "text-center py-2 px-2 rounded border text-[11px] md:text-x
                 </h3>
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
                     {stateList.map(state => (
-                        <button onclick={`filterState('${state.replace(/\s+/g, '-').toLowerCase()}')`} 
-                            class={`${btnBaseClass} bg-green-50 border-green-200 text-green-700 hover:bg-green-600 hover:text-white`}>
+                        <a href={`#${state.replace(/\s+/g, '-').toLowerCase()}`} 
+                           class={`${btnBaseClass} bg-green-50 border-green-200 text-green-700 hover:bg-green-600 hover:text-white`}>
                             {state}
-                        </button>
+                        </a>
                     ))}
                 </div>
             </div>
@@ -212,7 +209,6 @@ const btnBaseClass = "text-center py-2 px-2 rounded border text-[11px] md:text-x
             })}
         </div>
 
-        {/* 💰 BOTTOM AD SLOT */}
         <div class="mt-8">
             <AdSlot type="horizontal" />
         </div>
@@ -240,7 +236,7 @@ const btnBaseClass = "text-center py-2 px-2 rounded border text-[11px] md:text-x
             <a href="https://t.me/toponlineform" target="_blank" class="block bg-white border-l-4 border-[#229ED9] p-4 shadow-sm hover:shadow-md transition rounded">
                 <div class="flex items-center gap-3">
                     <div class="bg-[#229ED9] text-white p-2 rounded-full">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 11.944 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.8-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 11.944 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
                     </div>
                     <div>
                         <div class="text-xs text-gray-500 font-bold uppercase">Join us on</div>
@@ -249,7 +245,6 @@ const btnBaseClass = "text-center py-2 px-2 rounded border text-[11px] md:text-x
                 </div>
             </a>
 
-            {/* 💰 AD SLOT 3: SIDEBAR STICKY */}
             <AdSlot type="square" />
 
         </div>
@@ -258,26 +253,39 @@ const btnBaseClass = "text-center py-2 px-2 rounded border text-[11px] md:text-x
     </div>
   </div>
 
-  {/* ⚡ CLIENT SIDE FILTER LOGIC */}
+  {/* ⚡ CLIENT SIDE FILTER LOGIC (Updated for Hash Support) */}
   <script is:inline>
+    // 1. Function to show only selected state
     function filterState(targetId) {
         const allSections = document.querySelectorAll('.state-section');
         
-        if (targetId === 'all') {
+        if (targetId === 'all' || !targetId) {
             // Show All
             allSections.forEach(sec => sec.classList.remove('hidden'));
         } else {
             // Hide All first
             allSections.forEach(sec => sec.classList.add('hidden'));
+            
             // Show Targeted
             const targetSection = document.getElementById(targetId);
             if (targetSection) {
                 targetSection.classList.remove('hidden');
-                // Smooth scroll to that section
-                targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Scroll Logic is handled by browser hash default mostly, but we ensure visibility
             }
         }
     }
+
+    // 2. Event Listener for URL Hash Change (Browser Back/Forward)
+    window.addEventListener('hashchange', () => {
+        const hash = window.location.hash.replace('#', '');
+        filterState(hash || 'all');
+    });
+
+    // 3. Initial Load Check
+    window.addEventListener('load', () => {
+        const hash = window.location.hash.replace('#', '');
+        filterState(hash || 'all');
+    });
   </script>
 
 </Layout>
