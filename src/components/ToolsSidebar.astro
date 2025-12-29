@@ -1,50 +1,90 @@
 ---
 // src/components/ToolsSidebar.astro
+import AdSlot from './AdSlot.astro'; // AdSlot import zaroor karein
+
 const currentPath = Astro.url.pathname;
+
+// Helper function: Active Link ka style decide karne ke liye
+const getLinkClass = (path: string) => {
+  // Agar URL me ye path hai, toh Blue Active Color, nahi toh Gray
+  const isActive = currentPath.includes(path);
+  return `flex items-center gap-3 p-3 rounded-lg transition-all duration-200 ${
+    isActive 
+      ? 'bg-blue-600 text-white shadow-md font-medium' 
+      : 'text-gray-700 hover:bg-gray-100 hover:text-blue-600'
+  }`;
+};
 ---
 
-<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden sticky top-24">
-  <div class="bg-blue-50 p-4 border-b border-blue-100">
-    <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
-      🛠️ <span class="text-blue-700">Explore Tools</span>
-    </h3>
-    <p class="text-xs text-gray-500 mt-1">Make your work easier</p>
-  </div>
+<div class="flex flex-col gap-6">
   
-  <nav class="p-2">
-    <ul class="space-y-1">
-      <li>
-        <a href="/tools/age-calculator" class={`flex items-center gap-3 p-3 rounded-lg transition-all duration-200 ${currentPath.includes('age-calculator') ? 'bg-blue-600 text-white shadow-md' : 'text-gray-700 hover:bg-gray-100'}`}>
-          <span class="text-lg">📅</span>
-          <span class="font-medium text-sm">Age Calculator</span>
-        </a>
-      </li>
-      
-      <li>
-        <a href="/tools/image-resizer" class={`flex items-center gap-3 p-3 rounded-lg transition-all duration-200 ${currentPath.includes('image-resizer') ? 'bg-blue-600 text-white shadow-md' : 'text-gray-700 hover:bg-gray-100'}`}>
-          <span class="text-lg">🖼️</span>
-          <span class="font-medium text-sm">Image Resizer</span>
-        </a>
-      </li>
+  {/* 1. Main Navigation Menu */}
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    <div class="bg-blue-50 p-4 border-b border-blue-100">
+      <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+        🛠️ <span class="text-blue-700">Explore Tools</span>
+      </h3>
+      <p class="text-xs text-gray-500 mt-1">Free Utilities for Students</p>
+    </div>
+    
+    <nav class="p-2">
+      <ul class="space-y-1">
+        <li>
+          <a href="/tools/age-calculator" class={getLinkClass('age-calculator')}>
+            <span class="text-xl">📅</span>
+            <span class="text-sm">Age Calculator</span>
+          </a>
+        </li>
+        
+        <li>
+          <a href="/tools/image-resizer" class={getLinkClass('image-resizer')}>
+            <span class="text-xl">🖼️</span>
+            <span class="text-sm">Image Resizer</span>
+          </a>
+        </li>
 
-      <li>
-        <a href="/tools/jpg-to-pdf" class={`flex items-center gap-3 p-3 rounded-lg transition-all duration-200 ${currentPath.includes('jpg-to-pdf') ? 'bg-blue-600 text-white shadow-md' : 'text-gray-700 hover:bg-gray-100'}`}>
-          <span class="text-lg">📄</span>
-          <span class="font-medium text-sm">JPG to PDF</span>
-        </a>
-      </li>
+        <li>
+          <a href="/tools/jpg-to-pdf" class={getLinkClass('jpg-to-pdf')}>
+            <span class="text-xl">📄</span>
+            <span class="text-sm">JPG to PDF</span>
+          </a>
+        </li>
 
-      <li>
-        <a href="/tools/resume-maker" class={`flex items-center gap-3 p-3 rounded-lg transition-all duration-200 ${currentPath.includes('resume-maker') ? 'bg-blue-600 text-white shadow-md' : 'text-gray-700 hover:bg-gray-100'}`}>
-          <span class="text-lg">📝</span>
-          <span class="font-medium text-sm">Resume Maker</span>
-        </a>
-      </li>
-    </ul>
-  </nav>
+        <li>
+          <a href="/tools/resume-maker" class={getLinkClass('resume-maker')}>
+            <span class="text-xl">📝</span>
+            <span class="text-sm">Resume Maker</span>
+          </a>
+        </li>
 
-  <div class="p-4 bg-yellow-50 border-t border-yellow-100 mt-2">
-    <p class="text-xs text-yellow-800 font-bold">🚀 Join Telegram for Updates</p>
-    <a href="https://t.me/toponlineform" target="_blank" class="block mt-2 text-center bg-yellow-400 hover:bg-yellow-500 text-black text-xs font-bold py-2 rounded shadow-sm transition">Join Now</a>
+        {/* Future Tools ke liye jagah */}
+        <li>
+          <a href="/tools/typing-test" class={getLinkClass('typing-test')}>
+            <span class="text-xl">⌨️</span>
+            <span class="text-sm">Typing Test</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    {/* Telegram CTA */}
+    <div class="p-4 bg-yellow-50 border-t border-yellow-100 mt-2">
+      <p class="text-xs text-yellow-800 font-bold flex items-center gap-1">
+        🚀 Join Telegram for Updates
+      </p>
+      <a href="https://t.me/toponlineform" target="_blank" class="block mt-2 text-center bg-yellow-400 hover:bg-yellow-500 text-black text-xs font-bold py-2.5 rounded shadow-sm transition transform hover:-translate-y-0.5">
+        Join Now
+      </a>
+    </div>
   </div>
+
+  {/* 2. SIDEBAR AD SLOT (Vertical Skyscraper) */}
+  {/* Ye tabhi dikhega jab user desktop par hoga */}
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-2 overflow-hidden flex flex-col items-center justify-center min-h-[250px]">
+     <span class="text-[10px] text-gray-400 uppercase tracking-widest mb-2">Sponsored</span>
+     
+     {/* Vertical Ad Type pass kar rahe hain */}
+     <AdSlot type="vertical" />
+  </div>
+
 </div>
