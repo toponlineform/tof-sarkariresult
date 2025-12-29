@@ -1,31 +1,37 @@
 ---
+// src/layouts/Layout.astro
 import MarketingPopup from '../components/MarketingPopup.astro';
+
+// ✅ IMPORT ADSENSE ID (Centralized Control)
+// This ensures Layout uses the same ID as your manual ad slots
+import { ADSENSE_ID } from '../components/AdSlot.astro';
 
 const { 
   title, 
   description, 
-  isPost = false, // Post page ke liye extra check
-  categoryName = "" 
+  isPost = false,
+  image = "/og-default.jpg" // Default Social Image if none provided
 } = Astro.props;
 
 const siteUrl = "https://toponlineform.com";
 const canonicalURL = new URL(Astro.url.pathname, siteUrl);
 
 // --- 🚀 INFINITY SEO TITLE LOGIC ---
-let seoTitle = "";
+let seoTitle = title;
 let seoDescription = description;
 
 const currentPath = Astro.url.pathname;
 
 if (currentPath === "/" || currentPath === "") {
   seoTitle = "Top Online Form: Sarkari Result, Latest Govt Jobs & Admit Card 2026";
-  seoDescription = seoDescription || "India's No.1 Portal for Sarkari Result, Latest Government Jobs, Admit Cards, and Results updates at TopOnlineForm.com.";
+  seoDescription = "India's No.1 Portal for Sarkari Result, Latest Government Jobs, Admit Cards, and Results updates at TopOnlineForm.com.";
 } 
-else if (isPost) {
+else if (isPost && !title.toLowerCase().includes('form')) {
   seoTitle = `${title} 2026 Online Form | Eligibility, Last Date - Top Online Form`;
 } 
-else {
-  seoTitle = `${title} 2026 | Latest Updates & Online Form - Top Online Form`;
+else if (!isPost) {
+  // Tools & Categories
+  seoTitle = title.includes("Top Online Form") ? title : `${title} - Top Online Form`;
 }
 ---
 
@@ -33,8 +39,8 @@ else {
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    {/* <meta name="viewport" content="width=device-width, initial-scale=1.0" />  */}
-    <meta name="viewport" content="width=device-width, initial-scale=0.90, maximum-scale=5.0, user-scalable=yes" />
+    {/* Optimized Viewport for Mobile Responsiveness */}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     
     <title>{seoTitle}</title>
     <meta name="title" content={seoTitle} />
@@ -45,16 +51,27 @@ else {
     
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
     
-    <meta property="og:type" content="website" />
+    {/* SOCIAL META TAGS (Open Graph) */}
+    <meta property="og:type" content={isPost ? "article" : "website"} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={seoTitle} />
     <meta property="og:description" content={seoDescription} />
+    <meta property="og:image" content={new URL(image, siteUrl)} />
+    <meta property="twitter:card" content="summary_large_image" />
+
+    {/* 💰 GOOGLE ADSENSE (AUTO ADS SCRIPT) */}
+    {/* This script enables Auto Ads (Vignette/Anchor) and supports manual units */}
+    <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_ID}`}
+     crossorigin="anonymous"></script>
 
     <script is:inline src="https://cdn.tailwindcss.com"></script>
     
     <link href="/pagefind/pagefind-ui.css" rel="stylesheet">
     <script src="/pagefind/pagefind-ui.js" is:inline></script>
+
+    <slot name="head" />
 
     <style>
         #searchOverlay.open { display: flex; }
@@ -67,7 +84,6 @@ else {
             --pagefind-ui-border: #e5e7eb;
             --pagefind-ui-border-radius: 0.5rem;
         }
-        /* Hide pagefind branding if desired or adjust spacing */
         .pagefind-ui__result {
             padding: 10px 0 !important;
             border-bottom: 1px solid #eee !important;
@@ -88,7 +104,7 @@ else {
                     TOP ONLINE FORM
                 </a>
 
-                {/* Mobile Controls (Search & Hamburger) - Visible only on Mobile */}
+                {/* Mobile Controls (Search & Hamburger) */}
                 <div class="flex items-center gap-4 md:hidden">
                     <button id="mobileSearchToggle" class="hover:text-yellow-300 focus:outline-none">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -102,7 +118,7 @@ else {
                     </button>
                 </div>
 
-                {/* Desktop Navigation - Hidden on Mobile */}
+                {/* Desktop Navigation */}
                 <nav class="hidden md:flex flex-wrap justify-center items-center gap-6 font-semibold text-sm uppercase tracking-wide">
                     <a href="/" class="hover:text-yellow-300 transition">Home</a>
                     <a href="/active-jobs" class="hover:text-yellow-300 transition text-yellow-100 font-bold">Active Jobs</a>
@@ -139,7 +155,7 @@ else {
                 </nav>
             </div>
 
-            {/* Mobile Menu Dropdown (Hidden by default) */}
+            {/* Mobile Menu Dropdown */}
             <div id="mobileMenu" class="hidden md:hidden mt-3 border-t border-red-500 pt-3">
                 <nav class="flex flex-col space-y-3 font-semibold text-sm uppercase tracking-wide">
                     <a href="/" class="hover:text-yellow-300 block">Home</a>
@@ -158,7 +174,7 @@ else {
         </div>
     </header>
 
-    {/* 🔍 SEARCH OVERLAY */}
+    {/* SEARCH OVERLAY */}
     <div id="searchOverlay" class="fixed inset-0 bg-black/80 z-[60] hidden justify-center items-start pt-10 px-4 backdrop-blur-sm transition-all">
         <div class="bg-white w-full max-w-2xl rounded-lg shadow-2xl relative p-6 max-h-[85vh] overflow-y-auto">
             <button id="closeSearch" class="absolute top-2 right-2 text-gray-500 hover:text-red-600 bg-gray-100 rounded-full p-1">
@@ -192,17 +208,6 @@ else {
             <p class="text-xs text-gray-600">Copyright © 2026 TopOnlineForm. All Rights Reserved.</p>
         </div>
     </footer>
-
-    {/* MOBILE STICKY BOTTOM BAR (COMMENTED OUT AS REQUESTED) */}
-    {/* <div class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-300 shadow-2xl flex z-50 md:hidden">
-        <a href="https://t.me/toponlineform" target="_blank" class="flex-1 bg-blue-500 text-white text-center py-3 font-bold flex items-center justify-center gap-2">
-            Telegram
-        </a>
-        <a href="https://whatsapp.com/channel/0029Vb7TcG06LwHoTXhZKn2D" target="_blank" class="flex-1 bg-green-600 text-white text-center py-3 font-bold flex items-center justify-center gap-2">
-            WhatsApp
-        </a>
-    </div>
-    */}
 
     <MarketingPopup />
 
