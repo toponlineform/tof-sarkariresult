@@ -1,10 +1,11 @@
 ---
+// src/pages/tools/pdf-merger.astro
 import ToolLayout from '../../layouts/ToolLayout.astro';
 import AdSlot from '../../components/AdSlot.astro';
 
-// 🎯 CHANGE 1: Title & Desc ab "Universal" hain (Sabke liye)
-const title = "PDF Merger - Merge PDF Files Online for Free (Fast & Secure)";
-const description = "Best Free PDF Merger. Combine multiple PDF files into one document instantly. No Upload Limit, No Watermark. Secure Client-side PDF Combiner.";
+// 🌍 GLOBAL SEO METADATA
+const title = "Free PDF Merger - Combine PDF Files Online (Secure & Fast)";
+const description = "Merge multiple PDF files into one document instantly. No upload limits, no watermarks. 100% Secure client-side processing for privacy.";
 ---
 
 <ToolLayout 
@@ -13,68 +14,63 @@ const description = "Best Free PDF Merger. Combine multiple PDF files into one d
   toolName="PDF Merger"
 >
 
-  {/* ⚡ FAQ SCHEMA (Broad Keywords: Combine, Join, Merge) */}
+  {/* ⚡ FAQ SCHEMA */}
   <script type="application/ld+json" slot="head">
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": [{
         "@type": "Question",
-        "name": "How to merge PDF files online for free?",
+        "name": "How to merge PDF files for free?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "1. Select your PDF files.\n2. Arrange them in the desired order.\n3. Click 'Merge PDF Now'.\n4. Download your combined file instantly."
+          "text": "1. Select your PDF documents.\n2. Reorder them if needed.\n3. Click 'Merge PDF'.\n4. Download the combined file instantly."
         }
       }, {
         "@type": "Question",
-        "name": "Is it safe to use Infinity PDF Merger?",
+        "name": "Is it safe to merge confidential PDFs?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes, unlike other tools, we process files inside your browser. Your documents are never uploaded to any server, making it 100% secure for confidential data."
-        }
-      }, {
-        "@type": "Question",
-        "name": "Can I combine PDF files on Mobile?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Absolutely. This tool works perfectly on Android, iPhone, Tablet, and Desktop without installing any app."
+          "text": "Yes. Infinity PDF Merger operates entirely in your browser. Your files are never uploaded to any server, ensuring complete data privacy."
         }
       }]
     }
   </script>
 
-  {/* Load PDF-Lib */}
+  {/* Load PDF-Lib (Lightweight Library) */}
   <script is:inline src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
 
-  {/* 🟢 TOP AD */}
-  <div class="mb-6">
+  {/* 1. TOP AD SLOT */}
+  <div class="mb-8">
     <AdSlot type="horizontal" />
   </div>
 
   <div class="space-y-8">
       
-      {/* 🎯 CHANGE 2: H1 Heading seedha "Merge PDF Files" */}
-      <div class="text-center">
-        <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 mb-2">
-           Merge <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-pink-600">PDF Files</span> Online
+      {/* HEADER SECTION */}
+      <div class="text-center max-w-2xl mx-auto">
+        <h1 class="text-3xl md:text-5xl font-black text-gray-900 mb-3 tracking-tight">
+           Merge <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-pink-600">PDF Files</span>
         </h1>
-        <p class="text-gray-500 text-lg">Combine multiple PDFs into one unified document.</p>
+        <p class="text-gray-500 text-lg">Combine unlimited PDFs into a single file. 100% Free & Secure.</p>
       </div>
 
       {/* STEP 1: UPLOAD */}
-      <div id="uploadArea" class="py-12 text-center bg-white border-4 border-dashed border-red-200 rounded-3xl cursor-pointer hover:border-red-400 hover:shadow-lg transition relative group" onclick="document.getElementById('fileInput').click()">
+      <div id="uploadArea" class="py-16 text-center bg-white border-4 border-dashed border-red-200 rounded-3xl cursor-pointer hover:border-red-400 hover:shadow-xl transition relative group" onclick="document.getElementById('fileInput').click()">
           <div class="relative z-10">
-            <div class="text-7xl mb-4 group-hover:scale-110 transition duration-200 drop-shadow-sm">📑</div>
-            <h3 class="text-3xl font-extrabold text-gray-800 mb-2">Select PDF Files</h3>
-            <p class="text-gray-500 mb-8 font-medium text-lg">or Drag and Drop files here</p>
+            <div class="text-7xl mb-6 group-hover:scale-110 transition duration-200 drop-shadow-sm">📑</div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">Drop PDF Files Here</h3>
+            <p class="text-gray-500 mb-8">or click to browse from device</p>
             
-            <span class="bg-red-600 text-white px-10 py-4 rounded-xl font-bold text-lg shadow-xl hover:bg-red-700 transition flex items-center justify-center gap-2 w-max mx-auto">
-                <span>📂</span> Choose Files
+            <span class="bg-red-600 text-white px-10 py-4 rounded-xl font-bold text-lg shadow-xl hover:bg-red-700 transition flex items-center justify-center gap-2 w-max mx-auto transform group-hover:-translate-y-1">
+                <span>📂</span> Select PDFs
             </span>
-            <p class="mt-6 text-xs text-gray-400 font-bold uppercase tracking-wider">
-                <span class="bg-red-50 text-red-600 px-2 py-1 rounded">🔒 Secure</span> • 
-                <span class="bg-blue-50 text-blue-600 px-2 py-1 rounded ml-2">⚡ Unlimited</span>
-            </p>
+            
+            <div class="mt-8 flex justify-center gap-6 text-xs font-bold text-gray-400 uppercase tracking-widest">
+                <span class="flex items-center gap-1">🔒 Private</span>
+                <span class="flex items-center gap-1">⚡ Instant</span>
+                <span class="flex items-center gap-1">♾️ Unlimited</span>
+            </div>
           </div>
           <input type="file" id="fileInput" multiple accept=".pdf" class="hidden" />
       </div>
@@ -82,11 +78,18 @@ const description = "Best Free PDF Merger. Combine multiple PDF files into one d
       {/* STEP 2: FILE LIST (Hidden initially) */}
       <div id="fileListArea" class="hidden animate-fade-in">
           
-          <div class="flex justify-between items-center mb-4 px-2">
-              <h4 class="font-bold text-gray-800 text-lg">Files to Merge (<span id="count" class="text-red-600">0</span>)</h4>
-              <button id="clearBtn" class="text-sm text-red-600 font-bold hover:bg-red-50 px-3 py-1 rounded transition">
-                  🗑️ Clear All
-              </button>
+          <div class="flex justify-between items-center mb-6 px-2">
+              <h4 class="font-bold text-gray-800 text-xl flex items-center gap-2">
+                  <span>📄</span> Files (<span id="count" class="text-red-600">0</span>)
+              </h4>
+              <div class="flex gap-2">
+                  <button onclick="document.getElementById('fileInput').click()" class="text-sm font-bold bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-2 rounded-lg transition">
+                     + Add More
+                  </button>
+                  <button id="clearBtn" class="text-sm font-bold text-red-600 hover:bg-red-50 px-4 py-2 rounded-lg transition">
+                     Clear All
+                  </button>
+              </div>
           </div>
 
           {/* List Container */}
@@ -95,53 +98,65 @@ const description = "Best Free PDF Merger. Combine multiple PDF files into one d
           </div>
 
           {/* Merge Button */}
-          <button id="mergeBtn" class="w-full bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white font-bold py-5 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-1 transition text-xl flex justify-center items-center gap-3">
+          <button id="mergeBtn" class="w-full bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white font-bold py-5 rounded-2xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition text-xl flex justify-center items-center gap-3">
               <span>🚀</span> Merge PDF Now
           </button>
       </div>
 
   </div>
 
-  {/* 🎯 CHANGE 3: Content ab "General Use" par focus karega */}
-  <div slot="content">
-      <p class="lead text-lg text-gray-700 mb-6">
-          <strong>Infinity PDF Merger</strong> is the simplest and fastest tool to combine PDF files online. Whether you need to merge business reports, legal documents, invoices, or educational certificates, our tool does it securely in your browser.
-      </p>
+  {/* 2. MIDDLE AD SLOT */}
+  <div class="mb-8 mt-12">
+     <AdSlot type="horizontal" />
+  </div>
 
-      {/* Features Grid */}
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-8 not-prose">
-          <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition">
-              <h3 class="text-xl mb-2">🔒 Secure Merging</h3>
-              <p class="text-gray-600 text-sm">Your files are processed locally on your device. No data is uploaded to our server, ensuring 100% privacy.</p>
+  {/* SEO CONTENT */}
+  <div slot="content">
+      
+      {/* SECTION 1: GLOBAL APPEAL */}
+      <div class="grid md:grid-cols-3 gap-6 mb-10 not-prose">
+          <div class="bg-gray-50 p-6 rounded-2xl border border-gray-100">
+              <div class="text-3xl mb-3">🔒</div>
+              <h3 class="font-bold text-gray-900 mb-2">Secure Processing</h3>
+              <p class="text-sm text-gray-600">Files stay on your device. We use browser-based technology for maximum privacy.</p>
           </div>
-          <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition">
-              <h3 class="text-xl mb-2">⚡ Lightning Fast</h3>
-              <p class="text-gray-600 text-sm">No upload/download waiting time. Merging happens instantly using your browser's power.</p>
+          <div class="bg-gray-50 p-6 rounded-2xl border border-gray-100">
+              <div class="text-3xl mb-3">⚡</div>
+              <h3 class="font-bold text-gray-900 mb-2">Lightning Fast</h3>
+              <p class="text-sm text-gray-600">No upload waiting time. Merge dozens of files in milliseconds.</p>
           </div>
-          <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition">
-              <h3 class="text-xl mb-2">📱 Device Friendly</h3>
-              <p class="text-gray-600 text-sm">Works flawlessly on Windows, Mac, Android, and iOS. No software installation needed.</p>
+          <div class="bg-gray-50 p-6 rounded-2xl border border-gray-100">
+              <div class="text-3xl mb-3">📱</div>
+              <h3 class="font-bold text-gray-900 mb-2">Mobile Ready</h3>
+              <p class="text-sm text-gray-600">Works perfectly on iPhone, Android, Mac, and Windows without any app.</p>
           </div>
       </div>
 
-      <h3 class="font-bold text-gray-800 text-xl">How to combine PDF files?</h3>
-      <ol class="list-decimal pl-5 space-y-3 text-gray-700">
+      <h3 class="font-bold text-gray-800 text-xl mb-4">How to combine PDF files?</h3>
+      <ol class="list-decimal pl-5 space-y-3 text-gray-700 mb-8">
           <li><strong>Select Files:</strong> Upload the PDF documents you want to join. You can select multiple files at once.</li>
-          <li><strong>Review:</strong> Check the list of uploaded files. Remove any unwanted document.</li>
+          <li><strong>Reorder:</strong> Check the list. Add more files if needed.</li>
           <li><strong>Merge:</strong> Click on the "Merge PDF Now" button.</li>
           <li><strong>Download:</strong> Your unified PDF file will be ready for download instantly.</li>
       </ol>
 
-      <div class="mt-8 bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-400">
-          <p class="text-sm text-yellow-800">
-              <strong>Tip:</strong> This tool is also perfect for students applying for <strong>UPSC, SSC, and Banking exams</strong> who need to merge marksheet and certificate photos into a single PDF.
+      {/* SECTION 2: INDIAN USE CASES */}
+      <div class="bg-blue-50 p-6 rounded-xl border-l-4 border-blue-500">
+          <h4 class="font-bold text-blue-900 mb-2">🇮🇳 For Govt Job Aspirants</h4>
+          <p class="text-sm text-blue-800">
+              Applying for <strong>UPSC, SSC, or Banking Exams</strong>? Use this tool to merge your:
           </p>
+          <ul class="mt-2 space-y-1 text-sm text-blue-700 list-disc pl-4">
+              <li>Aadhar Card (Front + Back)</li>
+              <li>10th & 12th Marksheets</li>
+              <li>Multiple Semester Grade Cards</li>
+          </ul>
       </div>
   </div>
 
 </ToolLayout>
 
-{/* 🧠 LOGIC (Same robust code) */}
+{/* 🧠 LOGIC */}
 <script>
   // @ts-nocheck
   const fileInput = document.getElementById('fileInput');
@@ -154,6 +169,7 @@ const description = "Best Free PDF Merger. Combine multiple PDF files into one d
 
   let selectedFiles = [];
 
+  // 1. File Selection
   fileInput?.addEventListener('change', (e) => {
       if (e.target.files && e.target.files.length > 0) {
           const newFiles = Array.from(e.target.files).filter(f => f.type === 'application/pdf');
@@ -180,10 +196,10 @@ const description = "Best Free PDF Merger. Combine multiple PDF files into one d
 
       selectedFiles.forEach((file, index) => {
           const div = document.createElement('div');
-          div.className = 'flex items-center justify-between bg-white p-4 rounded-xl border border-gray-200 shadow-sm transition hover:shadow-md';
+          div.className = 'flex items-center justify-between bg-white p-4 rounded-xl border border-gray-200 shadow-sm transition hover:shadow-md hover:border-red-200';
           div.innerHTML = `
               <div class="flex items-center gap-4 overflow-hidden">
-                  <div class="w-10 h-10 bg-red-50 text-red-600 rounded-lg flex items-center justify-center text-xl font-bold">
+                  <div class="w-10 h-10 bg-red-50 text-red-600 rounded-lg flex items-center justify-center text-lg font-bold">
                       ${index + 1}
                   </div>
                   <div class="min-w-0">
@@ -197,17 +213,20 @@ const description = "Best Free PDF Merger. Combine multiple PDF files into one d
       });
   }
 
+  // 2. Remove File
   window.removePdf = (index) => {
       selectedFiles.splice(index, 1);
       updateUI();
   };
 
+  // 3. Clear All
   clearBtn?.addEventListener('click', () => {
       selectedFiles = [];
       fileInput.value = '';
       updateUI();
   });
 
+  // 4. Merge Logic (PDF-Lib)
   mergeBtn?.addEventListener('click', async () => {
       if (selectedFiles.length < 2) {
           alert("Please select at least 2 PDF files to merge.");
