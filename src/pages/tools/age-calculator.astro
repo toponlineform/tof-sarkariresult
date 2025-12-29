@@ -3,9 +3,9 @@
 import ToolLayout from '../../layouts/ToolLayout.astro';
 import AdSlot from '../../components/AdSlot.astro';
 
-// 🔒 FUTURE PROOF METADATA
-const title = "Age Calculator - Calculate Exact Age Online (Years, Months, Days)";
-const description = "Free Online Age Calculator by Date of Birth. Calculate exact age in years, months, and days. 100% Accurate for Govt Exams (SSC, UPSC) and general use.";
+// 🌍 GLOBAL METADATA (Targeting Worldwide Audience)
+const title = "Free Age Calculator - Calculate Chronological Age & Date Difference";
+const description = "Calculate your exact age in years, months, and days. Free online tool to find date difference for job eligibility, retirement, school admission, and astrological use.";
 ---
 
 <ToolLayout 
@@ -14,157 +14,171 @@ const description = "Free Online Age Calculator by Date of Birth. Calculate exac
   toolName="Age Calculator"
 >
   
-  {/* ⚡ FAQ SCHEMA */}
+  {/* ⚡ GLOBAL FAQ SCHEMA */}
   <script type="application/ld+json" slot="head">
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": [{
         "@type": "Question",
-        "name": "How to calculate age for SSC CGL / Govt Exams?",
+        "name": "How to calculate my exact age?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Select your Date of Birth and set the 'Age as on' date to the cutoff date mentioned in the official notification (e.g., 01 August or 01 January). The tool will show if you are eligible."
+          "text": "Simply enter your Date of Birth and select the 'Age at the Date of' (usually today). Our tool will calculate your chronological age down to the exact day."
         }
       }, {
         "@type": "Question",
         "name": "Is this calculator accurate for Leap Years?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes, it perfectly handles leap years (29 days in Feb) and months with 30/31 days to give 100% precise results down to the last day."
+          "text": "Yes, our algorithm perfectly handles leap years (February 29th) and varying month lengths (30 vs 31 days) to provide 100% precision."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I use this for Govt Job Eligibility?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolutely. This tool is optimized for checking age limits for exams like UPSC, SSC, IBPS (India), as well as Civil Service exams in the USA and UK."
         }
       }]
     }
   </script>
 
-  {/* 1. TOP AD SLOT (Above Input Form) */}
+  {/* 1. TOP AD SLOT */}
   <div class="mb-8">
     <AdSlot type="horizontal" />
   </div>
 
   <div class="space-y-8">
       
-      {/* 2. INPUT FORM (H1 hata diya hai, Layout handle karega) */}
+      {/* 2. INPUT FORM */}
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           
           {/* DOB Input */}
-          <div class="bg-blue-50 p-4 rounded-xl border border-blue-100 hover:border-blue-300 transition-colors">
-              <label class="block text-sm font-bold text-gray-700 mb-2">📅 Date of Birth</label>
-              <input type="date" id="dobInput" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-lg font-mono bg-white cursor-pointer shadow-sm">
+          <div class="bg-blue-50 p-6 rounded-2xl border border-blue-100 hover:border-blue-300 transition-colors shadow-sm">
+              <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wider">📅 Date of Birth</label>
+              <input type="date" id="dobInput" class="w-full p-4 border border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none text-xl font-mono bg-white cursor-pointer shadow-inner text-gray-800">
           </div>
 
           {/* Target Date Input */}
-          <div class="bg-green-50 p-4 rounded-xl border border-green-100 hover:border-green-300 transition-colors">
-              <label class="block text-sm font-bold text-gray-700 mb-2">📍 Age as on (Date)</label>
-              <input type="date" id="todayInput" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none text-lg font-mono bg-white cursor-pointer shadow-sm">
-              <p class="text-xs text-gray-500 mt-2 font-medium">*Default is Today's Date</p>
+          <div class="bg-green-50 p-6 rounded-2xl border border-green-100 hover:border-green-300 transition-colors shadow-sm">
+              <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wider">📍 Age at the Date of</label>
+              <input type="date" id="todayInput" class="w-full p-4 border border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 outline-none text-xl font-mono bg-white cursor-pointer shadow-inner text-gray-800">
+              <p class="text-xs text-gray-500 mt-2 font-medium text-right">*Default is Today</p>
           </div>
       </div>
 
       {/* 3. ACTION BUTTON */}
-      <button id="calcBtn" class="w-full bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-bold py-4 px-6 rounded-xl shadow-lg transform hover:-translate-y-1 transition-all text-xl flex justify-center items-center gap-2">
-          Calculate My Age 🚀
+      <button id="calcBtn" class="w-full bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white font-bold py-5 px-6 rounded-xl shadow-xl transform hover:-translate-y-1 transition-all text-xl md:text-2xl flex justify-center items-center gap-3">
+          Calculate Age 🚀
       </button>
 
       {/* 4. RESULT AREA (Initially Hidden) */}
       <div id="resultArea" class="hidden animate-fade-in space-y-8">
           
           {/* Main Card */}
-          <div class="bg-gradient-to-br from-gray-900 to-gray-800 text-white rounded-2xl p-6 md:p-8 text-center shadow-2xl relative overflow-hidden ring-4 ring-blue-100">
+          <div class="bg-gray-900 text-white rounded-3xl p-6 md:p-10 text-center shadow-2xl relative overflow-hidden border border-gray-700">
               <div class="relative z-10">
-                  <p class="text-gray-400 uppercase tracking-widest text-xs font-bold mb-4">You are exactly</p>
+                  <p class="text-gray-400 uppercase tracking-widest text-xs font-bold mb-6">Your Chronological Age</p>
                   
-                  <div class="flex justify-center items-baseline gap-2 md:gap-6 flex-wrap">
+                  <div class="flex justify-center items-baseline gap-4 md:gap-8 flex-wrap">
                       <div class="text-center group">
-                          <span id="resYears" class="text-5xl md:text-7xl font-extrabold text-yellow-400 group-hover:scale-110 transition-transform block">0</span>
-                          <span class="text-xs md:text-sm text-gray-400 uppercase tracking-wider">Years</span>
+                          <span id="resYears" class="text-6xl md:text-8xl font-black text-yellow-400 group-hover:scale-110 transition-transform block filter drop-shadow-lg">0</span>
+                          <span class="text-xs md:text-sm text-gray-400 uppercase tracking-wider font-bold">Years</span>
                       </div>
                       
-                      <div class="text-4xl md:text-6xl text-gray-600 font-light hidden md:block">/</div>
+                      <div class="text-4xl md:text-6xl text-gray-600 font-light hidden md:block pt-4">/</div>
                       
                       <div class="text-center group">
-                          <span id="resMonths" class="text-5xl md:text-7xl font-extrabold text-blue-400 group-hover:scale-110 transition-transform block">0</span>
-                          <span class="text-xs md:text-sm text-gray-400 uppercase tracking-wider">Months</span>
+                          <span id="resMonths" class="text-6xl md:text-8xl font-black text-blue-400 group-hover:scale-110 transition-transform block filter drop-shadow-lg">0</span>
+                          <span class="text-xs md:text-sm text-gray-400 uppercase tracking-wider font-bold">Months</span>
                       </div>
 
-                      <div class="text-4xl md:text-6xl text-gray-600 font-light hidden md:block">/</div>
+                      <div class="text-4xl md:text-6xl text-gray-600 font-light hidden md:block pt-4">/</div>
 
                       <div class="text-center group">
-                          <span id="resDays" class="text-5xl md:text-7xl font-extrabold text-green-400 group-hover:scale-110 transition-transform block">0</span>
-                          <span class="text-xs md:text-sm text-gray-400 uppercase tracking-wider">Days</span>
+                          <span id="resDays" class="text-6xl md:text-8xl font-black text-green-400 group-hover:scale-110 transition-transform block filter drop-shadow-lg">0</span>
+                          <span class="text-xs md:text-sm text-gray-400 uppercase tracking-wider font-bold">Days</span>
                       </div>
                   </div>
               </div>
-              {/* Decorative Blur */}
-              <div class="absolute top-0 right-0 -mt-10 -mr-10 w-32 h-32 bg-blue-500 rounded-full blur-3xl opacity-20"></div>
-              <div class="absolute bottom-0 left-0 -mb-10 -ml-10 w-32 h-32 bg-yellow-500 rounded-full blur-3xl opacity-20"></div>
+              
+              {/* Decorative Elements */}
+              <div class="absolute top-0 right-0 w-64 h-64 bg-blue-600 rounded-full blur-[100px] opacity-20 pointer-events-none"></div>
+              <div class="absolute bottom-0 left-0 w-64 h-64 bg-purple-600 rounded-full blur-[100px] opacity-20 pointer-events-none"></div>
           </div>
 
           {/* Detailed Stats Grid */}
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm text-center hover:shadow-md transition">
-                  <div class="text-2xl mb-1">🎂</div>
-                  <p class="text-xs text-gray-500 font-bold uppercase">Next Birthday</p>
+              <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm text-center hover:shadow-md transition">
+                  <div class="text-3xl mb-2">🎂</div>
+                  <p class="text-xs text-gray-500 font-bold uppercase tracking-wide">Next Birthday</p>
                   <p id="nextBdayDay" class="text-blue-700 font-bold text-lg">Monday</p>
-                  <p id="nextBdayMonth" class="text-xs text-gray-400">in 5 months</p>
+                  <p id="nextBdayMonth" class="text-xs text-gray-400 mt-1">in 5 months</p>
               </div>
-              <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm text-center hover:shadow-md transition">
-                  <div class="text-2xl mb-1">🗓️</div>
-                  <p class="text-xs text-gray-500 font-bold uppercase">Total Months</p>
-                  <p id="totalMonths" class="text-green-700 font-bold text-xl">0</p>
+              <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm text-center hover:shadow-md transition">
+                  <div class="text-3xl mb-2">🗓️</div>
+                  <p class="text-xs text-gray-500 font-bold uppercase tracking-wide">Total Months</p>
+                  <p id="totalMonths" class="text-gray-800 font-bold text-xl md:text-2xl mt-1">0</p>
               </div>
-              <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm text-center hover:shadow-md transition">
-                  <div class="text-2xl mb-1">🌤️</div>
-                  <p class="text-xs text-gray-500 font-bold uppercase">Total Days</p>
-                  <p id="totalDays" class="text-purple-700 font-bold text-xl">0</p>
+              <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm text-center hover:shadow-md transition">
+                  <div class="text-3xl mb-2">☀️</div>
+                  <p class="text-xs text-gray-500 font-bold uppercase tracking-wide">Total Days</p>
+                  <p id="totalDays" class="text-gray-800 font-bold text-xl md:text-2xl mt-1">0</p>
               </div>
-              <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm text-center hover:shadow-md transition">
-                  <div class="text-2xl mb-1">⏰</div>
-                  <p class="text-xs text-gray-500 font-bold uppercase">Total Hours</p>
-                  <p id="totalHours" class="text-pink-700 font-bold text-xl">0</p>
+              <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm text-center hover:shadow-md transition">
+                  <div class="text-3xl mb-2">⏰</div>
+                  <p class="text-xs text-gray-500 font-bold uppercase tracking-wide">Total Hours</p>
+                  <p id="totalHours" class="text-gray-800 font-bold text-xl md:text-2xl mt-1">0</p>
               </div>
           </div>
 
-          {/* 💰 RESULT AD SLOT (Shown automatically with result) */}
+          {/* 💰 RESULT AD SLOT */}
           <div class="mt-8">
-            <span class="text-xs text-gray-400 block text-center mb-1 uppercase tracking-wider">Advertisement</span>
+            <span class="text-xs text-gray-400 block text-center mb-1 uppercase tracking-wider">Sponsored</span>
             <AdSlot type="horizontal" />
           </div>
 
       </div>
   </div>
 
-  {/* 5. SEO CONTENT */}
+  {/* 5. GLOBAL SEO CONTENT */}
   <div slot="content">
-      <p class="lead text-lg text-gray-700 mb-4">
-          The <strong>Infinity Age Calculator</strong> is a precision tool designed to calculate your chronological age based on your Date of Birth. It handles variable month lengths and leap years to provide the most accurate result possible.
+      <h3 class="text-xl font-bold text-gray-800 mb-3">About this Calculator</h3>
+      <p class="text-gray-600 mb-6 leading-relaxed">
+          The <strong>Infinity Age Calculator</strong> is a versatile tool designed to determine the precise time duration between two dates. Whether you need to calculate your chronological age, find out the days remaining until your next birthday, or check eligibility for legal requirements, this tool provides 100% accurate results instantly.
       </p>
 
-      <h3 class="text-gray-800 font-bold text-xl mb-2">Why use this Age Calculator?</h3>
-      <ul class="list-disc pl-5 space-y-2 mb-6">
-          <li><strong>Govt Exams Eligibility:</strong> Essential for aspirants of <strong class="text-blue-700">SSC CGL, CHSL, UPSC IAS, IBPS PO, and RRB</strong> to check if they meet the age criteria (e.g., 18-27 years) as on the cut-off date.</li>
-          <li><strong>Retirement Planning:</strong> Calculate exactly when you will turn 60 or 65 years old.</li>
-          <li><strong>Zero Error:</strong> Unlike manual calculation, our algorithm never makes a mistake with February 29th (Leap Year).</li>
-      </ul>
+      <div class="grid md:grid-cols-2 gap-8 mb-8">
+          <div>
+            <h4 class="font-bold text-gray-800 mb-2 flex items-center gap-2">🌍 Global Uses</h4>
+            <ul class="space-y-2 text-sm text-gray-600">
+                <li class="flex items-center gap-2">✅ <strong>School Admission:</strong> Check if your child meets the age cutoff (e.g., 5 or 6 years).</li>
+                <li class="flex items-center gap-2">✅ <strong>Legal Milestones:</strong> Verify age for Voting (18+), Driving (16/18+), or Retirement (60/65+).</li>
+                <li class="flex items-center gap-2">✅ <strong>Medical:</strong> Doctors often require chronological age in months for infants.</li>
+            </ul>
+          </div>
 
-      <h3 class="text-gray-800 font-bold text-xl mb-2">How to use?</h3>
-      <ol class="list-decimal pl-5 space-y-2">
-          <li>Enter your <strong>Date of Birth</strong> in the first field.</li>
-          <li>Enter the <strong>'Age as on'</strong> date (Default is Today). For exams, change this to the date mentioned in the notification.</li>
-          <li>Click the <strong>Calculate My Age</strong> button.</li>
-      </ol>
+          <div>
+            <h4 class="font-bold text-gray-800 mb-2 flex items-center gap-2">🇮🇳 Govt Job Uses (India)</h4>
+            <ul class="space-y-2 text-sm text-gray-600">
+                <li class="flex items-center gap-2">✅ <strong>UPSC Civil Services:</strong> Check 21-32 years criteria.</li>
+                <li class="flex items-center gap-2">✅ <strong>SSC CGL / CHSL:</strong> Verify age on 1st Aug or 1st Jan.</li>
+                <li class="flex items-center gap-2">✅ <strong>Banking (IBPS/SBI):</strong> Confirm eligibility before applying.</li>
+            </ul>
+          </div>
+      </div>
   </div>
 
 </ToolLayout>
 
-{/* 🧠 LOGIC (Robust & Fast) */}
+{/* 🧠 JAVASCRIPT LOGIC (Unchanged - It works perfectly) */}
 <script>
   const dobInput = document.getElementById('dobInput');
   const todayInput = document.getElementById('todayInput');
   const calcBtn = document.getElementById('calcBtn');
   const resultArea = document.getElementById('resultArea');
   
-  // Set Today's Date as Default
   const today = new Date();
   todayInput.valueAsDate = today;
 
@@ -185,7 +199,6 @@ const description = "Free Online Age Calculator by Date of Birth. Calculate exac
           return;
       }
 
-      // Calculation Logic
       let years = target.getFullYear() - dob.getFullYear();
       let months = target.getMonth() - dob.getMonth();
       let days = target.getDate() - dob.getDate();
@@ -201,12 +214,10 @@ const description = "Free Online Age Calculator by Date of Birth. Calculate exac
           months += 12;
       }
 
-      // Update Main Result
       document.getElementById('resYears').innerText = years.toString();
       document.getElementById('resMonths').innerText = months.toString();
       document.getElementById('resDays').innerText = days.toString();
 
-      // Extra Stats
       const diffTime = Math.abs(target.getTime() - dob.getTime());
       const totalDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
       const totalHours = totalDays * 24;
@@ -215,7 +226,6 @@ const description = "Free Online Age Calculator by Date of Birth. Calculate exac
       document.getElementById('totalDays').innerText = totalDays.toLocaleString();
       document.getElementById('totalHours').innerText = totalHours.toLocaleString();
 
-      // Next Birthday Logic
       const currentYear = target.getFullYear();
       let nextBday = new Date(dob);
       nextBday.setFullYear(currentYear);
@@ -230,10 +240,7 @@ const description = "Free Online Age Calculator by Date of Birth. Calculate exac
       document.getElementById('nextBdayDay').innerText = daysOfWeek[nextBday.getDay()];
       document.getElementById('nextBdayMonth').innerText = daysToBday === 0 ? "Today! 🎂" : `in ${daysToBday} days`;
 
-      // Show Result
       resultArea.classList.remove('hidden');
-      
-      // Smooth Scroll to result
       resultArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   });
 </script>
