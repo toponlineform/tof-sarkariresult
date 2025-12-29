@@ -3,15 +3,13 @@
 import MarketingPopup from '../components/MarketingPopup.astro';
 
 // ✅ IMPORT ADSENSE SETTINGS (Centralized Control)
-// ADSENSE_ID: Your Publisher ID
-// LOAD_SCRIPT: Master Switch for Auto/Vignette Ads
 import { ADSENSE_ID, LOAD_SCRIPT } from '../components/AdSlot.astro';
 
 const { 
   title, 
   description, 
   isPost = false,
-  image = "/og-default.jpg" // Default Social Image if none provided
+  image = "/og-default.jpg" // Default Social Image
 } = Astro.props;
 
 const siteUrl = "https://toponlineform.com";
@@ -31,16 +29,35 @@ else if (isPost && !title.toLowerCase().includes('form')) {
   seoTitle = `${title} 2026 Online Form | Eligibility, Last Date - Top Online Form`;
 } 
 else if (!isPost) {
-  // Tools & Categories
   seoTitle = title.includes("Top Online Form") ? title : `${title} - Top Online Form`;
 }
+
+// 🧠 BRAND SCHEMA (ORGANIZATION)
+// Ye schema Google ko batata hai ki ye website ek Brand hai.
+const organizationSchema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Top Online Form",
+  "url": siteUrl,
+  "logo": `${siteUrl}/logo.png`,
+  "sameAs": [
+    "https://facebook.com/toponlineform",
+    "https://twitter.com/toponlineform",
+    "https://instagram.com/toponlineform"
+  ],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer support",
+    "email": "support@toponlineform.com"
+  }
+});
 ---
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    {/* Optimized Viewport for Mobile Responsiveness */}
+    {/* Optimized Viewport for Mobile Responsiveness & Accessibility */}
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     
     <title>{seoTitle}</title>
@@ -61,16 +78,24 @@ else if (!isPost) {
     <meta property="og:description" content={seoDescription} />
     <meta property="og:image" content={new URL(image, siteUrl)} />
     <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonicalURL} />
+    <meta property="twitter:title" content={seoTitle} />
+    <meta property="twitter:description" content={seoDescription} />
+    <meta property="twitter:image" content={new URL(image, siteUrl)} />
 
-    {/* 💰 GOOGLE ADSENSE MAIN SCRIPT (Controlled by LOAD_SCRIPT) */}
-    {/* If LOAD_SCRIPT is false in AdSlot.astro, this won't load (No Vignette/Auto Ads) */}
+    {/* 🏆 BRAND SCHEMA INJECTION */}
+    <script type="application/ld+json" set:html={organizationSchema} />
+
+    {/* 💰 GOOGLE ADSENSE (Controlled by AdSlot Switch) */}
     {LOAD_SCRIPT && (
         <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_ID}`}
          crossorigin="anonymous"></script>
     )}
 
+    {/* Tailwind CSS */}
     <script is:inline src="https://cdn.tailwindcss.com"></script>
     
+    {/* Search Scripts */}
     <link href="/pagefind/pagefind-ui.css" rel="stylesheet">
     <script src="/pagefind/pagefind-ui.js" is:inline></script>
 
@@ -78,10 +103,10 @@ else if (!isPost) {
 
     <style>
         #searchOverlay.open { display: flex; }
-        /* Pagefind Tweaks to match theme */
+        /* Pagefind Tweaks */
         :root {
             --pagefind-ui-scale: 0.9;
-            --pagefind-ui-primary: #b91c1c; /* red-700 */
+            --pagefind-ui-primary: #b91c1c;
             --pagefind-ui-text: #1f2937;
             --pagefind-ui-background: #ffffff;
             --pagefind-ui-border: #e5e7eb;
@@ -102,19 +127,19 @@ else if (!isPost) {
             {/* Top Bar: Logo & Mobile Toggle */}
             <div class="flex justify-between items-center">
                 
-                {/* Logo */}
-                <a href="/" class="text-2xl md:text-3xl font-extrabold uppercase tracking-tighter hover:text-gray-200 transition">
+                {/* Logo - SEO Optimized with H1 hidden logic if needed, but anchor is fine here */}
+                <a href="/" class="text-2xl md:text-3xl font-extrabold uppercase tracking-tighter hover:text-gray-200 transition" title="Top Online Form Home">
                     TOP ONLINE FORM
                 </a>
 
-                {/* Mobile Controls (Search & Hamburger) */}
+                {/* Mobile Controls */}
                 <div class="flex items-center gap-4 md:hidden">
-                    <button id="mobileSearchToggle" class="hover:text-yellow-300 focus:outline-none">
+                    <button id="mobileSearchToggle" class="hover:text-yellow-300 focus:outline-none" aria-label="Search">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
                     </button>
-                    <button id="mobileMenuBtn" class="hover:text-yellow-300 focus:outline-none">
+                    <button id="mobileMenuBtn" class="hover:text-yellow-300 focus:outline-none" aria-label="Menu">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
                         </svg>
@@ -180,7 +205,7 @@ else if (!isPost) {
     {/* SEARCH OVERLAY */}
     <div id="searchOverlay" class="fixed inset-0 bg-black/80 z-[60] hidden justify-center items-start pt-10 px-4 backdrop-blur-sm transition-all">
         <div class="bg-white w-full max-w-2xl rounded-lg shadow-2xl relative p-6 max-h-[85vh] overflow-y-auto">
-            <button id="closeSearch" class="absolute top-2 right-2 text-gray-500 hover:text-red-600 bg-gray-100 rounded-full p-1">
+            <button id="closeSearch" class="absolute top-2 right-2 text-gray-500 hover:text-red-600 bg-gray-100 rounded-full p-1" aria-label="Close Search">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -199,7 +224,7 @@ else if (!isPost) {
     <footer class="bg-gray-900 text-white py-8 mt-auto border-t-4 border-red-700">
         <div class="max-w-7xl mx-auto px-4 text-center">
             <h2 class="text-xl font-bold mb-2">TopOnlineForm.com</h2>
-            <p class="text-gray-400 text-sm mb-4">India's Most Trusted Portal for Government Job Updates.</p>
+            <p class="text-gray-400 text-sm mb-4">India's No.1 Portal for Sarkari Result, Latest Govt Jobs, and Admit Cards.</p>
             <div class="flex justify-center flex-wrap gap-4 text-xs text-gray-500 mb-4">
                 <a href="/about" class="hover:text-white transition-colors">About Us</a>
                 <a href="/contact" class="hover:text-white transition-colors">Contact Us</a>
