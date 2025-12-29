@@ -1,13 +1,24 @@
 ---
 // src/components/AdSlot.astro
 
-// 🎛️ MASTER SWITCH (Yahan se ON/OFF karein)
-export const ENABLE_ADS = true; // <--- BAS ISKO 'false' KAR DO TO DISABLE ADS and 'true' KAR DO TO ENABLE ADS
+// =========================================================
+// 🎛️ CONTROL ROOM (Yahan se manage karein)
+// =========================================================
 
-// 1. MASTER ID
+// 1. ADSENSE ID
 export const ADSENSE_ID = "ca-pub-XXXXXXXXXXXXXXXX"; 
 
-// 2. SLOT IDs
+// 2. MAIN SCRIPT SWITCH (Vignette/Auto Ads ke liye)
+// Note: Agar ye 'false' hai, toh neeche wale Manual Ads bhi nahi chalenge (kyunki engine band hai).
+export const LOAD_SCRIPT = true; 
+
+// 3. MANUAL BLOCKS SWITCH (Page ke beech wale dabbe)
+// Agar aap chahte hain ki sirf Vignette aaye aur page clean rahe, toh isse 'false' karein.
+const ENABLE_MANUAL_ADS = true; 
+
+// =========================================================
+
+// 4. SLOT IDs
 const SLOT_IDS = {
     horizontal: "1234567890",
     vertical:   "0987654321",
@@ -16,8 +27,8 @@ const SLOT_IDS = {
 
 const { type = 'horizontal' } = Astro.props;
 
-// 🛑 AGAR ADS BAND HAIN, TOH KUCH MAT DIKHAO
-if (!ENABLE_ADS) {
+// 🛑 LOGIC: Agar Manual Ads band hain, toh component render mat karo.
+if (!ENABLE_MANUAL_ADS) {
     return null; 
 }
 
@@ -44,14 +55,14 @@ else if (type === 'square') {
 
 <div class={containerClass}>
     
-    {/* DEV MODE: Placeholder */}
+    {/* DEV MODE */}
     {import.meta.env.DEV ? (
         <div class="flex flex-col items-center justify-center text-gray-400 p-4 text-center w-full h-full bg-gray-100 border-2 border-dashed border-gray-300">
             <span class="text-xs font-bold uppercase tracking-widest text-gray-500">Ad ({type})</span>
             <span class="text-[10px] font-mono mt-1 text-blue-500">Auto Format</span>
         </div>
     ) : (
-        /* PROD MODE: Real Ad */
+        /* PROD MODE */
         <ins class="adsbygoogle"
              style={adStyle}
              data-ad-client={ADSENSE_ID}
@@ -61,6 +72,7 @@ else if (type === 'square') {
         ></ins>
     )}
 
+    {/* Push Script (Sirf tab chalega jab Manual Ads enabled honge) */}
     {!import.meta.env.DEV && (
         <script is:inline>
              (adsbygoogle = window.adsbygoogle || []).push({});
