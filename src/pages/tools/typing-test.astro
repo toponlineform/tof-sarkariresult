@@ -1,4 +1,5 @@
 ---
+// src/pages/tools/typing-test.astro
 import Layout from '../../layouts/Layout.astro';
 import AdSlot from '../../components/AdSlot.astro';
 
@@ -7,7 +8,7 @@ const title = "Free Online Typing Test | Practice & Check Speed (WPM) - Typing M
 const description = "Boost your typing speed with our Free Online Typing Test. Simulates TCS interface for SSC CGL, CHSL & Banking. Real-time WPM, Accuracy & Error check. Start now!";
 const keywords = "typing test, online typing test, typing master, typing speed test, wpm checker, ssc typing practice, tcs typing interface, english typing test";
 
-// 🧠 JSON-LD SCHEMA (Google ko batane ke liye ki ye ek Tool/App hai)
+// 🧠 JSON-LD SCHEMA
 const schemaMarkup = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
@@ -30,13 +31,13 @@ const schemaMarkup = JSON.stringify({
 
 <Layout title={title} description={description}>
   
-  {/* Inject Schema for Google SEO */}
+  {/* Inject Schema & Keywords */}
   <script type="application/ld+json" set:html={schemaMarkup} slot="head" />
   <meta name="keywords" content={keywords} slot="head" />
 
-  <div class="max-w-5xl mx-auto px-4 py-8">
+  <div class="max-w-6xl mx-auto px-4 py-8">
       
-      {/* HEADER WITH KEYWORDS */}
+      {/* HEADER */}
       <div class="text-center mb-8">
           <span class="bg-purple-100 text-purple-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Free Typing Speed Test</span>
           <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 mt-3 mb-4">
@@ -48,7 +49,7 @@ const schemaMarkup = JSON.stringify({
           </p>
       </div>
 
-      {/* 🟢 TOP ADVERTISEMENT */}
+      {/* 🟢 TOP AD */}
       <div class="mb-8">
         <AdSlot type="horizontal" />
       </div>
@@ -89,6 +90,7 @@ const schemaMarkup = JSON.stringify({
                           <option value="2" selected>2 Minutes (Standard)</option>
                           <option value="5">5 Minutes (Full Exam)</option>
                           <option value="10">10 Minutes (Endurance)</option>
+                          <option value="15">15 Minutes (SSC CGL)</option>
                       </select>
                   </div>
 
@@ -103,7 +105,7 @@ const schemaMarkup = JSON.stringify({
               <div class="p-4 md:p-6 bg-[#f0f9ff]">
                   
                   {/* Text to Type */}
-                  <div id="quoteDisplay" class="bg-white border-2 border-gray-300 p-4 rounded-lg mb-4 text-lg font-mono leading-relaxed h-40 overflow-hidden text-gray-500 select-none relative shadow-inner">
+                  <div id="quoteDisplay" class="bg-white border-2 border-gray-300 p-4 rounded-lg mb-4 text-lg font-mono leading-relaxed h-48 overflow-hidden text-gray-500 select-none relative shadow-inner">
                       {/* Text Injected Here */}
                   </div>
 
@@ -157,7 +159,7 @@ const schemaMarkup = JSON.stringify({
 
                   <div class="flex gap-4">
                     <button onclick="location.reload()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 rounded-xl transition">
-                       Exit
+                        Exit
                     </button>
                     <button id="retryBtn" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-xl shadow-lg transition transform hover:-translate-y-1">
                         Try Again ⟳
@@ -166,19 +168,19 @@ const schemaMarkup = JSON.stringify({
               </div>
           </div>
 
-          {/* 🟢 BOTTOM ADVERTISEMENT */}
+          {/* 🟢 BOTTOM ADVERTISEMENT (High Visibilty after test) */}
           <div class="mb-10">
             <AdSlot type="horizontal" />
           </div>
 
           {/* SEO OPTIMIZED CONTENT SECTION */}
           <article class="prose prose-purple max-w-none bg-white p-6 md:p-8 rounded-xl border border-gray-100 shadow-sm">
-              <h2 class="text-2xl font-bold text-gray-900">Why Use Infinity Typing Master for Online Typing Practice?</h2>
+              <h2 class="text-2xl font-bold text-gray-900">Why Use Infinity Typing Master?</h2>
               <p class="text-gray-700">
                   Welcome to the ultimate <strong>Online Typing Test</strong> platform. Whether you are preparing for government exams or just want to improve your keyboard skills, our tool offers a realistic environment to help you succeed. It is designed as a free alternative to paid software like <em>Typing Master</em> and <em>Sony Typing Tutor</em>.
               </p>
 
-              <h3 class="text-xl font-bold text-gray-800 mt-6">Key Features of Our Typing Speed Test</h3>
+              <h3 class="text-xl font-bold text-gray-800 mt-6">Key Features</h3>
               <ul class="list-disc pl-5 space-y-2 text-gray-700">
                   <li><strong>Real Exam Interface:</strong> We simulate the actual interface used by TCS iON for exams like SSC CGL, CHSL, MTS, and RRB NTPC.</li>
                   <li><strong>Accurate WPM Calculator:</strong> Unlike other tools, we calculate 'Net Speed' based on the SSC formula (5 keystrokes = 1 word).</li>
@@ -196,8 +198,8 @@ const schemaMarkup = JSON.stringify({
                   <p><strong>Step 3:</strong> Formula: <code class="bg-gray-200 px-1 rounded">Net Speed (WPM) = (Gross Words - Errors) / Time in Minutes</code></p>
               </div>
 
-              {/* FAQ Schema Content */}
-              <h3 class="text-xl font-bold text-gray-800 mt-8 mb-4">Frequently Asked Questions (FAQs)</h3>
+              {/* FAQs */}
+              <h3 class="text-xl font-bold text-gray-800 mt-8 mb-4">Frequently Asked Questions</h3>
               
               <div class="space-y-4">
                   <details class="group bg-gray-50 p-4 rounded-lg cursor-pointer">
@@ -230,6 +232,7 @@ const schemaMarkup = JSON.stringify({
 
   {/* 🧠 TYPING ENGINE LOGIC */}
   <script>
+      // @ts-nocheck
       // 10 LONG PASSAGES FOR SSC PRACTICE
       const TEST_DATA = [
           {
@@ -457,4 +460,5 @@ const schemaMarkup = JSON.stringify({
           }
       });
   </script>
+
 </Layout>
