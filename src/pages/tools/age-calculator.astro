@@ -1,12 +1,10 @@
 ---
+// src/pages/tools/age-calculator.astro
 import ToolLayout from '../../layouts/ToolLayout.astro';
 import AdSlot from '../../components/AdSlot.astro';
 
 // 🔒 FUTURE PROOF METADATA
-// Title me humne "Govt Job" nahi likha, taaki ye sabke liye ho.
 const title = "Age Calculator - Calculate Exact Age Online (Years, Months, Days)";
-
-// Description me humne "Govt Job" + "General" dono dala hai.
 const description = "Free Online Age Calculator by Date of Birth. Calculate exact age in years, months, and days. 100% Accurate for Govt Exams (SSC, UPSC) and general use.";
 ---
 
@@ -16,7 +14,7 @@ const description = "Free Online Age Calculator by Date of Birth. Calculate exac
   toolName="Age Calculator"
 >
   
-  {/* ⚡ FAQ SCHEMA (Google Rich Snippet ke liye) */}
+  {/* ⚡ FAQ SCHEMA */}
   <script type="application/ld+json" slot="head">
     {
       "@context": "https://schema.org",
@@ -39,23 +37,14 @@ const description = "Free Online Age Calculator by Date of Birth. Calculate exac
     }
   </script>
 
-  {/* 1. AD SLOT (Top position for earnings) */}
-  <div class="mb-6">
+  {/* 1. TOP AD SLOT (Above Input Form) */}
+  <div class="mb-8">
     <AdSlot type="horizontal" />
   </div>
 
   <div class="space-y-8">
-      {/* 2. UNIVERSAL HEADING (Future Proof) */}
-      <div class="text-center mb-6">
-        <h1 class="text-3xl md:text-5xl font-extrabold text-gray-800 mb-2">
-           <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800">Age Calculator</span>
-        </h1>
-        <p class="text-gray-500 text-lg">
-          Check your exact age for <span class="font-bold text-gray-700">Govt Job Eligibility</span>, Admission, or Personal use.
-        </p>
-      </div>
-
-      {/* 3. INPUT FORM (Clean & Fast) */}
+      
+      {/* 2. INPUT FORM (H1 hata diya hai, Layout handle karega) */}
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           
           {/* DOB Input */}
@@ -72,13 +61,13 @@ const description = "Free Online Age Calculator by Date of Birth. Calculate exac
           </div>
       </div>
 
-      {/* 4. ACTION BUTTON */}
+      {/* 3. ACTION BUTTON */}
       <button id="calcBtn" class="w-full bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-bold py-4 px-6 rounded-xl shadow-lg transform hover:-translate-y-1 transition-all text-xl flex justify-center items-center gap-2">
           Calculate My Age 🚀
       </button>
 
-      {/* 5. RESULT AREA (Initially Hidden) */}
-      <div id="resultArea" class="hidden animate-fade-in space-y-6">
+      {/* 4. RESULT AREA (Initially Hidden) */}
+      <div id="resultArea" class="hidden animate-fade-in space-y-8">
           
           {/* Main Card */}
           <div class="bg-gradient-to-br from-gray-900 to-gray-800 text-white rounded-2xl p-6 md:p-8 text-center shadow-2xl relative overflow-hidden ring-4 ring-blue-100">
@@ -135,23 +124,30 @@ const description = "Free Online Age Calculator by Date of Birth. Calculate exac
                   <p id="totalHours" class="text-pink-700 font-bold text-xl">0</p>
               </div>
           </div>
+
+          {/* 💰 RESULT AD SLOT (Shown automatically with result) */}
+          <div class="mt-8">
+            <span class="text-xs text-gray-400 block text-center mb-1 uppercase tracking-wider">Advertisement</span>
+            <AdSlot type="horizontal" />
+          </div>
+
       </div>
   </div>
 
-  {/* 6. SEO CONTENT (Mixed Strategy) */}
+  {/* 5. SEO CONTENT */}
   <div slot="content">
       <p class="lead text-lg text-gray-700 mb-4">
           The <strong>Infinity Age Calculator</strong> is a precision tool designed to calculate your chronological age based on your Date of Birth. It handles variable month lengths and leap years to provide the most accurate result possible.
       </p>
 
-      <h3 class="text-gray-800">Why use this Age Calculator?</h3>
+      <h3 class="text-gray-800 font-bold text-xl mb-2">Why use this Age Calculator?</h3>
       <ul class="list-disc pl-5 space-y-2 mb-6">
           <li><strong>Govt Exams Eligibility:</strong> Essential for aspirants of <strong class="text-blue-700">SSC CGL, CHSL, UPSC IAS, IBPS PO, and RRB</strong> to check if they meet the age criteria (e.g., 18-27 years) as on the cut-off date.</li>
           <li><strong>Retirement Planning:</strong> Calculate exactly when you will turn 60 or 65 years old.</li>
           <li><strong>Zero Error:</strong> Unlike manual calculation, our algorithm never makes a mistake with February 29th (Leap Year).</li>
       </ul>
 
-      <h3 class="text-gray-800">How to use?</h3>
+      <h3 class="text-gray-800 font-bold text-xl mb-2">How to use?</h3>
       <ol class="list-decimal pl-5 space-y-2">
           <li>Enter your <strong>Date of Birth</strong> in the first field.</li>
           <li>Enter the <strong>'Age as on'</strong> date (Default is Today). For exams, change this to the date mentioned in the notification.</li>
@@ -163,8 +159,8 @@ const description = "Free Online Age Calculator by Date of Birth. Calculate exac
 
 {/* 🧠 LOGIC (Robust & Fast) */}
 <script>
-  const dobInput = document.getElementById('dobInput') as HTMLInputElement;
-  const todayInput = document.getElementById('todayInput') as HTMLInputElement;
+  const dobInput = document.getElementById('dobInput');
+  const todayInput = document.getElementById('todayInput');
   const calcBtn = document.getElementById('calcBtn');
   const resultArea = document.getElementById('resultArea');
   
