@@ -1,50 +1,49 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import AdSlot from '../components/AdSlot.astro'; // ✅ Smart Ad Component
+import AdSlot from '../components/AdSlot.astro';
 import { allPosts } from '../data/index.js';
 
-// --- 🧠 SERVER SIDE LOGIC: FILTER ACTIVE JOBS ---
+// --- 🧠 SERVER SIDE LOGIC ---
+
+// 1. Helper Function: Date Parser (Code Repetition Bachane ke liye)
+const parseJobDate = (post) => {
+    const dateObj = post.importantDates?.find(d => 
+        d.label.toLowerCase().includes('last date') || 
+        d.label.toLowerCase().includes('closing date')
+    );
+    
+    if (!dateObj) return null;
+
+    // "25/12/2025 (5:00 PM)" -> "25/12/2025"
+    const cleanDate = dateObj.value.replace(/ \(.*\)/, '').trim();
+    const parts = cleanDate.split(/[/-]/);
+    
+    if (parts.length !== 3) return null;
+    
+    // Convert to Timestamp number for easy math
+    return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`).getTime();
+};
 
 const getActiveJobs = () => {
   const today = new Date();
-  today.setHours(0, 0, 0, 0); 
+  today.setHours(0, 0, 0, 0); // Aaj raat 12 baje tak valid rahega
+  const todayTimestamp = today.getTime();
 
-  // 1. Filter Logic
-  const active = allPosts.filter(post => {
-    
-    // ✅ CATEGORY FILTER (Sirf Jobs aur Admission)
-    if (post.category !== 'Latest Jobs' && post.category !== 'Admission') {
-        return false;
-    }
-
-    // Last Date Check
-    const lastDateObj = post.importantDates?.find(d => 
-      d.label.toLowerCase().includes('last date') || 
-      d.label.toLowerCase().includes('closing date')
-    );
-
-    if (!lastDateObj) return true;
-
-    const dateStr = lastDateObj.value.replace(/ \(.*\)/, '').trim(); 
-    const parts = dateStr.split(/[/-]/); 
-    
-    if (parts.length !== 3) return true; 
-
-    const jobDate = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
-    return jobDate >= today;
-  });
-
-  // 2. Sort Logic (Jiski last date paas hai wo upar)
-  active.sort((a, b) => {
-    const getDate = (p) => {
-       const dObj = p.importantDates?.find(d => d.label.toLowerCase().includes('last date'));
-       if(!dObj) return 9999999999999;
-       const pts = dObj.value.replace(/ \(.*\)/, '').trim().split(/[/-]/);
-       if (pts.length !== 3) return 9999999999999;
-       return new Date(`${pts[2]}-${pts[1]}-${pts[0]}`).getTime();
-    };
-    return getDate(a) - getDate(b);
-  });
+  // 2. Filter & Map (Ek saath data prepare karo)
+  const active = allPosts
+    .filter(post => {
+        // Sirf Jobs aur Admission chahiye
+        if (post.category !== 'Latest Jobs' && post.category !== 'Admission') return false;
+        
+        const jobTime = parseJobDate(post);
+        // Agar date nahi hai, toh Active maano (Safe side) OR Date future me honi chahiye
+        return jobTime === null || jobTime >= todayTimestamp;
+    })
+    .sort((a, b) => {
+        const dateA = parseJobDate(a) || 9999999999999; // Date nahi hai toh sabse neeche
+        const dateB = parseJobDate(b) || 9999999999999;
+        return dateA - dateB; // Jo pehle khatam ho raha hai wo upar
+    });
 
   return active;
 };
@@ -52,7 +51,7 @@ const getActiveJobs = () => {
 const activePosts = getActiveJobs();
 ---
 
-<Layout title="Active Jobs Tracker - Top Online Form" description="Track all live government job applications and deadlines.">
+<Layout title="Active Jobs Tracker 2025 - Live Application Forms" description="Track all live government job applications closing soon. Don't miss the last date for SSC, Railway, UPSC, and State Exams.">
 
   <div class="max-w-7xl mx-auto px-2 md:px-4 py-6 font-sans">
     
@@ -64,22 +63,21 @@ const activePosts = getActiveJobs();
         {/* 1. HEADER SECTION */}
         <div class="text-center mb-6 bg-white p-6 border border-gray-200 shadow-sm rounded-lg">
           <h1 class="text-2xl md:text-3xl font-extrabold text-[#1a56db] uppercase tracking-tight mb-2">
-            Current Active Applications
+             🔴 Current Active Applications
           </h1>
           <p class="text-xs md:text-sm text-gray-500 font-bold tracking-widest uppercase">
             Live Central & State Govt Recruitment Deadline Tracker
           </p>
         </div>
 
-        {/* 💰 AD SLOT 1: Title ke niche */}
         <AdSlot type="horizontal" />
 
         {/* 2. MAIN TABLE CONTAINER */}
-        <div class="bg-white border border-gray-300 shadow-sm rounded-t-lg overflow-hidden mb-6">
+        <div class="bg-white border border-gray-300 shadow-sm rounded-t-lg overflow-hidden mb-6 mt-6">
           
           {/* Blue Header Bar */}
-          <div class="bg-[#004B8D] text-white text-center font-bold py-3 text-sm md:text-base uppercase tracking-wide">
-            Active Govt Jobs & Admissions (Live)
+          <div class="bg-[#004B8D] text-white text-center font-bold py-3 text-sm md:text-base uppercase tracking-wide flex items-center justify-center gap-2">
+            <span class="animate-pulse">●</span> Live Jobs & Admissions
           </div>
 
           {/* Search Box */}
@@ -87,26 +85,27 @@ const activePosts = getActiveJobs();
             <input 
               type="text" 
               id="jobSearchInput" 
-              placeholder="Search within active jobs..." 
-              class="w-full p-2 text-sm border border-gray-300 rounded focus:outline-none focus:border-blue-500 shadow-inner"
+              placeholder="🔍 Search active jobs (e.g., Police, SSC)..." 
+              class="w-full p-2 text-sm border border-gray-300 rounded focus:outline-none focus:border-blue-500 shadow-inner bg-white"
             />
           </div>
 
           {/* Table Headers */}
-          <div class="grid grid-cols-[90px_1fr] md:grid-cols-[110px_1fr] bg-[#f1f1f1] border-b border-gray-300 text-xs md:text-sm font-bold text-gray-700 uppercase">
+          <div class="grid grid-cols-[90px_1fr] md:grid-cols-[120px_1fr] bg-[#f1f1f1] border-b border-gray-300 text-xs md:text-sm font-bold text-gray-700 uppercase">
             <div class="p-3 border-r border-gray-300 text-center flex items-center justify-center">Last Date</div>
             <div class="p-3 pl-4">Post Name / Details</div>
           </div>
 
-          {/* JOB LIST (Clean - No Ads Inside) */}
+          {/* JOB LIST */}
           <div id="jobListContainer">
             {activePosts.length > 0 ? (
               activePosts.map((post) => {
+                // Display Date nikalne ke liye simple logic
                 let lastDateVal = post.importantDates?.find(d => d.label.toLowerCase().includes('last date'))?.value || "Check Notice";
                 lastDateVal = lastDateVal.replace(/ \(.*\)/, '').trim();
 
                 return (
-                  <div class="job-row grid grid-cols-[90px_1fr] md:grid-cols-[110px_1fr] border-b border-gray-200 hover:bg-yellow-50 transition group">
+                  <div class="job-row grid grid-cols-[90px_1fr] md:grid-cols-[120px_1fr] border-b border-gray-200 hover:bg-yellow-50 transition group">
                     
                     {/* Date Column */}
                     <div class="p-3 border-r border-gray-200 text-center flex flex-col justify-center text-[11px] md:text-xs font-bold text-red-600 bg-gray-50 group-hover:bg-yellow-50">
@@ -137,32 +136,26 @@ const activePosts = getActiveJobs();
 
           {/* No Results Msg */}
           <div id="noResultsMsg" class="hidden text-center py-8 text-gray-400 text-xs uppercase tracking-widest">
-            No Matching Active Jobs Found.
+            No Matching Jobs Found.
           </div>
 
         </div>
 
-        {/* 💰 AD SLOT 2: Table ke niche */}
         <AdSlot type="horizontal" />
 
         {/* Footer Info Box */}
         <div class="bg-white border border-gray-200 p-6 rounded shadow-sm mt-6">
           <h3 class="text-gray-800 font-bold uppercase text-sm mb-4 border-b border-gray-200 pb-2">
-            Why Track Active Jobs?
+            Why use this Tracker?
           </h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs md:text-sm text-gray-600 leading-relaxed">
-            <p>
-              Missing a deadline can mean waiting for another year. Our <strong>Active Jobs Tracker</strong> filters through hundreds of notifications to show you exactly what is still open for application.
-            </p>
-            <p>
-              We monitor <strong>SSC, UPSC, Railway, Bank, and State Selection Boards</strong> daily to ensure you never miss an opportunity to apply for your dream government career.
-            </p>
-          </div>
+          <p class="text-xs md:text-sm text-gray-600 leading-relaxed">
+            Many students miss the deadline for <strong>Sarkari Naukri</strong> forms. This page automatically filters expired jobs and shows only what is <strong>Active</strong> right now. Sorted by 'Ending Soon' so you can prioritize your applications.
+          </p>
         </div>
 
       </main>
 
-      {/* --- RIGHT COLUMN: SIDEBAR (For Desktop) --- */}
+      {/* --- SIDEBAR (Same as yours) --- */}
       <aside class="hidden lg:block w-[300px] flex-shrink-0">
         <div class="sticky top-4 space-y-6">
             
@@ -192,7 +185,6 @@ const activePosts = getActiveJobs();
                 </div>
             </a>
 
-            {/* 💰 AD SLOT 3: SIDEBAR */}
             <AdSlot type="square" />
 
         </div>
@@ -201,7 +193,7 @@ const activePosts = getActiveJobs();
     </div>
   </div>
 
-  {/* 🔍 CLIENT SIDE SEARCH SCRIPT */}
+  {/* 🔍 CLIENT SIDE SEARCH SCRIPT (Same as before) */}
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const searchInput = document.getElementById('jobSearchInput');
