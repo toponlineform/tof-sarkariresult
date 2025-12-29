@@ -1,9 +1,11 @@
 ---
+// src/pages/tools/name-date-on-photo.astro
 import ToolLayout from '../../layouts/ToolLayout.astro';
 import AdSlot from '../../components/AdSlot.astro';
 
-const title = "Add Name and Date on Photo Online - For SSC & Govt Exams";
-const description = "Free Online Tool to write Name and Date of Photo (DOP) on passport size photos. 100% Compliant with SSC CGL, CHSL, MTS, and Railway formats.";
+// 🇮🇳 INDIA SPECIFIC SEO
+const title = "Add Name and Date on Photo Online - For SSC CGL, CHSL, GD & Railways";
+const description = "Free tool to write Name and Date of Photo (DOP) on passport size photos. Compliant with SSC, UPSC, and Railway exam photo requirements.";
 ---
 
 <ToolLayout 
@@ -12,130 +14,141 @@ const description = "Free Online Tool to write Name and Date of Photo (DOP) on p
   toolName="Name & Date Writer"
 >
 
-  {/* ⚡ FAQ SCHEMA (Targeting SSC Rejections) */}
+  {/* ⚡ FAQ SCHEMA (Targeting Rejection Queries) */}
   <script type="application/ld+json" slot="head">
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": [{
         "@type": "Question",
-        "name": "How to write date on photo for SSC application?",
+        "name": "How to add Date of Photo (DOP) for SSC CGL?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Upload your photo in our Infinity Name & Date tool. Enter your Name and the Date of Photo (DOP). The tool automatically adds a white strip at the bottom with clear black text as per SSC rules."
+          "text": "Simply upload your photo, enter your Name and the Photo Date. Our tool will automatically place a legible white strip with black text at the bottom, exactly as per SSC guidelines."
         }
       }, {
         "@type": "Question",
-        "name": "Is this format accepted by Railway/RRB?",
+        "name": "Is it mandatory to write Name and Date on SSC Photo?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes, this tool follows the standard format required by SSC, Railways (RRB), and other state exams where name and date printing is mandatory."
+          "text": "As per the latest SSC notifications, the photograph must have the Date of Photograph (DOP) clearly printed. Applications without this may be rejected."
         }
       }]
     }
   </script>
 
-  {/* 🟢 TOP AD */}
-  <div class="mb-6">
+  {/* 1. TOP AD SLOT */}
+  <div class="mb-8">
     <AdSlot type="horizontal" />
   </div>
 
-  <div class="space-y-8">
+  <div class="space-y-10">
       
-      <div class="flex flex-col lg:flex-row gap-8 items-start">
+      <div class="flex flex-col lg:flex-row gap-10 items-start">
           
           {/* LEFT: INPUTS & CONTROLS */}
-          <div class="w-full lg:w-1/2 space-y-6">
+          <div class="w-full lg:w-1/2 space-y-8">
               
               {/* Step 1: Upload */}
-              <div id="uploadBox" class="bg-blue-50 border-2 border-dashed border-blue-200 rounded-xl p-6 text-center hover:bg-blue-100 transition cursor-pointer relative" onclick="document.getElementById('fileInput').click()">
-                  <span class="text-4xl block mb-2">📸</span>
-                  <p class="font-bold text-blue-800">Click to Upload Passport Photo</p>
-                  <p class="text-xs text-blue-500 mt-1">Supports JPG, PNG (Max 5MB)</p>
+              <div id="uploadBox" class="bg-blue-50 border-2 border-dashed border-blue-200 rounded-2xl p-8 text-center hover:bg-blue-100 transition cursor-pointer relative group" onclick="document.getElementById('fileInput').click()">
+                  <div class="mb-3 transform group-hover:scale-110 transition duration-200">📸</div>
+                  <p class="font-bold text-blue-900 text-lg">Upload Passport Photo</p>
+                  <p class="text-sm text-blue-600 mt-1">JPG or PNG (Max 5MB)</p>
                   <input type="file" id="fileInput" accept="image/*" class="hidden">
               </div>
 
               {/* Step 2: Details Form */}
-              <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
-                  <div class="border-b pb-2 mb-2">
-                      <h3 class="font-bold text-gray-800 flex items-center gap-2">
-                          <span>✍️</span> Enter Details
+              <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm space-y-6">
+                  <div class="border-b border-gray-100 pb-2">
+                      <h3 class="font-bold text-gray-800 text-lg flex items-center gap-2">
+                          <span>✍️</span> Photo Details
                       </h3>
                   </div>
 
                   <div>
-                      <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Candidate Name</label>
-                      <input type="text" id="nameInput" placeholder="e.g. VIKRAM SINGH" class="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-0 outline-none uppercase font-bold text-gray-800 transition">
+                      <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Candidate Name</label>
+                      <input type="text" id="nameInput" placeholder="e.g., VIKRAM SINGH" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none uppercase font-bold text-gray-800 transition shadow-sm">
                   </div>
 
                   <div>
-                      <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Date of Photo (DOP)</label>
-                      <input type="date" id="dateInput" class="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-0 outline-none font-bold text-gray-800 transition">
+                      <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Date of Photo (DOP)</label>
+                      <input type="date" id="dateInput" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none font-bold text-gray-800 transition shadow-sm">
                   </div>
 
-                  <div class="flex items-center gap-3 bg-gray-50 p-3 rounded-lg border border-gray-100">
-                      <input type="checkbox" id="showDopPrefix" class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500" checked>
-                      <label for="showDopPrefix" class="text-sm font-medium text-gray-700 cursor-pointer select-none">Add "DOP:" prefix (Recommended)</label>
+                  <div class="flex items-center gap-3 bg-gray-50 p-4 rounded-xl border border-gray-200">
+                      <input type="checkbox" id="showDopPrefix" class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500 cursor-pointer" checked>
+                      <label for="showDopPrefix" class="text-sm font-bold text-gray-700 cursor-pointer select-none">Add "DOP:" Prefix (Recommended)</label>
                   </div>
               </div>
 
               {/* Download Button */}
-              <button id="downloadBtn" class="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition transform hover:-translate-y-1 text-lg flex justify-center items-center gap-2 opacity-50 cursor-not-allowed disabled:opacity-50">
-                  <span>⬇️</span> Download Photo
+              <button id="downloadBtn" class="w-full bg-gray-900 hover:bg-black text-white font-bold py-5 px-6 rounded-xl shadow-xl transition transform hover:-translate-y-1 text-xl flex justify-center items-center gap-3 opacity-50 cursor-not-allowed disabled:opacity-50">
+                  <span>Download Photo</span>
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
               </button>
           </div>
 
           {/* RIGHT: LIVE PREVIEW (Sticky) */}
-          <div class="w-full lg:w-1/2 flex flex-col items-center lg:sticky lg:top-24">
-              <div class="bg-gray-800 text-white text-xs font-bold px-3 py-1 rounded-full mb-4 shadow-md uppercase tracking-wide">Live Preview</div>
+          <div class="w-full lg:w-1/2 flex flex-col items-center lg:sticky lg:top-8">
+              <div class="bg-gray-800 text-white text-xs font-bold px-4 py-1.5 rounded-full mb-6 shadow-md uppercase tracking-wider">Live Preview</div>
               
               {/* Canvas Container */}
-              <div class="relative shadow-2xl border-[6px] border-white bg-gray-200 rounded-sm overflow-hidden w-full max-w-[350px] aspect-[3.5/4.5]">
+              <div class="relative shadow-2xl border-[8px] border-white bg-gray-100 rounded-sm overflow-hidden w-full max-w-[320px] aspect-[3.5/4.5]">
                   
                   {/* Placeholder State */}
-                  <div id="placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-gray-400 gap-3">
-                      <span class="text-5xl opacity-50">👤</span>
-                      <span class="text-sm font-medium">Your photo will appear here</span>
+                  <div id="placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-gray-400 gap-4">
+                      <span class="text-6xl opacity-30">👤</span>
+                      <span class="text-sm font-bold opacity-60">Preview will appear here</span>
                   </div>
                   
                   {/* The Real Canvas */}
                   <canvas id="photoCanvas" class="hidden w-full h-full object-contain"></canvas>
               </div>
 
-              <div class="mt-6 bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded text-sm text-yellow-800 max-w-[350px]">
-                  <strong>Note:</strong> The white strip covers exactly <strong>15-20%</strong> of the bottom area, ensuring your face remains clearly visible as per SSC guidelines.
+              <div class="mt-8 bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg text-sm text-yellow-800 max-w-[320px] shadow-sm">
+                  <strong class="block mb-1">📢 Important Note:</strong>
+                  The white strip covers exactly <strong>15-20%</strong> of the bottom area to ensure your face remains clearly visible, as per strict SSC rejection criteria.
               </div>
           </div>
 
       </div>
   </div>
 
+  {/* 2. MIDDLE AD SLOT */}
+  <div class="mb-8 mt-12">
+    <AdSlot type="horizontal" />
+  </div>
+
   {/* SEO CONTENT */}
   <div slot="content">
-      <p class="lead text-lg text-gray-700 mb-6">
-          Submitting an application for <strong>SSC CGL, CHSL, MTS, or Railways (RRB NTPC)</strong>? Don't risk rejection! Strict rules require the <strong>Date of Photograph (DOP)</strong> to be clearly printed on the photo.
+      <h3 class="text-xl font-bold text-gray-800 mb-3">Why are SSC Photos Rejected?</h3>
+      <p class="text-gray-600 mb-6">
+          Every year, thousands of SSC CGL, CHSL, and MTS applications are rejected due to <strong>"Date of Photograph not printed"</strong> or blurred text. Our tool fixes this instantly.
       </p>
 
-      
-
-      <h3>Why use this Name & Date Tool?</h3>
-      <ul class="list-disc pl-5 space-y-2 text-gray-700 mb-6">
-          <li><strong>Automatic Formatting:</strong> You don't need Photoshop. Our tool automatically creates the white strip and centers the text.</li>
-          <li><strong>Standard Font:</strong> We use the bold, legible font style preferred by examination authorities.</li>
-          <li><strong>High Quality:</strong> The downloaded image retains the original clarity of your photo.</li>
-      </ul>
-
-      <h3>Instructions for SSC Candidates:</h3>
-      <ol class="list-decimal pl-5 space-y-2 text-gray-700">
-          <li>The photograph should not be more than <strong>3 months old</strong> from the date of notification.</li>
-          <li>The date printed should match the date you enter in the application form.</li>
-          <li>Ensure the name is spelled exactly as it appears in your Matriculation certificate.</li>
-      </ol>
+      <div class="grid md:grid-cols-2 gap-6 mb-8">
+          <div class="bg-green-50 p-5 rounded-xl border border-green-100">
+             <h4 class="font-bold text-green-900 mb-2">✅ Accepted Format</h4>
+             <ul class="text-sm text-green-800 space-y-1 list-disc pl-4">
+                 <li>Clear White Strip at Bottom</li>
+                 <li>Legible Black Text (Arial Bold)</li>
+                 <li>Date clearly mentioned (DD-MM-YYYY)</li>
+             </ul>
+          </div>
+          <div class="bg-red-50 p-5 rounded-xl border border-red-100">
+             <h4 class="font-bold text-red-900 mb-2">❌ Rejected Format</h4>
+             <ul class="text-sm text-red-800 space-y-1 list-disc pl-4">
+                 <li>Date written with pen</li>
+                 <li>Text covering the face</li>
+                 <li>Blurred or too small text</li>
+             </ul>
+          </div>
+      </div>
   </div>
 
 </ToolLayout>
 
-{/* 🧠 LOGIC */}
+{/* 🧠 LOGIC (Canvas) */}
 <script>
   // @ts-nocheck
   const fileInput = document.getElementById('fileInput');
@@ -162,18 +175,15 @@ const description = "Free Online Tool to write Name and Date of Photo (DOP) on p
           reader.onload = (event) => {
               originalImage = new Image();
               originalImage.onload = () => {
-                  // Hide placeholder, show canvas
                   placeholder.classList.add('hidden');
                   photoCanvas.classList.remove('hidden');
                   
-                  // Enable button
                   downloadBtn.disabled = false;
                   downloadBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                   
-                  // Update UI Style for Upload Box (Visual Feedback)
                   uploadBox.classList.remove('bg-blue-50', 'border-dashed');
                   uploadBox.classList.add('bg-green-50', 'border-solid', 'border-green-300');
-                  uploadBox.querySelector('p').innerText = "✅ Image Loaded Successfully";
+                  uploadBox.querySelector('p').innerText = "✅ Image Loaded";
 
                   updateCanvas();
               };
@@ -188,18 +198,17 @@ const description = "Free Online Tool to write Name and Date of Photo (DOP) on p
   dateInput?.addEventListener('input', updateCanvas);
   showDopPrefix?.addEventListener('change', updateCanvas);
 
-  // 3. Draw Logic (Optimized for Clarity)
+  // 3. Draw Logic
   function updateCanvas() {
       if (!originalImage) return;
 
       const w = originalImage.width;
       const h = originalImage.height;
       
-      // Set canvas resolution to match image
       photoCanvas.width = w;
       photoCanvas.height = h;
 
-      // Draw Original Image
+      // Draw Image
       ctx.drawImage(originalImage, 0, 0);
 
       // Inputs
@@ -215,34 +224,30 @@ const description = "Free Online Tool to write Name and Date of Photo (DOP) on p
           }
       }
 
-      // --- DRAW WHITE STRIP ---
-      // 18% of height covers enough area without hiding face
+      // Draw Strip (18% of height)
       const stripHeight = h * 0.18; 
       const stripY = h - stripHeight;
 
       ctx.fillStyle = "#ffffff";
       ctx.fillRect(0, stripY, w, stripHeight);
 
-      // --- DRAW TEXT ---
+      // Draw Text
       ctx.fillStyle = "#000000";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
 
-      // Dynamic Font Sizing
-      // Adjust font size based on width so it fits perfectly
-      const fontSize = w * 0.085; // 8.5% of width
-      ctx.font = `900 ${fontSize}px Arial`; // 900 weight = Extra Bold
+      // Font Sizing logic
+      const fontSize = w * 0.085; 
+      ctx.font = `900 ${fontSize}px Arial`; 
 
       const centerX = w / 2;
       
       if (nameText && dateText) {
-          // Two Lines
           const line1Y = stripY + (stripHeight * 0.35);
           const line2Y = stripY + (stripHeight * 0.75);
           ctx.fillText(nameText, centerX, line1Y);
           ctx.fillText(dateText, centerX, line2Y);
       } else if (nameText || dateText) {
-          // Single Line (Centered)
           const text = nameText || dateText;
           const centerY = stripY + (stripHeight / 2);
           ctx.fillText(text, centerX, centerY);
@@ -254,7 +259,7 @@ const description = "Free Online Tool to write Name and Date of Photo (DOP) on p
       if (!originalImage) return;
       const link = document.createElement('a');
       link.download = `SSC-Photo-${Date.now()}.jpg`;
-      link.href = photoCanvas.toDataURL('image/jpeg', 1.0); // High Quality
+      link.href = photoCanvas.toDataURL('image/jpeg', 1.0);
       link.click();
   });
 </script>
