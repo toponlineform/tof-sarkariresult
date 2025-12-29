@@ -3,8 +3,9 @@
 import ToolLayout from '../../layouts/ToolLayout.astro';
 import AdSlot from '../../components/AdSlot.astro';
 
-const title = "CGPA to Percentage Calculator - Convert Grades for CBSE & University";
-const description = "Instantly convert CGPA to Percentage for CBSE, Mumbai University, KTU, VTU & Anna University. Best tool for filling SSC, UPSC & Placement forms.";
+// 🌍 GLOBAL METADATA (Universal Appeal)
+const title = "CGPA to Percentage Calculator - Convert Grades to % (10.0 Scale)";
+const description = "Free CGPA to Percentage Converter. Instantly convert 10.0 Scale CGPA, CBSE grades, and University marks to percentage. Accurate for College Admissions & Job Applications.";
 ---
 
 <ToolLayout 
@@ -13,24 +14,24 @@ const description = "Instantly convert CGPA to Percentage for CBSE, Mumbai Unive
   toolName="CGPA Calculator"
 >
 
-  {/* ⚡ FAQ SCHEMA */}
+  {/* ⚡ GLOBAL FAQ SCHEMA */}
   <script type="application/ld+json" slot="head">
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": [{
         "@type": "Question",
-        "name": "How to convert CGPA to Percentage for CBSE?",
+        "name": "How do I convert my CGPA to Percentage?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "For CBSE, the standard formula is Percentage = CGPA × 9.5. For example, if your CGPA is 8.0, your percentage is 76%."
+          "text": "The most common global formula for a 10.0 scale is multiplying your CGPA by 10 (e.g., 8.5 CGPA = 85%). However, some educational boards like CBSE use a 9.5 multiplier."
         }
       }, {
         "@type": "Question",
-        "name": "What is the CGPA formula for Mumbai University?",
+        "name": "What is the difference between 9.5 and 10 scale?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "For Mumbai University (Rev 2016 onwards), the formula is Percentage = (7.1 × CGPA) + 11. If CGPA is less than 7, the formula differs slightly."
+          "text": "The 10.0 multiplier is a simple percentage calculation used internationally. The 9.5 multiplier is a specific statistical adjustment used primarily by Indian boards (CBSE) to equate grades with average performance."
         }
       }]
     }
@@ -46,107 +47,135 @@ const description = "Instantly convert CGPA to Percentage for CBSE, Mumbai Unive
       
       {/* TABS */}
       <div class="flex border-b border-gray-200 bg-gray-50">
-          <button id="tabToPercent" class="flex-1 py-4 text-sm font-bold text-purple-700 bg-white border-b-2 border-purple-600 focus:outline-none transition-colors">
+          <button id="tabToPercent" class="flex-1 py-4 text-sm md:text-base font-bold text-purple-700 bg-white border-b-2 border-purple-600 focus:outline-none transition-colors">
               CGPA to Percentage
           </button>
-          <button id="tabToCgpa" class="flex-1 py-4 text-sm font-bold text-gray-500 hover:text-purple-600 focus:outline-none transition-colors">
+          <button id="tabToCgpa" class="flex-1 py-4 text-sm md:text-base font-bold text-gray-500 hover:text-purple-600 focus:outline-none transition-colors">
               Percentage to CGPA
           </button>
       </div>
 
-      <div class="p-6 md:p-8 flex flex-col md:flex-row gap-8 items-center">
+      <div class="p-6 md:p-10 flex flex-col md:flex-row gap-10 items-center">
           
           {/* LEFT: INPUTS */}
-          <div class="w-full md:w-1/2 space-y-6">
+          <div class="w-full md:w-1/2 space-y-8">
               
-              {/* Formula Selector */}
+              {/* Scale Selector (Renamed for Global Context) */}
               <div class="transition-opacity duration-200">
-                  <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Select Board / University</label>
-                  <select id="formulaSelect" class="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 font-medium focus:ring-2 focus:ring-purple-500 outline-none cursor-pointer">
-                      <option value="9.5">CBSE / Standard (x 9.5)</option>
-                      <option value="10">Simple Scale (x 10)</option>
-                      <option value="eng">Engineering (VTU/Anna) [-0.75 x 10]</option>
-                      <option value="mumbai">Mumbai University [7.1x + 11]</option>
-                      <option value="ktu">KTU Kerala [-0.5 x 10]</option>
-                  </select>
+                  <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Select Conversion Scale</label>
+                  <div class="relative">
+                    <select id="formulaSelect" class="w-full p-4 border border-gray-300 rounded-xl bg-gray-50 font-medium focus:ring-2 focus:ring-purple-500 outline-none cursor-pointer appearance-none text-gray-700">
+                        <option value="10">Global Standard (10.0 Scale × 10)</option>
+                        <option value="9.5">CBSE / India Standard (× 9.5)</option>
+                        <option value="eng">Technical / Engineering (VTU) [-0.75]</option>
+                        <option value="mumbai">Mumbai University [7.1x + 11]</option>
+                        <option value="ktu">KTU Kerala [-0.5]</option>
+                    </select>
+                    <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-gray-500">▼</div>
+                  </div>
               </div>
 
               {/* Input Field */}
               <div>
-                  <label class="block text-sm font-bold text-gray-700 mb-2" id="inputLabel">Enter CGPA (e.g. 9.2)</label>
+                  <label class="block text-sm font-bold text-gray-700 mb-2" id="inputLabel">Enter CGPA (e.g., 9.2)</label>
                   <div class="relative">
-                    <input type="number" id="inputVal" placeholder="0.00" step="0.01" min="0" max="100" class="w-full p-4 text-2xl font-mono border border-gray-300 rounded-xl focus:ring-4 focus:ring-purple-100 outline-none text-purple-700 font-bold bg-white shadow-inner">
+                    <input type="number" id="inputVal" placeholder="0.00" step="0.01" min="0" max="100" class="w-full p-5 text-3xl font-mono border border-gray-300 rounded-xl focus:ring-4 focus:ring-purple-100 focus:border-purple-500 outline-none text-purple-800 font-bold bg-white shadow-inner transition-all">
                   </div>
               </div>
 
-              <button id="calcBtn" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition transform hover:-translate-y-1 text-lg flex justify-center items-center gap-2">
-                  Convert Now ⚡
+              <button id="calcBtn" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition transform hover:-translate-y-1 text-lg flex justify-center items-center gap-2">
+                  <span>Convert Grades</span>
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
               </button>
 
           </div>
 
           {/* RIGHT: RESULT DISPLAY */}
           <div class="w-full md:w-1/2 flex justify-center">
-              <div class="relative w-64 h-64 flex flex-col items-center justify-center bg-gray-50 rounded-full border-8 border-gray-100 shadow-inner group">
+              <div class="relative w-72 h-72 flex flex-col items-center justify-center bg-gray-50 rounded-full border-[10px] border-white shadow-2xl group">
                   
-                  {/* Decorative Ring */}
-                  <div class="absolute inset-0 rounded-full border-4 border-dashed border-purple-200 opacity-50 animate-spin-slow"></div>
+                  {/* Animated Ring */}
+                  <div class="absolute inset-0 rounded-full border-[6px] border-dashed border-purple-200 opacity-60 animate-spin-slow"></div>
 
                   <div class="text-center z-10 relative">
-                      <span class="block text-gray-400 text-xs font-bold uppercase tracking-widest mb-1" id="resultLabel">Percentage</span>
-                      <h2 id="resultVal" class="text-5xl md:text-6xl font-extrabold text-gray-800 transition-all transform group-hover:scale-110">0%</h2>
-                      <p id="gradeVal" class="text-green-600 font-bold mt-2 text-sm bg-green-50 px-3 py-1 rounded-full">-</p>
+                      <span class="block text-gray-400 text-xs font-bold uppercase tracking-widest mb-2" id="resultLabel">Percentage</span>
+                      <h2 id="resultVal" class="text-6xl md:text-7xl font-black text-gray-800 tracking-tight transition-all transform group-hover:scale-110">0%</h2>
+                      <div id="gradeBadge" class="mt-4 inline-block bg-green-100 text-green-700 font-bold text-sm px-4 py-1.5 rounded-full opacity-0 transition-opacity">
+                         Excellent
+                      </div>
                   </div>
               </div>
           </div>
 
       </div>
 
-      {/* Quick Table for SEO */}
-      <div class="bg-purple-50 p-4 border-t border-purple-100">
-          <h4 class="text-xs font-bold text-purple-900 mb-3 uppercase tracking-wide text-center">Quick Reference (CBSE 9.5 Scale)</h4>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm text-center">
-              <div class="bg-white p-2 rounded shadow-sm border border-purple-100"><span class="font-bold text-gray-600">10 CGPA</span> = 95%</div>
-              <div class="bg-white p-2 rounded shadow-sm border border-purple-100"><span class="font-bold text-gray-600">9 CGPA</span> = 85.5%</div>
-              <div class="bg-white p-2 rounded shadow-sm border border-purple-100"><span class="font-bold text-gray-600">8 CGPA</span> = 76%</div>
-              <div class="bg-white p-2 rounded shadow-sm border border-purple-100"><span class="font-bold text-gray-600">7 CGPA</span> = 66.5%</div>
+      {/* Quick Reference Table (SEO Rich) */}
+      <div class="bg-gray-50 p-6 border-t border-gray-200">
+          <h4 class="text-xs font-bold text-gray-500 mb-4 uppercase tracking-wide text-center">Conversion Cheat Sheet (10.0 Scale)</h4>
+          <div class="grid grid-cols-2 md:grid-cols-5 gap-3 text-sm text-center font-mono">
+              <div class="bg-white p-3 rounded-lg shadow-sm border border-gray-200">10.0 = 95%</div>
+              <div class="bg-white p-3 rounded-lg shadow-sm border border-gray-200">9.5 = 90.25%</div>
+              <div class="bg-white p-3 rounded-lg shadow-sm border border-gray-200">9.0 = 85.5%</div>
+              <div class="bg-white p-3 rounded-lg shadow-sm border border-gray-200">8.0 = 76%</div>
+              <div class="bg-white p-3 rounded-lg shadow-sm border border-gray-200">7.0 = 66.5%</div>
           </div>
       </div>
 
   </div>
 
-  {/* 2. MIDDLE AD SLOT (High Visibility after Calculation) */}
+  {/* 2. MIDDLE AD SLOT */}
   <div class="mb-8">
      <AdSlot type="horizontal" />
   </div>
 
-  {/* SEO CONTENT AREA */}
+  {/* SEO CONTENT AREA (Hybrid: Global + Local) */}
   <div slot="content">
-      <p class="lead text-lg text-gray-700 mb-4">
-          Most government job applications (like <strong class="text-purple-700">SSC CGL, CHSL, UPSC, Railways</strong>) and college admissions require you to enter your marks in <strong>Percentage (%)</strong> format. If your marksheet shows grades in CGPA or SGPA, you must convert them accurately.
+      
+      {/* SECTION 1: GLOBAL CONTEXT */}
+      <h3 class="text-xl font-bold text-gray-800 mb-3">Understanding CGPA to Percentage Conversion</h3>
+      <p class="text-gray-600 mb-6 leading-relaxed">
+          The Cumulative Grade Point Average (CGPA) is a widely used grading system in education globally. However, many institutions, employers, and visa applications require marks in <strong>Percentage (%)</strong>. Our tool provides a precise conversion based on your specific university or board standards.
       </p>
 
-      <h3 class="text-xl font-bold text-gray-800 mb-2">Why is this converter important?</h3>
-      <ul class="list-disc pl-5 space-y-2 mb-6">
-          <li><strong>Accuracy:</strong> Manual calculation often leads to errors like 9.5 vs 10 multiplication.</li>
-          <li><strong>University Support:</strong> Different universities (Mumbai, VTU, KTU) use different formulas. We support them all.</li>
-          <li><strong>Govt Job Ready:</strong> Avoid rejection in document verification by entering the exact decimal percentage.</li>
-      </ul>
+      
 
-      <h3 class="text-xl font-bold text-gray-800 mb-2">Popular Conversion Formulas</h3>
-      <div class="overflow-x-auto shadow-sm rounded-lg border border-gray-200">
+      <div class="grid md:grid-cols-2 gap-8 mb-8">
+          <div>
+              <h4 class="font-bold text-gray-800 mb-2">🌍 Universal 10.0 Scale</h4>
+              <p class="text-sm text-gray-600 mb-4">Used by many international universities. The logic is simple:</p>
+              <div class="bg-purple-50 p-3 rounded border border-purple-100 font-mono text-sm text-purple-700">
+                  Percentage = CGPA × 10
+              </div>
+          </div>
+          <div>
+              <h4 class="font-bold text-gray-800 mb-2">🇮🇳 CBSE / India Format</h4>
+              <p class="text-sm text-gray-600 mb-4">Standard for Indian Govt Exams & CBSE Board:</p>
+              <div class="bg-blue-50 p-3 rounded border border-blue-100 font-mono text-sm text-blue-700">
+                  Percentage = CGPA × 9.5
+              </div>
+          </div>
+      </div>
+
+      {/* SECTION 2: EXAM SPECIFIC TABLE */}
+      <h3 class="text-lg font-bold text-gray-800 mb-3">Why convert for Govt Exams?</h3>
+      <p class="text-gray-600 mb-4 text-sm">
+          If you are applying for <strong class="text-purple-700">SSC CGL, UPSC, or Study Abroad</strong>, entering the wrong percentage can lead to application rejection.
+      </p>
+      
+      <div class="overflow-x-auto border border-gray-200 rounded-lg shadow-sm mb-6">
         <table class="min-w-full text-sm text-left">
-          <thead class="bg-gray-100 text-gray-700 font-bold uppercase text-xs">
+          <thead class="bg-gray-50 text-gray-700 font-bold uppercase text-xs">
             <tr>
-              <th class="p-3">Board / University</th>
-              <th class="p-3">Formula</th>
+              <th class="p-4 border-b">Institution / Board</th>
+              <th class="p-4 border-b">Multiplier</th>
+              <th class="p-4 border-b">Example (8.0 CGPA)</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-200 bg-white">
-            <tr><td class="p-3 font-medium">CBSE / SSC</td><td class="p-3 text-purple-600 font-mono">CGPA × 9.5</td></tr>
-            <tr><td class="p-3 font-medium">Mumbai Univ (Rev 2016)</td><td class="p-3 text-purple-600 font-mono">(7.1 × CGPA) + 11</td></tr>
-            <tr><td class="p-3 font-medium">VTU / Anna Univ</td><td class="p-3 text-purple-600 font-mono">(CGPA - 0.75) × 10</td></tr>
-            <tr><td class="p-3 font-medium">KTU (Kerala)</td><td class="p-3 text-purple-600 font-mono">(CGPA - 0.5) × 10</td></tr>
+          <tbody class="divide-y divide-gray-100 bg-white">
+            <tr><td class="p-4 font-medium">Global Standard</td><td class="p-4 text-gray-500">× 10</td><td class="p-4 font-bold text-purple-600">80.00%</td></tr>
+            <tr><td class="p-4 font-medium">CBSE (India)</td><td class="p-4 text-gray-500">× 9.5</td><td class="p-4 font-bold text-purple-600">76.00%</td></tr>
+            <tr><td class="p-4 font-medium">KTU (Kerala)</td><td class="p-4 text-gray-500">(x - 0.5) × 10</td><td class="p-4 font-bold text-purple-600">75.00%</td></tr>
+            <tr><td class="p-4 font-medium">Mumbai Univ</td><td class="p-4 text-gray-500">(7.1 × x) + 11</td><td class="p-4 font-bold text-purple-600">67.80%</td></tr>
           </tbody>
         </table>
       </div>
@@ -164,33 +193,33 @@ const description = "Instantly convert CGPA to Percentage for CBSE, Mumbai Unive
   const calcBtn = document.getElementById('calcBtn');
   const resultVal = document.getElementById('resultVal');
   const resultLabel = document.getElementById('resultLabel');
-  const gradeVal = document.getElementById('gradeVal');
+  const gradeBadge = document.getElementById('gradeBadge');
 
-  let mode = 'toPercent'; // 'toPercent' or 'toCgpa'
+  let mode = 'toPercent'; 
 
   // 1. Tab Switching Logic
   function setMode(newMode) {
       mode = newMode;
       inputVal.value = '';
       resultVal.innerText = mode === 'toPercent' ? '0%' : '0';
-      gradeVal.innerText = '-';
+      gradeBadge.style.opacity = '0';
 
       if (mode === 'toPercent') {
-          // UI Style
-          tabToPercent.className = "flex-1 py-4 text-sm font-bold text-purple-700 bg-white border-b-2 border-purple-600 focus:outline-none transition-colors cursor-pointer";
-          tabToCgpa.className = "flex-1 py-4 text-sm font-bold text-gray-500 hover:text-purple-600 focus:outline-none transition-colors cursor-pointer";
+          // Tabs UI
+          tabToPercent.className = "flex-1 py-4 text-sm md:text-base font-bold text-purple-700 bg-white border-b-2 border-purple-600 focus:outline-none transition-colors cursor-pointer";
+          tabToCgpa.className = "flex-1 py-4 text-sm md:text-base font-bold text-gray-500 hover:text-purple-600 focus:outline-none transition-colors cursor-pointer";
           
-          inputLabel.innerText = "Enter CGPA (e.g. 9.4)";
+          inputLabel.innerText = "Enter CGPA (e.g., 9.4)";
           resultLabel.innerText = "Percentage";
           formulaSelect.disabled = false;
           formulaSelect.parentElement.classList.remove('opacity-50', 'pointer-events-none');
           inputVal.placeholder = "0.00";
       } else {
-          // UI Style
-          tabToCgpa.className = "flex-1 py-4 text-sm font-bold text-purple-700 bg-white border-b-2 border-purple-600 focus:outline-none transition-colors cursor-pointer";
-          tabToPercent.className = "flex-1 py-4 text-sm font-bold text-gray-500 hover:text-purple-600 focus:outline-none transition-colors cursor-pointer";
+          // Tabs UI
+          tabToCgpa.className = "flex-1 py-4 text-sm md:text-base font-bold text-purple-700 bg-white border-b-2 border-purple-600 focus:outline-none transition-colors cursor-pointer";
+          tabToPercent.className = "flex-1 py-4 text-sm md:text-base font-bold text-gray-500 hover:text-purple-600 focus:outline-none transition-colors cursor-pointer";
           
-          inputLabel.innerText = "Enter Percentage (e.g. 85%)";
+          inputLabel.innerText = "Enter Percentage (e.g., 85)";
           resultLabel.innerText = "CGPA";
           formulaSelect.disabled = true; 
           formulaSelect.parentElement.classList.add('opacity-50', 'pointer-events-none');
@@ -206,18 +235,20 @@ const description = "Instantly convert CGPA to Percentage for CBSE, Mumbai Unive
       let val = parseFloat(inputVal.value);
       if (isNaN(val)) {
         resultVal.innerText = mode === 'toPercent' ? '0%' : '0';
+        gradeBadge.style.opacity = '0';
         return;
       }
 
       let res = 0;
       let grade = "";
+      let colorClass = "bg-green-100 text-green-700";
 
       if (mode === 'toPercent') {
           // CGPA -> %
           const formula = formulaSelect.value;
           
-          if (formula === '9.5') res = val * 9.5;
-          else if (formula === '10') res = val * 10;
+          if (formula === '10') res = val * 10;
+          else if (formula === '9.5') res = val * 9.5;
           else if (formula === 'eng') res = (val - 0.75) * 10;
           else if (formula === 'mumbai') {
                 if(val >= 7) res = (7.1 * val) + 11;
@@ -225,31 +256,32 @@ const description = "Instantly convert CGPA to Percentage for CBSE, Mumbai Unive
           }
           else if (formula === 'ktu') res = (val - 0.5) * 10; 
 
-          if (res > 100) res = 100; // Cap at 100
+          if (res > 100) res = 100;
           resultVal.innerText = res.toFixed(2) + '%';
           
+          // Grading Logic
+          if(res >= 90) { grade = "Outstanding! 🌟"; colorClass = "bg-purple-100 text-purple-700"; }
+          else if(res >= 80) { grade = "Excellent Work! 👏"; colorClass = "bg-blue-100 text-blue-700"; }
+          else if(res >= 60) { grade = "First Class 👍"; colorClass = "bg-green-100 text-green-700"; }
+          else { grade = "Pass"; colorClass = "bg-gray-100 text-gray-700"; }
+
       } else {
           // % -> CGPA (Standard Reverse 9.5)
           res = val / 9.5;
           if (res > 10) res = 10;
           resultVal.innerText = res.toFixed(2);
+          grade = "Equivalent CGPA";
       }
 
-      // Grading Text
-      if(mode === 'toPercent') {
-          if(res >= 90) grade = "Outstanding! 🌟";
-          else if(res >= 80) grade = "Excellent Work! 👏";
-          else if(res >= 60) grade = "First Class 👍";
-          else grade = "Keep it up!";
-      } else {
-         grade = "Calculated CGPA";
-      }
-      gradeVal.innerText = grade;
+      // Update Badge
+      gradeBadge.innerText = grade;
+      gradeBadge.className = `mt-4 inline-block font-bold text-sm px-4 py-1.5 rounded-full transition-opacity ${colorClass}`;
+      gradeBadge.style.opacity = '1';
   }
 
   calcBtn.addEventListener('click', calculate);
   
-  // Auto Calc on Input
+  // Auto Calc
   inputVal.addEventListener('input', calculate);
   formulaSelect.addEventListener('change', calculate);
 
