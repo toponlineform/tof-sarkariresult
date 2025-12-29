@@ -1,42 +1,42 @@
 ---
 // src/components/AdSlot.astro
 
+// 🎛️ MASTER SWITCH (Yahan se ON/OFF karein)
+export const ENABLE_ADS = true; // <--- BAS ISKO 'false' KAR DO TO DISABLE ADS and 'true' KAR DO TO ENABLE ADS
+
 // 1. MASTER ID
 export const ADSENSE_ID = "ca-pub-XXXXXXXXXXXXXXXX"; 
 
-// 2. SLOT IDs (AdSense Dashboard se "Display Ad Unit" -> "Responsive" banayein)
-// Tip: Aap chahein toh teeno ke liye SAME ID use kar sakte hain agar units Responsive hain.
-// Lekin tracking ke liye alag rakhna behtar hai.
+// 2. SLOT IDs
 const SLOT_IDS = {
-    horizontal: "1234567890", // Top/Bottom/Content ke liye
-    vertical:   "0987654321", // Sidebar ke liye
-    square:     "1122334455", // Specific chote areas ke liye
+    horizontal: "1234567890",
+    vertical:   "0987654321",
+    square:     "1122334455",
 };
 
 const { type = 'horizontal' } = Astro.props;
 
+// 🛑 AGAR ADS BAND HAIN, TOH KUCH MAT DIKHAO
+if (!ENABLE_ADS) {
+    return null; 
+}
+
 const currentSlotId = SLOT_IDS[type] || SLOT_IDS.horizontal;
 
-// --- 🧠 INTELLIGENT LAYOUT LOGIC ---
-
+// --- CSS LOGIC ---
 let containerClass = "my-6 mx-auto flex justify-center items-center bg-gray-50 border border-gray-100 rounded-lg overflow-hidden";
-let adFormat = "auto"; // MAGIC: Google decide karega shape
+let adFormat = "auto";
 let adStyle = { display: 'block' };
 
 if (type === 'horizontal') {
-    // Logic: Width full lo, Height Google decide karega (Mobile pe square, Desktop pe banner ho sakta hai)
-    // min-h-[100px] isliye diya taaki ad load hone se pehle layout shift (CLS) na ho.
     containerClass += " w-full min-h-[100px]"; 
     adFormat = "auto"; 
 } 
 else if (type === 'vertical') {
-    // Logic: Sidebar mein width fix hoti hai, height flexible rakho.
-    // Google yahan lamba skyscraper ya square box dono dikha sakta hai.
     containerClass += " w-full max-w-[300px] min-h-[250px]"; 
     adFormat = "auto"; 
 } 
 else if (type === 'square') {
-    // Logic: Ye specific box hai, isme hum rectangular shape prefer karenge.
     containerClass += " w-full max-w-[336px] min-h-[280px]";
     adFormat = "rectangle";
 }
@@ -51,7 +51,7 @@ else if (type === 'square') {
             <span class="text-[10px] font-mono mt-1 text-blue-500">Auto Format</span>
         </div>
     ) : (
-        /* PROD MODE: Fully Fluid Ad */
+        /* PROD MODE: Real Ad */
         <ins class="adsbygoogle"
              style={adStyle}
              data-ad-client={ADSENSE_ID}
