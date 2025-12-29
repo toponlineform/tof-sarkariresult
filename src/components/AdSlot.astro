@@ -3,22 +3,44 @@
 const { type = "horizontal" } = Astro.props;
 
 // 🔒 CONTROL CENTER
-// Abhi 'false' hai -> Website par kuch nahi dikhega (Clean).
-// Jab Ads mil jayein, isse 'true' kar dena.
+// Approval milne se pehle isse 'false' rakhein.
+// Jab AdSense approve ho jaye, isse 'true' kar dein.
 const showAds = false; 
 
-// 🛑 MAGIC LINE: Agar ads off hain, to component yahin khatam.
+// 🛑 MAGIC LINE: Agar ads off hain, to component render hi nahi hoga.
 if (!showAds) return null;
 
-// Ad Sizes Styles (Ye tabhi chalega jab showAds = true hoga)
+// Ad Sizes Styles
 const styles = {
-  horizontal: "min-h-[90px] max-w-[728px]", // Standard Banner
-  square: "min-h-[250px] max-w-[300px]",    // Sidebar/Mobile Square
+  horizontal: "min-h-[90px] w-full max-w-[728px]", // Article ke beech/upar ke liye
+  square: "min-h-[250px] w-full max-w-[300px]",    // Mobile/Small areas ke liye
+  vertical: "min-h-[600px] w-full max-w-[300px]"   // ✨ NEW: Sidebar Skyscraper ke liye
 };
+
+// Google AdSense Slot IDs (Jab approval mile tab yahan IDs daalna)
+// Har jagah alag ID hoti hai, aap logic laga sakte ho type ke hisab se.
+const adSlotId = "1234567890"; // Example ID
 ---
 
-<div class={`ad-slot-container my-6 mx-auto flex justify-center items-center ${styles[type]}`}>
-    {/* 🟢 FUTURE: Yahan Google AdSense ka code aayega */}
-    <div class="w-full h-full bg-white">
-       </div>
+<div class={`ad-slot-container my-6 mx-auto flex justify-center items-center bg-gray-50 border border-gray-100 rounded overflow-hidden ${styles[type]}`}>
+    
+    {/* 🟢 GOOGLE ADSENSE CODE STRUCTURE */}
+    {/* Jab ads on karoge, niche wala code active hoga */}
+    
+    <div class="text-xs text-gray-400 font-mono">
+       {/* <ins class="adsbygoogle"
+            style="display:block"
+            data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" 
+            data-ad-slot={adSlotId}
+            data-ad-format="auto"
+            data-full-width-responsive="true"></ins>
+       <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+       </script> 
+       */}
+       
+       {/* DELETE THIS LINE LATER: Sirf testing ke liye placeholder */}
+       <span class="block py-10 text-center">Ad Space ({type})</span>
+    </div>
+
 </div>
