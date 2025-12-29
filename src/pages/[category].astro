@@ -15,12 +15,15 @@ export async function getStaticPaths() {
   ];
 
   return categories.map((cat) => {
+    // 1. FILTERING LOGIC
     const filteredPosts = allPosts.filter(post => {
         const isMainCategory = post.category === cat.name;
+        // Agar post me 'types' array hai (multiple category ke liye)
         const isTagged = post.types && post.types.includes(cat.name);
         return isMainCategory || isTagged;
     });
     
+    // 2. SORTING LOGIC (Category specific date sorting)
     filteredPosts.sort((a, b) => {
         const parseDate = (dateStr) => {
             if (!dateStr) return 0;
@@ -67,6 +70,8 @@ export async function getStaticPaths() {
 }
 
 const { categoryName, posts } = Astro.props;
+const currentYear = new Date().getFullYear();
+const nextYear = currentYear + 1; // 2026 logic ke liye
 
 // Helper: Button Border Color
 const getBorderColor = (cat) => {
@@ -79,14 +84,15 @@ const getBorderColor = (cat) => {
     return 'border-red-600';
 };
 
-// --- 🚀 INFINITY SEO DESCRIPTION LOGIC ---
-// Har category ke liye alag description jo Google me dikhega
-const seoDesc = `Check Latest ${categoryName} 2026 updates. Get direct links for ${categoryName} and online forms for various government exams at TopOnlineForm.com.`;
+// --- 🚀 INFINITY SEO METADATA ---
+// Title ko thoda catchy banaya hai click badhane ke liye
+const pageTitle = `${categoryName} ${nextYear} - Check Latest Updates & Direct Links`;
+const seoDesc = `Check Latest ${categoryName} ${nextYear} updates. Get direct links for ${categoryName} and online forms for various government exams at TopOnlineForm.com.`;
 ---
 
-{/* ✅ SEO UPDATE: Passing categoryName and optimized description */}
+{/* ✅ SEO UPDATE: Improved Title and Description */}
 <Layout 
-    title={categoryName} 
+    title={pageTitle} 
     description={seoDesc}
 >
   
@@ -100,8 +106,9 @@ const seoDesc = `Check Latest ${categoryName} 2026 updates. Get direct links for
 
       {/* 2. PAGE HEADER */}
       <div class="text-center mb-6">
+        {/* ✅ FIX: 2025 ko hatakar Dynamic Next Year kar diya */}
         <h1 class={`text-2xl md:text-3xl font-extrabold text-gray-800 border-b-4 inline-block pb-2 px-4 ${getBorderColor(categoryName)} uppercase tracking-tight`}>
-            {categoryName} <span class="text-red-600">2025</span>
+            {categoryName} <span class="text-red-600">{nextYear}</span>
         </h1>
         <p class="text-xs text-gray-400 mt-1 italic uppercase tracking-widest">Fastest Updates on TopOnlineForm.com</p>
       </div>
@@ -124,6 +131,7 @@ const seoDesc = `Check Latest ${categoryName} 2026 updates. Get direct links for
                                   <div class="text-xs text-gray-500 font-mono">
                                       📅 {post.postDate}
                                   </div>
+                                  {/* Smart Status Logic */}
                                   {categoryName === 'Syllabus' ? (
                                       <div class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded uppercase">Syllabus PDF</div>
                                   ) : post.lastDate ? (
@@ -147,6 +155,7 @@ const seoDesc = `Check Latest ${categoryName} 2026 updates. Get direct links for
               </div>
           </main>
 
+          {/* SIDEBAR: Category Page par Sidebar zaroori hai ads ke liye */}
           <aside class="hidden lg:block w-[300px] flex-shrink-0">
               <div class="sticky top-4 space-y-6">
                   <a href="https://whatsapp.com/channel/0029Vb7TcG06LwHoTXhZKn2D" target="_blank" class="block bg-white border border-green-200 p-4 rounded shadow-sm hover:shadow-md transition text-center group">
