@@ -2,9 +2,10 @@
 // src/layouts/Layout.astro
 import MarketingPopup from '../components/MarketingPopup.astro';
 
-// ✅ IMPORT ADSENSE ID (Centralized Control)
-// This ensures Layout uses the same ID as your manual ad slots
-import { ADSENSE_ID } from '../components/AdSlot.astro';
+// ✅ IMPORT ADSENSE SETTINGS (Centralized Control)
+// ADSENSE_ID: Your Publisher ID
+// LOAD_SCRIPT: Master Switch for Auto/Vignette Ads
+import { ADSENSE_ID, LOAD_SCRIPT } from '../components/AdSlot.astro';
 
 const { 
   title, 
@@ -61,10 +62,12 @@ else if (!isPost) {
     <meta property="og:image" content={new URL(image, siteUrl)} />
     <meta property="twitter:card" content="summary_large_image" />
 
-    {/* 💰 GOOGLE ADSENSE (AUTO ADS SCRIPT) */}
-    {/* This script enables Auto Ads (Vignette/Anchor) and supports manual units */}
-    <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_ID}`}
-     crossorigin="anonymous"></script>
+    {/* 💰 GOOGLE ADSENSE MAIN SCRIPT (Controlled by LOAD_SCRIPT) */}
+    {/* If LOAD_SCRIPT is false in AdSlot.astro, this won't load (No Vignette/Auto Ads) */}
+    {LOAD_SCRIPT && (
+        <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_ID}`}
+         crossorigin="anonymous"></script>
+    )}
 
     <script is:inline src="https://cdn.tailwindcss.com"></script>
     
