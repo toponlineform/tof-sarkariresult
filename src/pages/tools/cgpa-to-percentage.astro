@@ -1,4 +1,5 @@
 ---
+// src/pages/tools/cgpa-to-percentage.astro
 import ToolLayout from '../../layouts/ToolLayout.astro';
 import AdSlot from '../../components/AdSlot.astro';
 
@@ -12,7 +13,7 @@ const description = "Instantly convert CGPA to Percentage for CBSE, Mumbai Unive
   toolName="CGPA Calculator"
 >
 
-  {/* ⚡ FAQ SCHEMA (Rich Results) */}
+  {/* ⚡ FAQ SCHEMA */}
   <script type="application/ld+json" slot="head">
     {
       "@context": "https://schema.org",
@@ -35,15 +36,15 @@ const description = "Instantly convert CGPA to Percentage for CBSE, Mumbai Unive
     }
   </script>
 
-  {/* 🟢 TOP AD */}
-  <div class="mb-6">
+  {/* 1. TOP AD SLOT */}
+  <div class="mb-8">
     <AdSlot type="horizontal" />
   </div>
 
   {/* MAIN CALCULATOR CARD */}
-  <div class="bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden ring-1 ring-gray-100">
+  <div class="bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden ring-1 ring-gray-100 mb-8">
       
-      {/* TABS (CGPA->% OR %->CGPA) */}
+      {/* TABS */}
       <div class="flex border-b border-gray-200 bg-gray-50">
           <button id="tabToPercent" class="flex-1 py-4 text-sm font-bold text-purple-700 bg-white border-b-2 border-purple-600 focus:outline-none transition-colors">
               CGPA to Percentage
@@ -70,11 +71,11 @@ const description = "Instantly convert CGPA to Percentage for CBSE, Mumbai Unive
                   </select>
               </div>
 
-              {/* Input Field (Dynamic) */}
+              {/* Input Field */}
               <div>
                   <label class="block text-sm font-bold text-gray-700 mb-2" id="inputLabel">Enter CGPA (e.g. 9.2)</label>
                   <div class="relative">
-                    <input type="number" id="inputVal" placeholder="0.00" step="0.01" min="0" max="100" class="w-full p-4 text-2xl font-mono border border-gray-300 rounded-xl focus:ring-4 focus:ring-purple-100 outline-none text-purple-700 font-bold bg-white">
+                    <input type="number" id="inputVal" placeholder="0.00" step="0.01" min="0" max="100" class="w-full p-4 text-2xl font-mono border border-gray-300 rounded-xl focus:ring-4 focus:ring-purple-100 outline-none text-purple-700 font-bold bg-white shadow-inner">
                   </div>
               </div>
 
@@ -114,33 +115,38 @@ const description = "Instantly convert CGPA to Percentage for CBSE, Mumbai Unive
 
   </div>
 
-  {/* SEO CONTENT AREA (Using Slot) */}
+  {/* 2. MIDDLE AD SLOT (High Visibility after Calculation) */}
+  <div class="mb-8">
+     <AdSlot type="horizontal" />
+  </div>
+
+  {/* SEO CONTENT AREA */}
   <div slot="content">
-      <p>
-          Most government job applications (like <strong>SSC CGL, CHSL, UPSC, Railways</strong>) and college admissions require you to enter your marks in <strong>Percentage (%)</strong> format. If your marksheet shows grades in CGPA or SGPA, you must convert them accurately.
+      <p class="lead text-lg text-gray-700 mb-4">
+          Most government job applications (like <strong class="text-purple-700">SSC CGL, CHSL, UPSC, Railways</strong>) and college admissions require you to enter your marks in <strong>Percentage (%)</strong> format. If your marksheet shows grades in CGPA or SGPA, you must convert them accurately.
       </p>
 
-      <h3>Why is this converter important?</h3>
-      <ul>
+      <h3 class="text-xl font-bold text-gray-800 mb-2">Why is this converter important?</h3>
+      <ul class="list-disc pl-5 space-y-2 mb-6">
           <li><strong>Accuracy:</strong> Manual calculation often leads to errors like 9.5 vs 10 multiplication.</li>
           <li><strong>University Support:</strong> Different universities (Mumbai, VTU, KTU) use different formulas. We support them all.</li>
           <li><strong>Govt Job Ready:</strong> Avoid rejection in document verification by entering the exact decimal percentage.</li>
       </ul>
 
-      <h3>Popular Conversion Formulas</h3>
-      <div class="overflow-x-auto">
-        <table class="min-w-full text-sm text-left border rounded-lg overflow-hidden">
-          <thead class="bg-gray-100 text-gray-700 font-bold">
+      <h3 class="text-xl font-bold text-gray-800 mb-2">Popular Conversion Formulas</h3>
+      <div class="overflow-x-auto shadow-sm rounded-lg border border-gray-200">
+        <table class="min-w-full text-sm text-left">
+          <thead class="bg-gray-100 text-gray-700 font-bold uppercase text-xs">
             <tr>
               <th class="p-3">Board / University</th>
               <th class="p-3">Formula</th>
             </tr>
           </thead>
-          <tbody class="divide-y">
-            <tr><td class="p-3">CBSE / SSC</td><td class="p-3">CGPA × 9.5</td></tr>
-            <tr><td class="p-3">Mumbai Univ (Rev 2016)</td><td class="p-3">(7.1 × CGPA) + 11</td></tr>
-            <tr><td class="p-3">VTU / Anna Univ</td><td class="p-3">(CGPA - 0.75) × 10</td></tr>
-            <tr><td class="p-3">KTU (Kerala)</td><td class="p-3">(CGPA - 0.5) × 10</td></tr>
+          <tbody class="divide-y divide-gray-200 bg-white">
+            <tr><td class="p-3 font-medium">CBSE / SSC</td><td class="p-3 text-purple-600 font-mono">CGPA × 9.5</td></tr>
+            <tr><td class="p-3 font-medium">Mumbai Univ (Rev 2016)</td><td class="p-3 text-purple-600 font-mono">(7.1 × CGPA) + 11</td></tr>
+            <tr><td class="p-3 font-medium">VTU / Anna Univ</td><td class="p-3 text-purple-600 font-mono">(CGPA - 0.75) × 10</td></tr>
+            <tr><td class="p-3 font-medium">KTU (Kerala)</td><td class="p-3 text-purple-600 font-mono">(CGPA - 0.5) × 10</td></tr>
           </tbody>
         </table>
       </div>
@@ -152,9 +158,9 @@ const description = "Instantly convert CGPA to Percentage for CBSE, Mumbai Unive
 <script>
   const tabToPercent = document.getElementById('tabToPercent');
   const tabToCgpa = document.getElementById('tabToCgpa');
-  const formulaSelect = document.getElementById('formulaSelect') as HTMLSelectElement;
+  const formulaSelect = document.getElementById('formulaSelect');
   const inputLabel = document.getElementById('inputLabel');
-  const inputVal = document.getElementById('inputVal') as HTMLInputElement;
+  const inputVal = document.getElementById('inputVal');
   const calcBtn = document.getElementById('calcBtn');
   const resultVal = document.getElementById('resultVal');
   const resultLabel = document.getElementById('resultLabel');
