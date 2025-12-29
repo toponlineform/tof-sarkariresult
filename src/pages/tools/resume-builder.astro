@@ -1,9 +1,11 @@
 ---
+// src/pages/tools/resume-builder.astro
 import ToolLayout from '../../layouts/ToolLayout.astro';
 import AdSlot from '../../components/AdSlot.astro';
 
-const title = "Free Resume Builder Online - Make Professional CV / Bio-Data";
-const description = "Create ATS-friendly Resume, CV, or Bio-Data for Government Jobs and Private Interviews. Download PDF instantly. No Login Required.";
+// 🌍 HYBRID SEO: "Resume" (Global) + "Bio-data" (India)
+const title = "Free Resume Builder & Biodata Maker - Download PDF with Photo";
+const description = "Create professional Resume, CV, or Marriage Biodata online. Choose theme colors, add photo, and download PDF instantly. Best for Freshers & Govt Jobs.";
 ---
 
 <ToolLayout 
@@ -12,7 +14,6 @@ const description = "Create ATS-friendly Resume, CV, or Bio-Data for Government 
   toolName="Resume Builder"
   showSidebar={false} 
 >
-  {/* Note: Sidebar OFF kiya hai taaki Editor ko Full Width mile (User Experience ke liye better) */}
 
   {/* ⚡ FAQ SCHEMA */}
   <script type="application/ld+json" slot="head">
@@ -21,17 +22,17 @@ const description = "Create ATS-friendly Resume, CV, or Bio-Data for Government 
       "@type": "FAQPage",
       "mainEntity": [{
         "@type": "Question",
-        "name": "How to create a resume for fresher?",
+        "name": "How to make a resume with photo for free?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Fill in your personal details, education (10th, 12th, Graduation), and skills in our Resume Builder. It automatically formats everything into a professional layout."
+          "text": "Use our Infinity Resume Builder. Upload your photo, fill in details, choose a color theme, and click 'Download PDF'. It's completely free."
         }
       }, {
         "@type": "Question",
-        "name": "Is this resume builder free?",
+        "name": "Can I use this for Marriage Biodata?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes, Infinity Resume Builder is 100% free. You can create and download unlimited PDF resumes without any watermark."
+          "text": "Yes! The clean layout works perfectly as a Marriage Biodata. Just enter family details in the summary or extra sections."
         }
       }]
     }
@@ -50,18 +51,18 @@ const description = "Create ATS-friendly Resume, CV, or Bio-Data for Government 
             <div class="flex items-center gap-3">
                 <span class="text-2xl">📄</span>
                 <div>
-                    <h2 class="font-bold text-lg leading-tight">Infinity Resume Builder</h2>
-                    <p class="text-xs text-gray-400">Auto-Save Enabled</p>
+                    <h2 class="font-bold text-lg leading-tight">Infinity Resume & Biodata</h2>
+                    <p class="text-xs text-gray-400">Auto-Save Enabled • Secure</p>
                 </div>
             </div>
             
             <div class="flex items-center gap-4">
                 <div class="flex items-center gap-2 bg-gray-800 px-3 py-1 rounded-lg border border-gray-700">
-                    <span class="text-sm">🎨 Theme:</span>
+                    <span class="text-sm">🎨 Color:</span>
                     <input type="color" id="themeColorInput" value="#2c3e50" class="w-8 h-8 rounded cursor-pointer bg-transparent border-none" title="Change Theme Color" />
                 </div>
 
-                <button onclick="window.print()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-bold shadow-md transition flex items-center gap-2">
+                <button onclick="window.print()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-bold shadow-md transition flex items-center gap-2 animate-pulse-slow">
                     <span>🖨️</span> Download PDF
                 </button>
             </div>
@@ -74,41 +75,52 @@ const description = "Create ATS-friendly Resume, CV, or Bio-Data for Government 
             {/* --- LEFT: EDITOR SECTION --- */}
             <div class="w-full xl:w-[40%] bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden no-print h-[85vh] overflow-y-auto custom-scrollbar">
                 <div class="p-6">
-                    <h3 class="font-bold text-gray-800 text-lg mb-4 border-b pb-2 flex items-center gap-2">
+                    <h3 class="font-bold text-gray-800 text-lg mb-6 border-b pb-2 flex items-center gap-2">
                         ✏️ Edit Details
                     </h3>
+
+                    {/* Photo Upload */}
+                    <div class="mb-6 flex items-center gap-4 bg-blue-50 p-4 rounded-lg border border-blue-100">
+                        <div class="w-16 h-16 bg-gray-200 rounded-full overflow-hidden border-2 border-white shadow-sm flex-shrink-0">
+                            <img id="editorProfilePrev" src="https://via.placeholder.com/150" class="w-full h-full object-cover opacity-50" />
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-blue-800 mb-1">Profile Photo</label>
+                            <input type="file" id="photoInput" accept="image/*" class="text-xs text-gray-500 file:mr-2 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700"/>
+                        </div>
+                    </div>
 
                     {/* Personal Info */}
                     <div class="space-y-4 mb-8">
                         <div class="form-group">
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Full Name</label>
-                            <input type="text" id="inName" value="Rohit Sharma" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none" />
+                            <input type="text" id="inName" value="Rohit Sharma" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition" />
                         </div>
                         <div class="form-group">
-                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Job Title</label>
-                            <input type="text" id="inRole" value="Software Developer" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none" />
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Job Title / Qualification</label>
+                            <input type="text" id="inRole" value="Software Developer" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition" />
                         </div>
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Email</label>
-                                <input type="text" id="inEmail" value="rohit@example.com" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none" />
+                                <input type="text" id="inEmail" value="rohit@example.com" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition" />
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Phone</label>
-                                <input type="text" id="inPhone" value="+91 98765 43210" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none" />
+                                <input type="text" id="inPhone" value="+91 98765 43210" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition" />
                             </div>
                         </div>
                         <div>
-                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">LinkedIn / Portfolio (Optional)</label>
-                             <input type="text" id="inLinkedin" placeholder="linkedin.com/in/rohit" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none" />
+                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">LinkedIn / Portfolio / Website</label>
+                             <input type="text" id="inLinkedin" placeholder="linkedin.com/in/rohit" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition" />
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Address</label>
-                            <input type="text" id="inAddress" value="New Delhi, India" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none" />
+                            <input type="text" id="inAddress" value="New Delhi, India" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition" />
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Summary</label>
-                            <textarea rows="4" id="inSummary" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">Passionate developer with 3+ years of experience in building scalable web applications. Dedicated to writing clean, efficient code.</textarea>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Profile Summary</label>
+                            <textarea rows="4" id="inSummary" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition">Passionate developer with 3+ years of experience in building scalable web applications. Dedicated to writing clean, efficient code.</textarea>
                         </div>
                     </div>
 
@@ -116,34 +128,34 @@ const description = "Create ATS-friendly Resume, CV, or Bio-Data for Government 
                     <div class="mb-8">
                         <div class="flex justify-between items-center mb-3">
                             <h4 class="font-bold text-gray-700">Experience</h4>
-                            <button id="addExpBtn" class="text-blue-600 font-bold hover:bg-blue-50 px-2 rounded">+</button>
+                            <button id="addExpBtn" class="text-blue-600 font-bold hover:bg-blue-50 px-2 rounded border border-blue-100">+ Add</button>
                         </div>
-                        <div id="experienceList" class="space-y-3"></div>
+                        <div id="experienceList" class="space-y-4"></div>
                     </div>
 
                     {/* Education */}
                     <div class="mb-8">
                         <div class="flex justify-between items-center mb-3">
                             <h4 class="font-bold text-gray-700">Education</h4>
-                            <button id="addEduBtn" class="text-blue-600 font-bold hover:bg-blue-50 px-2 rounded">+</button>
+                            <button id="addEduBtn" class="text-blue-600 font-bold hover:bg-blue-50 px-2 rounded border border-blue-100">+ Add</button>
                         </div>
-                        <div id="educationList" class="space-y-3"></div>
+                        <div id="educationList" class="space-y-4"></div>
                     </div>
 
                     {/* Skills */}
                     <div class="mb-8">
                         <h4 class="font-bold text-gray-700 mb-2">Skills</h4>
                         <div class="flex gap-2 mb-3">
-                            <input type="text" id="newSkillInput" placeholder="Add skill (e.g. Java)" class="flex-1 p-2 border rounded text-sm" />
-                            <button id="addSkillBtn" class="bg-gray-800 text-white px-4 rounded text-sm font-bold">Add</button>
+                            <input type="text" id="newSkillInput" placeholder="Add skill (e.g. Java)" class="flex-1 p-3 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+                            <button id="addSkillBtn" class="bg-gray-800 text-white px-4 rounded-lg text-sm font-bold">Add</button>
                         </div>
                         <div id="skillsListEditor" class="flex flex-wrap gap-2"></div>
                     </div>
 
                     {/* Settings */}
-                    <div class="bg-gray-50 p-3 rounded border border-gray-200">
-                        <div class="flex items-center gap-2">
-                            <input type="checkbox" id="toggleDeclaration" checked class="w-4 h-4 text-blue-600" />
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                        <div class="flex items-center gap-3">
+                            <input type="checkbox" id="toggleDeclaration" checked class="w-5 h-5 text-blue-600 rounded cursor-pointer" />
                             <label for="toggleDeclaration" class="text-sm text-gray-700 font-medium select-none cursor-pointer">Show Declaration & Signature</label>
                         </div>
                     </div>
@@ -151,55 +163,63 @@ const description = "Create ATS-friendly Resume, CV, or Bio-Data for Government 
             </div>
 
             {/* --- RIGHT: PREVIEW SECTION (A4 PAPER) --- */}
-            <div class="w-full xl:w-[60%] flex justify-center bg-gray-200/50 p-4 rounded-xl border border-gray-300 xl:h-[85vh] xl:overflow-y-auto custom-scrollbar">
+            <div class="w-full xl:w-[60%] flex justify-center bg-gray-200/50 p-6 rounded-xl border border-gray-300 xl:h-[85vh] xl:overflow-y-auto custom-scrollbar">
                 
                 {/* A4 PAPER */}
-                <div class="resume-paper bg-white shadow-2xl" id="resume-to-print">
+                <div class="resume-paper bg-white shadow-2xl relative" id="resume-to-print">
                     
-                    {/* Header */}
-                    <div class="res-header border-b-2 pb-4 mb-6 dynamic-border">
-                        <h1 class="text-4xl font-extrabold uppercase mb-1 dynamic-text" id="outName">Rohit Sharma</h1>
-                        <p class="text-lg font-medium text-gray-600 mb-3" id="outRole">Software Developer</p>
+                    {/* Header with Photo */}
+                    <div class="res-header border-b-2 pb-6 mb-6 dynamic-border flex justify-between items-start gap-6">
+                        <div class="flex-1">
+                            <h1 class="text-4xl font-extrabold uppercase mb-2 dynamic-text tracking-tight" id="outName">Rohit Sharma</h1>
+                            <p class="text-xl font-medium text-gray-600 mb-4" id="outRole">Software Developer</p>
+                            
+                            <div class="flex flex-wrap gap-y-2 gap-x-4 text-sm text-gray-600">
+                                <span class="flex items-center gap-1">📧 <span id="outEmail">rohit@example.com</span></span>
+                                <span class="flex items-center gap-1">📱 <span id="outPhone">+91 98765 43210</span></span>
+                                <span id="linkedinWrapper" class="hidden flex items-center gap-1">🔗 <span id="outLinkedin"></span></span>
+                                <span class="flex items-center gap-1 w-full mt-1">📍 <span id="outAddress">New Delhi, India</span></span>
+                            </div>
+                        </div>
                         
-                        <div class="flex flex-wrap gap-4 text-sm text-gray-600">
-                            <span class="flex items-center gap-1">📧 <span id="outEmail">rohit@example.com</span></span>
-                            <span class="flex items-center gap-1">📱 <span id="outPhone">+91 98765 43210</span></span>
-                            <span id="linkedinWrapper" class="hidden flex items-center gap-1">🔗 <span id="outLinkedin"></span></span>
-                            <span class="flex items-center gap-1">📍 <span id="outAddress">New Delhi, India</span></span>
+                        {/* Profile Photo Display */}
+                        <div class="w-28 h-28 rounded-lg overflow-hidden border-2 border-gray-100 shadow-sm flex-shrink-0 bg-gray-50">
+                            <img id="outProfilePic" src="" class="w-full h-full object-cover hidden" />
+                            <div id="outProfilePlaceholder" class="w-full h-full flex items-center justify-center text-gray-300 text-4xl bg-gray-100">👤</div>
                         </div>
                     </div>
 
                     {/* Summary */}
-                    <div class="mb-6 text-gray-700 leading-relaxed" id="summarySection">
+                    <div class="mb-8 text-gray-700 leading-relaxed text-justify" id="summarySection">
                         <p id="outSummary">Passionate developer with 3+ years of experience in building scalable web applications. Dedicated to writing clean, efficient code.</p>
                     </div>
 
                     {/* Experience */}
-                    <div id="previewExpSection" class="hidden mb-6">
-                        <div class="text-lg font-bold uppercase border-b mb-3 pb-1 tracking-wider dynamic-text dynamic-border">Experience</div>
-                        <div id="previewExpList" class="space-y-4"></div>
+                    <div id="previewExpSection" class="hidden mb-8">
+                        <div class="text-lg font-bold uppercase border-b-2 mb-4 pb-1 tracking-wider dynamic-text dynamic-border">Experience</div>
+                        <div id="previewExpList" class="space-y-5"></div>
                     </div>
 
                     {/* Education */}
-                    <div id="previewEduSection" class="hidden mb-6">
-                        <div class="text-lg font-bold uppercase border-b mb-3 pb-1 tracking-wider dynamic-text dynamic-border">Education</div>
+                    <div id="previewEduSection" class="hidden mb-8">
+                        <div class="text-lg font-bold uppercase border-b-2 mb-4 pb-1 tracking-wider dynamic-text dynamic-border">Education</div>
                         <div id="previewEduList" class="space-y-4"></div>
                     </div>
 
                     {/* Skills */}
-                    <div id="previewSkillSection" class="hidden mb-6">
-                        <div class="text-lg font-bold uppercase border-b mb-3 pb-1 tracking-wider dynamic-text dynamic-border">Skills</div>
+                    <div id="previewSkillSection" class="hidden mb-8">
+                        <div class="text-lg font-bold uppercase border-b-2 mb-4 pb-1 tracking-wider dynamic-text dynamic-border">Skills</div>
                         <div id="previewSkillsList" class="flex flex-wrap gap-2"></div>
                     </div>
 
                     {/* Declaration */}
-                    <div id="previewDeclaration" class="mt-12 pt-4 border-t border-dashed border-gray-300">
-                        <p class="text-xs italic text-gray-500 mb-8">
-                            I hereby declare that the information provided above is true to the best of my knowledge.
+                    <div id="previewDeclaration" class="mt-16 pt-4 border-t border-dashed border-gray-300">
+                        <p class="text-sm italic text-gray-500 mb-12">
+                            I hereby declare that the information provided above is true to the best of my knowledge and belief.
                         </p>
                         <div class="flex justify-between text-sm font-bold text-gray-800">
                             <span>Date: ____________</span>
-                            <span>Signature: ____________</span>
+                            <span class="mr-8">Signature: ____________</span>
                         </div>
                     </div>
 
@@ -208,18 +228,38 @@ const description = "Create ATS-friendly Resume, CV, or Bio-Data for Government 
         </div>
       </div>
       
-      {/* SEO CONTENT (Visible below tool) */}
-      <div slot="content" class="max-w-4xl mx-auto px-4 mt-12 no-print">
+      {/* 🔴 BOTTOM AD (Added Here) */}
+      <div class="max-w-6xl mx-auto px-4 py-8 no-print">
+         <span class="text-xs text-gray-400 block text-center mb-1 uppercase tracking-wider">Advertisement</span>
+         <AdSlot type="horizontal" />
+      </div>
+      
+      {/* SEO CONTENT */}
+      <div slot="content" class="max-w-4xl mx-auto px-4 mt-8 no-print">
           <div class="prose prose-blue max-w-none bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
-              <h2 class="text-2xl font-bold text-gray-800">Why use this Resume Builder?</h2>
+              <h2 class="text-2xl font-bold text-gray-800">Best Free Resume Builder for 2025</h2>
               <p>
-                  A clean, professional resume increases your chances of getting shortlisted for Government Jobs and Private Companies. Our tool ensures:
+                  Whether you are a <strong>Fresher applying for your first job</strong>, an experienced professional updating your CV, or creating a <strong>Biodata for marriage</strong>, our tool handles it all.
               </p>
-              <ul>
-                  <li><strong>ATS Friendly:</strong> Simple layout that passes Applicant Tracking Systems.</li>
-                  <li><strong>Instant PDF:</strong> No watermark, free download.</li>
-                  <li><strong>Secure:</strong> Data stays in your browser. No server upload.</li>
-              </ul>
+              
+              <div class="grid md:grid-cols-2 gap-6 my-6">
+                  <div class="bg-green-50 p-4 rounded-lg">
+                      <h4 class="font-bold text-green-900 mb-2">For Job Seekers</h4>
+                      <ul class="list-disc pl-4 text-sm text-green-800">
+                          <li>ATS-Friendly Layout</li>
+                          <li>Clean & Professional Fonts</li>
+                          <li>Highlight Skills & Experience</li>
+                      </ul>
+                  </div>
+                  <div class="bg-pink-50 p-4 rounded-lg">
+                      <h4 class="font-bold text-pink-900 mb-2">For Biodata</h4>
+                      <ul class="list-disc pl-4 text-sm text-pink-800">
+                          <li>Photo Upload Support</li>
+                          <li>Clear Family & Personal Details</li>
+                          <li>Elegant Printable Format</li>
+                      </ul>
+                  </div>
+              </div>
           </div>
       </div>
 
@@ -227,23 +267,25 @@ const description = "Create ATS-friendly Resume, CV, or Bio-Data for Government 
 
   {/* CSS for Print & Layout */}
   <style is:global>
-      .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-      .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
+      .custom-scrollbar::-webkit-scrollbar { width: 8px; }
+      .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
       .custom-scrollbar::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
       .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
 
       .resume-paper {
           width: 210mm; min-height: 297mm; 
-          padding: 10mm 12mm; /* Standard Margins */
-          color: #333; line-height: 1.5;
+          padding: 12mm 15mm; 
+          color: #333; line-height: 1.6;
       }
 
       @media print {
           @page { margin: 0; }
+          body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
           body * { visibility: hidden; }
           #resume-to-print, #resume-to-print * { visibility: visible; }
           #resume-to-print {
-              position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 10mm 15mm !important;
+              position: absolute; left: 0; top: 0; width: 100%; margin: 0; 
+              padding: 15mm !important;
               box-shadow: none !important;
           }
           .no-print { display: none !important; }
@@ -262,6 +304,10 @@ const description = "Create ATS-friendly Resume, CV, or Bio-Data for Government 
       // Elements
       const themeInput = document.getElementById('themeColorInput');
       const addSkillBtn = document.getElementById('addSkillBtn');
+      const photoInput = document.getElementById('photoInput');
+      const editorProfilePrev = document.getElementById('editorProfilePrev');
+      const outProfilePic = document.getElementById('outProfilePic');
+      const outProfilePlaceholder = document.getElementById('outProfilePlaceholder');
 
       function updateTheme(color) {
           document.querySelectorAll('.dynamic-text').forEach(el => el.style.color = color);
@@ -275,6 +321,19 @@ const description = "Create ATS-friendly Resume, CV, or Bio-Data for Government 
 
       themeInput.addEventListener('input', (e) => updateTheme(e.target.value));
       setTimeout(() => updateTheme('#2c3e50'), 100);
+
+      // Photo Upload Logic
+      photoInput.addEventListener('change', (e) => {
+          if (e.target.files && e.target.files[0]) {
+              const url = URL.createObjectURL(e.target.files[0]);
+              editorProfilePrev.src = url;
+              editorProfilePrev.classList.remove('opacity-50');
+              
+              outProfilePic.src = url;
+              outProfilePic.classList.remove('hidden');
+              outProfilePlaceholder.classList.add('hidden');
+          }
+      });
 
       // Bind Text Inputs
       const bindText = (inId, outId) => {
@@ -320,27 +379,27 @@ const description = "Create ATS-friendly Resume, CV, or Bio-Data for Government 
           experienceData.forEach(exp => {
               // Editor Item
               const expDiv = document.createElement('div');
-              expDiv.className = "bg-gray-50 p-3 rounded border border-gray-200 relative group";
+              expDiv.className = "bg-white p-4 rounded-lg border border-gray-200 relative group shadow-sm";
               expDiv.innerHTML = `
-                  <button onclick="window.removeExp(${exp.id})" class="absolute top-2 right-2 text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition">🗑️</button>
-                  <input class="w-full mb-2 p-1 border rounded text-sm font-bold" placeholder="Job Title" value="${exp.title}" oninput="window.updateExp(${exp.id}, 'title', this.value)">
-                  <div class="flex gap-2 mb-2">
-                     <input class="w-1/2 p-1 border rounded text-sm" placeholder="Company" value="${exp.company}" oninput="window.updateExp(${exp.id}, 'company', this.value)">
-                     <input class="w-1/2 p-1 border rounded text-sm" placeholder="Duration" value="${exp.duration}" oninput="window.updateExp(${exp.id}, 'duration', this.value)">
+                  <button onclick="window.removeExp(${exp.id})" class="absolute top-2 right-2 text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition p-1">🗑️</button>
+                  <input class="w-full mb-3 p-2 border rounded text-sm font-bold focus:ring-2 focus:ring-blue-100 outline-none" placeholder="Job Title" value="${exp.title}" oninput="window.updateExp(${exp.id}, 'title', this.value)">
+                  <div class="flex gap-2 mb-3">
+                      <input class="w-1/2 p-2 border rounded text-sm focus:ring-2 focus:ring-blue-100 outline-none" placeholder="Company" value="${exp.company}" oninput="window.updateExp(${exp.id}, 'company', this.value)">
+                      <input class="w-1/2 p-2 border rounded text-sm focus:ring-2 focus:ring-blue-100 outline-none" placeholder="Duration" value="${exp.duration}" oninput="window.updateExp(${exp.id}, 'duration', this.value)">
                   </div>
-                  <textarea class="w-full p-1 border rounded text-sm" rows="2" placeholder="Description" oninput="window.updateExp(${exp.id}, 'desc', this.value)">${exp.desc}</textarea>
+                  <textarea class="w-full p-2 border rounded text-sm focus:ring-2 focus:ring-blue-100 outline-none" rows="2" placeholder="Description" oninput="window.updateExp(${exp.id}, 'desc', this.value)">${exp.desc}</textarea>
               `;
               editorList.appendChild(expDiv);
 
               // Preview Item
               const prevDiv = document.createElement('div');
               prevDiv.innerHTML = `
-                  <div class="font-bold text-gray-800 text-sm">${exp.title}</div>
-                  <div class="flex justify-between text-xs italic text-gray-500 mb-1">
-                      <span>${exp.company}</span>
-                      <span>${exp.duration}</span>
+                  <div class="flex justify-between items-baseline mb-1">
+                      <span class="font-bold text-gray-800 text-lg">${exp.title}</span>
+                      <span class="text-sm font-medium text-gray-500 bg-gray-50 px-2 py-0.5 rounded">${exp.duration}</span>
                   </div>
-                  <div class="text-sm text-gray-700 whitespace-pre-wrap">${exp.desc}</div>
+                  <div class="text-md font-semibold text-gray-700 mb-2">${exp.company}</div>
+                  <div class="text-sm text-gray-600 leading-relaxed whitespace-pre-wrap">${exp.desc}</div>
               `;
               previewList.appendChild(prevDiv);
           });
@@ -359,7 +418,6 @@ const description = "Create ATS-friendly Resume, CV, or Bio-Data for Government 
           const item = experienceData.find(e => e.id === id);
           if (item) item[field] = value;
           renderExperience();
-          // Keep focus hack
           setTimeout(() => document.activeElement.focus(), 0);
       };
       document.getElementById('addExpBtn').addEventListener('click', window.addExp);
@@ -378,14 +436,14 @@ const description = "Create ATS-friendly Resume, CV, or Bio-Data for Government 
           educationData.forEach(edu => {
                // Editor
                const eduDiv = document.createElement('div');
-               eduDiv.className = "bg-gray-50 p-3 rounded border border-gray-200 relative group";
+               eduDiv.className = "bg-white p-4 rounded-lg border border-gray-200 relative group shadow-sm";
                eduDiv.innerHTML = `
-                  <button onclick="window.removeEdu(${edu.id})" class="absolute top-2 right-2 text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition">🗑️</button>
-                  <input class="w-full mb-2 p-1 border rounded text-sm font-bold" placeholder="Degree" value="${edu.degree}" oninput="window.updateEdu(${edu.id}, 'degree', this.value)">
-                  <input class="w-full mb-2 p-1 border rounded text-sm" placeholder="College" value="${edu.college}" oninput="window.updateEdu(${edu.id}, 'college', this.value)">
+                  <button onclick="window.removeEdu(${edu.id})" class="absolute top-2 right-2 text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition p-1">🗑️</button>
+                  <input class="w-full mb-3 p-2 border rounded text-sm font-bold focus:ring-2 focus:ring-blue-100 outline-none" placeholder="Degree / 12th" value="${edu.degree}" oninput="window.updateEdu(${edu.id}, 'degree', this.value)">
+                  <input class="w-full mb-3 p-2 border rounded text-sm focus:ring-2 focus:ring-blue-100 outline-none" placeholder="University / School" value="${edu.college}" oninput="window.updateEdu(${edu.id}, 'college', this.value)">
                   <div class="flex gap-2">
-                     <input class="w-1/2 p-1 border rounded text-sm" placeholder="Year" value="${edu.year}" oninput="window.updateEdu(${edu.id}, 'year', this.value)">
-                     <input class="w-1/2 p-1 border rounded text-sm" placeholder="Grade" value="${edu.grade}" oninput="window.updateEdu(${edu.id}, 'grade', this.value)">
+                      <input class="w-1/2 p-2 border rounded text-sm focus:ring-2 focus:ring-blue-100 outline-none" placeholder="Year" value="${edu.year}" oninput="window.updateEdu(${edu.id}, 'year', this.value)">
+                      <input class="w-1/2 p-2 border rounded text-sm focus:ring-2 focus:ring-blue-100 outline-none" placeholder="Grade / %" value="${edu.grade}" oninput="window.updateEdu(${edu.id}, 'grade', this.value)">
                   </div>
               `;
               editorList.appendChild(eduDiv);
@@ -393,12 +451,12 @@ const description = "Create ATS-friendly Resume, CV, or Bio-Data for Government 
               // Preview
               const prevDiv = document.createElement('div');
               prevDiv.innerHTML = `
-                  <div class="font-bold text-gray-800 text-sm">${edu.degree}</div>
-                  <div class="flex justify-between text-xs italic text-gray-500 mb-1">
-                      <span>${edu.college}</span>
-                      <span>${edu.year}</span>
+                  <div class="flex justify-between items-baseline mb-1">
+                      <span class="font-bold text-gray-800 text-md">${edu.degree}</span>
+                      <span class="text-sm font-medium text-gray-500 bg-gray-50 px-2 py-0.5 rounded">${edu.year}</span>
                   </div>
-                  ${edu.grade ? `<div class="text-xs text-gray-600">Grade: ${edu.grade}</div>` : ''}
+                  <div class="text-sm text-gray-700">${edu.college}</div>
+                  ${edu.grade ? `<div class="text-sm text-gray-500 mt-1">Score: <span class="font-medium text-gray-700">${edu.grade}</span></div>` : ''}
               `;
               previewList.appendChild(prevDiv);
           });
@@ -429,13 +487,13 @@ const description = "Create ATS-friendly Resume, CV, or Bio-Data for Government 
           skillsData.forEach(skill => {
               // Editor Tag
               const tag = document.createElement('span');
-              tag.className = "bg-gray-100 px-2 py-1 rounded text-xs flex items-center gap-1 border";
-              tag.innerHTML = `${skill} <span style="cursor:pointer; color:red; font-weight:bold" onclick="window.removeSkill('${skill}')">×</span>`;
+              tag.className = "bg-gray-100 px-3 py-1 rounded-full text-sm flex items-center gap-2 border border-gray-200 text-gray-700";
+              tag.innerHTML = `${skill} <span style="cursor:pointer; color:#ef4444; font-weight:bold" onclick="window.removeSkill('${skill}')">×</span>`;
               editorList.appendChild(tag);
 
               // Preview Tag
               const prevTag = document.createElement('span');
-              prevTag.className = 'res-skill-tag px-3 py-1 text-sm font-medium border rounded';
+              prevTag.className = 'res-skill-tag px-3 py-1 text-sm font-bold border rounded-md';
               prevTag.style.color = color;
               prevTag.style.borderColor = color;
               prevTag.innerText = skill;
