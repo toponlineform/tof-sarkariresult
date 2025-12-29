@@ -1,222 +1,236 @@
 ---
-import Layout from '../../layouts/Layout.astro';
+// src/pages/tools/postcard-photo-maker.astro
+import ToolLayout from '../../layouts/ToolLayout.astro';
 import AdSlot from '../../components/AdSlot.astro';
 
-const title = "Postcard Photo Maker (4x6 inch) for SSC & Govt Exams - Free Online";
-const description = "Convert any photo into Postcard Size (4 inch x 6 inch) required for SSC CGL, CHSL, and other government exams. Download high-quality printable JPG.";
+// 🇮🇳 INDIA SPECIFIC SEO
+const title = "Postcard Photo Maker (4x6 inch) for SSC, NEET & JEE - Free Online";
+const description = "Create 4x6 inch Postcard Size Photograph required for SSC CGL, NEET, JEE and other NTA exams. Convert any photo to 4x6 ratio instantly.";
 ---
 
-<Layout title={title} description={description}>
-  
-  {/* Load CropperJS Library */}
+<ToolLayout 
+  title={title} 
+  description={description}
+  toolName="Postcard Photo Maker"
+>
+
+  {/* ⚡ FAQ SCHEMA */}
+  <script type="application/ld+json" slot="head">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is the size of Postcard Photograph for SSC?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The standard postcard size for SSC and NTA exams is 4 inches x 6 inches (10.16 cm x 15.24 cm). Our tool generates this exact size."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How to create 4x6 photo from mobile?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Upload your normal portrait photo in this tool. It will automatically lock the 4:6 aspect ratio. Adjust the crop to fit your face and download the high-quality JPG."
+        }
+      }]
+    }
+  </script>
+
+  {/* Load CropperJS */}
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" />
   <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
-  <div class="max-w-6xl mx-auto px-4 py-8">
+  {/* 1. TOP AD SLOT */}
+  <div class="mb-8">
+    <AdSlot type="horizontal" />
+  </div>
+
+  <div class="space-y-8">
       
-      {/* HEADER */}
-      <div class="text-center mb-8">
-          <span class="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Exam Special</span>
-          <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 mt-3 mb-4">
-              Infinity <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-600">Postcard Photo Maker</span>
-          </h1>
-          <p class="text-gray-500 text-lg max-w-2xl mx-auto">
-              Create <strong>4 inch x 6 inch</strong> size photograph required for SSC and other exam forms.
-          </p>
-      </div>
-
-      {/* 🟢 TOP AD */}
-      <div class="mb-8">
-        <AdSlot type="horizontal" />
-      </div>
-
-      {/* MAIN TOOL AREA */}
-      <div class="bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden p-6 md:p-10">
-          
-          {/* STEP 1: UPLOAD */}
-          <div id="step1" class="text-center transition-all">
-              <div class="border-3 border-dashed border-blue-200 bg-blue-50 rounded-2xl p-12 hover:bg-blue-100 transition cursor-pointer max-w-2xl mx-auto group" onclick="document.getElementById('fileInput').click()">
-                  <div class="text-6xl mb-6 group-hover:scale-110 transition">🖼️</div>
-                  <h3 class="text-2xl font-bold text-gray-800 mb-2">Select Your Photo</h3>
-                  <p class="text-gray-500">Upload a clear portrait or selfie.</p>
-                  <input type="file" id="fileInput" accept="image/*" class="hidden" />
-              </div>
+      {/* STEP 1: UPLOAD */}
+      <div id="step1" class="py-16 text-center bg-blue-50 border-4 border-dashed border-blue-200 rounded-3xl cursor-pointer hover:border-blue-400 hover:shadow-xl transition relative group" onclick="document.getElementById('fileInput').click()">
+          <div class="relative z-10">
+            <div class="text-7xl mb-6 group-hover:scale-110 transition duration-200 drop-shadow-sm">🖼️</div>
+            <h3 class="text-3xl font-extrabold text-gray-800 mb-2">Create Postcard Photo (4x6)</h3>
+            <p class="text-gray-500 mb-8 font-medium text-lg">For SSC, NEET, JEE & Railway</p>
+            
+            <span class="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-blue-700 transition flex items-center justify-center gap-2 w-max mx-auto transform group-hover:-translate-y-1">
+                <span>📂</span> Select Your Photo
+            </span>
           </div>
+          <input type="file" id="fileInput" accept="image/*" class="hidden" />
+      </div>
 
-          {/* STEP 2: CROPPER & SETTINGS */}
-          <div id="step2" class="hidden">
-              <h3 class="text-xl font-bold text-gray-800 mb-6 text-center">Adjust for Postcard Size (4x6)</h3>
+      {/* STEP 2: CROP & PREVIEW */}
+      <div id="step2" class="hidden animate-fade-in">
+          <div class="flex flex-col lg:flex-row gap-8">
               
-              <div class="flex flex-col lg:flex-row gap-8 justify-center">
-                  {/* Cropping Area */}
-                  <div class="w-full lg:w-[500px] bg-gray-900 rounded-xl overflow-hidden h-[400px] md:h-[600px] relative shadow-inner">
-                      <img id="cropImage" class="max-w-full" />
-                  </div>
-
-                  {/* Controls */}
-                  <div class="w-full lg:w-[300px] flex flex-col gap-6 justify-center">
-                      
-                      <div class="bg-blue-50 p-5 rounded-xl border border-blue-200">
-                          <h4 class="font-bold text-blue-900 mb-2">Instructions:</h4>
-                          <ul class="list-disc pl-4 text-sm text-blue-800 space-y-1">
-                              <li>We have locked the ratio to <strong>4:6 (Postcard)</strong>.</li>
-                              <li>Drag the box to fit your head and shoulders smoothly.</li>
-                              <li>Ensure both ears are visible (exam rule).</li>
-                          </ul>
-                      </div>
-                      
-                      <button id="cropBtn" class="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition transform hover:-translate-y-1 flex justify-center items-center gap-2">
-                          <span>✨</span> Generate Postcard Photo
-                      </button>
-
-                      <button id="resetBtn" class="text-gray-500 underline text-sm text-center">Upload Different Photo</button>
+              {/* Left: Cropper */}
+              <div class="w-full lg:w-2/3 bg-gray-900 rounded-xl overflow-hidden shadow-2xl relative h-[500px] border border-gray-700">
+                  <img id="cropImage" class="max-w-full" />
+                  <div class="absolute bottom-4 left-0 right-0 text-center pointer-events-none z-10">
+                      <span class="bg-black/70 text-white px-4 py-2 rounded-full text-sm backdrop-blur-md">
+                         Adjust frame to show Head & Shoulders
+                      </span>
                   </div>
               </div>
-          </div>
 
-          {/* STEP 3: PREVIEW & DOWNLOAD */}
-          <div id="step3" class="hidden text-center">
-              <h3 class="text-2xl font-bold text-gray-800 mb-2">Your Postcard Photo is Ready!</h3>
-              <p class="text-gray-500 mb-6">Download this 4x6 inch image and get it printed.</p>
-              
-              <div class="flex flex-col items-center gap-8">
-                  {/* Canvas Container - Fixed Width for Preview */}
-                  <div class="border-4 border-white shadow-2xl bg-gray-100 inline-block rounded-lg overflow-hidden">
-                      <canvas id="photoCanvas" class="max-w-full h-auto md:max-w-[400px]"></canvas>
+              {/* Right: Controls */}
+              <div class="w-full lg:w-1/3 space-y-6">
+                  
+                  <div class="bg-yellow-50 p-5 rounded-xl border border-yellow-200 shadow-sm">
+                      <h4 class="font-bold text-yellow-900 mb-2 flex items-center gap-2">
+                          <span>📢</span> Exam Rules:
+                      </h4>
+                      <ul class="text-sm text-yellow-800 space-y-1 list-disc pl-4">
+                          <li>Aspect Ratio is Locked to <strong>4:6</strong>.</li>
+                          <li>Both <strong>ears must be visible</strong>.</li>
+                          <li>Look straight at the camera.</li>
+                      </ul>
                   </div>
 
-                  <div class="flex flex-col sm:flex-row gap-4 w-full max-w-md">
-                      <button id="downloadBtn" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg text-lg flex justify-center items-center gap-2 transition animate-bounce-slow">
-                          ⬇️ Download HD JPG
-                      </button>
-                      <button onclick="location.reload()" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-4 px-6 rounded-xl shadow-sm transition">
-                          ↻ Start Over
-                      </button>
-                  </div>
+                  <button id="cropBtn" class="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold py-5 px-6 rounded-xl shadow-xl transition transform hover:-translate-y-1 flex justify-center items-center gap-3 text-xl">
+                      <span>✨</span> Generate Photo
+                  </button>
+                  
+                  <button onclick="location.reload()" class="w-full text-gray-500 underline text-sm hover:text-gray-700">
+                      Upload Different Photo
+                  </button>
               </div>
           </div>
-
       </div>
 
-      {/* 🟢 BOTTOM AD */}
-      <div class="mt-8 mb-12">
-        <AdSlot type="horizontal" />
-      </div>
-
-      {/* SEO CONTENT */}
-      <div class="prose prose-blue max-w-none bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
-          <h2 class="text-2xl font-bold text-gray-800">Why do exams ask for Postcard Size Photos?</h2>
-          <p class="text-gray-600">
-             Exams like <strong>SSC CGL, CHSL, MTS, and Railway NTPC</strong> often require candidates to carry a "Postcard Size (4 inch x 6 inch)" photograph to the exam center for verification. This is larger than the standard passport size.
-          </p>
+      {/* STEP 3: DOWNLOAD */}
+      <div id="step3" class="hidden animate-fade-in text-center">
+          <h3 class="text-2xl font-bold text-gray-800 mb-2">🎉 Postcard Photo Ready!</h3>
+          <p class="text-gray-500 mb-6">Size: 4 inch x 6 inch (1200x1800 px)</p>
           
-          <div class="bg-yellow-50 p-5 rounded-lg border-l-4 border-yellow-400 my-6 not-prose">
-              <h4 class="font-bold text-yellow-900 mb-2">SSC/Govt Exam Photo Rules:</h4>
-              <ul class="list-disc pl-5 text-sm text-yellow-800 space-y-1">
-                  <li>Size must be **4 inch x 6 inch**.</li>
-                  <li>The photo should have a **white background**.</li>
-                  <li>Both ears, neck, and shoulders must be clearly visible.</li>
-                  <li>No caps, goggles, or masks allowed.</li>
-              </ul>
+          <div class="inline-block border-[10px] border-white shadow-2xl bg-gray-200 rounded-sm overflow-hidden mb-8">
+               <canvas id="photoCanvas" class="max-w-full h-auto max-h-[500px]"></canvas>
+          </div>
+
+          <div class="flex flex-col sm:flex-row gap-4 justify-center max-w-lg mx-auto">
+              <button id="downloadBtn" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-xl shadow-xl text-lg flex justify-center items-center gap-2 transition transform hover:-translate-y-1">
+                  ⬇️ Download HD JPG
+              </button>
+              <button onclick="location.reload()" class="flex-1 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold py-4 px-8 rounded-xl shadow-sm transition">
+                  ↺ Create New
+              </button>
           </div>
           
-          <h3 class="font-bold text-gray-800 mt-4">How to use this tool?</h3>
-          <ol class="list-decimal pl-5 space-y-2 text-gray-700">
-              <li>Upload your normal portrait photo.</li>
-              <li>Our tool automatically locks the aspect ratio to 4:6.</li>
-              <li>Adjust the crop frame to fit your face perfectly.</li>
-              <li>Click <strong>Generate</strong> and download the high-resolution JPG.</li>
-              <li>Get it printed on a standard 4x6 photo paper at any shop.</li>
-          </ol>
+          <div class="mt-8 text-xs text-gray-400">
+              Print this on 4x6 Glossy Paper
+          </div>
       </div>
 
   </div>
 
-  {/* 🧠 JAVASCRIPT LOGIC */}
-  <script>
-      const fileInput = document.getElementById('fileInput');
-      const step1 = document.getElementById('step1');
-      const step2 = document.getElementById('step2');
-      const step3 = document.getElementById('step3');
-      const cropImage = document.getElementById('cropImage');
-      const cropBtn = document.getElementById('cropBtn');
-      const photoCanvas = document.getElementById('photoCanvas');
-      const downloadBtn = document.getElementById('downloadBtn');
-      const resetBtn = document.getElementById('resetBtn');
+  {/* 2. MIDDLE AD SLOT */}
+  <div class="mb-8 mt-12">
+     <AdSlot type="horizontal" />
+  </div>
 
-      let cropper = null;
+  {/* SEO CONTENT */}
+  <div slot="content">
+      <h3 class="text-xl font-bold text-gray-800 mb-3">Why 4x6 Postcard Photo?</h3>
+      <p class="text-gray-600 mb-4">
+          Government exams like <strong>SSC CGL, CHSL, MTS</strong> and NTA exams like <strong>NEET and JEE Main</strong> require candidates to bring a "Postcard Size Photograph" to the exam center. This photo is pasted on the attendance sheet.
+      </p>
+      
+      <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+          <h4 class="font-bold text-gray-800 mb-3">Dimensions Explained:</h4>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div class="bg-gray-50 p-3 rounded-lg">
+                  <span class="block text-xs text-gray-500 uppercase">Inches</span>
+                  <strong class="text-blue-600 text-lg">4" x 6"</strong>
+              </div>
+              <div class="bg-gray-50 p-3 rounded-lg">
+                  <span class="block text-xs text-gray-500 uppercase">Centimeters</span>
+                  <strong class="text-blue-600 text-lg">10.16 x 15.24</strong>
+              </div>
+              <div class="bg-gray-50 p-3 rounded-lg">
+                  <span class="block text-xs text-gray-500 uppercase">Millimeters</span>
+                  <strong class="text-blue-600 text-lg">101.6 x 152.4</strong>
+              </div>
+              <div class="bg-gray-50 p-3 rounded-lg">
+                  <span class="block text-xs text-gray-500 uppercase">Pixels (300 DPI)</span>
+                  <strong class="text-blue-600 text-lg">1200 x 1800</strong>
+              </div>
+          </div>
+      </div>
+  </div>
 
-      // 1. Handle File Upload
-      fileInput.addEventListener('change', (e) => {
-          if (e.target.files && e.target.files.length > 0) {
-              const file = e.target.files[0];
-              const url = URL.createObjectURL(file);
-              
-              cropImage.src = url;
-              step1.classList.add('hidden');
-              step2.classList.remove('hidden');
+</ToolLayout>
 
-              // Initialize Cropper with Postcard Ratio (4:6 or 2:3)
-              if(cropper) cropper.destroy();
-              // @ts-ignore
-              cropper = new Cropper(cropImage, {
-                  aspectRatio: 4 / 6, // LOCKED RATIO
-                  viewMode: 1,
-                  autoCropArea: 0.9,
-                  dragMode: 'move',
-                  guides: true,
-                  center: true,
-                  background: false,
-              });
-          }
-      });
+{/* 🧠 LOGIC */}
+<script>
+  // @ts-nocheck
+  const fileInput = document.getElementById('fileInput');
+  const step1 = document.getElementById('step1');
+  const step2 = document.getElementById('step2');
+  const step3 = document.getElementById('step3');
+  const cropImage = document.getElementById('cropImage');
+  const cropBtn = document.getElementById('cropBtn');
+  const photoCanvas = document.getElementById('photoCanvas');
+  const downloadBtn = document.getElementById('downloadBtn');
 
-      // 2. Generate High-Res Postcard Image
-      cropBtn.addEventListener('click', () => {
-          if(!cropper) return;
+  let cropper = null;
 
-          // 4x6 inches at 300 DPI = 1200 x 1800 pixels
-          const targetWidth = 1200;
-          const targetHeight = 1800;
+  // 1. Upload
+  fileInput?.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files.length > 0) {
+          const file = e.target.files[0];
+          cropImage.src = URL.createObjectURL(file);
+          
+          step1.classList.add('hidden');
+          step2.classList.remove('hidden');
 
-          // Get cropped canvas at high resolution
-          const croppedCanvas = cropper.getCroppedCanvas({
-              width: targetWidth,
-              height: targetHeight,
-              imageSmoothingEnabled: true,
-              imageSmoothingQuality: 'high',
+          if(cropper) cropper.destroy();
+          cropper = new Cropper(cropImage, {
+              aspectRatio: 4 / 6, // 4:6 Postcard Ratio
+              viewMode: 1,
+              dragMode: 'move',
+              autoCropArea: 0.9,
+              guides: true,
+              center: true,
+              background: false,
+              highlight: false,
+              toggleDragModeOnDblclick: false,
           });
+      }
+  });
 
-          // Set final canvas dimensions
-          photoCanvas.width = targetWidth;
-          photoCanvas.height = targetHeight;
-          const ctx = photoCanvas.getContext('2d');
-          
-          // Draw the cropped image onto the final canvas
-          ctx.drawImage(croppedCanvas, 0, 0, targetWidth, targetHeight);
+  // 2. Generate
+  cropBtn?.addEventListener('click', () => {
+      if(!cropper) return;
 
-          // Show Result
-          step2.classList.add('hidden');
-          step3.classList.remove('hidden');
-          
-          // Scroll on mobile
-          if(window.innerWidth < 768) {
-             step3.scrollIntoView({ behavior: 'smooth' });
-          }
+      // 4x6 inches @ 300 DPI = 1200x1800 px
+      const targetW = 1200;
+      const targetH = 1800;
+
+      const croppedCanvas = cropper.getCroppedCanvas({
+          width: targetW, height: targetH,
+          imageSmoothingQuality: 'high'
       });
 
-      // 3. Download Logic
-      downloadBtn.addEventListener('click', () => {
-          const link = document.createElement('a');
-          link.download = `Postcard-Photo-4x6-${Date.now()}.jpg`;
-          // High quality JPG (0.95)
-          link.href = photoCanvas.toDataURL('image/jpeg', 0.95);
-          link.click();
-      });
+      photoCanvas.width = targetW;
+      photoCanvas.height = targetH;
+      const ctx = photoCanvas.getContext('2d');
+      
+      // Draw onto final canvas
+      ctx.drawImage(croppedCanvas, 0, 0, targetW, targetH);
 
-      // Reset
-      resetBtn.addEventListener('click', () => {
-          fileInput.click();
-      });
-  </script>
-</Layout>
+      step2.classList.add('hidden');
+      step3.classList.remove('hidden');
+      window.scrollTo(0, 0);
+  });
+
+  // 3. Download
+  downloadBtn?.addEventListener('click', () => {
+      const link = document.createElement('a');
+      link.download = `Postcard-4x6-${Date.now()}.jpg`;
+      link.href = photoCanvas.toDataURL('image/jpeg', 0.95);
+      link.click();
+  });
+</script>
