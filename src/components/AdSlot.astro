@@ -1,65 +1,66 @@
 ---
 // src/components/AdSlot.astro
 
-// 🟢 1. MASTER ADSENSE ID (Central Control)
-// Ye ID Layout.astro bhi import karega. Future me change karni ho to sirf yahan karein.
+// 1. MASTER ID
 export const ADSENSE_ID = "ca-pub-XXXXXXXXXXXXXXXX"; 
 
-// 🟢 2. AD UNIT IDs (From Google AdSense Dashboard)
-// Jab aap units create karenge, wahan se IDs lekar yahan replace kar dena.
+// 2. SLOT IDs (AdSense Dashboard se "Display Ad Unit" -> "Responsive" banayein)
+// Tip: Aap chahein toh teeno ke liye SAME ID use kar sakte hain agar units Responsive hain.
+// Lekin tracking ke liye alag rakhna behtar hai.
 const SLOT_IDS = {
-    horizontal: "1234567890", // Header/Footer/Content ke beech
+    horizontal: "1234567890", // Top/Bottom/Content ke liye
     vertical:   "0987654321", // Sidebar ke liye
-    square:     "1122334455", // Small content areas ke liye
+    square:     "1122334455", // Specific chote areas ke liye
 };
 
 const { type = 'horizontal' } = Astro.props;
 
-// Select correct slot based on type provided
 const currentSlotId = SLOT_IDS[type] || SLOT_IDS.horizontal;
 
-// 🟢 3. LAYOUT SAFETY (To prevent design breakage)
-let containerClass = "my-6 flex justify-center items-center overflow-hidden bg-gray-50 border border-gray-100 rounded-lg mx-auto";
+// --- 🧠 INTELLIGENT LAYOUT LOGIC ---
+
+let containerClass = "my-6 mx-auto flex justify-center items-center bg-gray-50 border border-gray-100 rounded-lg overflow-hidden";
+let adFormat = "auto"; // MAGIC: Google decide karega shape
 let adStyle = { display: 'block' };
 
-// Specific styles per type
 if (type === 'horizontal') {
-    // Responsive width, fixed height range
-    containerClass += " w-full min-h-[90px] max-h-[280px]";
+    // Logic: Width full lo, Height Google decide karega (Mobile pe square, Desktop pe banner ho sakta hai)
+    // min-h-[100px] isliye diya taaki ad load hone se pehle layout shift (CLS) na ho.
+    containerClass += " w-full min-h-[100px]"; 
+    adFormat = "auto"; 
 } 
 else if (type === 'vertical') {
-    // Fixed width for Sidebar
-    containerClass = "my-6 flex justify-center items-center overflow-hidden bg-gray-50 border border-gray-100 rounded-lg w-[300px] h-[600px]";
-    adStyle = { display: 'inline-block', width: '300px', height: '600px' };
+    // Logic: Sidebar mein width fix hoti hai, height flexible rakho.
+    // Google yahan lamba skyscraper ya square box dono dikha sakta hai.
+    containerClass += " w-full max-w-[300px] min-h-[250px]"; 
+    adFormat = "auto"; 
 } 
 else if (type === 'square') {
-    // Fixed box
-    containerClass += " w-[300px] h-[250px]";
-    adStyle = { display: 'inline-block', width: '300px', height: '250px' };
+    // Logic: Ye specific box hai, isme hum rectangular shape prefer karenge.
+    containerClass += " w-full max-w-[336px] min-h-[280px]";
+    adFormat = "rectangle";
 }
 ---
 
 <div class={containerClass}>
     
-    {/* 🛡️ DEVELOPMENT MODE: Show Placeholder Box */}
+    {/* DEV MODE: Placeholder */}
     {import.meta.env.DEV ? (
-        <div class="flex flex-col items-center justify-center text-gray-400 p-4 w-full h-full text-center">
-            <span class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-1">Google Ad</span>
-            <span class="text-[10px] font-mono bg-gray-200 px-2 py-1 rounded text-gray-600 mb-1">Type: {type}</span>
-            <span class="text-[9px] font-mono text-gray-400">ID: {currentSlotId}</span>
+        <div class="flex flex-col items-center justify-center text-gray-400 p-4 text-center w-full h-full bg-gray-100 border-2 border-dashed border-gray-300">
+            <span class="text-xs font-bold uppercase tracking-widest text-gray-500">Ad ({type})</span>
+            <span class="text-[10px] font-mono mt-1 text-blue-500">Auto Format</span>
         </div>
     ) : (
-        /* 💰 PRODUCTION MODE: Load Real Ad */
+        /* PROD MODE: Fully Fluid Ad */
         <ins class="adsbygoogle"
              style={adStyle}
              data-ad-client={ADSENSE_ID}
              data-ad-slot={currentSlotId}
-             data-ad-format={type === 'horizontal' ? 'auto' : null} 
-             data-full-width-responsive={type === 'horizontal' ? 'true' : 'false'}
+             data-ad-format={adFormat} 
+             data-full-width-responsive="true"
         ></ins>
     )}
 
-    {/* Push Script: Only runs in Production/Build */}
     {!import.meta.env.DEV && (
         <script is:inline>
              (adsbygoogle = window.adsbygoogle || []).push({});
