@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import StoryLogo from '../components/StoryLogo.astro'; // Import the new animation
 ---
 
 <Layout title="About Us - TopOnlineForm">
@@ -9,7 +10,48 @@ import Layout from '../layouts/Layout.astro';
     <p class="mt-2 text-blue-200 text-sm font-semibold tracking-wider uppercase">Empowering Aspirants Since 2021</p>
   </div>
 
-  <div class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+  <div class="bg-gray-900 text-white py-16 border-b border-gray-800">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center gap-12">
+      
+      <div class="w-full md:w-1/3 flex justify-center bg-white/5 p-8 rounded-2xl border border-white/10 shadow-2xl">
+        <StoryLogo />
+      </div>
+
+      <div class="w-full md:w-2/3 space-y-6">
+        <h2 class="text-3xl font-bold leading-tight">
+          <span class="text-yellow-400">Complex Data</span> se <br/>
+          <span class="text-yellow-400">Verified Job</span> tak ka safar.
+        </h2>
+        
+        <p class="text-gray-400 text-lg">
+          Hum jante hain ki ek choti si galti aapka career miss karwa sakti hai. Isliye <strong>TopOnlineForm</strong> par hum sirf news copy-paste nahi karte, hum use process karte hain.
+        </p>
+
+        <div class="grid gap-4 md:grid-cols-3 mt-4">
+          <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
+            <div class="text-2xl mb-2">📥</div>
+            <h3 class="font-bold text-white mb-1">Collection</h3>
+            <p class="text-xs text-gray-400">Raw notifications ('T') ko official sources se track karna.</p>
+          </div>
+
+          <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
+            <div class="text-2xl mb-2">⚏</div>
+            <h3 class="font-bold text-white mb-1">Structuring</h3>
+            <p class="text-xs text-gray-400">Mushkil PDFs ko simple Box format mein badalna.</p>
+          </div>
+
+          <div class="bg-gray-800 p-4 rounded-lg border-l-4 border-yellow-400">
+            <div class="text-2xl mb-2">⚡</div>
+            <h3 class="font-bold text-white mb-1">Verification</h3>
+            <p class="text-xs text-gray-400">Humara <span class="text-yellow-400">Yellow Scanner</span> har detail ko verify karta hai.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="max-w-6xl mx-auto px-4 py-16 space-y-16">
     
     <div class="grid md:grid-cols-2 gap-8">
       <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-red-600 hover:shadow-xl transition-shadow duration-300">
@@ -87,5 +129,6 @@ import Layout from '../layouts/Layout.astro';
 
       </div>
     </div>
-    </div>
+
+  </div>
 </Layout>
