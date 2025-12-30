@@ -8,11 +8,15 @@ const SHOW_ANIMATION = true; // ✅ 'true' for Animation, 'false' for Simple Tex
 // ==========================================
 ---
 
-<div class={`logo-text-container ${SHOW_ANIMATION ? 'animated-mode' : 'simple-mode'}`}>
+<div 
+  class={`logo-text-container ${SHOW_ANIMATION ? 'animated-mode' : 'simple-mode'}`}
+  aria-label="Top Online Form" 
+  role="img"
+>
   
-  {/* 1. LIVE T (Sirf tab dikhega jab Animation ON ho) */}
+  {/* 1. LIVE T (Visual Only - Screen Reader se chupa diya) */}
   {SHOW_ANIMATION && (
-    <div class="letter-t-wrapper">
+    <div class="letter-t-wrapper" aria-hidden="true">
       <div class="t-top-row">
         <div class="dot"></div>
         <div class="dot"></div>
@@ -22,16 +26,16 @@ const SHOW_ANIMATION = true; // ✅ 'true' for Animation, 'false' for Simple Tex
     </div>
   )}
 
-  {/* 2. TEXT (Logic: Agar Animation ON hai to 'OP...', agar OFF hai to pura 'TOP...') */}
-  <div class="text-content">
+  {/* 2. TEXT (Visual Only - Screen Reader se chupa diya kyunki parent label padha jayega) */}
+  <div class="text-content" aria-hidden="true">
     <span class="word-main">
       {SHOW_ANIMATION ? "OP ONLINE FORM" : "TOP ONLINE FORM"}
     </span>
   </div>
 
-  {/* 3. SCANNING FORM (Sirf tab dikhega jab Animation ON ho) */}
+  {/* 3. SCANNING FORM (Visual Only) */}
   {SHOW_ANIMATION && (
-    <div class="doc-icon-wrapper">
+    <div class="doc-icon-wrapper" aria-hidden="true">
       <div class="doc-rect">
         <div class="scan-line"></div>
       </div>
@@ -57,10 +61,7 @@ const SHOW_ANIMATION = true; // ✅ 'true' for Animation, 'false' for Simple Tex
   }
 
   /* --- GAP CONTROL --- */
-  /* Jab Animation ON ho: Gap 0 (Kyunki hum margin use kar rahe hain) */
   .animated-mode { gap: 0; }
-  
-  /* Jab Animation OFF ho: Normal Text jaisa dikhe */
   .simple-mode { gap: 0; letter-spacing: -0.02em; }
 
 
@@ -73,7 +74,7 @@ const SHOW_ANIMATION = true; // ✅ 'true' for Animation, 'false' for Simple Tex
   }
 
   /* =========================================
-     ANIMATION STYLES (Only Active if Elements Exist)
+     ANIMATION STYLES
      ========================================= */
 
   /* --- T ICON --- */
