@@ -3,47 +3,72 @@
 import Layout from '../../layouts/Layout.astro';
 ---
 
-<Layout title="HTML to Image Converter - Free Developer Tool">
+<Layout title="Pro HTML to Image Converter - TopOnlineForm">
   
   <main class="tool-wrapper">
-    <div class="header-center">
+    <div class="header-section">
+      <span class="pro-badge">PRO TOOLS</span>
       <h1>⚡ HTML to Image Converter</h1>
-      <p>Paste your HTML & CSS code below and download the high-quality image instantly.</p>
+      <p>Convert HTML/CSS code into high-quality images. <br>Perfect for social media posts, email snippets, and design mockups.</p>
     </div>
 
-    <div class="editor-container">
+    <div class="editor-grid">
       
       <div class="input-panel">
         
-        <div class="code-box">
-          <label class="label-tag html-tag">HTML</label>
-          <textarea id="htmlInput" placeholder="<div>Hello World</div>"></textarea>
+        <div class="panel-header">
+           <h3>👨‍💻 Code Editor</h3>
+           <button id="resetBtn" class="sm-btn">↺ Reset Default</button>
         </div>
 
-        <div class="code-box">
-          <label class="label-tag css-tag">CSS</label>
-          <textarea id="cssInput" placeholder=".box { color: red; font-size: 20px; }"></textarea>
-        </div>
-
-        <div class="control-bar">
-          <div class="bg-control">
-            <span>Background:</span>
-            <input type="color" id="bgColorPicker" value="#ffffff">
-            <label><input type="checkbox" id="transparentBg"> Transparent</label>
+        <div class="code-group">
+          <div class="label-row">
+            <span class="tag html">HTML</span>
           </div>
-          <button id="downloadBtn" class="action-btn">📸 Download PNG</button>
+          <textarea id="htmlInput" spellcheck="false" placeholder="<div>Hello World</div>"></textarea>
+        </div>
+
+        <div class="code-group">
+           <div class="label-row">
+            <span class="tag css">CSS</span>
+           </div>
+          <textarea id="cssInput" spellcheck="false" placeholder=".box { color: red; }"></textarea>
         </div>
 
       </div>
 
       <div class="preview-panel">
-        <label class="preview-label">Live Preview</label>
+        <div class="panel-header">
+            <h3>👁️ Live Preview</h3>
+            <div class="bg-toggle">
+                <label>Background:</label>
+                <input type="color" id="bgColorPicker" value="#ffffff">
+                <label class="checkbox-label"><input type="checkbox" id="transparentBg"> Transparent</label>
+            </div>
+        </div>
         
         <div class="canvas-wrapper">
-          <div id="renderTarget" class="render-box">
-            <div class="placeholder-text">Preview will appear here...</div>
+          <div class="canvas-scroll">
+            <div id="renderTarget" class="render-box">
+              </div>
           </div>
         </div>
+
+        <div class="export-bar">
+            <div class="settings">
+                <select id="scaleSelect">
+                    <option value="1">1x (Standard)</option>
+                    <option value="2" selected>2x (HD)</option>
+                    <option value="4">4x (Ultra HD)</option>
+                </select>
+                <select id="formatSelect">
+                    <option value="png">PNG</option>
+                    <option value="jpeg">JPG</option>
+                </select>
+            </div>
+            <button id="downloadBtn" class="download-btn">📸 Download Image</button>
+        </div>
+
       </div>
 
     </div>
@@ -53,170 +78,260 @@ import Layout from '../../layouts/Layout.astro';
 <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <script is:inline>
-  // Elements
+  // --- ELEMENTS ---
   const htmlInput = document.getElementById('htmlInput');
   const cssInput = document.getElementById('cssInput');
   const renderTarget = document.getElementById('renderTarget');
   const downloadBtn = document.getElementById('downloadBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  
+  // Settings
   const bgColorPicker = document.getElementById('bgColorPicker');
   const transparentBg = document.getElementById('transparentBg');
+  const scaleSelect = document.getElementById('scaleSelect');
+  const formatSelect = document.getElementById('formatSelect');
 
-  // Default Content
+  // --- DEFAULT DATA ---
   const defaultHTML = `<div class="card">
-  <h2>🚀 Top Online Form</h2>
-  <p>HTML to Image Generator</p>
-  <button>Download Now</button>
+  <div class="icon">🚀</div>
+  <h2>Pro Converter</h2>
+  <p>Create beautiful images from code instantly.</p>
+  <div class="tags">
+    <span>HTML</span>
+    <span>CSS</span>
+  </div>
 </div>`;
 
   const defaultCSS = `.card {
-  background: linear-gradient(135deg, #dc2626, #991b1b);
+  background: linear-gradient(135deg, #1e293b, #0f172a);
   color: white;
+  width: 350px;
   padding: 40px;
-  border-radius: 20px;
+  border-radius: 24px;
   text-align: center;
-  font-family: sans-serif;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  width: 300px;
+  font-family: 'Segoe UI', sans-serif;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.1);
 }
-h2 { margin: 0 0 10px 0; font-size: 24px; }
-button {
-  background: #facc15;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 20px;
+
+.icon {
+  font-size: 50px;
+  margin-bottom: 20px;
+  background: rgba(255,255,255,0.05);
+  width: 100px; height: 100px;
+  line-height: 100px;
+  border-radius: 50%;
+  margin: 0 auto 20px auto;
+}
+
+h2 { margin: 0 0 10px 0; font-size: 28px; font-weight: 700; color: #38bdf8; }
+p { color: #94a3b8; line-height: 1.6; margin-bottom: 25px; }
+
+.tags { display: flex; justify-content: center; gap: 10px; }
+.tags span {
+  background: #38bdf8; color: #0f172a;
+  padding: 5px 15px; border-radius: 20px;
+  font-size: 12px; font-weight: bold;
 }`;
 
-  // Initialize
-  htmlInput.value = defaultHTML;
-  cssInput.value = defaultCSS;
-  updatePreview();
-
-  // Listeners
+  // --- INITIALIZATION ---
+  function init() {
+    htmlInput.value = defaultHTML;
+    cssInput.value = defaultCSS;
+    updatePreview();
+  }
+  
+  // Event Listeners
   htmlInput.addEventListener('input', updatePreview);
   cssInput.addEventListener('input', updatePreview);
-  
-  bgColorPicker.addEventListener('input', () => {
-    if(!transparentBg.checked) renderTarget.style.backgroundColor = bgColorPicker.value;
-  });
+  resetBtn.addEventListener('click', init);
 
-  transparentBg.addEventListener('change', () => {
+  // Background Handling
+  function updateBg() {
     if(transparentBg.checked) {
       renderTarget.style.backgroundColor = 'transparent';
     } else {
       renderTarget.style.backgroundColor = bgColorPicker.value;
     }
-  });
+  }
+  bgColorPicker.addEventListener('input', () => { transparentBg.checked = false; updateBg(); });
+  transparentBg.addEventListener('change', updateBg);
 
-  // Function to Update Live Preview
+  // --- LIVE PREVIEW ---
   function updatePreview() {
     const html = htmlInput.value;
+    // Add Scoped style wrapper to prevent leaking
     const css = `<style>${cssInput.value}</style>`;
     renderTarget.innerHTML = css + html;
+    updateBg();
   }
 
-  // Function to Download
+  // --- 📸 DOWNLOAD FUNCTION (FIXED ALIGNMENT) ---
   downloadBtn.addEventListener('click', () => {
     const originalText = downloadBtn.innerText;
     downloadBtn.innerText = "Processing... ⚙️";
+    downloadBtn.style.opacity = "0.7";
     
-    // Check transparency
-    let bg = transparentBg.checked ? null : bgColorPicker.value;
+    // settings
+    const scale = parseInt(scaleSelect.value);
+    const format = formatSelect.value; // 'png' or 'jpeg'
+    const isTransparent = transparentBg.checked;
+    const bg = isTransparent ? null : bgColorPicker.value;
 
     html2canvas(renderTarget, {
+      scale: scale, 
       backgroundColor: bg,
-      scale: 2, // High Res
-      logging: false
+      logging: false,
+      useCORS: true,
+      allowTaint: true,
+      // 🔥 MAGIC FIX: onclone ensures captured element size matches exactly
+      onclone: (clonedDoc) => {
+          const el = clonedDoc.getElementById('renderTarget');
+          
+          // 1. Force exact width/height from original to prevent wrapping issues
+          const rect = renderTarget.getBoundingClientRect();
+          el.style.width = rect.width + "px";
+          el.style.height = rect.height + "px";
+          
+          // 2. Reset margins/transforms that might shift content
+          el.style.margin = "0";
+          el.style.transform = "none";
+          el.style.display = "inline-block"; // Ensures it wraps tight around content
+      }
     }).then(canvas => {
       const link = document.createElement('a');
-      link.download = 'generated-image.png';
-      link.href = canvas.toDataURL('image/png');
+      link.download = `code-image-${Date.now()}.${format}`;
+      link.href = canvas.toDataURL(`image/${format}`);
       link.click();
+      
       downloadBtn.innerText = "✅ Saved!";
-      setTimeout(() => downloadBtn.innerText = originalText, 2000);
+      setTimeout(() => {
+        downloadBtn.innerText = originalText;
+        downloadBtn.style.opacity = "1";
+      }, 2000);
+    }).catch(err => {
+        console.error(err);
+        alert('Error generating image');
+        downloadBtn.innerText = originalText;
     });
   });
+
+  // Run on Load
+  init();
 </script>
 
 <style>
-  /* --- LAYOUT --- */
+  /* --- PAGE LAYOUT --- */
   .tool-wrapper {
-    max-width: 1200px; margin: 0 auto; padding: 40px 20px;
-    font-family: 'Segoe UI', sans-serif; color: white;
-  }
-  .header-center { text-align: center; margin-bottom: 40px; }
-  .header-center h1 { color: #facc15; margin-bottom: 10px; font-size: 2.5rem; }
-  .header-center p { color: #ccc; }
-
-  /* --- EDITOR GRID --- */
-  .editor-container {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+    max-width: 1300px; margin: 0 auto; padding: 60px 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #e2e8f0;
   }
   
-  /* Responsive for Mobile */
-  @media (max-width: 768px) {
-    .editor-container { grid-template-columns: 1fr; }
+  .header-section { text-align: center; margin-bottom: 50px; }
+  .pro-badge { 
+    background: linear-gradient(90deg, #facc15, #eab308); color: #000;
+    font-size: 11px; font-weight: 900; padding: 4px 8px; border-radius: 4px;
+    letter-spacing: 1px; display: inline-block; margin-bottom: 10px;
   }
+  h1 { font-size: 3rem; margin: 0 0 10px 0; color: white; font-weight: 800; }
+  p { color: #94a3b8; font-size: 1.1rem; }
 
-  /* --- INPUT PANEL --- */
+  /* --- GRID --- */
+  .editor-grid {
+    display: grid; grid-template-columns: 40% 60%; gap: 30px;
+    align-items: start;
+  }
+  @media (max-width: 900px) { .editor-grid { grid-template-columns: 1fr; } }
+
+  /* --- LEFT: INPUT PANEL --- */
   .input-panel { display: flex; flex-direction: column; gap: 20px; }
   
-  .code-box { position: relative; }
-  .label-tag {
-    position: absolute; top: 0; right: 0;
-    padding: 4px 10px; font-size: 12px; font-weight: bold;
-    border-bottom-left-radius: 8px;
+  .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+  h3 { margin: 0; font-size: 1.1rem; color: #f8fafc; display: flex; align-items: center; gap: 8px; }
+  
+  .sm-btn {
+    background: transparent; border: 1px solid #475569; color: #94a3b8;
+    padding: 4px 10px; font-size: 12px; border-radius: 4px; cursor: pointer;
   }
-  .html-tag { background: #e34c26; color: white; }
-  .css-tag { background: #264de4; color: white; }
+  .sm-btn:hover { background: #334155; color: white; }
+
+  .code-group { position: relative; }
+  .label-row { position: absolute; right: 10px; top: 10px; z-index: 10; pointer-events: none; }
+  .tag { 
+    font-size: 10px; font-weight: bold; padding: 3px 8px; border-radius: 4px; 
+    text-transform: uppercase; color: white;
+  }
+  .html { background: #e34c26; }
+  .css { background: #264de4; }
 
   textarea {
-    width: 100%; height: 200px;
-    background: #1e1e1e; color: #a9b7c6;
-    border: 1px solid #444; border-radius: 8px;
-    padding: 15px; font-family: monospace; font-size: 14px;
-    resize: vertical; outline: none;
+    width: 100%; height: 250px;
+    background: #0f172a; color: #a9b7c6;
+    border: 1px solid #334155; border-radius: 12px;
+    padding: 20px; font-family: 'Fira Code', 'Consolas', monospace; font-size: 14px;
+    resize: vertical; outline: none; transition: border 0.2s;
+    line-height: 1.5;
   }
-  textarea:focus { border-color: #facc15; }
+  textarea:focus { border-color: #38bdf8; box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1); }
 
-  /* --- CONTROLS --- */
-  .control-bar {
-    background: #222; padding: 15px; border-radius: 10px;
-    display: flex; justify-content: space-between; align-items: center;
-    border: 1px solid #333;
-  }
-  .bg-control { display: flex; align-items: center; gap: 10px; font-size: 14px; }
-  input[type="color"] { border: none; width: 30px; height: 30px; cursor: pointer; background: none; }
-  
-  .action-btn {
-    background: #dc2626; color: white; border: none;
-    padding: 10px 25px; border-radius: 5px; font-weight: bold; cursor: pointer;
-    transition: 0.2s;
-  }
-  .action-btn:hover { background: #b91c1c; }
-
-  /* --- PREVIEW PANEL --- */
+  /* --- RIGHT: PREVIEW PANEL --- */
   .preview-panel {
-    background: #111; border: 1px solid #333;
-    border-radius: 12px; padding: 20px;
-    display: flex; flex-direction: column;
+    background: #1e293b; border: 1px solid #334155;
+    border-radius: 16px; padding: 25px;
+    display: flex; flex-direction: column; gap: 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
   }
-  .preview-label { color: #888; font-size: 12px; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; }
+
+  .bg-toggle { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #94a3b8; }
+  .checkbox-label { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+  input[type="color"] { border: none; width: 24px; height: 24px; cursor: pointer; background: none; border-radius: 4px; overflow: hidden; }
 
   .canvas-wrapper {
-    flex-grow: 1;
-    background-image: radial-gradient(#333 1px, transparent 1px);
-    background-size: 20px 20px; background-color: #000;
-    border-radius: 8px;
+    background-image: 
+        linear-gradient(45deg, #2a3241 25%, transparent 25%), 
+        linear-gradient(-45deg, #2a3241 25%, transparent 25%), 
+        linear-gradient(45deg, transparent 75%, #2a3241 75%), 
+        linear-gradient(-45deg, transparent 75%, #2a3241 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    background-color: #1a202c; /* Checkerboard pattern for transparency */
+    border-radius: 12px;
+    padding: 40px;
+    min-height: 450px;
     display: flex; align-items: center; justify-content: center;
-    padding: 40px; overflow: auto; min-height: 400px;
+    overflow: hidden;
+    position: relative;
+    border: 2px dashed #334155;
   }
 
+  /* This box ensures the content fits tightly */
   .render-box {
-    /* This box will grow based on content */
-    background-color: white; /* Default bg */
-    display: inline-block;
+    display: inline-block; /* Crucial for fit-content capture */
+    min-width: 100px; min-height: 50px;
+    /* User set background handled by JS */
   }
+
+  /* --- EXPORT BAR --- */
+  .export-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 10px; border-top: 1px solid #334155;
+  }
+  
+  .settings { display: flex; gap: 10px; }
+  select {
+    background: #0f172a; color: white; border: 1px solid #475569;
+    padding: 10px; border-radius: 8px; cursor: pointer; outline: none;
+  }
+
+  .download-btn {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    color: white; border: none;
+    padding: 12px 30px; font-size: 1rem; font-weight: bold;
+    border-radius: 50px; cursor: pointer;
+    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
+    transition: all 0.2s;
+  }
+  .download-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(220, 38, 38, 0.6); }
+  .download-btn:active { transform: translateY(0); }
+
 </style>
