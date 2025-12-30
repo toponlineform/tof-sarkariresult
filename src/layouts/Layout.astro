@@ -18,6 +18,9 @@ const {
 const siteUrl = "https://toponlineform.com";
 const canonicalURL = new URL(Astro.url.pathname, siteUrl);
 
+// --- 📅 DYNAMIC YEAR LOGIC ---
+const currentYear = new Date().getFullYear();
+
 // --- 🚀 INFINITY SEO TITLE LOGIC ---
 let seoTitle = title;
 let seoDescription = description;
@@ -25,11 +28,11 @@ let seoDescription = description;
 const currentPath = Astro.url.pathname;
 
 if (currentPath === "/" || currentPath === "") {
-  seoTitle = "Top Online Form: Sarkari Result, Latest Govt Jobs & Admit Card 2026";
-  seoDescription = "India's No.1 Portal for Sarkari Result, Latest Government Jobs, Admit Cards, and Results updates at TopOnlineForm.com.";
+  seoTitle = `Top Online Form: Sarkari Result, Latest Govt Jobs & Admit Card ${currentYear}`;
+  seoDescription = `India's No.1 Portal for Sarkari Result, Latest Government Jobs, Admit Cards, and Results updates at TopOnlineForm.com.`;
 } 
 else if (isPost && !title.toLowerCase().includes('form')) {
-  seoTitle = `${title} 2026 Online Form | Eligibility, Last Date - Top Online Form`;
+  seoTitle = `${title} ${currentYear} Online Form | Eligibility, Last Date - Top Online Form`;
 } 
 else if (!isPost) {
   seoTitle = title.includes("Top Online Form") ? title : `${title} - Top Online Form`;
@@ -51,6 +54,18 @@ const organizationSchema = JSON.stringify({
     "@type": "ContactPoint",
     "contactType": "customer support",
     "email": "support@toponlineform.com"
+  }
+});
+
+// 🔍 WEBSITE SCHEMA (Sitelinks Search Box)
+const websiteSchema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "url": siteUrl,
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": `${siteUrl}/search?q={search_term_string}`,
+    "query-input": "required name=search_term_string"
   }
 });
 ---
@@ -85,8 +100,9 @@ const organizationSchema = JSON.stringify({
     <meta property="twitter:description" content={seoDescription} />
     <meta property="twitter:image" content={new URL(image, siteUrl)} />
 
-    {/* 🏆 BRAND SCHEMA INJECTION */}
+    {/* 🏆 SCHEMA INJECTION (Organization + WebSite) */}
     <script type="application/ld+json" set:html={organizationSchema} />
+    <script type="application/ld+json" set:html={websiteSchema} />
 
     {/* 💰 GOOGLE ADSENSE (Controlled by AdSlot Switch) */}
     {LOAD_SCRIPT && (
@@ -94,8 +110,7 @@ const organizationSchema = JSON.stringify({
          crossorigin="anonymous"></script>
     )}
 
-    {/* Tailwind CSS */}
-    <script is:inline src="https://cdn.tailwindcss.com"></script>
+    {/* ❌ REMOVED: Tailwind CDN (Now using installed Tailwind for speed) */}
     
     {/* Search Scripts */}
     <link href="/pagefind/pagefind-ui.css" rel="stylesheet">
@@ -185,7 +200,7 @@ const organizationSchema = JSON.stringify({
                 </nav>
             </div>
 
-            {/* Mobile Menu Dropdown */}
+            {/* Mobile Menu Dropdown (Simple Toggle kept as requested) */}
             <div id="mobileMenu" class="hidden md:hidden mt-3 border-t border-red-500 pt-3">
                 <nav class="flex flex-col space-y-3 font-semibold text-sm uppercase tracking-wide">
                     <a href="/" class="hover:text-yellow-300 block">Home</a>
@@ -235,7 +250,7 @@ const organizationSchema = JSON.stringify({
                 <a href="/terms-conditions" class="hover:text-white transition-colors font-bold text-gray-400">Terms & Conditions</a>
                 <a href="/sitemap-index.xml" class="hover:text-white transition-colors">Sitemap</a>
             </div>
-            <p class="text-xs text-gray-600">Copyright © 2026 TopOnlineForm. All Rights Reserved.</p>
+            <p class="text-xs text-gray-600">Copyright © {currentYear} TopOnlineForm. All Rights Reserved.</p>
         </div>
     </footer>
 
@@ -278,7 +293,7 @@ const organizationSchema = JSON.stringify({
             }
         });
 
-        // Mobile Menu Toggle
+        // Mobile Menu Toggle (Kept Simple as Requested)
         if(mobileMenuBtn) {
             mobileMenuBtn.addEventListener('click', () => {
                 mobileMenu.classList.toggle('hidden');
