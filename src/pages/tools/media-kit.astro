@@ -1,7 +1,6 @@
 ---
 // File Location: src/pages/tools/media-kit.astro
 
-// ✅ Note: Path updated to '../../' because we are inside the 'tools' folder
 import Layout from '../../layouts/Layout.astro';
 ---
 
@@ -104,10 +103,31 @@ import Layout from '../../layouts/Layout.astro';
     btn.style.opacity = "0.7";
 
     html2canvas(element, {
-      scale: 2, // High Quality Export
+      scale: 3, // High Quality (3x Resolution)
       backgroundColor: null,
       useCORS: true,
-      logging: false
+      allowTaint: true,
+      logging: false,
+      // ✅ VITAL FIX: Reset scale and margins specifically for the screenshot
+      onclone: (clonedDoc) => {
+        const clonedElement = clonedDoc.getElementById(elementId);
+        
+        // 1. Reset Transform (fix alignment issues caused by zoom)
+        clonedElement.style.transform = "scale(1)";
+        
+        // 2. Remove negative margins (fix layout clipping)
+        clonedElement.style.margin = "0";
+        
+        // 3. Force Dimensions for Banner (ensure full width capture)
+        if(elementId === 'x-banner') {
+             clonedElement.style.width = "1000px";
+             clonedElement.style.height = "333px";
+        }
+
+        // 4. Disable editing indicators (cursors/borders) in the final image
+        const editables = clonedElement.querySelectorAll('[contenteditable="true"]');
+        editables.forEach(el => el.setAttribute('contenteditable', 'false'));
+      }
     }).then(canvas => {
       const link = document.createElement('a');
       link.download = fileName + '.png';
@@ -124,6 +144,7 @@ import Layout from '../../layouts/Layout.astro';
       console.error(err);
       alert("Error generating image. Please try on a different browser.");
       btn.innerText = originalText;
+      btn.style.opacity = "1";
     });
   }
 </script>
