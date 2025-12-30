@@ -5,12 +5,14 @@
 <div class="logo-text-container">
   
   <div class="letter-t-wrapper">
-    <div class="t-top-row">
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
+    <div class="t-shape">
+      <div class="t-top">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <div class="t-stem"></div>
     </div>
-    <div class="t-stem"></div>
   </div>
 
   <div class="text-content">
@@ -29,76 +31,72 @@
   /* --- CONTAINER --- */
   .logo-text-container {
     display: flex;
-    align-items: flex-end; /* Niche se align kiya taaki Text aur T ek line me hon */
-    gap: 0.1em;
+    align-items: flex-end; 
+    gap: 0.15em;
     font-family: inherit;
-    font-weight: 900; /* Extra Bold */
+    font-weight: 900; 
     text-transform: uppercase;
     color: white;
-    /* Line height 1 bahut zaroori hai taaki height calculation sahi ho */
-    line-height: 0.9; 
+    font-size: 1.5rem; 
+    line-height: 1; 
   }
 
   /* --- TEXT STYLING --- */
   .text-content {
     display: flex;
     align-items: flex-end;
-  }
-  
-  .word-main {
-    display: inline-block;
-    /* Thoda sa adjustment taaki letters 'O' aur 'T' same level pe lagen */
+    line-height: 1;
     position: relative;
-    top: 0.02em; 
+    bottom: -0.02em; 
   }
 
-  /* --- ANIMATED "T" STYLES (Magic Numbers using 'em') --- */
+  /* --- ANIMATED "T" STYLES --- */
   .letter-t-wrapper {
-    /* Total Height = 0.9em (Jo ki Capital Letters ki height hoti hai) */
     height: 0.9em; 
-    width: 0.75em;
     display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* Dots upar, Stem niche */
+    align-items: flex-end;
     margin-right: 0.05em;
-    padding-bottom: 0.02em; /* Micro adjustment */
   }
 
-  /* Dots Row */
-  .t-top-row {
-    display: flex;
-    justify-content: space-between;
-    height: 0.22em; 
-    width: 100%;
+  .t-shape { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 0.08em; /* Gap wahi rakha hai jo aapne manga tha */
   }
   
-  /* Stem (Dandi) */
-  .t-stem { 
-    width: 0.24em; 
-    height: 0.64em; /* Remaining height */
+  .t-top { 
+    display: flex; 
+    gap: 0.08em; 
+  }
+  
+  /* Dots Size (Thoda Chota/Patla kiya) */
+  .dot { 
+    width: 0.18em; /* Phele 0.22em tha */
+    height: 0.18em; 
     background-color: white; 
     border-radius: 1px; 
-    align-self: center;
-    /* Animation */
+  }
+  
+  /* Stem Size (Thoda Patla kiya) */
+  .t-stem { 
+    width: 0.18em; /* Phele 0.24em tha */
+    height: 0.64em; 
+    background-color: white; 
+    border-radius: 1px; 
     animation: slideUp 1.5s ease-out forwards;
   }
   
-  .dot { 
-    width: 0.22em; 
-    height: 0.22em; 
-    background-color: white; 
-    border-radius: 1px; 
-  }
-  
   /* Animations */
-  .dot:nth-child(1) { animation: blink 1.5s infinite; }
-  .dot:nth-child(2) { animation: blink 1.5s 0.2s infinite; }
-  .dot:nth-child(3) { animation: blink 1.5s 0.4s infinite; }
+  .t-shape .dot:nth-child(1) { animation: blink 1.5s infinite; }
+  .t-shape .dot:nth-child(2) { animation: blink 1.5s 0.2s infinite; }
+  .t-shape .dot:nth-child(3) { animation: blink 1.5s 0.4s infinite; }
+
 
   /* --- SCANNING FORM ICON STYLES --- */
   .doc-icon-wrapper {
-    margin-left: 0.3em;
-    height: 0.9em; /* Match Text Height */
+    margin-left: 0.2em;
+    height: 0.9em; 
     display: flex;
     align-items: center;
     padding-bottom: 0.1em;
@@ -106,7 +104,7 @@
 
   .doc-rect {
     width: 0.7em; height: 0.85em;
-    border: 0.1em solid white; 
+    border: 0.08em solid white; /* Border ko bhi patla kiya (Phele 0.1em tha) */
     border-radius: 2px;
     position: relative;
     background: rgba(255,255,255,0.1); 
@@ -114,10 +112,10 @@
   }
 
   .scan-line {
-    width: 80%; height: 0.1em;
+    width: 80%; height: 0.08em; /* Line bhi thodi patli ki */
     background-color: #facc15; 
     position: absolute; top: 20%;
-    box-shadow: 0 0 4px #facc15;
+    box-shadow: 0 0 3px #facc15;
     animation: scanMove 2s linear infinite;
   }
 
