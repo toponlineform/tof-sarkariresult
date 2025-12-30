@@ -30,23 +30,23 @@
   .logo-text-container {
     display: flex;
     align-items: center; 
-    gap: 0.2em; 
+    /* ❌ GAP REMOVED: Pehle yahan gap tha, ab hum margin se control karenge */
+    gap: 0; 
+    
     font-family: inherit;
     font-weight: 900;
     color: white;
     line-height: 1;
-    white-space: nowrap; /* Text tootega nahi */
-    flex-shrink: 0; /* Header chota hone par ye pichkega nahi */
+    white-space: nowrap;
+    flex-shrink: 0;
     
-    /* 🔥 MAGIC FORMULA (CLAMP) 🔥 */
-    /* Syntax: clamp(MIN, PREFERRED, MAX) */
-    /* Matlab: Kam se kam 20px rahe, Screen ka 4% rahe, lekin 32px se upar na jaye */
+    /* Fluid Typography */
     font-size: clamp(20px, 4vw, 32px); 
   }
 
   /* --- TEXT --- */
   .text-content {
-    font-size: 1em; /* Container ke size se chalega */
+    font-size: 1em; 
     letter-spacing: -0.03em;
     position: relative;
     top: 0.02em; 
@@ -59,7 +59,9 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between; 
-    margin-right: 0.05em;
+    
+    /* ✅ FIX: Sirf halka sa saans lene ka space, taaki 'T' aur 'O' overlap na karein */
+    margin-right: 0.03em; 
   }
 
   .t-top-row {
@@ -85,7 +87,9 @@
 
   /* --- FORM ICON --- */
   .doc-icon-wrapper {
-    margin-left: 0.2em;
+    /* ✅ FIX: Icon ko thoda door rakha taaki wo text se chipke na */
+    margin-left: 0.25em; 
+    
     height: 0.9em; 
     display: flex;
     align-items: center;
