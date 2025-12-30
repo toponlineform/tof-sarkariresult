@@ -26,43 +26,40 @@
 </div>
 
 <style>
-  /* --- MASTER CONTAINER (Yahan se size control hoga) --- */
+  /* --- MASTER CONTAINER --- */
   .logo-text-container {
     display: flex;
-    align-items: center; /* Sabko center line me rakho */
-    gap: 0.2em; /* Beech ka gap relative */
+    align-items: center; 
+    gap: 0.2em; 
     font-family: inherit;
     font-weight: 900;
     color: white;
-    line-height: 1; /* Extra spacing khatam */
+    line-height: 1;
+    white-space: nowrap; /* Text tootega nahi */
+    flex-shrink: 0; /* Header chota hone par ye pichkega nahi */
     
-    /* --- RESPONSIVE SIZE MAGIC --- */
-    font-size: 20px; /* Mobile ke liye default size */
-  }
-
-  /* Desktop ke liye size bada kar do */
-  @media (min-width: 768px) {
-    .logo-text-container {
-      font-size: 28px; /* Laptop/PC pe bada dikhega */
-    }
+    /* 🔥 MAGIC FORMULA (CLAMP) 🔥 */
+    /* Syntax: clamp(MIN, PREFERRED, MAX) */
+    /* Matlab: Kam se kam 20px rahe, Screen ka 4% rahe, lekin 32px se upar na jaye */
+    font-size: clamp(20px, 4vw, 32px); 
   }
 
   /* --- TEXT --- */
   .text-content {
-    font-size: 1em; /* Jo container ka size, wahi text ka size */
+    font-size: 1em; /* Container ke size se chalega */
     letter-spacing: -0.03em;
     position: relative;
-    top: 0.02em; /* Optical alignment */
+    top: 0.02em; 
   }
 
-  /* --- T ICON (Calculated relative to Text) --- */
+  /* --- T ICON --- */
   .letter-t-wrapper {
-    height: 0.9em; /* Text ki height ke barabar */
+    height: 0.9em; 
     width: 0.75em;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Gap automatically manage hoga */
-    margin-right: 0.01em;
+    justify-content: space-between; 
+    margin-right: 0.05em;
   }
 
   .t-top-row {
@@ -74,7 +71,7 @@
 
   .t-stem { 
     width: 0.24em; 
-    height: 0.62em; /* Balance banaya taaki dot se touch na ho */
+    height: 0.62em; 
     background-color: white; 
     border-radius: 1px; 
     align-self: center;
@@ -86,16 +83,16 @@
     background-color: white; border-radius: 1px; 
   }
 
-  /* --- FORM ICON (Calculated relative to Text) --- */
+  /* --- FORM ICON --- */
   .doc-icon-wrapper {
     margin-left: 0.2em;
-    height: 0.9em; /* Text ki height ke barabar */
+    height: 0.9em; 
     display: flex;
     align-items: center;
   }
 
   .doc-rect {
-    width: 0.75em; height: 0.9em; /* Icon Text se bada nahi hoga */
+    width: 0.75em; height: 0.9em; 
     border: 0.08em solid white; 
     border-radius: 2px;
     position: relative;
