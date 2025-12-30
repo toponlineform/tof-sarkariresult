@@ -1,27 +1,42 @@
 ---
 // src/components/LogoWithText.astro
+
+// ==========================================
+// 🎛️ CONTROL CENTER (Yahan se Control karo)
+// ==========================================
+const SHOW_ANIMATION = true; // ✅ 'true' for Animation, 'false' for Simple Text
+// ==========================================
 ---
 
-<div class="logo-text-container">
+<div class={`logo-text-container ${SHOW_ANIMATION ? 'animated-mode' : 'simple-mode'}`}>
   
-  <div class="letter-t-wrapper">
-    <div class="t-top-row">
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
+  {/* 1. LIVE T (Sirf tab dikhega jab Animation ON ho) */}
+  {SHOW_ANIMATION && (
+    <div class="letter-t-wrapper">
+      <div class="t-top-row">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <div class="t-stem"></div>
     </div>
-    <div class="t-stem"></div>
-  </div>
+  )}
 
+  {/* 2. TEXT (Logic: Agar Animation ON hai to 'OP...', agar OFF hai to pura 'TOP...') */}
   <div class="text-content">
-    <span class="word-main">OP ONLINE FORM</span>
+    <span class="word-main">
+      {SHOW_ANIMATION ? "OP ONLINE FORM" : "TOP ONLINE FORM"}
+    </span>
   </div>
 
-  <div class="doc-icon-wrapper">
-    <div class="doc-rect">
-      <div class="scan-line"></div>
+  {/* 3. SCANNING FORM (Sirf tab dikhega jab Animation ON ho) */}
+  {SHOW_ANIMATION && (
+    <div class="doc-icon-wrapper">
+      <div class="doc-rect">
+        <div class="scan-line"></div>
+      </div>
     </div>
-  </div>
+  )}
 
 </div>
 
@@ -30,9 +45,6 @@
   .logo-text-container {
     display: flex;
     align-items: center; 
-    /* ❌ GAP REMOVED: Pehle yahan gap tha, ab hum margin se control karenge */
-    gap: 0; 
-    
     font-family: inherit;
     font-weight: 900;
     color: white;
@@ -40,17 +52,29 @@
     white-space: nowrap;
     flex-shrink: 0;
     
-    /* Fluid Typography */
+    /* Fluid Typography - Size control */
     font-size: clamp(20px, 4vw, 32px); 
   }
 
-  /* --- TEXT --- */
+  /* --- GAP CONTROL --- */
+  /* Jab Animation ON ho: Gap 0 (Kyunki hum margin use kar rahe hain) */
+  .animated-mode { gap: 0; }
+  
+  /* Jab Animation OFF ho: Normal Text jaisa dikhe */
+  .simple-mode { gap: 0; letter-spacing: -0.02em; }
+
+
+  /* --- TEXT STYLING --- */
   .text-content {
     font-size: 1em; 
     letter-spacing: -0.03em;
     position: relative;
     top: 0.02em; 
   }
+
+  /* =========================================
+     ANIMATION STYLES (Only Active if Elements Exist)
+     ========================================= */
 
   /* --- T ICON --- */
   .letter-t-wrapper {
@@ -59,9 +83,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between; 
-    
-    /* ✅ FIX: Sirf halka sa saans lene ka space, taaki 'T' aur 'O' overlap na karein */
-    margin-right: 0.03em; 
+    margin-right: 0.03em; /* T aur O ke beech ka gap */
   }
 
   .t-top-row {
@@ -87,9 +109,7 @@
 
   /* --- FORM ICON --- */
   .doc-icon-wrapper {
-    /* ✅ FIX: Icon ko thoda door rakha taaki wo text se chipke na */
-    margin-left: 0.25em; 
-    
+    margin-left: 0.25em; /* Text aur Form Icon ke beech ka gap */
     height: 0.9em; 
     display: flex;
     align-items: center;
@@ -112,7 +132,7 @@
     animation: scanMove 2s linear infinite;
   }
 
-  /* --- ANIMATIONS --- */
+  /* --- ANIMATION KEYFRAMES --- */
   .dot:nth-child(1) { animation: blink 1.5s infinite; }
   .dot:nth-child(2) { animation: blink 1.5s 0.2s infinite; }
   .dot:nth-child(3) { animation: blink 1.5s 0.4s infinite; }
