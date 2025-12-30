@@ -1,0 +1,25 @@
+<svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="150" cy="150" r="146" fill="#dc2626" stroke="white" stroke-width="8"/>
+  
+  <circle cx="150" cy="150" r="125" fill="none" stroke="white" stroke-width="3" stroke-dasharray="10 5" stroke-opacity="0.5" />
+
+  <g transform="translate(118, 90)">
+    <rect x="0" y="0" width="20" height="20" rx="4" fill="white" />
+    <rect x="24" y="0" width="20" height="20" rx="4" fill="white" />
+    <rect x="48" y="0" width="20" height="20" rx="4" fill="white" />
+    <rect x="24" y="24" width="20" height="50" rx="4" fill="white" />
+  </g>
+
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect x="80" y="155" width="140" height="6" rx="3" fill="#facc15" filter="url(#glow)" />
+
+  <text x="150" y="205" font-family="Segoe UI, Arial, sans-serif" font-weight="900" font-size="22" fill="white" text-anchor="middle" letter-spacing="1">TOP ONLINE FORM</text>
+</svg>
