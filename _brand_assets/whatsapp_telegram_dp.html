@@ -1,52 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>WhatsApp & Telegram DP</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<div class="wa-dp-clean">
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #222; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; color: white; }
-        
-        /* DOWNLOAD BUTTON STYLE */
-        .btn { margin-top: 30px; padding: 12px 25px; background: #22c55e; color: white; border: none; font-size: 16px; font-weight: bold; border-radius: 30px; cursor: pointer; }
-        
-        /* --- DESIGN --- */
-        #dp-node {
-            width: 500px; height: 500px; /* High Res */
-            background-color: #dc2626; border-radius: 50%;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            border: 15px solid white;
+        .wa-dp-clean {
+            width: 300px; height: 300px;
+            background-color: #dc2626; /* Red Background */
+            border-radius: 50%; /* Circle Shape */
+            /* No Border here */
+            display: flex; flex-direction: column; 
+            justify-content: center; align-items: center;
+            font-family: 'Segoe UI', sans-serif;
             position: relative; overflow: hidden;
         }
-        .news-badge {
-            background: white; color: #dc2626; padding: 10px 30px; border-radius: 50px;
-            font-size: 24px; font-weight: 800; text-transform: uppercase; margin-bottom: 15px;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.2); letter-spacing: 1px;
+        .wa-badge-c {
+            background: white; color: #dc2626; padding: 5px 15px; border-radius: 50px;
+            font-size: 14px; font-weight: 800; text-transform: uppercase; margin-bottom: 8px;
         }
-        .big-text-1 { font-size: 80px; font-weight: 900; color: white; line-height: 0.9; text-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        .big-text-2 { font-size: 80px; font-weight: 900; color: #facc15; line-height: 0.9; text-shadow: 0 5px 15px rgba(0,0,0,0.3); margin-bottom: 20px; }
-        .brand-sub { font-size: 18px; font-weight: 700; color: white; letter-spacing: 3px; opacity: 0.9; text-transform: uppercase; border-top: 2px solid rgba(255,255,255,0.3); padding-top: 10px; }
+        .wa-txt1-c { font-size: 45px; font-weight: 900; color: white; line-height: 0.9; }
+        .wa-txt2-c { font-size: 45px; font-weight: 900; color: #facc15; line-height: 0.9; margin-bottom: 8px; }
+        .wa-sub-c { 
+            font-size: 12px; font-weight: 700; color: white; letter-spacing: 2px; 
+            text-transform: uppercase; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 5px; 
+        }
     </style>
-</head>
-<body>
-    <div id="dp-node">
-        <div class="news-badge">Daily Updates</div>
-        <div class="big-text-1">SARKARI</div>
-        <div class="big-text-2">NAUKRI</div>
-        <div class="brand-sub">Top Online Form</div>
-    </div>
 
-    <button class="btn" onclick="downloadImage()">Download WhatsApp DP</button>
-
-    <script>
-        function downloadImage() {
-            html2canvas(document.querySelector("#dp-node"), { scale: 2, backgroundColor: null }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = 'whatsapp_dp.png';
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-            });
-        }
-    </script>
-</body>
-</html>
+    <div class="wa-badge-c" contenteditable="true">Daily Updates</div>
+    <div class="wa-txt1-c" contenteditable="true">SARKARI</div>
+    <div class="wa-txt2-c" contenteditable="true">NAUKRI</div>
+    <div class="wa-sub-c">Top Online Form</div>
+</div>
