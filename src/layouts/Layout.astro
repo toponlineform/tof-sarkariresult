@@ -11,7 +11,7 @@ import LogoWithText from '../components/LogoWithText.astro';
 const { 
   title, 
   description, 
-  isPost = false,
+  isPost = false, 
   image = "/og-default.jpg" // Default Social Image
 } = Astro.props;
 
@@ -133,6 +133,16 @@ const websiteSchema = JSON.stringify({
             padding: 10px 0 !important;
             border-bottom: 1px solid #eee !important;
         }
+        
+        /* 🛡️ Verification Modal Animation */
+        @keyframes scan-beam {
+            0% { top: -100%; opacity: 0; }
+            50% { opacity: 1; }
+            100% { top: 200%; opacity: 0; }
+        }
+        .animate-scan-beam {
+            animation: scan-beam 1.5s linear infinite;
+        }
     </style>
 </head>
 <body class="bg-gray-100 flex flex-col min-h-screen font-sans">
@@ -232,8 +242,26 @@ const websiteSchema = JSON.stringify({
         </div>
     </div>
 
-    {/* MAIN CONTENT */}
-    <main class="flex-grow w-full max-w-7xl mx-auto p-3 md:p-6">
+    {/* 🛡️ NEW: SMART VERIFICATION MODAL (The Magic) */}
+    <div id="verifyModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/90 backdrop-blur-sm transition-opacity opacity-0">
+      <div class="bg-gray-900 border border-gray-700 p-6 rounded-xl w-80 text-center relative overflow-hidden shadow-2xl transform scale-95 transition-transform">
+         
+         {/* Green Scan Beam */}
+         <div class="absolute top-0 left-0 w-full h-2 bg-green-500 shadow-[0_0_20px_#22c55e] animate-scan-beam"></div>
+
+         <div class="text-4xl mb-4 animate-bounce">🛡️</div>
+         <h3 class="text-white font-bold text-lg mb-1 tracking-wide">Security Check</h3>
+         <p id="verifyText" class="text-gray-400 text-xs font-mono mb-4">Initializing secure connection...</p>
+
+         {/* Progress Bar */}
+         <div class="w-full bg-gray-800 rounded-full h-1.5 overflow-hidden">
+            <div id="verifyBar" class="bg-green-500 h-full w-0 transition-all duration-300 ease-out"></div>
+         </div>
+      </div>
+    </div>
+
+    {/* MAIN CONTENT (Added ID for targeting) */}
+    <main id="mainContent" class="flex-grow w-full max-w-7xl mx-auto p-3 md:p-6">
         <slot />
     </main>
 
@@ -293,7 +321,7 @@ const websiteSchema = JSON.stringify({
             }
         });
 
-        // Mobile Menu Toggle (Kept Simple as Requested)
+        // Mobile Menu Toggle
         if(mobileMenuBtn) {
             mobileMenuBtn.addEventListener('click', () => {
                 mobileMenu.classList.toggle('hidden');
@@ -307,6 +335,74 @@ const websiteSchema = JSON.stringify({
                 showSubResults: true,
                 showImages: false 
             });
+        });
+
+        // 🛡️ SMART VERIFICATION LOGIC (The Automation Feel)
+        document.addEventListener('DOMContentLoaded', () => {
+            const mainContent = document.getElementById('mainContent');
+            const modal = document.getElementById('verifyModal');
+            const modalBox = modal.querySelector('div');
+            const verifyText = document.getElementById('verifyText');
+            const verifyBar = document.getElementById('verifyBar');
+
+            if(mainContent) {
+                mainContent.addEventListener('click', (e) => {
+                    const link = e.target.closest('a');
+                    
+                    // Trigger only for links inside Main Content, AND (External OR PDF)
+                    if (link && link.href) {
+                        const isExternal = link.hostname !== window.location.hostname;
+                        const isPDF = link.href.toLowerCase().endsWith('.pdf');
+                        // Optional: Trigger for job links specifically if they have a class or pattern
+                        
+                        if (isExternal || isPDF) {
+                            e.preventDefault();
+                            
+                            // 1. Show Modal
+                            modal.classList.remove('hidden');
+                            modal.classList.add('flex');
+                            // Small delay for fade-in effect
+                            setTimeout(() => {
+                                modal.classList.remove('opacity-0');
+                                modalBox.classList.remove('scale-95');
+                            }, 10);
+
+                            // 2. Step 1: Checking Server (0-500ms)
+                            verifyBar.style.width = '10%';
+                            verifyText.textContent = "Connecting to official server...";
+
+                            // 3. Step 2: Scanning (500ms-1200ms)
+                            setTimeout(() => {
+                                verifyBar.style.width = '60%';
+                                verifyText.textContent = "Scanning link for security...";
+                                verifyText.classList.add('text-green-400');
+                            }, 600);
+
+                            // 4. Step 3: Success & Redirect (1200ms+)
+                            setTimeout(() => {
+                                verifyBar.style.width = '100%';
+                                verifyText.textContent = "Verified! Redirecting...";
+                                verifyText.classList.add('font-bold');
+                                
+                                // Redirect
+                                setTimeout(() => {
+                                    window.open(link.href, '_blank');
+                                    // Reset Modal
+                                    modal.classList.add('opacity-0');
+                                    modalBox.classList.add('scale-95');
+                                    setTimeout(() => {
+                                        modal.classList.add('hidden');
+                                        modal.classList.remove('flex');
+                                        verifyBar.style.width = '0%';
+                                        verifyText.textContent = "Initializing...";
+                                        verifyText.classList.remove('text-green-400', 'font-bold');
+                                    }, 200);
+                                }, 400);
+                            }, 1400);
+                        }
+                    }
+                });
+            }
         });
     </script>
 </body>
