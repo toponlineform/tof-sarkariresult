@@ -82,14 +82,23 @@ const getBtnStyle = (title) => {
   return 'bg-green-600 hover:bg-green-700 border-green-700 text-white';
 };
 
+// --- ⏳ DATE PARSING LOGIC (For Counter) ---
 const getLastDateISO = () => {
-    if (!post.importantDates) return null;
-    const lastDateObj = post.importantDates.find(d => d.label.toLowerCase().includes('last date') || d.label.toLowerCase().includes('closing date'));
-    if (!lastDateObj) return null;
-    const dateStr = lastDateObj.value.replace(/ \(.*\)/, '').trim(); 
-    const parts = dateStr.split(/[/-]/);
-    if (parts.length !== 3) return null;
-    return `${parts[2]}-${parts[1]}-${parts[0]}`;
+    // Priority 1: Direct 'lastDate' field from post (Cleanest way)
+    if (post.lastDate) {
+        const parts = post.lastDate.trim().split('/');
+        if (parts.length === 3) return `${parts[2]}-${parts[1]}-${parts[0]}`;
+    }
+    // Priority 2: Fallback to 'importantDates' array search
+    if (post.importantDates) {
+        const lastDateObj = post.importantDates.find(d => d.label.toLowerCase().includes('last date') || d.label.toLowerCase().includes('closing date'));
+        if (lastDateObj) {
+            const dateStr = lastDateObj.value.replace(/ \(.*\)/, '').trim(); 
+            const parts = dateStr.split(/[/-]/);
+            if (parts.length === 3) return `${parts[2]}-${parts[1]}-${parts[0]}`;
+        }
+    }
+    return null;
 };
 const lastDateISO = getLastDateISO();
 
@@ -132,7 +141,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                 {post.updatedDate && <span class="bg-green-50 text-green-700 px-2 py-1 rounded border border-green-200 uppercase">📝 Updated: {post.updatedDate}</span>}
             </div>
 
-            {/* 🔥 NEW: Job Highlights Bar (UX Upgrade) */}
+            {/* 🔥 Job Highlights Bar */}
             {(post.totalVacancy || post.salary) && (
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4 text-center">
                     {post.totalVacancy && (
@@ -162,16 +171,19 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                 </div>
             )}
 
-            {post.shortInfo && (
-                <div class="text-left bg-[#fffae6] border border-[#f0c14b] p-3 text-sm md:text-base text-gray-800 leading-relaxed">
-                <p><strong class="text-[#d32f2f]">Short Information:</strong> <span set:html={formatText(post.shortInfo)}></span></p>
+            {/* 🔥 NEW: LIVE COUNTDOWN TIMER (The Urgency Feature) */}
+            {lastDateISO && !isSimpleMode && (
+                <div id="countdown-box" data-date={lastDateISO} class="hidden mb-4 rounded-lg border-l-4 p-3 shadow-sm transition-all duration-300">
+                    <div class="flex flex-col md:flex-row items-center justify-center gap-2">
+                        <span id="timer-label" class="text-xs font-bold uppercase tracking-widest"></span>
+                        <div id="timer-display" class="text-lg md:text-xl font-black font-mono tracking-wide">Calculating...</div>
+                    </div>
                 </div>
             )}
 
-            {lastDateISO && !isSimpleMode && (
-                <div id="countdown-box" data-date={lastDateISO} class="hidden mt-4 bg-red-50 border border-red-200 rounded p-3 text-center animate-pulse">
-                    <p class="text-xs text-red-600 font-bold uppercase tracking-widest mb-1">Application Ends In:</p>
-                    <div id="timer-display" class="text-lg md:text-xl font-extrabold text-red-700 font-mono">Calculating...</div>
+            {post.shortInfo && (
+                <div class="text-left bg-[#fffae6] border border-[#f0c14b] p-3 text-sm md:text-base text-gray-800 leading-relaxed">
+                <p><strong class="text-[#d32f2f]">Short Information:</strong> <span set:html={formatText(post.shortInfo)}></span></p>
                 </div>
             )}
             </header>
@@ -407,14 +419,13 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             </div>
             )}
 
-            {/* EXAM PATTERN - UPDATED for Unified Blocks */}
+            {/* EXAM PATTERN */}
             {post.examPattern && (
             <div id="pattern" class="mb-6 border border-gray-400 scroll-mt-20">
                 <div class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase">Detailed Exam Pattern</div>
                 <div class="bg-white p-4">
                     {Array.isArray(post.examPattern) ? (
                         post.examPattern.map(block => {
-                            // Support 'table' OR 'data' OR 'tableData'
                             const tableData = block.table || block.data || block.tableData;
                             const isTable = block.type === 'table' || (Array.isArray(tableData) && tableData.length > 0);
                             
@@ -484,11 +495,10 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             </div>
             )}
 
-            {/* EXTRA SECTIONS - UPDATED for Unified Blocks */}
+            {/* EXTRA SECTIONS */}
             {post.extraSections && post.extraSections.length > 0 && (
                 <div id="extra-sections" class="mb-6 scroll-mt-20">
                     {post.extraSections.map((section) => {
-                        // Support 'table' OR 'data' OR 'tableData'
                         const tableData = section.table || section.data || section.tableData;
                         return (
                             <div class="mb-6 border border-gray-400">
@@ -555,7 +565,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             </div>
             )}
 
-            {/* LINKS - UPDATED for Smart Logic (isActive, Note) */}
+            {/* LINKS */}
             <div id="links" class="mb-6 border border-gray-400 scroll-mt-20">
                 <div class="bg-[#d32f2f] text-white text-center font-bold py-2 text-lg uppercase tracking-wider">
                 {isSimpleMode ? "Direct Download Links" : "Important Official Links"}
@@ -651,11 +661,11 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
 
   </div>
 
-  {/* ✅ INFINITY PRO SEO SCHEMA (Multi-Layer Strategy) */}
+  {/* ✅ INFINITY PRO SEO SCHEMA */}
   <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@graph": [
-      // 1. JOB POSTING (Traffic Engine)
+      // 1. JOB POSTING
       {
         "@type": "JobPosting",
         "title": post.title,
@@ -675,7 +685,6 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             "addressRegion": post.state || "India"
           }
         },
-        // ADDED BASE SALARY SCHEMA IF AVAILABLE
         ...(post.salary ? {
             "baseSalary": {
                 "@type": "MonetaryAmount",
@@ -688,8 +697,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             }
         } : {})
       },
-      
-      // 2. NEWS ARTICLE (Authority)
+      // 2. NEWS ARTICLE
       {
         "@type": "NewsArticle",
         "headline": post.title,
@@ -712,32 +720,69 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
     ]
   })} />
 
+  {/* ⏳ LIVE COUNTDOWN SCRIPT */}
   <script>
     const box = document.getElementById('countdown-box');
+    const label = document.getElementById('timer-label');
     const display = document.getElementById('timer-display');
-    if (box && display) {
+    
+    if (box && display && label) {
         const targetDate = new Date(box.dataset.date);
-        targetDate.setHours(23, 59, 59);
+        targetDate.setHours(23, 59, 59); // End of the day
+
         const updateTimer = () => {
             const now = new Date();
             const diff = targetDate - now;
+
             if (diff <= 0) {
-                display.innerText = "Application Closed";
+                // EXPIRED STATE
+                display.innerText = "Application Closed ❌";
+                label.innerText = "Status:";
+                box.classList.remove('bg-red-50', 'border-red-200', 'animate-pulse');
+                box.classList.add('bg-gray-100', 'border-gray-300', 'opacity-70');
                 display.classList.remove('text-red-700');
                 display.classList.add('text-gray-500');
-                box.classList.remove('animate-pulse');
                 clearInterval(interval);
+                box.classList.remove('hidden');
                 return;
             }
+
+            // Calculations
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
             const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            // COLOR LOGIC (Dynamic Urgency)
+            if (days > 10) {
+                // Safe Zone (Green)
+                box.classList.remove('bg-red-50', 'border-red-200', 'bg-yellow-50', 'border-yellow-200');
+                box.classList.add('bg-green-50', 'border-green-200');
+                label.innerText = "Ends In:";
+                label.className = "text-xs font-bold uppercase tracking-widest text-green-700";
+                display.className = "text-lg md:text-xl font-black font-mono tracking-wide text-green-800";
+            } else if (days > 3) {
+                // Warning Zone (Yellow)
+                box.classList.remove('bg-green-50', 'border-green-200', 'bg-red-50', 'border-red-200');
+                box.classList.add('bg-yellow-50', 'border-yellow-300');
+                label.innerText = "Hurry Up! Ends In:";
+                label.className = "text-xs font-bold uppercase tracking-widest text-yellow-800";
+                display.className = "text-lg md:text-xl font-black font-mono tracking-wide text-yellow-900";
+            } else {
+                // Critical Zone (Red Blinking)
+                box.classList.remove('bg-green-50', 'border-green-200', 'bg-yellow-50', 'border-yellow-300');
+                box.classList.add('bg-red-50', 'border-red-200');
+                label.innerText = "CRITICAL! Application Closing In:";
+                label.className = "text-xs font-bold uppercase tracking-widest text-red-600 animate-pulse";
+                display.className = "text-lg md:text-xl font-black font-mono tracking-wide text-red-700";
+            }
+
             display.innerText = `${days}d : ${hours}h : ${minutes}m : ${seconds}s`;
             box.classList.remove('hidden');
         };
+
         const interval = setInterval(updateTimer, 1000);
-        updateTimer();
+        updateTimer(); // Initial call
     }
   </script>
 
