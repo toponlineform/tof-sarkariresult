@@ -12,38 +12,15 @@ const currentYear = new Date().getFullYear();
 
   <div class="relative max-w-7xl mx-auto px-4 py-8 md:py-12 flex flex-col md:flex-row items-center gap-8">
     
-    {/* ✅ SCANNER ANIMATION (Smart Positioning) */}
-    {/* Mobile: Absolute Top-Right (Small) | Desktop: Static Right Side (Big) */}
-    <div class="absolute top-2 -right-4 transform scale-[0.45] origin-top-right md:static md:scale-100 md:flex md:w-1/3 justify-center z-0 md:z-auto">
-      <div class="relative w-40 h-48">
-         <div class="absolute inset-0 bg-white rounded-xl shadow-lg border-2 border-gray-100 flex items-center justify-center overflow-hidden">
-             {/* Document Lines */}
-             <div class="w-24 h-32 border-2 border-gray-300 rounded flex flex-col items-center justify-start pt-4 gap-2">
-                 <div class="w-16 h-2 bg-gray-200 rounded"></div>
-                 <div class="w-12 h-2 bg-gray-200 rounded"></div>
-                 <div class="w-16 h-2 bg-gray-200 rounded"></div>
-                 <div class="w-14 h-2 bg-gray-200 rounded mt-2"></div>
-                 <div class="w-10 h-2 bg-gray-200 rounded"></div>
-             </div>
-             {/* Yellow Scanner Line */}
-             <div class="absolute top-0 w-full h-1 bg-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.8)] animate-scan"></div>
-         </div>
-         {/* Verified Badge */}
-         <div class="absolute -bottom-4 -right-4 bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold shadow-sm border border-green-200 flex items-center gap-1">
-             <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> Verified
-         </div>
-      </div>
-    </div>
-
-    {/* LEFT: TEXT & SEARCH */}
-    <div class="w-full md:w-2/3 text-center md:text-left z-10 mt-8 md:mt-0">
+    {/* 1. LEFT SIDE: TEXT & SEARCH (Desktop par ye Left rahega) */}
+    <div class="w-full md:w-2/3 text-center md:text-left z-10 mt-6 md:mt-0">
       
       <p class="text-red-600 font-bold tracking-widest uppercase text-xs md:text-sm mb-2 animate-pulse flex items-center justify-center md:justify-start gap-2">
         🔴 Live Updates: {currentYear}
       </p>
       
-      {/* pr-12 added to prevent text overlapping scanner on small phones */}
-      <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-4 pr-12 md:pr-0">
+      {/* pr-8 added on mobile to avoid overlap with tiny scanner */}
+      <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-4 pr-8 md:pr-0">
         Find Your Dream <br class="hidden md:block"/>
         <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-800">Sarkari Job</span> Today.
       </h1>
@@ -52,7 +29,7 @@ const currentYear = new Date().getFullYear();
         India's No.1 Portal for <strong>Sarkari Result</strong>, Admit Cards & Latest Online Forms.
       </p>
 
-      {/* SEARCH BAR (Yellow Glow on Mobile) */}
+      {/* SEARCH BAR */}
       <div class="relative max-w-xl mx-auto md:mx-0 group">
         <div class="absolute -inset-1 bg-gradient-to-r from-red-600 to-yellow-400 rounded-lg blur opacity-25 group-hover:opacity-50 transition duration-200"></div>
         <button onclick="document.getElementById('searchOverlay').classList.remove('hidden'); document.getElementById('searchOverlay').classList.add('flex'); setTimeout(() => document.querySelector('.pagefind-ui__search-input').focus(), 100);" 
@@ -74,6 +51,30 @@ const currentYear = new Date().getFullYear();
         <a href="/search?q=police" class="bg-gray-100 hover:bg-red-50 text-gray-600 hover:text-red-600 px-3 py-1 rounded-full transition border border-gray-200">Police</a>
       </div>
 
+    </div>
+
+    {/* 2. RIGHT SIDE: SCANNER ANIMATION */}
+    {/* Mobile: Tiny size (scale-35) at top-right corner */}
+    {/* Desktop: Full size on the Right side */}
+    <div class="absolute top-0 right-0 transform scale-[0.35] origin-top-right md:static md:scale-100 md:flex md:w-1/3 justify-center z-0 md:z-auto">
+      <div class="relative w-40 h-48">
+         <div class="absolute inset-0 bg-white rounded-xl shadow-lg border-2 border-gray-100 flex items-center justify-center overflow-hidden">
+             {/* Document Lines */}
+             <div class="w-24 h-32 border-2 border-gray-300 rounded flex flex-col items-center justify-start pt-4 gap-2">
+                 <div class="w-16 h-2 bg-gray-200 rounded"></div>
+                 <div class="w-12 h-2 bg-gray-200 rounded"></div>
+                 <div class="w-16 h-2 bg-gray-200 rounded"></div>
+                 <div class="w-14 h-2 bg-gray-200 rounded mt-2"></div>
+                 <div class="w-10 h-2 bg-gray-200 rounded"></div>
+             </div>
+             {/* Yellow Scanner Line */}
+             <div class="absolute top-0 w-full h-1 bg-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.8)] animate-scan"></div>
+         </div>
+         {/* Verified Badge */}
+         <div class="absolute -bottom-4 -right-4 bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold shadow-sm border border-green-200 flex items-center gap-1">
+             <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> Verified
+         </div>
+      </div>
     </div>
 
   </div>
