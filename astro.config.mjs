@@ -7,8 +7,8 @@ export default defineConfig({
   site: 'https://toponlineform.com',
   output: 'static', // HTML files banayega (Super Fast)
 
-  // ✅ 2. SEO SAFETY (Duplicate Content Killer)
-  // Isse '/job' aur '/job/' alag-alag count nahi honge.
+  // ✅ 2. SEO SAFETY & CLOUDFLARE FIX (Redirect Loop Killer)
+  // Isse '/job' aur '/job/' ka jhagda khatam ho jayega.
   trailingSlash: 'never', 
   
   // ✅ 3. SPEED BOOSTER
@@ -25,14 +25,16 @@ export default defineConfig({
   ],
 
   // ✅ 5. MAGIC CODE (Prefetch - Super Speed)
-  // Jab user link par bas hover karega ya scroll karke dekhega, page background me load ho jayega.
+  // Jab user link par bas hover karega, page background me load ho jayega.
   prefetch: {
     prefetchAll: true,
     defaultStrategy: 'viewport'
   },
 
-  // ✅ 6. BUILD SETTINGS
+  // ✅ 6. BUILD SETTINGS (Cloudflare Special)
   build: {
-    format: 'file' // Clean URLs generate karega
+    // Astro ab 'job/index.html' (folder) nahi, balki 'job.html' (file) banayega.
+    // Cloudflare Pages ke liye ye sabse BEST setting hai.
+    format: 'file' 
   }
 });
