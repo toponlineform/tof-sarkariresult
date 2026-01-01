@@ -82,22 +82,37 @@ const getBtnStyle = (title) => {
   return 'bg-green-600 hover:bg-green-700 border-green-700 text-white';
 };
 
-// --- ⏳ DATE PARSING LOGIC (For Counter) ---
+// --- ⏳ ROBUST DATE PARSING LOGIC (For Counter) ---
 const getLastDateISO = () => {
-    // Priority 1: Direct 'lastDate' field from post (Cleanest way)
+    let dateStr = "";
+    
+    // Priority 1: Direct 'lastDate' field
     if (post.lastDate) {
-        const parts = post.lastDate.trim().split('/');
-        if (parts.length === 3) return `${parts[2]}-${parts[1]}-${parts[0]}`;
+        dateStr = post.lastDate;
+    } 
+    // Priority 2: Fallback to 'importantDates'
+    else if (post.importantDates) {
+        const lastDateObj = post.importantDates.find(d => 
+            d.label.toLowerCase().includes('last date') || 
+            d.label.toLowerCase().includes('closing date')
+        );
+        if (lastDateObj) dateStr = lastDateObj.value;
     }
-    // Priority 2: Fallback to 'importantDates' array search
-    if (post.importantDates) {
-        const lastDateObj = post.importantDates.find(d => d.label.toLowerCase().includes('last date') || d.label.toLowerCase().includes('closing date'));
-        if (lastDateObj) {
-            const dateStr = lastDateObj.value.replace(/ \(.*\)/, '').trim(); 
-            const parts = dateStr.split(/[/-]/);
-            if (parts.length === 3) return `${parts[2]}-${parts[1]}-${parts[0]}`;
-        }
+
+    if (!dateStr) return null;
+
+    // Cleaning: Remove brackets and extra spaces
+    dateStr = dateStr.replace(/\(.*\)/, '').trim();
+    // Handling separators: Replace '-' or '.' with '/'
+    dateStr = dateStr.replace(/-/g, '/').replace(/\./g, '/');
+
+    const parts = dateStr.split('/');
+    
+    // Format Check: DD/MM/YYYY
+    if (parts.length === 3) {
+        return `${parts[2]}-${parts[1]}-${parts[0]}`; // Returns YYYY-MM-DD
     }
+    
     return null;
 };
 const lastDateISO = getLastDateISO();
@@ -118,6 +133,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
 >
   
   <div class="max-w-7xl mx-auto px-1">
+      {/* Visual Breadcrumb (For Users) */}
       <nav class="flex text-xs text-gray-500 mb-2 font-medium overflow-x-auto whitespace-nowrap">
         <a href="/" class="hover:text-blue-700">Home</a> <span class="mx-1">›</span>
         <a href={`/${post.category.toLowerCase().replace(/\s+/g, '-')}`} class="hover:text-blue-700 text-blue-600">{post.category}</a> <span class="mx-1">›</span>
@@ -141,7 +157,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                 {post.updatedDate && <span class="bg-green-50 text-green-700 px-2 py-1 rounded border border-green-200 uppercase">📝 Updated: {post.updatedDate}</span>}
             </div>
 
-            {/* Job Highlights Bar */}
+            {/* 🔥 Job Highlights Bar */}
             {(post.totalVacancy || post.salary) && (
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4 text-center">
                     {post.totalVacancy && (
@@ -758,39 +774,50 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
     ]
   })} />
 
-  {/* ⏳ OLD STYLE COUNTDOWN SCRIPT (Simple Red/White Box) */}
+  {/* ⏳ OLD STYLE COUNTDOWN SCRIPT (Robust Version) */}
   <script>
     const box = document.getElementById('countdown-box');
     const display = document.getElementById('timer-display');
     
     if (box && display) {
-        const targetDate = new Date(box.dataset.date);
-        targetDate.setHours(23, 59, 59);
+        // Safe Date Parsing
+        const isoDate = box.dataset.date; // YYYY-MM-DD
+        const targetDate = new Date(isoDate);
+        
+        // Check if Date is Valid
+        if (!isNaN(targetDate.getTime())) {
+            targetDate.setHours(23, 59, 59); // End of that day
 
-        const updateTimer = () => {
-            const now = new Date();
-            const diff = targetDate - now;
+            const updateTimer = () => {
+                const now = new Date();
+                const diff = targetDate - now;
 
-            if (diff <= 0) {
-                display.innerText = "Application Closed";
-                display.classList.remove('text-red-700');
-                display.classList.add('text-gray-500');
-                box.classList.remove('animate-pulse');
-                clearInterval(interval);
-                return;
-            }
+                // Show the box immediately once calculation starts
+                box.classList.remove('hidden');
 
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                if (diff <= 0) {
+                    display.innerText = "Application Closed ❌";
+                    display.classList.remove('text-red-700');
+                    display.classList.add('text-gray-500');
+                    box.classList.remove('animate-pulse', 'bg-red-50', 'border-red-200');
+                    box.classList.add('bg-gray-100', 'border-gray-300');
+                    clearInterval(interval);
+                    return;
+                }
 
-            display.innerText = `${days}d : ${hours}h : ${minutes}m : ${seconds}s`;
-            box.classList.remove('hidden');
-        };
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-        const interval = setInterval(updateTimer, 1000);
-        updateTimer();
+                display.innerText = `${days}d : ${hours}h : ${minutes}m : ${seconds}s`;
+            };
+
+            const interval = setInterval(updateTimer, 1000);
+            updateTimer(); // Run immediately
+        } else {
+            console.error("Invalid Date Format for Counter:", isoDate);
+        }
     }
   </script>
 
