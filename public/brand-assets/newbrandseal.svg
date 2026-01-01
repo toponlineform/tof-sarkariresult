@@ -12,19 +12,19 @@
 
   <circle cx="256" cy="256" r="256" fill="#d32f2f" />
   
-  <circle cx="256" cy="256" r="236" fill="none" stroke="#ffffff" stroke-width="20" />
+  <circle cx="256" cy="256" r="249.5" fill="none" stroke="#ffffff" stroke-width="20" />
 
   <circle cx="256" cy="256" r="205" fill="none" stroke="#ffffff" stroke-width="3" stroke-dasharray="10 10" opacity="0.4" />
 
   <g fill="#ffffff">
-    <rect x="170" y="140" width="50" height="50" rx="10" />
-    <rect x="231" y="140" width="50" height="50" rx="10" />
-    <rect x="292" y="140" width="50" height="50" rx="10" />
+    <rect x="170" y="135" width="50" height="50" rx="10" />
+    <rect x="231" y="135" width="50" height="50" rx="10" />
+    <rect x="292" y="135" width="50" height="50" rx="10" />
     
-    <rect x="231" y="200" width="50" height="90" rx="10" />
+    <rect x="231" y="195" width="50" height="95" rx="10" />
   </g>
 
-  <line x1="140" y1="230" x2="372" y2="230" 
+  <line x1="140" y1="235" x2="372" y2="235" 
         stroke="#FCD34D" 
         stroke-width="10" 
         stroke-linecap="round" 
