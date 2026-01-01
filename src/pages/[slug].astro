@@ -30,14 +30,10 @@ const { post, relatedPosts } = Astro.props;
 const catLower = post.category ? post.category.toLowerCase() : "";
 const isSimpleMode = catLower.includes("syllabus") || catLower.includes("previous") || catLower.includes("paper") || catLower.includes("answer key");
 
-// ✅ UPDATE: Dynamic Keyword for SEO Headers
-const jobKeyword = post.shortTitle || "Recruitment";
-
-// ✅ UPDATE: Smarter Headers with Keywords
-let stepsHeader = `How to Apply for ${jobKeyword}`;
+let stepsHeader = "How to Apply";
 if (isSimpleMode) stepsHeader = "How to Download";
-else if (catLower.includes("admit card")) stepsHeader = `How to Download ${jobKeyword} Admit Card`;
-else if (catLower.includes("result")) stepsHeader = `How to Check ${jobKeyword} Result`;
+else if (catLower.includes("admit card")) stepsHeader = "How to Download Admit Card";
+else if (catLower.includes("result")) stepsHeader = "How to Check Result";
 else if (catLower.includes("admission")) stepsHeader = "How to Apply for Admission";
 
 // 1. Universal Total Calculator
@@ -220,8 +216,8 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             {!isSimpleMode && post.importantDates && post.importantDates.length > 0 && (
             <div id="dates" class="grid grid-cols-1 md:grid-cols-2 gap-0 border border-gray-400 mb-6 scroll-mt-20">
             <div class="border-b md:border-b-0 md:border-r border-gray-400">
-                {/* ✅ SEO UPDATE: H2 Tag + Keyword */}
-                <h2 class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase m-0">{jobKeyword} Important Dates</h2>
+                {/* ✅ SEO UPDATE: H2 Tag with m-0 */}
+                <h2 class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase m-0">Important Dates</h2>
                 <div class="bg-white p-2">
                 <ul class="space-y-2 text-sm">
                     {post.importantDates.map((date) => (
@@ -233,7 +229,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                 </div>
             </div>
             <div>
-                {/* ✅ SEO UPDATE: H2 Tag */}
+                {/* ✅ SEO UPDATE: H2 Tag with m-0 */}
                 <h2 class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase m-0">Application Fee</h2>
                 <div class="bg-white p-2">
                 {post.applicationFee ? (
@@ -254,8 +250,8 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             {/* VACANCY & AGE */}
             {!isSimpleMode && (post.ageLimit || post.vacancyDetails) && (
             <div id="vacancy" class="mb-6 border border-gray-400 scroll-mt-20">
-                {/* ✅ SEO UPDATE: H2 Tag + Keyword */}
-                <h2 class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase m-0">{jobKeyword} Age Limit & Vacancy</h2>
+                {/* ✅ SEO UPDATE: H2 Tag with m-0 */}
+                <h2 class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase m-0">Vacancy Details & Age Limit</h2>
                 {post.ageLimit && (
                     <div class="p-3 text-center border-b border-gray-300 bg-gray-50">
                         <p class="text-sm font-bold text-gray-800 uppercase tracking-wide">Age Limit: <span class="font-normal">{post.ageLimit}</span></p>
@@ -297,7 +293,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             {/* CATEGORY/STATE VACANCY */}
             {!isSimpleMode && post.stateWiseVacancy && post.stateWiseVacancy.length > 0 && (
             <div id="state-vacancy" class="mb-6 border border-gray-400 scroll-mt-20">
-                {/* ✅ SEO UPDATE: H2 Tag */}
+                {/* ✅ SEO UPDATE: H2 Tag with m-0 */}
                 <h2 class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase m-0">
                     {post.vacancyTableTitle || "Category Wise Vacancy Details"}
                 </h2>
@@ -372,7 +368,8 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                 ) : (
                     post.stateWiseVacancy.map(block => (
                         <div class="mb-4 mt-2 px-2">
-                            {block.title && <div class="bg-gray-200 px-3 py-1 font-bold text-sm text-gray-800 border border-gray-300 text-center uppercase mb-1">{block.title}</div>}
+                            {/* ✅ SEO UPDATE: H3 Tag with m-0 */}
+                            {block.title && <h3 class="bg-gray-200 px-3 py-1 font-bold text-sm text-gray-800 border border-gray-300 text-center uppercase mb-1 m-0">{block.title}</h3>}
                             <div class="overflow-x-auto">
                                 <table class="w-full text-sm border-collapse text-center">
                                     <thead class="bg-gray-100 font-bold text-gray-700 whitespace-nowrap uppercase text-xs">
@@ -397,8 +394,8 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             {/* ELIGIBILITY */}
             {post.eligibility && (
                 <div class="mb-6">
-                    {/* ✅ SEO UPDATE: H2 Tag + Keyword */}
-                    <h2 class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase m-0">{jobKeyword} Eligibility Criteria</h2>
+                    {/* ✅ SEO UPDATE: H2 Tag with m-0 */}
+                    <h2 class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase m-0">Eligibility Criteria</h2>
                     <ul class="border border-gray-400 p-4 list-disc pl-8 text-sm text-gray-800 bg-gray-50 leading-relaxed">
                         {post.eligibility.map(item => <li class="mb-1" set:html={formatText(item)}></li>)}
                     </ul>
@@ -408,8 +405,8 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             {/* SALARY */}
             {!isSimpleMode && (post.salary || post.salaryDetails) && (
             <div id="salary" class="mb-6 border border-gray-400 scroll-mt-20">
-                {/* ✅ SEO UPDATE: H2 Tag + Keyword */}
-                <h2 class="bg-[#008000] text-white text-center font-bold py-2 text-sm uppercase tracking-wide m-0">{jobKeyword} Salary & Pay Scale</h2>
+                {/* ✅ SEO UPDATE: H2 Tag with m-0 */}
+                <h2 class="bg-[#008000] text-white text-center font-bold py-2 text-sm uppercase tracking-wide m-0">Pay Scale / Salary Structure</h2>
                 {post.salaryDetails ? (
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm border-collapse border border-gray-300">
@@ -430,8 +427,8 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             {/* SELECTION PROCESS */}
             {post.selectionProcess && (
             <div id="selection" class="mb-6 border border-gray-400 scroll-mt-20">
-                {/* ✅ SEO UPDATE: H2 Tag + Keyword */}
-                <h2 class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase m-0">{jobKeyword} Selection Process</h2>
+                {/* ✅ SEO UPDATE: H2 Tag with m-0 */}
+                <h2 class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase m-0">Selection Process Steps</h2>
                 <div class="bg-white p-4"><ol class="list-decimal pl-6 space-y-2 text-sm text-gray-900 font-medium">{post.selectionProcess.map(s => <li class="tracking-wide">{s}</li>)}</ol></div>
             </div>
             )}
@@ -439,8 +436,8 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             {/* EXAM PATTERN */}
             {post.examPattern && (
             <div id="pattern" class="mb-6 border border-gray-400 scroll-mt-20">
-                {/* ✅ SEO UPDATE: H2 Tag + Keyword */}
-                <h2 class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase m-0">{jobKeyword} Exam Pattern</h2>
+                {/* ✅ SEO UPDATE: H2 Tag with m-0 */}
+                <h2 class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase m-0">Detailed Exam Pattern</h2>
                 <div class="bg-white p-4">
                     {Array.isArray(post.examPattern) ? (
                         post.examPattern.map(block => {
@@ -479,7 +476,8 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                                 const textContent = block.content || block.data;
                                 return (
                                     <div class="mb-4 p-3 bg-gray-50 border-l-4 border-blue-500">
-                                        {block.title && <h4 class="font-bold text-gray-800 mb-1 uppercase text-xs">{block.title}</h4>}
+                                        {/* ✅ SEO UPDATE: H3 Tag with m-0 (since h4 was already there, h3 is better if parent is h2) */}
+                                        {block.title && <h3 class="font-bold text-gray-800 mb-1 uppercase text-xs m-0">{block.title}</h3>}
                                         <p class="text-sm text-gray-700 leading-relaxed" set:html={formatText(textContent)}></p>
                                     </div>
                                 );
@@ -491,7 +489,8 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                              if(Array.isArray(value) && typeof value[0] === 'object') {
                                 return (
                                     <div class="mb-4 border border-gray-300">
-                                        <div class="bg-gray-200 px-3 py-1 font-bold text-sm text-gray-800 text-center uppercase">{formatHeader(key)}</div>
+                                        {/* ✅ SEO UPDATE: H3 Tag with m-0 */}
+                                        <h3 class="bg-gray-200 px-3 py-1 font-bold text-sm text-gray-800 text-center uppercase m-0">{formatHeader(key)}</h3>
                                         <table class="w-full text-sm border-collapse text-center">
                                             <thead class="bg-gray-100 uppercase text-xs"><tr>{Object.keys(value[0]).map(h=><th class="border px-2 py-2">{h}</th>)}</tr></thead>
                                             <tbody>{value.map(r=>(<tr class="hover:bg-white"><td class="border px-2 py-2">{Object.values(r).map(v=><span class="block">{v}</span>)}</td></tr>))}</tbody>
@@ -520,7 +519,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                         const tableData = section.table || section.data || section.tableData;
                         return (
                             <div class="mb-6 border border-gray-400">
-                                {/* ✅ SEO UPDATE: H2 Tag */}
+                                {/* ✅ SEO UPDATE: H2 Tag with m-0 */}
                                 <h2 class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase m-0">{section.title}</h2>
                                 <div class="bg-white">
                                     {tableData && (
@@ -561,8 +560,8 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             {/* SYLLABUS */}
             {post.syllabus && (
             <div id="syllabus" class="mb-6 border border-gray-400 scroll-mt-20">
-                {/* ✅ SEO UPDATE: H2 Tag + Keyword */}
-                <h2 class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase m-0">{jobKeyword} Syllabus</h2>
+                {/* ✅ SEO UPDATE: H2 Tag with m-0 */}
+                <h2 class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase m-0">Subject-wise Syllabus Topics</h2>
                 <div class="bg-white p-4">
                     {post.syllabus.intro && <p class="text-sm text-gray-700 mb-4 italic border-l-4 border-blue-500 pl-3 bg-blue-50 py-2">{post.syllabus.intro}</p>}
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -580,7 +579,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             {/* HOW TO APPLY */}
             {post.howToApply && (
             <div class="mb-6 border border-gray-400">
-                {/* ✅ SEO UPDATE: H2 Tag */}
+                {/* ✅ SEO UPDATE: H2 Tag with m-0 */}
                 <h2 class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase m-0">{stepsHeader}</h2>
                 <div class="bg-white p-4"><ol class="list-decimal pl-6 space-y-2 text-sm text-gray-800 font-medium">{post.howToApply.map(s => <li set:html={formatText(s)}></li>)}</ol></div>
             </div>
@@ -588,9 +587,9 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
 
             {/* LINKS */}
             <div id="links" class="mb-6 border border-gray-400 scroll-mt-20">
-                {/* ✅ SEO UPDATE: H2 Tag + Keyword */}
+                {/* ✅ SEO UPDATE: H2 Tag with m-0 */}
                 <h2 class="bg-[#d32f2f] text-white text-center font-bold py-2 text-lg uppercase tracking-wider m-0">
-                {isSimpleMode ? "Direct Download Links" : `${jobKeyword} Important Official Links`}
+                {isSimpleMode ? "Direct Download Links" : "Important Official Links"}
                 </h2>
                 <div class="bg-white">
                     <table class="w-full text-sm md:text-base border-collapse">
