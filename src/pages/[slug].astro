@@ -85,13 +85,9 @@ const getBtnStyle = (title) => {
 // --- ⏳ ROBUST DATE PARSING LOGIC (For Counter) ---
 const getLastDateISO = () => {
     let dateStr = "";
-    
-    // Priority 1: Direct 'lastDate' field
     if (post.lastDate) {
         dateStr = post.lastDate;
-    } 
-    // Priority 2: Fallback to 'importantDates'
-    else if (post.importantDates) {
+    } else if (post.importantDates) {
         const lastDateObj = post.importantDates.find(d => 
             d.label.toLowerCase().includes('last date') || 
             d.label.toLowerCase().includes('closing date')
@@ -101,18 +97,13 @@ const getLastDateISO = () => {
 
     if (!dateStr) return null;
 
-    // Cleaning: Remove brackets and extra spaces
     dateStr = dateStr.replace(/\(.*\)/, '').trim();
-    // Handling separators: Replace '-' or '.' with '/'
     dateStr = dateStr.replace(/-/g, '/').replace(/\./g, '/');
 
     const parts = dateStr.split('/');
-    
-    // Format Check: DD/MM/YYYY
     if (parts.length === 3) {
-        return `${parts[2]}-${parts[1]}-${parts[0]}`; // Returns YYYY-MM-DD
+        return `${parts[2]}-${parts[1]}-${parts[0]}`; 
     }
-    
     return null;
 };
 const lastDateISO = getLastDateISO();
@@ -133,7 +124,6 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
 >
   
   <div class="max-w-7xl mx-auto px-1">
-      {/* Visual Breadcrumb (For Users) */}
       <nav class="flex text-xs text-gray-500 mb-2 font-medium overflow-x-auto whitespace-nowrap">
         <a href="/" class="hover:text-blue-700">Home</a> <span class="mx-1">›</span>
         <a href={`/${post.category.toLowerCase().replace(/\s+/g, '-')}`} class="hover:text-blue-700 text-blue-600">{post.category}</a> <span class="mx-1">›</span>
@@ -157,7 +147,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                 {post.updatedDate && <span class="bg-green-50 text-green-700 px-2 py-1 rounded border border-green-200 uppercase">📝 Updated: {post.updatedDate}</span>}
             </div>
 
-            {/* 🔥 Job Highlights Bar */}
+            {/* Job Highlights Bar */}
             {(post.totalVacancy || post.salary) && (
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4 text-center">
                     {post.totalVacancy && (
@@ -187,7 +177,14 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                 </div>
             )}
 
-            {/* ✅ RESTORED OLD COUNTDOWN DESIGN (Simple & Clean) */}
+            {/* ✅ 1. Short Info (Yellow Box) */}
+            {post.shortInfo && (
+                <div class="text-left bg-[#fffae6] border border-[#f0c14b] p-3 text-sm md:text-base text-gray-800 leading-relaxed">
+                <p><strong class="text-[#d32f2f]">Short Information:</strong> <span set:html={formatText(post.shortInfo)}></span></p>
+                </div>
+            )}
+
+            {/* ✅ 2. Old Counter (Red Box) - Moved BELOW Short Info */}
             {lastDateISO && !isSimpleMode && (
                 <div id="countdown-box" data-date={lastDateISO} class="hidden mt-4 bg-red-50 border border-red-200 rounded p-3 text-center animate-pulse">
                     <p class="text-xs text-red-600 font-bold uppercase tracking-widest mb-1">Application Ends In:</p>
@@ -195,11 +192,6 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                 </div>
             )}
 
-            {post.shortInfo && (
-                <div class="text-left bg-[#fffae6] border border-[#f0c14b] p-3 text-sm md:text-base text-gray-800 leading-relaxed">
-                <p><strong class="text-[#d32f2f]">Short Information:</strong> <span set:html={formatText(post.shortInfo)}></span></p>
-                </div>
-            )}
             </header>
 
             <AdSlot type="horizontal" />
@@ -774,7 +766,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
     ]
   })} />
 
-  {/* ⏳ OLD STYLE COUNTDOWN SCRIPT (Robust Version) */}
+  {/* ⏳ ROBUST COUNTDOWN SCRIPT (Matches Any Date Format) */}
   <script>
     const box = document.getElementById('countdown-box');
     const display = document.getElementById('timer-display');
