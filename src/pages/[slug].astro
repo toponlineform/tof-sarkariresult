@@ -118,7 +118,6 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
 >
   
   <div class="max-w-7xl mx-auto px-1">
-      {/* Visual Breadcrumb (For Users) */}
       <nav class="flex text-xs text-gray-500 mb-2 font-medium overflow-x-auto whitespace-nowrap">
         <a href="/" class="hover:text-blue-700">Home</a> <span class="mx-1">›</span>
         <a href={`/${post.category.toLowerCase().replace(/\s+/g, '-')}`} class="hover:text-blue-700 text-blue-600">{post.category}</a> <span class="mx-1">›</span>
@@ -142,7 +141,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                 {post.updatedDate && <span class="bg-green-50 text-green-700 px-2 py-1 rounded border border-green-200 uppercase">📝 Updated: {post.updatedDate}</span>}
             </div>
 
-            {/* 🔥 Job Highlights Bar */}
+            {/* Job Highlights Bar */}
             {(post.totalVacancy || post.salary) && (
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4 text-center">
                     {post.totalVacancy && (
@@ -172,13 +171,11 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                 </div>
             )}
 
-            {/* 🔥 NEW: LIVE COUNTDOWN TIMER (The Urgency Feature) */}
+            {/* ✅ RESTORED OLD COUNTDOWN DESIGN (Simple & Clean) */}
             {lastDateISO && !isSimpleMode && (
-                <div id="countdown-box" data-date={lastDateISO} class="hidden mb-4 rounded-lg border-l-4 p-3 shadow-sm transition-all duration-300">
-                    <div class="flex flex-col md:flex-row items-center justify-center gap-2">
-                        <span id="timer-label" class="text-xs font-bold uppercase tracking-widest"></span>
-                        <div id="timer-display" class="text-lg md:text-xl font-black font-mono tracking-wide">Calculating...</div>
-                    </div>
+                <div id="countdown-box" data-date={lastDateISO} class="hidden mt-4 bg-red-50 border border-red-200 rounded p-3 text-center animate-pulse">
+                    <p class="text-xs text-red-600 font-bold uppercase tracking-widest mb-1">Application Ends In:</p>
+                    <div id="timer-display" class="text-lg md:text-xl font-extrabold text-red-700 font-mono">Calculating...</div>
                 </div>
             )}
 
@@ -761,69 +758,39 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
     ]
   })} />
 
-  {/* ⏳ LIVE COUNTDOWN SCRIPT */}
+  {/* ⏳ OLD STYLE COUNTDOWN SCRIPT (Simple Red/White Box) */}
   <script>
     const box = document.getElementById('countdown-box');
-    const label = document.getElementById('timer-label');
     const display = document.getElementById('timer-display');
     
-    if (box && display && label) {
+    if (box && display) {
         const targetDate = new Date(box.dataset.date);
-        targetDate.setHours(23, 59, 59); // End of the day
+        targetDate.setHours(23, 59, 59);
 
         const updateTimer = () => {
             const now = new Date();
             const diff = targetDate - now;
 
             if (diff <= 0) {
-                // EXPIRED STATE
-                display.innerText = "Application Closed ❌";
-                label.innerText = "Status:";
-                box.classList.remove('bg-red-50', 'border-red-200', 'animate-pulse');
-                box.classList.add('bg-gray-100', 'border-gray-300', 'opacity-70');
+                display.innerText = "Application Closed";
                 display.classList.remove('text-red-700');
                 display.classList.add('text-gray-500');
+                box.classList.remove('animate-pulse');
                 clearInterval(interval);
-                box.classList.remove('hidden');
                 return;
             }
 
-            // Calculations
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
             const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-            // COLOR LOGIC (Dynamic Urgency)
-            if (days > 10) {
-                // Safe Zone (Green)
-                box.classList.remove('bg-red-50', 'border-red-200', 'bg-yellow-50', 'border-yellow-200');
-                box.classList.add('bg-green-50', 'border-green-200');
-                label.innerText = "Ends In:";
-                label.className = "text-xs font-bold uppercase tracking-widest text-green-700";
-                display.className = "text-lg md:text-xl font-black font-mono tracking-wide text-green-800";
-            } else if (days > 3) {
-                // Warning Zone (Yellow)
-                box.classList.remove('bg-green-50', 'border-green-200', 'bg-red-50', 'border-red-200');
-                box.classList.add('bg-yellow-50', 'border-yellow-300');
-                label.innerText = "Hurry Up! Ends In:";
-                label.className = "text-xs font-bold uppercase tracking-widest text-yellow-800";
-                display.className = "text-lg md:text-xl font-black font-mono tracking-wide text-yellow-900";
-            } else {
-                // Critical Zone (Red Blinking)
-                box.classList.remove('bg-green-50', 'border-green-200', 'bg-yellow-50', 'border-yellow-300');
-                box.classList.add('bg-red-50', 'border-red-200');
-                label.innerText = "CRITICAL! Application Closing In:";
-                label.className = "text-xs font-bold uppercase tracking-widest text-red-600 animate-pulse";
-                display.className = "text-lg md:text-xl font-black font-mono tracking-wide text-red-700";
-            }
 
             display.innerText = `${days}d : ${hours}h : ${minutes}m : ${seconds}s`;
             box.classList.remove('hidden');
         };
 
         const interval = setInterval(updateTimer, 1000);
-        updateTimer(); // Initial call
+        updateTimer();
     }
   </script>
 
