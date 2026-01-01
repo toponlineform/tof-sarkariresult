@@ -82,7 +82,7 @@ const getBtnStyle = (title) => {
   return 'bg-green-600 hover:bg-green-700 border-green-700 text-white';
 };
 
-// --- ⏳ ROBUST DATE PARSING LOGIC ---
+// --- ⏳ ROBUST DATE PARSING LOGIC (For Counter) ---
 const getLastDateISO = () => {
     let dateStr = "";
     if (post.lastDate) {
@@ -135,8 +135,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
 
     {/* LEFT COLUMN */}
     <main class="flex-1 min-w-0 w-full">
-        {/* Removed Outer Border from Article to match old open style */}
-        <article class="bg-white p-3 md:p-5 font-sans shadow-sm">
+        <article class="bg-white p-3 md:p-5 border border-gray-400 font-sans shadow-sm">
             
             <header class="text-center mb-6">
             <h1 class="text-xl md:text-2xl lg:text-3xl font-extrabold text-[#d32f2f] mb-3 leading-snug uppercase">
@@ -148,7 +147,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                 {post.updatedDate && <span class="bg-green-50 text-green-700 px-2 py-1 rounded border border-green-200 uppercase">📝 Updated: {post.updatedDate}</span>}
             </div>
 
-            {/* Job Highlights Bar - Kept small border here as it is a data grid */}
+            {/* Job Highlights Bar */}
             {(post.totalVacancy || post.salary) && (
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4 text-center">
                     {post.totalVacancy && (
@@ -178,14 +177,14 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                 </div>
             )}
 
-            {/* Short Info */}
+            {/* ✅ 1. Short Info (Yellow Box) */}
             {post.shortInfo && (
                 <div class="text-left bg-[#fffae6] border border-[#f0c14b] p-3 text-sm md:text-base text-gray-800 leading-relaxed">
                 <p><strong class="text-[#d32f2f]">Short Information:</strong> <span set:html={formatText(post.shortInfo)}></span></p>
                 </div>
             )}
 
-            {/* Counter */}
+            {/* ✅ 2. Old Counter (Red Box) - Moved BELOW Short Info */}
             {lastDateISO && !isSimpleMode && (
                 <div id="countdown-box" data-date={lastDateISO} class="hidden mt-4 bg-red-50 border border-red-200 rounded p-3 text-center animate-pulse">
                     <p class="text-xs text-red-600 font-bold uppercase tracking-widest mb-1">Application Ends In:</p>
@@ -197,7 +196,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
 
             <AdSlot type="horizontal" />
 
-            {/* TOC - Navigation needs a border to look like a tool */}
+            {/* TOC */}
             <div class="mb-6 bg-blue-50 border border-blue-200 p-3 rounded-sm">
                 <p class="text-[10px] font-bold text-blue-800 uppercase mb-2 tracking-wider">Quick Navigation:</p>
                 <div class="flex flex-wrap gap-2 text-xs font-semibold text-blue-700">
@@ -213,13 +212,13 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                 </div>
             </div>
 
-            {/* DATES & FEES - Removed Border */}
+            {/* DATES & FEES */}
             {!isSimpleMode && post.importantDates && post.importantDates.length > 0 && (
-            <div id="dates" class="grid grid-cols-1 md:grid-cols-2 gap-0 mb-6 scroll-mt-20">
-            <div class="border-b md:border-b-0 md:border-r border-gray-300">
-                {/* Semantic H2, No Border */}
+            <div id="dates" class="grid grid-cols-1 md:grid-cols-2 gap-0 border border-gray-400 mb-6 scroll-mt-20">
+            <div class="border-b md:border-b-0 md:border-r border-gray-400">
+                {/* ✅ SEO UPDATE: H2 Tag with m-0 */}
                 <h2 class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase m-0">Important Dates</h2>
-                <div class="bg-white p-2 border border-t-0 border-gray-300">
+                <div class="bg-white p-2">
                 <ul class="space-y-2 text-sm">
                     {post.importantDates.map((date) => (
                     <li class="flex justify-between border-b border-gray-200 last:border-0 pb-1">
@@ -230,8 +229,9 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                 </div>
             </div>
             <div>
+                {/* ✅ SEO UPDATE: H2 Tag with m-0 */}
                 <h2 class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase m-0">Application Fee</h2>
-                <div class="bg-white p-2 border border-t-0 border-l-0 border-gray-300">
+                <div class="bg-white p-2">
                 {post.applicationFee ? (
                     <ul class="space-y-2 text-sm">
                         {post.applicationFee.map((fee) => (
@@ -247,57 +247,57 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             </div>
             )}
 
-            {/* VACANCY & AGE - Removed Border */}
+            {/* VACANCY & AGE */}
             {!isSimpleMode && (post.ageLimit || post.vacancyDetails) && (
-            <div id="vacancy" class="mb-6 scroll-mt-20">
+            <div id="vacancy" class="mb-6 border border-gray-400 scroll-mt-20">
+                {/* ✅ SEO UPDATE: H2 Tag with m-0 */}
                 <h2 class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase m-0">Vacancy Details & Age Limit</h2>
-                <div class="border border-t-0 border-gray-300">
-                    {post.ageLimit && (
-                        <div class="p-3 text-center border-b border-gray-300 bg-gray-50">
-                            <p class="text-sm font-bold text-gray-800 uppercase tracking-wide">Age Limit: <span class="font-normal">{post.ageLimit}</span></p>
-                            {post.ageRelaxation && <p class="text-xs text-gray-500 mt-1 italic tracking-wider">({post.ageRelaxation})</p>}
-                        </div>
-                    )}
-                    {post.vacancyDetails && (
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-sm border-collapse text-center">
-                                <thead class="bg-gray-100 text-gray-800 text-xs uppercase font-bold">
-                                    <tr>
-                                        {Object.keys(post.vacancyDetails[0]).map(key => (
-                                            <th class="border border-gray-300 px-2 py-2 text-left">{formatHeader(key)}</th>
+                {post.ageLimit && (
+                    <div class="p-3 text-center border-b border-gray-300 bg-gray-50">
+                        <p class="text-sm font-bold text-gray-800 uppercase tracking-wide">Age Limit: <span class="font-normal">{post.ageLimit}</span></p>
+                        {post.ageRelaxation && <p class="text-xs text-gray-500 mt-1 italic tracking-wider">({post.ageRelaxation})</p>}
+                    </div>
+                )}
+                {post.vacancyDetails && (
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm border-collapse text-center">
+                            <thead class="bg-gray-100 text-gray-800 text-xs uppercase font-bold">
+                                <tr>
+                                    {Object.keys(post.vacancyDetails[0]).map(key => (
+                                        <th class="border border-gray-300 px-2 py-2 text-left">{formatHeader(key)}</th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {post.vacancyDetails.map((row, i) => (
+                                    <tr class="hover:bg-yellow-50 transition">
+                                        {Object.values(row).map((val, idx) => (
+                                            <td class={`border border-gray-300 px-2 py-2 text-left ${idx===0 ? 'font-bold text-gray-700' : 'text-gray-600'}`} set:html={formatText(val)}></td>
                                         ))}
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    {post.vacancyDetails.map((row, i) => (
-                                        <tr class="hover:bg-yellow-50 transition">
-                                            {Object.values(row).map((val, idx) => (
-                                                <td class={`border border-gray-300 px-2 py-2 text-left ${idx===0 ? 'font-bold text-gray-700' : 'text-gray-600'}`} set:html={formatText(val)}></td>
-                                            ))}
-                                        </tr>
-                                    ))}
-                                    <tr class="bg-gray-200 font-bold">
-                                        {Object.keys(post.vacancyDetails[0]).map((key, index) => {
-                                            if (index === 0) return <td class="border border-gray-300 px-2 py-2 text-right uppercase">Total Vacancy</td>;
-                                            const total = calculateTotal(post.vacancyDetails, key);
-                                            return <td class="border border-gray-300 px-2 py-2 text-[#d32f2f]">{total || ""}</td>;
-                                        })}
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    )}
-                </div>
+                                ))}
+                                <tr class="bg-gray-200 font-bold">
+                                    {Object.keys(post.vacancyDetails[0]).map((key, index) => {
+                                        if (index === 0) return <td class="border border-gray-300 px-2 py-2 text-right uppercase">Total Vacancy</td>;
+                                        const total = calculateTotal(post.vacancyDetails, key);
+                                        return <td class="border border-gray-300 px-2 py-2 text-[#d32f2f]">{total || ""}</td>;
+                                    })}
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                )}
             </div>
             )}
 
-            {/* CATEGORY/STATE VACANCY - Removed Border */}
+            {/* CATEGORY/STATE VACANCY */}
             {!isSimpleMode && post.stateWiseVacancy && post.stateWiseVacancy.length > 0 && (
-            <div id="state-vacancy" class="mb-6 scroll-mt-20">
+            <div id="state-vacancy" class="mb-6 border border-gray-400 scroll-mt-20">
+                {/* ✅ SEO UPDATE: H2 Tag with m-0 */}
                 <h2 class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase m-0">
                     {post.vacancyTableTitle || "Category Wise Vacancy Details"}
                 </h2>
-                <div class="bg-white border border-t-0 border-gray-300">
+                <div class="bg-white">
                 {getDataType(post.stateWiseVacancy) === 'table' ? (
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm border-collapse border border-gray-300 text-center">
@@ -368,6 +368,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                 ) : (
                     post.stateWiseVacancy.map(block => (
                         <div class="mb-4 mt-2 px-2">
+                            {/* ✅ SEO UPDATE: H3 Tag with m-0 */}
                             {block.title && <h3 class="bg-gray-200 px-3 py-1 font-bold text-sm text-gray-800 border border-gray-300 text-center uppercase mb-1 m-0">{block.title}</h3>}
                             <div class="overflow-x-auto">
                                 <table class="w-full text-sm border-collapse text-center">
@@ -390,21 +391,22 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             </div>
             )}
 
-            {/* ELIGIBILITY - Removed Border */}
+            {/* ELIGIBILITY */}
             {post.eligibility && (
                 <div class="mb-6">
+                    {/* ✅ SEO UPDATE: H2 Tag with m-0 */}
                     <h2 class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase m-0">Eligibility Criteria</h2>
-                    <ul class="border border-t-0 border-gray-300 p-4 list-disc pl-8 text-sm text-gray-800 bg-gray-50 leading-relaxed">
+                    <ul class="border border-gray-400 p-4 list-disc pl-8 text-sm text-gray-800 bg-gray-50 leading-relaxed">
                         {post.eligibility.map(item => <li class="mb-1" set:html={formatText(item)}></li>)}
                     </ul>
                 </div>
             )}
 
-            {/* SALARY - Removed Border */}
+            {/* SALARY */}
             {!isSimpleMode && (post.salary || post.salaryDetails) && (
-            <div id="salary" class="mb-6 scroll-mt-20">
+            <div id="salary" class="mb-6 border border-gray-400 scroll-mt-20">
+                {/* ✅ SEO UPDATE: H2 Tag with m-0 */}
                 <h2 class="bg-[#008000] text-white text-center font-bold py-2 text-sm uppercase tracking-wide m-0">Pay Scale / Salary Structure</h2>
-                <div class="border border-t-0 border-gray-300">
                 {post.salaryDetails ? (
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm border-collapse border border-gray-300">
@@ -419,23 +421,24 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                         </table>
                     </div>
                 ) : (<div class="p-4 bg-gray-50 text-center text-green-800 font-bold border-t uppercase tracking-widest">{post.salary}</div>)}
-                </div>
             </div>
             )}
 
-            {/* SELECTION PROCESS - Removed Border */}
+            {/* SELECTION PROCESS */}
             {post.selectionProcess && (
-            <div id="selection" class="mb-6 scroll-mt-20">
+            <div id="selection" class="mb-6 border border-gray-400 scroll-mt-20">
+                {/* ✅ SEO UPDATE: H2 Tag with m-0 */}
                 <h2 class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase m-0">Selection Process Steps</h2>
-                <div class="bg-white p-4 border border-t-0 border-gray-300"><ol class="list-decimal pl-6 space-y-2 text-sm text-gray-900 font-medium">{post.selectionProcess.map(s => <li class="tracking-wide">{s}</li>)}</ol></div>
+                <div class="bg-white p-4"><ol class="list-decimal pl-6 space-y-2 text-sm text-gray-900 font-medium">{post.selectionProcess.map(s => <li class="tracking-wide">{s}</li>)}</ol></div>
             </div>
             )}
 
-            {/* EXAM PATTERN - Removed Border */}
+            {/* EXAM PATTERN */}
             {post.examPattern && (
-            <div id="pattern" class="mb-6 scroll-mt-20">
+            <div id="pattern" class="mb-6 border border-gray-400 scroll-mt-20">
+                {/* ✅ SEO UPDATE: H2 Tag with m-0 */}
                 <h2 class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase m-0">Detailed Exam Pattern</h2>
-                <div class="bg-white p-4 border border-t-0 border-gray-300">
+                <div class="bg-white p-4">
                     {Array.isArray(post.examPattern) ? (
                         post.examPattern.map(block => {
                             const tableData = block.table || block.data || block.tableData;
@@ -473,6 +476,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                                 const textContent = block.content || block.data;
                                 return (
                                     <div class="mb-4 p-3 bg-gray-50 border-l-4 border-blue-500">
+                                        {/* ✅ SEO UPDATE: H3 Tag with m-0 (since h4 was already there, h3 is better if parent is h2) */}
                                         {block.title && <h3 class="font-bold text-gray-800 mb-1 uppercase text-xs m-0">{block.title}</h3>}
                                         <p class="text-sm text-gray-700 leading-relaxed" set:html={formatText(textContent)}></p>
                                     </div>
@@ -485,6 +489,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                              if(Array.isArray(value) && typeof value[0] === 'object') {
                                 return (
                                     <div class="mb-4 border border-gray-300">
+                                        {/* ✅ SEO UPDATE: H3 Tag with m-0 */}
                                         <h3 class="bg-gray-200 px-3 py-1 font-bold text-sm text-gray-800 text-center uppercase m-0">{formatHeader(key)}</h3>
                                         <table class="w-full text-sm border-collapse text-center">
                                             <thead class="bg-gray-100 uppercase text-xs"><tr>{Object.keys(value[0]).map(h=><th class="border px-2 py-2">{h}</th>)}</tr></thead>
@@ -507,15 +512,16 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             </div>
             )}
 
-            {/* EXTRA SECTIONS - Removed Border */}
+            {/* EXTRA SECTIONS */}
             {post.extraSections && post.extraSections.length > 0 && (
                 <div id="extra-sections" class="mb-6 scroll-mt-20">
                     {post.extraSections.map((section) => {
                         const tableData = section.table || section.data || section.tableData;
                         return (
-                            <div class="mb-6">
+                            <div class="mb-6 border border-gray-400">
+                                {/* ✅ SEO UPDATE: H2 Tag with m-0 */}
                                 <h2 class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase m-0">{section.title}</h2>
-                                <div class="bg-white border border-t-0 border-gray-300">
+                                <div class="bg-white">
                                     {tableData && (
                                         <div class="overflow-x-auto">
                                             <table class="w-full text-sm border-collapse text-center">
@@ -551,11 +557,12 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                 </div>
             )}
 
-            {/* SYLLABUS - Removed Border */}
+            {/* SYLLABUS */}
             {post.syllabus && (
-            <div id="syllabus" class="mb-6 scroll-mt-20">
+            <div id="syllabus" class="mb-6 border border-gray-400 scroll-mt-20">
+                {/* ✅ SEO UPDATE: H2 Tag with m-0 */}
                 <h2 class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase m-0">Subject-wise Syllabus Topics</h2>
-                <div class="bg-white p-4 border border-t-0 border-gray-300">
+                <div class="bg-white p-4">
                     {post.syllabus.intro && <p class="text-sm text-gray-700 mb-4 italic border-l-4 border-blue-500 pl-3 bg-blue-50 py-2">{post.syllabus.intro}</p>}
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {post.syllabus.topics && post.syllabus.topics.map((subject) => (
@@ -569,20 +576,22 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             </div>
             )}
 
-            {/* HOW TO APPLY - Removed Border */}
+            {/* HOW TO APPLY */}
             {post.howToApply && (
-            <div class="mb-6">
+            <div class="mb-6 border border-gray-400">
+                {/* ✅ SEO UPDATE: H2 Tag with m-0 */}
                 <h2 class="bg-[#004B8D] text-white text-center font-bold py-2 text-sm uppercase m-0">{stepsHeader}</h2>
-                <div class="bg-white p-4 border border-t-0 border-gray-300"><ol class="list-decimal pl-6 space-y-2 text-sm text-gray-800 font-medium">{post.howToApply.map(s => <li set:html={formatText(s)}></li>)}</ol></div>
+                <div class="bg-white p-4"><ol class="list-decimal pl-6 space-y-2 text-sm text-gray-800 font-medium">{post.howToApply.map(s => <li set:html={formatText(s)}></li>)}</ol></div>
             </div>
             )}
 
-            {/* LINKS - Removed Border */}
-            <div id="links" class="mb-6 scroll-mt-20">
+            {/* LINKS */}
+            <div id="links" class="mb-6 border border-gray-400 scroll-mt-20">
+                {/* ✅ SEO UPDATE: H2 Tag with m-0 */}
                 <h2 class="bg-[#d32f2f] text-white text-center font-bold py-2 text-lg uppercase tracking-wider m-0">
                 {isSimpleMode ? "Direct Download Links" : "Important Official Links"}
                 </h2>
-                <div class="bg-white border border-t-0 border-gray-300">
+                <div class="bg-white">
                     <table class="w-full text-sm md:text-base border-collapse">
                         <tbody>
                             {post.links && post.links.map((link, index) => {
@@ -618,7 +627,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                <span class="text-gray-700 text-xs md:text-sm">Information provided here is for quick reference. Verify all details on the official website before taking action.</span>
             </div>
 
-            {/* ✅ SOCIAL BUTTONS */}
+            {/* ✅ SOCIAL BUTTONS (Moved here for better UX) */}
             <div class="flex flex-wrap justify-center gap-3 mb-8">
                 <a href={waLink} class="bg-[#25D366] hover:bg-[#20bd5a] text-white px-5 py-2.5 rounded shadow-md text-sm font-bold flex items-center gap-2 transform hover:-translate-y-1 transition uppercase tracking-wide"><span>Share on WhatsApp</span></a>
                 <a href={tgLink} target="_blank" class="bg-[#229ED9] hover:bg-[#1f8bc1] text-white px-5 py-2.5 rounded shadow-md text-sm font-bold flex items-center gap-2 transform hover:-translate-y-1 transition uppercase tracking-wide"><span>Share on Telegram</span></a>
