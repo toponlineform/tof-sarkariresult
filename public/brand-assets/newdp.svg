@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <circle cx="256" cy="256" r="256" fill="#d32f2f" />
+  
+  <circle cx="256" cy="256" r="235" fill="none" stroke="#ffffff" stroke-width="12" />
+
+  <rect x="136" y="85" width="240" height="50" rx="25" ry="25" fill="#ffffff" />
+  
+  <text x="256" y="118" 
+        font-family="Arial, sans-serif" 
+        font-weight="900" 
+        font-size="22" 
+        fill="#d32f2f" 
+        text-anchor="middle" 
+        letter-spacing="1">
+    DAILY UPDATES
+  </text>
+
+  <text x="256" y="210" 
+        font-family="Arial, sans-serif" 
+        font-weight="900" 
+        font-size="85" 
+        fill="#ffffff" 
+        text-anchor="middle"
+        style="text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">
+    SARKARI
+  </text>
+
+  <text x="256" y="295" 
+        font-family="Arial, sans-serif" 
+        font-weight="900" 
+        font-size="85" 
+        fill="#FCD34D" 
+        text-anchor="middle"
+        style="text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">
+    NAUKRI
+  </text>
+
+  <line x1="140" y1="325" x2="372" y2="325" stroke="#ffffff" stroke-width="2" opacity="0.6" />
+
+  <text x="256" y="365" 
+        font-family="Arial, sans-serif" 
+        font-weight="bold" 
+        font-size="24" 
+        fill="#ffffff" 
+        text-anchor="middle" 
+        letter-spacing="2">
+    TOP ONLINE FORM
+  </text>
+</svg>
