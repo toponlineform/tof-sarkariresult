@@ -118,6 +118,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
 >
   
   <div class="max-w-7xl mx-auto px-1">
+      {/* Visual Breadcrumb (For Users) */}
       <nav class="flex text-xs text-gray-500 mb-2 font-medium overflow-x-auto whitespace-nowrap">
         <a href="/" class="hover:text-blue-700">Home</a> <span class="mx-1">›</span>
         <a href={`/${post.category.toLowerCase().replace(/\s+/g, '-')}`} class="hover:text-blue-700 text-blue-600">{post.category}</a> <span class="mx-1">›</span>
@@ -661,11 +662,11 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
 
   </div>
 
-  {/* ✅ INFINITY PRO SEO SCHEMA */}
+  {/* ✅ INFINITY PRO SEO SCHEMA (Multi-Layer Strategy) */}
   <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@graph": [
-      // 1. JOB POSTING
+      // 1. JOB POSTING (Traffic Engine)
       {
         "@type": "JobPosting",
         "title": post.title,
@@ -685,6 +686,7 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             "addressRegion": post.state || "India"
           }
         },
+        // ADDED BASE SALARY SCHEMA IF AVAILABLE
         ...(post.salary ? {
             "baseSalary": {
                 "@type": "MonetaryAmount",
@@ -697,7 +699,8 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             }
         } : {})
       },
-      // 2. NEWS ARTICLE
+      
+      // 2. NEWS ARTICLE (Authority)
       {
         "@type": "NewsArticle",
         "headline": post.title,
@@ -716,7 +719,45 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             "url": "https://toponlineform.com/logo.png"
           }
         }
-      }
+      },
+
+      // 3. 🍞 BREADCRUMB LIST (Search Result me Path dikhane ke liye)
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://toponlineform.com"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": post.category,
+            "item": `https://toponlineform.com/${post.category.toLowerCase().replace(/\s+/g, '-')}`
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": post.shortTitle || "Job Details",
+            "item": `https://toponlineform.com/${post.slug}`
+          }
+        ]
+      },
+
+      // 4. ❓ FAQ PAGE (Google me Q&A dikhane ke liye)
+      ...(post.faqs && post.faqs.length > 0 ? [{
+        "@type": "FAQPage",
+        "mainEntity": post.faqs.map(f => ({
+          "@type": "Question",
+          "name": f.question,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": f.answer
+          }
+        }))
+      }] : [])
     ]
   })} />
 
