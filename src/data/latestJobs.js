@@ -15,7 +15,7 @@ export const latestJobs = [
     // Dates for Sorting
     postDate: "02/12/2025",
     updatedDate: "02/12/2025",
-    lastDate: "03/12/2025", // For Countdown
+    lastDate: "03/01/2026", // For Countdown
 
     // SEO Rich Info
     shortInfo: "Indo-Tibetan Border Police Force (ITBP) has invited online applications for the recruitment of <strong>Deputy Judge Attorney General (Deputy Commandant)</strong> vacancies. Candidates with a Bachelor's or Master's Degree in Law and registered Advocates are eligible. Interested candidates can check the Physical Standards (PST), Exam Pattern, and apply online before the last date.",
