@@ -606,7 +606,17 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                 </div>
             </div>
 
-            <div class="text-center text-[11px] text-gray-400 mt-2 mb-6 uppercase tracking-tighter">Disclaimer: Information provided here is for quick reference. Verify all details on the official website before taking action.</div>
+            {/* ✅ NEW HIGHLIGHTED DISCLAIMER (Red Box) */}
+            <div class="mt-6 mb-4 bg-red-50 border border-red-200 rounded p-3 text-center shadow-sm">
+               <span class="block text-red-700 font-bold text-xs uppercase tracking-wider mb-1">⚠️ Disclaimer</span>
+               <span class="text-gray-700 text-xs md:text-sm">Information provided here is for quick reference. Verify all details on the official website before taking action.</span>
+            </div>
+
+            {/* ✅ SOCIAL BUTTONS (Moved here for better UX) */}
+            <div class="flex flex-wrap justify-center gap-3 mb-8">
+                <a href={waLink} class="bg-[#25D366] hover:bg-[#20bd5a] text-white px-5 py-2.5 rounded shadow-md text-sm font-bold flex items-center gap-2 transform hover:-translate-y-1 transition uppercase tracking-wide"><span>Share on WhatsApp</span></a>
+                <a href={tgLink} target="_blank" class="bg-[#229ED9] hover:bg-[#1f8bc1] text-white px-5 py-2.5 rounded shadow-md text-sm font-bold flex items-center gap-2 transform hover:-translate-y-1 transition uppercase tracking-wide"><span>Share on Telegram</span></a>
+            </div>
 
             <AdSlot type="square" />
 
@@ -627,12 +637,6 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
                 </div>
             </div>
             )}
-
-            {/* SOCIAL */}
-            <div class="flex flex-wrap justify-center gap-3 mb-8">
-                <a href={waLink} class="bg-[#25D366] hover:bg-[#20bd5a] text-white px-5 py-2.5 rounded shadow-md text-sm font-bold flex items-center gap-2 transform hover:-translate-y-1 transition uppercase tracking-wide"><span>Share on WhatsApp</span></a>
-                <a href={tgLink} target="_blank" class="bg-[#229ED9] hover:bg-[#1f8bc1] text-white px-5 py-2.5 rounded shadow-md text-sm font-bold flex items-center gap-2 transform hover:-translate-y-1 transition uppercase tracking-wide"><span>Share on Telegram</span></a>
-            </div>
 
             {/* RELATED JOBS */}
             {relatedPosts.length > 0 && (
@@ -660,6 +664,9 @@ const formatText = (text) => String(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1<
             </a>
             <a href="https://t.me/toponlineform" target="_blank" class="block bg-white border-l-4 border-[#229ED9] p-4 shadow-sm hover:shadow-md transition rounded">
                 <div class="flex items-center gap-3"><div class="bg-[#229ED9] text-white p-2 rounded-full"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.694 0Zm5.216 8.784-1.76 8.297c-.13.587-.48.73-.974.454l-2.696-1.986-1.3 1.253c-.144.144-.265.265-.54.265l.192-2.738 4.985-4.506c.217-.193-.047-.3-.337-.107l-6.16 3.878-2.656-.83c-.577-.18-.588-.577.12-.852l10.378-4.004c.48-.173.9.117.748.876Z"/></svg></div><div><div class="text-xs text-gray-500 font-bold uppercase">Join us on</div><div class="text-lg font-bold text-gray-800 leading-none">Telegram</div></div></div>
+            </a>
+            <a href="https://www.youtube.com/@toponlineform" target="_blank" class="block bg-white border-l-4 border-[#FF0000] p-4 shadow-sm hover:shadow-md transition rounded">
+                <div class="flex items-center gap-3"><div class="bg-[#FF0000] text-white p-2 rounded-full"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></div><div><div class="text-xs text-gray-500 font-bold uppercase">Join us on</div><div class="text-lg font-bold text-gray-800 leading-none">YouTube</div></div></div>
             </a>
             <AdSlot type="square" />
         </div>
