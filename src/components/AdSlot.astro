@@ -9,7 +9,7 @@
 export const ADSENSE_ID = "ca-pub-XXXXXXXXXXXXXXXX"; 
 
 // 2. MAIN SCRIPT SWITCH (Vignette/Auto Ads ke liye)
-// Note: Agar ye 'false' hai, toh neeche wale Manual Ads bhi nahi chalenge (kyunki engine band hai).
+// Note: Agar ye 'false' hai, toh neeche wale Manual Ads bhi nahi chalenge.
 export const LOAD_SCRIPT = true; 
 
 // 3. MANUAL BLOCKS SWITCH (Page ke beech wale dabbe)
@@ -18,11 +18,11 @@ const ENABLE_MANUAL_ADS = true;
 
 // =========================================================
 
-// 4. SLOT IDs
+// 4. SLOT IDs (Apne AdSense dashboard se sahi IDs yahan daal dena)
 const SLOT_IDS = {
-    horizontal: "1234567890",
-    vertical:   "0987654321",
-    square:     "1122334455",
+    horizontal: "1234567890", // Article ke beech wale ads
+    vertical:   "0987654321", // Sidebar ads
+    square:     "1122334455", // Square ads (Footer/Bottom)
 };
 
 const { type = 'horizontal' } = Astro.props;
@@ -34,20 +34,26 @@ if (!ENABLE_MANUAL_ADS) {
 
 const currentSlotId = SLOT_IDS[type] || SLOT_IDS.horizontal;
 
-// --- CSS LOGIC ---
+// --- 🎨 CSS LOGIC (Fixed + Responsive Magic) ---
+// Base: Flexbox centering taaki agar chhota ad aaye toh wo beech mein dikhe (Ganda na lage)
 let containerClass = "my-6 mx-auto flex justify-center items-center bg-gray-50 border border-gray-100 rounded-lg overflow-hidden";
 let adFormat = "auto";
 let adStyle = { display: 'block' };
 
 if (type === 'horizontal') {
-    containerClass += " w-full min-h-[100px]"; 
+    // 🔥 UPDATE: 
+    // Mobile: min-h-[250px] -> Taaki mehnge Square Ads aa sakein.
+    // Desktop (md): min-h-[90px] -> Taaki Leaderboard Ads aa sakein.
+    containerClass += " w-full min-h-[250px] md:min-h-[90px]"; 
     adFormat = "auto"; 
 } 
 else if (type === 'vertical') {
+    // Sidebar: Width limited hai, Height fixed rakhi hai taaki layout na hile
     containerClass += " w-full max-w-[300px] min-h-[250px]"; 
     adFormat = "auto"; 
 } 
 else if (type === 'square') {
+    // Box Ads: Generally bottom content ke liye
     containerClass += " w-full max-w-[336px] min-h-[280px]";
     adFormat = "rectangle";
 }
@@ -55,14 +61,16 @@ else if (type === 'square') {
 
 <div class={containerClass}>
     
-    {/* DEV MODE */}
+    {/* DEV MODE: Sirf Development mein dikhega taaki pata chale ad kahan aayega */}
     {import.meta.env.DEV ? (
         <div class="flex flex-col items-center justify-center text-gray-400 p-4 text-center w-full h-full bg-gray-100 border-2 border-dashed border-gray-300">
-            <span class="text-xs font-bold uppercase tracking-widest text-gray-500">Ad ({type})</span>
-            <span class="text-[10px] font-mono mt-1 text-blue-500">Auto Format</span>
+            <span class="text-xs font-bold uppercase tracking-widest text-gray-500">Ad Space ({type})</span>
+            <span class="text-[10px] font-mono mt-1 text-blue-500">
+                {type === 'horizontal' ? 'Mob: 250px | PC: 90px' : 'Fixed Height'}
+            </span>
         </div>
     ) : (
-        /* PROD MODE */
+        /* PROD MODE: Asli AdSense Code */
         <ins class="adsbygoogle"
              style={adStyle}
              data-ad-client={ADSENSE_ID}
@@ -72,7 +80,7 @@ else if (type === 'square') {
         ></ins>
     )}
 
-    {/* Push Script (Sirf tab chalega jab Manual Ads enabled honge) */}
+    {/* Push Script (Sirf tab chalega jab Manual Ads enabled honge aur Prod mode hoga) */}
     {!import.meta.env.DEV && (
         <script is:inline>
              (adsbygoogle = window.adsbygoogle || []).push({});
